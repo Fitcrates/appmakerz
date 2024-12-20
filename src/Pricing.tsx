@@ -1,187 +1,128 @@
 import React from 'react';
-import Header from './components/Header';
-import Contact from './components/Contact';
-import { ArrowUpRight } from 'lucide-react';
-import { useScrollToTop } from './hooks/useScrollToTop';
-
-const PricingTable = () => {
-  const handlePlanClick = (planName: string) => {
-    const url = new URL(window.location.href);
-    url.hash = 'contact';
-    const searchParams = new URLSearchParams();
-    searchParams.set('plan', planName);
-    window.history.replaceState({}, '', `${url.hash}?${searchParams.toString()}`);
-    window.dispatchEvent(new Event('hashchange'));
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth',
-    });
-  };
-
-  const plans = [
-    {
-      name: 'Entry App Plan',
-      price: '$150',
-      features: ['1 functionality', 'Implementation into workspace'],
-    },
-    {
-      name: 'Basic App Plan',
-      price: '$500',
-      features: ['Up to 5 functionalities', 'Priority support', 'Advanced Features'],
-    },
-    {
-      name: 'Custom App Plan',
-      price: 'Custom Pricing',
-      features: [
-        '5+ Functionalities',
-        'Dedicated & Continuous Support',
-        'Custom Integrations',
-        'Implementation into workspace',
-      ],
-    },
-    {
-      name: 'Portfolio Website',
-      price: '$200',
-      features: ['Featured Portfolio', 'Responsive Design', 'Contact Form - SMTP'],
-    },
-    {
-      name: 'Custom Website',
-      price: 'From $500',
-      features: [
-        'Fullstack implementation',
-        'Personalized',
-        'Custom Integrations',
-        'CMS',
-        'Blog',
-        'Node.js',
-        'Contact Form - SMTP',
-        'Custom designed',
-      ],
-    },
-  ];
-
-  return (
-    <div className="flex flex-col w-full min-h-screen">
-      <section
-        id="pricing-hero"
-        style={{
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-          backgroundImage: `url(https://i.postimg.cc/VsR5xjyL/tlohero.png)`,
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-        }}
-        className="min-h-screen h-screen w-full flex items-end bg-fixed pb-16"
-      >
-        <div className="max-w-7xl mx-auto w-full flex justify-between items-end px-8">
-          {/* Left Section: Heading */}
-          <div className="flex flex-col justify-end">
-            <h1 className="text-7xl md:text-9xl lg:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-[0.9]">
-              Pricing 
-            </h1>
-            <h1 className="text-7xl md:text-9xl lg:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-[0.9]">
-              Plans
-            </h1>
-          </div>
-
-          {/* Right Section: Text + Arrow */}
-          <div className="flex items-end -space-x-6">
-            {/* Text Column */}
-            <div className="flex flex-col justify-between">
-              <div className="flex flex-col gap-0">
-                <span className="text-xl md:text-3xl text-black tracking-wider font-jakarta font-extralight -mb-2">
-                  Affordable
-                </span>
-                <span className="text-xl md:text-3xl text-black tracking-wider font-jakarta font-extralight -mb-2">
-                  solutions
-                </span>
-                <span className="text-xl md:text-3xl text-black tracking-wider font-jakarta font-extralight -mb-2">
-                  tailored to
-                </span>
-                <span className="text-xl md:text-3xl text-black tracking-wider font-jakarta font-extralight -mb-2">
-                  your needs.
-                </span>
-              </div>
-            </div>
-
-            {/* Arrow Column */}
-            <div className="flex justify-end ml-2 md:ml-4">
-              <a
-                href="#pricing-boxes"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('pricing-boxes')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="text-white hover:text-indigo-500 text-shadow-fuchsia transform transition-transform duration-300 
-                hover:scale-125 flex items-end cursor-pointer"
-              >
-                <ArrowUpRight
-                  className="w-auto h-32 md:h-60 -mb-8 md:-mb-16"
-                  strokeWidth={0.7}
-                  strokeLinecap="butt"
-                />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="pricing-boxes"
-        className="py-20"
-        style={{ backgroundColor: '#140F2D' }}
-      >
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {plans.map((plan, index) => (
-              <div
-                key={index}
-                className="z-48 shadow-sm rounded-lg shadow-lg p-6 hover:shadow-teal-100 hover:shadow-xl 
-                transform hover:scale-105 transition duration-300 flex flex-col h-full ring-1 ring-white/80"
-              >
-                <h3 className="text-2xl font-semibold text-white font-jakarta font-normal mb-4">{plan.name}</h3>
-                <p className="text-4xl font-jakarta font-light text-white mb-4">{plan.price}</p>
-                <ul className="mb-4 space-y-2 flex-grow">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="text-white font-jakarta font-light flex items-center">
-                      <span className="mr-2 text-teal-300">✔</span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={() => handlePlanClick(plan.name)}
-                  className="bg-teal-300 text-black px-4 py-2 rounded-full self-start mt-auto hover:bg-teal-400"
-                >
-                  Choose Plan
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-};
+import { Check } from 'lucide-react';
 
 const Pricing = () => {
-  useScrollToTop();
   return (
-    <div className="relative flex flex-col min-h-screen">
-      {/* Header */}
-      <div className="fixed top-0 left-0 w-full z-50">
-        <Header />
-      </div>
+    <section className="py-20 sm:py-32 bg-[#140F2D]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Heading */}
+        <div className="text-center mb-12 sm:mb-20">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal text-white mb-4 font-jakarta">
+            Pricing Plans
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-400 font-light max-w-2xl mx-auto">
+            Choose the perfect plan for your business needs
+          </p>
+        </div>
 
-      {/* Pricing Table */}
-      <div>
-        <PricingTable />
-      </div>
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
+          {/* Basic Plan */}
+          <div className="relative p-6 sm:p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-teal-500/50 transition-all duration-300 group">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-purple-500 rounded-2xl opacity-0 group-hover:opacity-10 transition duration-300"></div>
+            <h3 className="text-xl sm:text-2xl font-medium text-white mb-4">Basic</h3>
+            <div className="mb-6">
+              <span className="text-4xl sm:text-5xl font-bold text-white">$499</span>
+              <span className="text-gray-400 ml-2">/ project</span>
+            </div>
+            <ul className="space-y-4 mb-8">
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Custom Website Design</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Mobile Responsive</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>5 Pages</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Basic SEO</span>
+              </li>
+            </ul>
+            <button className="w-full py-3 px-6 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition duration-300">
+              Get Started
+            </button>
+          </div>
 
-      {/* Contact Section */}
-      <Contact />
-    </div>
-    
+          {/* Professional Plan */}
+          <div className="relative p-6 sm:p-8 bg-gradient-to-b from-teal-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl border border-teal-500/50 hover:border-teal-400 transition-all duration-300 group">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-purple-500 rounded-2xl opacity-10 group-hover:opacity-20 transition duration-300"></div>
+            <div className="absolute -top-4 right-6 bg-teal-500 text-white text-sm font-medium px-3 py-1 rounded-full">
+              Popular
+            </div>
+            <h3 className="text-xl sm:text-2xl font-medium text-white mb-4">Professional</h3>
+            <div className="mb-6">
+              <span className="text-4xl sm:text-5xl font-bold text-white">$999</span>
+              <span className="text-gray-400 ml-2">/ project</span>
+            </div>
+            <ul className="space-y-4 mb-8">
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Everything in Basic</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>E-commerce Integration</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>10 Pages</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Advanced SEO</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Analytics Integration</span>
+              </li>
+            </ul>
+            <button className="w-full py-3 px-6 rounded-lg bg-teal-500 hover:bg-teal-600 text-white font-medium transition duration-300">
+              Get Started
+            </button>
+          </div>
+
+          {/* Enterprise Plan */}
+          <div className="relative p-6 sm:p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-teal-500/50 transition-all duration-300 group">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-purple-500 rounded-2xl opacity-0 group-hover:opacity-10 transition duration-300"></div>
+            <h3 className="text-xl sm:text-2xl font-medium text-white mb-4">Enterprise</h3>
+            <div className="mb-6">
+              <span className="text-4xl sm:text-5xl font-bold text-white">Custom</span>
+              <span className="text-gray-400 ml-2">/ project</span>
+            </div>
+            <ul className="space-y-4 mb-8">
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Everything in Professional</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Custom Features</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Unlimited Pages</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Priority Support</span>
+              </li>
+              <li className="flex items-center text-gray-300">
+                <Check className="h-5 w-5 text-teal-500 mr-3" />
+                <span>Custom Integrations</span>
+              </li>
+            </ul>
+            <button className="w-full py-3 px-6 rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium transition duration-300">
+              Contact Us
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
