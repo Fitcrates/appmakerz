@@ -3,8 +3,8 @@ import { Check } from 'lucide-react';
 
 const Pricing = () => {
   return (
-    <section className="py-20 sm:py-32 bg-[#140F2D]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="w-full py-20 sm:py-32 bg-[#140F2D]">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="text-center mb-12 sm:mb-20">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-normal text-white mb-4 font-jakarta">
@@ -16,9 +16,9 @@ const Pricing = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
+        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
           {/* Basic Plan */}
-          <div className="relative p-6 sm:p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-teal-500/50 transition-all duration-300 group">
+          <div className="w-full relative p-6 sm:p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-teal-500/50 transition-all duration-300 group">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-purple-500 rounded-2xl opacity-0 group-hover:opacity-10 transition duration-300"></div>
             <h3 className="text-xl sm:text-2xl font-medium text-white mb-4">Basic</h3>
             <div className="mb-6">
@@ -49,7 +49,7 @@ const Pricing = () => {
           </div>
 
           {/* Professional Plan */}
-          <div className="relative p-6 sm:p-8 bg-gradient-to-b from-teal-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl border border-teal-500/50 hover:border-teal-400 transition-all duration-300 group">
+          <div className="w-full relative p-6 sm:p-8 bg-gradient-to-b from-teal-500/20 to-purple-500/20 backdrop-blur-sm rounded-2xl border border-teal-500/50 hover:border-teal-400 transition-all duration-300 group">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-purple-500 rounded-2xl opacity-10 group-hover:opacity-20 transition duration-300"></div>
             <div className="absolute -top-4 right-6 bg-teal-500 text-white text-sm font-medium px-3 py-1 rounded-full">
               Popular
@@ -87,7 +87,7 @@ const Pricing = () => {
           </div>
 
           {/* Enterprise Plan */}
-          <div className="relative p-6 sm:p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-teal-500/50 transition-all duration-300 group">
+          <div className="w-full relative p-6 sm:p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-teal-500/50 transition-all duration-300 group">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-purple-500 rounded-2xl opacity-0 group-hover:opacity-10 transition duration-300"></div>
             <h3 className="text-xl sm:text-2xl font-medium text-white mb-4">Enterprise</h3>
             <div className="mb-6">
