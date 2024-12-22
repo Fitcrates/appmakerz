@@ -374,7 +374,7 @@ export const translations = {
     },
     // Contact section
     contact: {
-      title: "Porozmawiajmy",
+      title: "Kontakt",
       form: {
         name: "Twoje imię",
         email: "Twój adres e-mail",
