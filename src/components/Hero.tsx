@@ -14,7 +14,7 @@ const Hero = () => {
         backgroundImage: `url(https://i.postimg.cc/VsR5xjyL/tlohero.png)`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
-        backgroundAttachment: 'fixed', // Safari fix for fixed background
+        backgroundAttachment: 'scroll', // Safari fix for fixed background
         backgroundRepeat: 'no-repeat',
         minHeight: '-webkit-fill-available', // iOS dynamic height fix
       }}
