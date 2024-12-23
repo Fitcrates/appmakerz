@@ -11,7 +11,7 @@ const Hero = () => {
     <section
       id="home"
       style={{
-        backgroundImage: `url(https://i.postimg.cc/VsR5xjyL/tlohero.png)`,
+        backgroundImage: `url(https://i.postimg.cc/fyCQ2K8v/tlohero.png)`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundAttachment: 'scroll', // Safari fix for fixed background
