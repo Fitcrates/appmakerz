@@ -11,13 +11,14 @@ const Hero = () => {
     <section
       id="home"
       style={{
-        clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
         backgroundImage: `url(https://i.postimg.cc/VsR5xjyL/tlohero.png)`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
+        backgroundAttachment: 'scroll', // Safari fix for fixed background
         backgroundRepeat: 'no-repeat',
+        minHeight: '-webkit-fill-available', // iOS dynamic height fix
       }}
-      className="min-h-screen h-screen w-full flex items-end bg-fixed pb-16 overflow-x-hidden"
+      className="min-h-screen h-screen w-full flex items-end pb-16 overflow-x-hidden"
     >
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row justify-between items-end px-4 sm:px-6 lg:px-8">
         {/* Left Section: Heading */}
