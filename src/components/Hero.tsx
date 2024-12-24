@@ -10,15 +10,7 @@ const Hero = () => {
   return (
     <section
       id="home"
-      style={{
-        backgroundImage: `url(https://i.postimg.cc/fyCQ2K8v/tlohero.png)`,
-        backgroundPosition: 'center',
-        backgroundSize: 'cover',
-        backgroundAttachment: 'fixed', // Safari fix for fixed background
-        backgroundRepeat: 'no-repeat',
-        minHeight: '-webkit-fill-available', // iOS dynamic height fix
-      }}
-      className="min-h-screen h-screen w-full flex items-end pb-16 overflow-x-hidden"
+      className="hero-section min-h-screen h-screen w-full flex items-end pb-16 overflow-x-hidden"
     >
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row justify-between items-end px-4 sm:px-6 lg:px-8">
         {/* Left Section: Heading */}
