@@ -27,7 +27,7 @@ const Hero = () => {
           </h1>
 
           {/* Black Subtext and Arrow in Two Columns */}
-          <div className="flex flex-row items-center justify-between w-full mt-8">
+          <div className="flex flex-row items-center justify-between w-full mt-4">
             {/* Text Column */}
             <div className="flex flex-col gap-1">
               <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight">
@@ -56,7 +56,7 @@ const Hero = () => {
                 hover:scale-125 flex items-center cursor-pointer"
               >
                 <ArrowUpRight
-                  className="w-auto h-12 md:h-16"
+                  className="w-auto h-12 md:h-32"
                   strokeWidth={0.7}
                   strokeLinecap="butt"
                 />
