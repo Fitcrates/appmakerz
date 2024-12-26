@@ -1,4 +1,4 @@
-import React from 'react';
+7import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
@@ -45,7 +45,7 @@ const Hero = () => {
           </div>
 
           {/* Arrow Column */}
-          <div className="flex justify-center md:justify-end ml-0 md:ml-4">
+          <div className="flex justify-end md:justify-end ml-0 md:ml-4">
             <a
               href="#projects"
               onClick={(e) => {
@@ -56,7 +56,7 @@ const Hero = () => {
               hover:scale-125 flex items-center md:items-end cursor-pointer"
             >
               <ArrowUpRight
-                className="w-16 h-16 md:w-auto md:h-32 md:h-60 -mb-8 md:-mb-16"
+                className="w-16 h-24 md:w-auto md:h-32 md:h-60 -mb-8 md:-mb-16"
                 strokeWidth={0.7}
                 strokeLinecap="butt"
               />
