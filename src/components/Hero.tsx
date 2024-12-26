@@ -14,7 +14,7 @@ const Hero = () => {
     >
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row justify-between items-end px-4 sm:px-6 lg:px-8">
         {/* Left Section: Heading */}
-        <div className="flex flex-col justify-end mb-8 md:mb-0">
+        <div className="flex flex-col justify-end mb-8 md:mb-0 text-center md:text-left items-center md:items-start">
           <h1 className="text-5xl sm:text-7xl md:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-[0.9]">
             {t.title.line1}
           </h1>
@@ -27,9 +27,9 @@ const Hero = () => {
         </div>
 
         {/* Right Section: Text + Arrow */}
-        <div className="flex items-end space-x-2 md:-space-x-6">
+        <div className="flex flex-col items-center md:flex-row md:items-end space-x-0 md:space-x-2 md:-space-x-6">
           {/* Text Column */}
-          <div className="flex flex-col justify-between">
+          <div className="flex flex-col justify-between text-center md:text-left">
             <div className="flex flex-col gap-0">
               <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mb-2">
                 {t.subtitle.line1}
@@ -47,7 +47,7 @@ const Hero = () => {
           </div>
 
           {/* Arrow Column */}
-          <div className="flex justify-end ml-2 md:ml-4">
+          <div className="flex justify-center md:justify-end mt-4 md:mt-0 ml-0 md:ml-4">
             <a
               href="#projects"
               onClick={(e) => {
@@ -55,7 +55,7 @@ const Hero = () => {
                 document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
               }}
               className="text-white hover:text-indigo-500 text-shadow-fuchsia transform transition-transform duration-300 
-              hover:scale-125 flex items-end cursor-pointer"
+              hover:scale-125 flex items-center md:items-end cursor-pointer"
             >
               <ArrowUpRight
                 className="w-auto h-32 md:h-60 -mb-8 md:-mb-16"
