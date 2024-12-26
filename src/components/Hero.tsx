@@ -45,7 +45,7 @@ const Hero = () => {
             </div>
 
             {/* Arrow Column */}
-            <div className="-ml-24 flex justify-center">
+            <div className="-ml-32 flex justify-center">
               <a
                 href="#projects"
                 onClick={(e) => {
