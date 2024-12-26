@@ -45,7 +45,7 @@ const Hero = () => {
             </div>
 
             {/* Arrow Column */}
-            <div className="ml-16 flex justify-center">
+            <div className="ml-36 flex justify-center">
               <a
                 href="#projects"
                 onClick={(e) => {
@@ -56,7 +56,7 @@ const Hero = () => {
                 hover:scale-125 flex items-center cursor-pointer"
               >
                 <ArrowUpRight
-                  className="w-auto h-60 sm:h-60 md:h-60"
+                  className="w-auto h-60 sm:h-36 md:h-36"
                   strokeWidth={0.7}
                   strokeLinecap="butt"
                 />
