@@ -27,7 +27,7 @@ const Hero = () => {
           </h1>
 
           {/* Black Subtext and Arrow in Two Columns */}
-          <div className="flex flex-row items-center justify-between w-full -mt-4">
+          <div className="flex flex-row items-center justify-between w-full mt-12">
             {/* Text Column */}
             <div className="text-left flex flex-col gap-1">
               <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight leading-[0.8]">
