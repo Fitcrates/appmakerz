@@ -39,7 +39,7 @@ const Hero = () => {
               <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight">
                 {t.subtitle.line3}
               </span>
-              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight">
+              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight leading-[0.9]">
                 {t.subtitle.line4}
               </span>
             </div>
