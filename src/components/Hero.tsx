@@ -14,7 +14,7 @@ const Hero = () => {
     >
       <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
         {/* Centered Text Section */}
-        <div className="flex flex-col items-center text-center md:items-start md:text-left w-full pb-8">
+        <div className="flex flex-col items-center text-center md:items-start md:text-left w-full pb-12">
           {/* Large White Heading */}
           <h1 className="text-5xl sm:text-7xl md:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-[0.9]">
             {t.title.line1}
@@ -45,7 +45,7 @@ const Hero = () => {
             </div>
 
             {/* Arrow Column */}
-            <div className="-ml-32 flex justify-center">
+            <div className="-ml-40 flex justify-center">
               <a
                 href="#projects"
                 onClick={(e) => {
