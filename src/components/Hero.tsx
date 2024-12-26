@@ -26,10 +26,10 @@ const Hero = () => {
             {t.title.line3}
           </h1>
 
-          {/* Black Subtext and Arrow Section */}
-          <div className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between w-full mt-8">
+          {/* Black Subtext and Arrow in Two Columns */}
+          <div className="flex flex-row items-center justify-between w-full mt-8">
             {/* Text Column */}
-            <div className="flex flex-col gap-0">
+            <div className="flex flex-col gap-1">
               <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight">
                 {t.subtitle.line1}
               </span>
@@ -45,7 +45,7 @@ const Hero = () => {
             </div>
 
             {/* Arrow Column */}
-            <div className="mt-4 md:mt-0 md:ml-4">
+            <div className="ml-4 flex justify-center">
               <a
                 href="#projects"
                 onClick={(e) => {
