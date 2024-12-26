@@ -29,7 +29,7 @@ const Hero = () => {
           {/* Black Subtext and Arrow in Two Columns */}
           <div className="flex flex-row items-center justify-between w-full mt-4">
             {/* Text Column */}
-            <div className="flex flex-col gap-1">
+            <div className="text-left flex flex-col gap-1">
               <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight leading-[0.8]">
                 {t.subtitle.line1}
               </span>
