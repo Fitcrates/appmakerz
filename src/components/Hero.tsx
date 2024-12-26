@@ -10,11 +10,11 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="hero-section min-h-screen h-screen w-full flex items-end pb-16 overflow-x-hidden"
+      className="hero-section min-h-screen h-screen w-full flex items-center md:items-end pb-16 overflow-x-hidden"
     >
-      <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row justify-between items-end px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row justify-center md:justify-between items-center md:items-end px-4 sm:px-6 lg:px-8">
         {/* Left Section: Heading */}
-        <div className="flex flex-col justify-end mb-8 md:mb-0 text-center md:text-left items-center md:items-start">
+        <div className="flex flex-col justify-center md:justify-end mb-8 md:mb-0 text-center md:text-left">
           <h1 className="text-5xl sm:text-7xl md:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-[0.9]">
             {t.title.line1}
           </h1>
@@ -27,27 +27,25 @@ const Hero = () => {
         </div>
 
         {/* Right Section: Text + Arrow */}
-        <div className="flex flex-col items-center md:flex-row md:items-end space-x-0 md:space-x-2 md:-space-x-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-center space-y-4 md:space-y-0 md:space-x-2">
           {/* Text Column */}
-          <div className="flex flex-col justify-between text-center md:text-left">
-            <div className="flex flex-col gap-0">
-              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mb-2">
-                {t.subtitle.line1}
-              </span>
-              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mb-2">
-                {t.subtitle.line2}
-              </span>
-              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mb-2">
-                {t.subtitle.line3}
-              </span>
-              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mb-2">
-                {t.subtitle.line4}
-              </span>
-            </div>
+          <div className="flex flex-col gap-0 text-center md:text-left">
+            <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mb-2">
+              {t.subtitle.line1}
+            </span>
+            <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mb-2">
+              {t.subtitle.line2}
+            </span>
+            <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mb-2">
+              {t.subtitle.line3}
+            </span>
+            <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mb-2">
+              {t.subtitle.line4}
+            </span>
           </div>
 
           {/* Arrow Column */}
-          <div className="flex justify-center md:justify-end mt-4 md:mt-0 ml-0 md:ml-4">
+          <div className="flex justify-center md:justify-end ml-0 md:ml-4">
             <a
               href="#projects"
               onClick={(e) => {
@@ -58,7 +56,7 @@ const Hero = () => {
               hover:scale-125 flex items-center md:items-end cursor-pointer"
             >
               <ArrowUpRight
-                className="w-auto h-32 md:h-60 -mb-8 md:-mb-16"
+                className="w-16 h-16 md:w-auto md:h-32 md:h-60 -mb-8 md:-mb-16"
                 strokeWidth={0.7}
                 strokeLinecap="butt"
               />
