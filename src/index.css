@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://i.postimg.cc/fyCQ2K8v/tlohero.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.hero-section > div {
+  position: relative;
+  z-index: 1;
+}
+
+/* Text Shadows */
+.text-shadow-fuchsia {
+  text-shadow: 0 0 15px rgba(255, 0, 255, 0.8), 0 0 25px rgba(255, 0, 255, 0.6);
+}
+
+.text-shadow-sky {
+  text-shadow: 0 0 15px rgba(0, 191, 255, 0.8), 0 0 25px rgba(0, 191, 255, 0.6);
+}
+
+.text-shadow-green {
+  text-shadow: 0 0 15px rgba(0, 255, 0, 0.8), 0 0 25px rgba(0, 255, 0, 0.6);
+}
+
+/* Gradient Shadows */
+.gradient-shadow {
+  box-shadow: 0 0 15px 5px rgba(128, 0, 128, 0.4),
+              0 0 25px 10px rgba(128, 0, 128, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+.gradient-shadow:hover {
+  box-shadow: 0 0 20px 10px rgba(128, 0, 128, 0.6),
+              0 0 30px 15px rgba(128, 0, 128, 0.5);
+}
+
+/* Spinning Gradient */
+@keyframes spin-gradient {
+  0% {
+    transform: rotate(0deg);
+    background: radial-gradient(circle, #4f46e5, #0ea5ff, #9333ea);
+  }
+  100% {
+    transform: rotate(360deg);
+    background: radial-gradient(circle, #9333ea, #0ea5ff, #4f46e5);
+  }
+}
+
+.spin-gradient {
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #4f46e5, #0ea5ff, #9333ea);
+  animation: spin-gradient 2s linear infinite;
+}
+
+/* Text Alignment */
+.text-justify-tight {
+  text-align: justify;
+  text-align-last: justify; /* For better balance */
+}
