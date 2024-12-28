@@ -138,8 +138,8 @@ export const translations = {
     },
     // Blog section
     blog: {
-      header1: "Posts",
-      header2: "On the blog",
+      header1: "Blog",
+      header2: "Posts",
       header3: "Project descriptions",
       header4: "travel",
       header5: "fitness, diet",
