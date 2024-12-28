@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
+import { ShieldX } from 'lucide-react';
 
 const Projects = () => {
   const { language } = useLanguage();
@@ -147,7 +148,7 @@ const Projects = () => {
                   className="text-white hover:text-teal-300 transition duration-300 inline-flex items-center space-x-1"
                 >
                   <span>Private</span>
-                  <ArrowUpRight className="w-5 h-5" />
+                  <ShieldX className="w-6 h-6" />
                 </a>
               </div>
             </div>
