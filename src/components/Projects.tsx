@@ -32,7 +32,7 @@ const Projects = () => {
             {/* Top Image Section */}
             <div className="h-2/5 relative overflow-hidden bg-[#140F2D] transform hover:scale-110 transition duration-300">
               <img
-                src="..\public\media\moja strona2.png"
+                src="\media\moja strona2.png"
                 alt="Custom Website"
                 className="w-full h-full object-cover"
               />
@@ -74,7 +74,7 @@ const Projects = () => {
   {/* Top Image Section */}
   <div className="h-2/5 relative overflow-hidden bg-[#140F2D] transform hover:scale-110 transition duration-300">
     <img
-      src="..\public\media\flixapp.png"
+      src="\media\flixapp.png"
       alt="Mobile App"
       className="w-full h-full object-cover"
     />
@@ -119,7 +119,7 @@ const Projects = () => {
             {/* Top Image Section */}
             <div className="h-2/5 relative overflow-hidden bg-[#140F2D] transform hover:scale-110 transition duration-300">
               <img
-                src="..\public\media\glide1.png"
+                src="\media\glide1.png"
                 alt="Portfolio Website"
                 className="w-full h-full object-cover"
               />
