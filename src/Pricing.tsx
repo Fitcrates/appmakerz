@@ -114,7 +114,7 @@ const PricingTable = () => {
             </div>
 
             {/* Mobile View: Centered Button */}
-            <div className="md:hidden flex flex-col items-center justify-center w-full mt-28 mb-36">
+            <div className="md:hidden flex flex-col items-center justify-center w-full mt-12 mb-36">
               <button
                 onClick={(e) => {
                   e.preventDefault();
