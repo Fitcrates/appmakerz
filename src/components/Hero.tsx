@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
@@ -6,6 +6,9 @@ import { translations } from '../translations/translations';
 const Hero = () => {
   const { language } = useLanguage();
   const t = translations[language].hero;
+
+  // State to manage hover
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <section
@@ -47,21 +50,33 @@ const Hero = () => {
               </span>
             </div>
 
-            {/* Arrow Section - Positioned to the Right */}
-            <div className="flex items-end md:ml-8 mt-6 md:mt-0">
+            {/* Arrow Section */}
+            <div
+              className="flex items-end md:ml-8 mt-6 md:mt-0 cursor-pointer"
+              onMouseEnter={() => setIsHovered(true)} // Handle hover start
+              onMouseLeave={() => setIsHovered(false)} // Handle hover end
+            >
               <a
                 href="#about"
                 onClick={(e) => {
                   e.preventDefault();
                   document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="text-white hover:text-indigo-500 text-shadow-fuchsia transform transition-transform duration-300 hover:scale-125 flex items-center cursor-pointer"
+                className="text-white hover:text-indigo-500 transform transition-transform duration-1000 flex items-center"
               >
-                <ArrowUpRight
-                  className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0"
-                  strokeWidth={0.7}
-                  strokeLinecap="butt"
-                />
+                {isHovered ? (
+                  <ArrowDown
+                    className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000 transform rotate-360"
+                    strokeWidth={0.7}
+                    strokeLinecap="butt"
+                  />
+                ) : (
+                  <ArrowUpRight
+                    className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000"
+                    strokeWidth={0.7}
+                    strokeLinecap="butt"
+                  />
+                )}
               </a>
             </div>
           </div>
