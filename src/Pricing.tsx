@@ -1,15 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Contact from './components/Contact';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { useScrollToTop } from './hooks/useScrollToTop';
 import { useLanguage } from './context/LanguageContext';
 import { translations } from './translations/translations';
 import Footer from './components/Footer';
 
-const PricingTable = () => {
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.3
+    }
+  }
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
+};
+
+const Pricing = () => {
   const { language } = useLanguage();
   const t = translations[language].pricing;
+  const [isHovered, setIsHovered] = useState(false);
+
+  useScrollToTop();
 
   const handlePlanClick = (planName) => {
     const url = new URL(window.location.href);
@@ -58,131 +85,145 @@ const PricingTable = () => {
   ];
 
   return (
-    <div>
-      <section
-        id="pricing-hero"
-        className="hero-section min-h-screen h-screen w-full flex items-end pb-24 overflow-x-hidden"
-      >
-        <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
-          {/* Main Content */}
-          <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full pb-8">
-            {/* Centered Text Section */}
-            <div className="flex flex-col items-center text-center md:items-start md:text-left">
-              {/* Large White Headings */}
-              <h1 className="text-5xl sm:text-7xl md:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-snug -mt-4">
-                {t.title}
-              </h1>
-              <h1 className="text-5xl sm:text-7xl md:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-snug -mt-4">
-                {t.subtitle}
-              </h1>
-            </div>
-
-            {/* Desktop View: Black Subtext and Arrow in Two Columns */}
-            <div className="hidden md:flex flex-row items-center justify-end w-full mt-20 md:mt-16 -mb-20 -space-x-6 md:-space-x-6">
-              {/* Text Column */}
-              <div className="text-left flex flex-col leading-loose">
-                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
-                  {t.right1}
-                </span>
-                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
-                  {t.right2}
-                </span>
-                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
-                  {t.right3}
-                </span>
-                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
-                  {t.right4}
-                </span>
+    <>
+      <Header />
+      <main>
+        <section
+          id="pricing-hero"
+          className="hero-section min-h-screen h-screen w-full flex items-end pb-24 overflow-x-hidden"
+        >
+          <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
+            {/* Main Content */}
+            <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full pb-8">
+              {/* Centered Text Section */}
+              <div className="flex flex-col items-center text-center md:items-start md:text-left">
+                {/* Large White Headings */}
+                <h1 className="text-5xl sm:text-7xl md:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-snug -mt-4">
+                  {t.title}
+                </h1>
+                <h1 className="text-5xl sm:text-7xl md:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-snug -mt-4">
+                  {t.subtitle}
+                </h1>
               </div>
 
-              {/* Arrow Section - Positioned to the Right */}
-              <div className="flex items-end md:ml-8 mt-6 md:mt-0">
-                <a
-                  href="#pricing-boxes"
+              {/* Desktop View: Black Subtext and Arrow in Two Columns */}
+              <div className="hidden md:flex flex-row items-center justify-end w-full mt-20 md:mt-16 -mb-20 -space-x-6 md:-space-x-6">
+                {/* Text Column */}
+                <div className="text-left flex flex-col leading-loose">
+                  <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
+                    {t.right1}
+                  </span>
+                  <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
+                    {t.right2}
+                  </span>
+                  <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
+                    {t.right3}
+                  </span>
+                  <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
+                    {t.right4}
+                  </span>
+                </div>
+
+                {/* Arrow Section */}
+                <div
+                  className="flex items-end md:ml-8 mt-6 md:mt-0 cursor-pointer"
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  <a
+                    href="#pricing-boxes"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.getElementById('pricing-boxes')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="text-white hover:text-indigo-500 text-shadow-fuchsia transform transition-transform duration-1000 flex items-center"
+                  >
+                    {isHovered ? (
+                      <ArrowDown
+                        className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000 transform rotate-360"
+                        strokeWidth={0.7}
+                        strokeLinecap="butt"
+                      />
+                    ) : (
+                      <ArrowUpRight
+                        className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000"
+                        strokeWidth={0.7}
+                        strokeLinecap="butt"
+                      />
+                    )}
+                  </a>
+                </div>
+              </div>
+
+              {/* Mobile View: Centered Button */}
+              <div className="md:hidden flex flex-col items-center justify-center w-full mt-12 mb-36">
+                <button
                   onClick={(e) => {
                     e.preventDefault();
                     document.getElementById('pricing-boxes')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="text-white hover:text-indigo-500 text-shadow-fuchsia transform transition-transform duration-300 hover:scale-125 flex items-center cursor-pointer"
+                  className="py-3 px-6 bg-teal-300 text-gray-900 rounded-full hover:bg-teal-600 transition-colors duration-300 flex items-center space-x-2 font-jakarta font-medium text-lg"
                 >
-                  <ArrowUpRight
-                    className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0"
-                    strokeWidth={0.7}
-                    strokeLinecap="butt"
-                  />
-                </a>
+                  <span>Learn More</span>
+                  <ArrowUpRight className="w-5 h-5" />
+                </button>
               </div>
             </div>
-
-            {/* Mobile View: Centered Button */}
-            <div className="md:hidden flex flex-col items-center justify-center w-full mt-12 mb-36">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('pricing-boxes')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="py-3 px-6 bg-teal-300 text-gray-900 rounded-full hover:bg-teal-600 transition-colors duration-300 flex items-center space-x-2 font-jakarta font-medium text-lg"
-              >
-                <span>Learn More</span>
-                <ArrowUpRight className="w-5 h-5" />
-              </button>
-            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Pricing Cards Grid */}
-      <section
-        id="pricing-boxes"
-        className="py-16"
-        style={{ backgroundColor: '#140F2D' }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-          {plans.map((plan, index) => (
-            <div
-              key={index}
-              className="bg-gradient-to-br from-[#140F2D] to-white/5 backdrop-blur-sm rounded-lg p-8 flex flex-col hover:shadow-lg hover:shadow-teal-500/50 hover:bg-white/10 transition-colors"
-            >
-              <h3 className="text-2xl font-light text-white mb-4 font-jakarta">{plan.name}</h3>
-              <p className="text-3xl text-teal-300 mb-8 font-jakarta">{plan.price}</p>
-              <p className="text-white/80 mb-4 font-jakarta font-light">{plan.description}</p>
-              <ul className="flex-grow space-y-4 mb-8">
-                {plan.features.map((feature, featureIndex) => (
-                  <li
-                    key={featureIndex}
-                    className="flex items-start text-white font-light"
-                  >
-                    <span className="mr-2">•</span>
-                    <span className="font-jakarta">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => handlePlanClick(plan.name)}
-                className="w-full py-3 px-6 bg-teal-300 text-gray-900 rounded-full hover:shadow-lg hover:shadow-teal-500/50 transition-colors duration-300 flex items-center justify-center space-x-2 font-jakarta"
+        {/* Pricing Cards Grid */}
+        <motion.section 
+          id="pricing-boxes"
+          className="py-16"
+          style={{ backgroundColor: '#140F2D' }}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+            {plans.map((plan, index) => (
+              <motion.div
+                key={index}
+                variants={cardVariants}
+                className="bg-gradient-to-br from-[#140F2D] to-white/5 rounded-lg p-8 flex flex-col hover:shadow-lg hover:shadow-teal-500 hover:bg-white/10 transition-all duration-300"
+                whileHover={{ scale: 1.02 }}
               >
-                <span>{t.monthly}</span>
-                <ArrowUpRight className="w-5 h-5" />
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-};
-
-const Pricing = () => {
-  useScrollToTop();
-  return (
-    <div className="min-h-screen">
-      <Header />
-      <main>
-        <PricingTable />
+                <h3 className="text-2xl font-light text-white mb-4 font-jakarta">{plan.name}</h3>
+                <p className="text-3xl text-teal-300 mb-8 font-jakarta">{plan.price}</p>
+                <p className="text-white/80 mb-4 font-jakarta font-light">{plan.description}</p>
+                <ul className="flex-grow space-y-4 mb-8">
+                  {plan.features.map((feature, featureIndex) => (
+                    <motion.li
+                      key={featureIndex}
+                      className="flex items-start text-white font-light"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 + featureIndex * 0.1 }}
+                    >
+                      <span className="mr-2">•</span>
+                      <span className="font-jakarta">{feature}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handlePlanClick(plan.name)}
+                  className="w-full py-3 px-6 bg-teal-300 text-gray-900 rounded-full hover:shadow-lg hover:shadow-teal-500 transition-colors duration-300 flex items-center justify-center space-x-2 font-jakarta"
+                >
+                  <span>{t.monthly}</span>
+                  <ArrowUpRight className="w-5 h-5" />
+                </motion.button>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
       </main>
       <Contact />
       <Footer />
-    </div>
+    </>
   );
 };
 
