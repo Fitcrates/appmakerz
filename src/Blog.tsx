@@ -26,6 +26,8 @@ const Blog = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const location = useLocation();
+// State to manage hover
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -152,24 +154,36 @@ const Blog = () => {
                 </span>
               </div>
 
-              {/* Arrow Section - Positioned to the Right */}
-              <div className="flex items-end md:ml-8 mt-6 md:mt-0">
-                <a
-                  href="#blog-posts"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById('blog-posts')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="text-white hover:text-indigo-500 text-shadow-fuchsia transform transition-transform duration-300 hover:scale-125 flex items-center cursor-pointer"
-                >
-                  <ArrowUpRight
-                    className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0"
+              {/* Arrow Section */}
+            <div
+              className="flex items-end md:ml-8 mt-6 md:mt-0 cursor-pointer"
+              onMouseEnter={() => setIsHovered(true)} // Handle hover start
+              onMouseLeave={() => setIsHovered(false)} // Handle hover end
+            >
+              <a
+                href="#blog-posts"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('blog-posts')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-white hover:text-indigo-500 text-shadow-fuchsia transform transition-transform duration-1000 flex items-center"
+              >
+                {isHovered ? (
+                  <ArrowDown
+                    className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000 transform rotate-360"
                     strokeWidth={0.7}
                     strokeLinecap="butt"
                   />
-                </a>
-              </div>
+                ) : (
+                  <ArrowUpRight
+                    className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000"
+                    strokeWidth={0.7}
+                    strokeLinecap="butt"
+                  />
+                )}
+              </a>
             </div>
+          </div>
 
             {/* Mobile View: Centered Button */}
             <div className="md:hidden flex flex-col items-center justify-center w-full mt-12 mb-36">
