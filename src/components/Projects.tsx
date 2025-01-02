@@ -1,8 +1,44 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { ShieldX } from 'lucide-react';
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
+};
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.3
+    }
+  }
+};
+
+const titleVariants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut"
+    }
+  }
+};
 
 const Projects = () => {
   const { language } = useLanguage();
@@ -14,19 +50,33 @@ const Projects = () => {
     className="py-20 sm:py-40 bg-[#140F2D] overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 sm:-mt-36">
         {/* Heading */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-16 gap-4">
+        <motion.div 
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-16 gap-4"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={titleVariants}
+        >
           <span className="text-5xl sm:text-7xl text-white font-normal font-jakarta">
             {t.title}
           </span>
           <span className="text-xl sm:text-3xl text-teal-300 font-biglight font-jakarta text-right sm:text-right sm:-mb-10">
             {t.categories.all}
           </span>
-        </div>
+        </motion.div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-6 justify-items-center">
+        <motion.div 
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-6 justify-items-center"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
           {/* Custom Website Card */}
-          <div
+          <motion.div
+            key={0}
+            variants={cardVariants}
             className="h-[30rem] w-full max-w-2xl lg:max-w-md rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 
             ring-1 ring-white ring-opacity-80 flex flex-col relative mb-8 lg:mb-0"
           >
@@ -65,10 +115,12 @@ const Projects = () => {
                 </a>
               </div>
             </div>
-          </div>
+          </motion.div>
 
          {/* Custom App Card */}
-          <div
+          <motion.div
+            key={1}
+            variants={cardVariants}
             className="h-[30rem] w-full max-w-2xl lg:max-w-md rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 
             ring-1 ring-white ring-opacity-80 flex flex-col relative mb-8 lg:mb-0"
           >
@@ -111,10 +163,12 @@ const Projects = () => {
                 </a>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Design Card */}
-          <div
+          <motion.div
+            key={2}
+            variants={cardVariants}
             className="h-[30rem] w-full max-w-2xl lg:max-w-md rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 
             ring-1 ring-white ring-opacity-80 flex flex-col relative"
           >
@@ -152,8 +206,8 @@ const Projects = () => {
                 </a>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
