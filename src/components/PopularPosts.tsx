@@ -84,9 +84,21 @@ const PopularPosts: React.FC = () => {
               <h4 className="font-medium text-white group-hover:text-teal-300 transition-colors duration-200 line-clamp-2">
                 {post.title?.[language] || post.title?.en}
               </h4>
-              <p className="text-sm text-white">
+              <p className="text-sm text-white/60">
                 {post.viewCount || 0} {t.views} • {new Date(post.publishedAt).toLocaleDateString()}
               </p>
+              {post.categories && post.categories.length > 0 && (
+                <div className="flex gap-2 mt-2">
+                  {post.categories.map((category, index) => (
+                    <span 
+                      key={index}
+                      className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/60"
+                    >
+                      {category}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </Link>
         ))}
