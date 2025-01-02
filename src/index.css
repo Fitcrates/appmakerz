@@ -130,3 +130,38 @@ textarea:-webkit-autofill:focus {
   background-color: transparent !important;
   -webkit-text-fill-color: inherit !important;
 }
+
+.hover-bounce {
+  display: inline-block; /* Ensure the word acts like a block for animation */
+  transition: transform 0.3s ease; /* Smooth transition */
+}
+
+.hover-bounce:hover {
+  animation: bounce 0.5s infinite; /* Apply the bounce animation */
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px); /* Move upwards */
+  }
+}
+
+.animated-word {
+  display: inline-block; /* Necessary for animations */
+  animation: bounceRotate 8s infinite; /* Infinite animation every 5 seconds */
+}
+
+@keyframes bounceRotate {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg); /* Default position */
+  }
+  50% {
+    transform: translateY(0) rotate(30deg); 
+  }
+  75% {
+    transform: translateY(0) rotate(-30deg); 
+  }
+}
