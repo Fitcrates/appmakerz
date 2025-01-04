@@ -21,13 +21,13 @@ const Hero = () => {
           {/* Centered Text Section */}
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             {/* Large White Headings */}
-            <h1 className="text-5xl sm:text-7xl md:text-9xl font-thin text-white tracking-tight font-jakarta font-normal leading-snug">
+            <h1 className="text-5xl sm:text-7xl md:text-9xl text-white tracking-tight font-jakarta font-normal leading-snug">
               {t.title.line1}
             </h1>
-            <h1 className="text-5xl sm:text-7xl md:text-9xl font-thin text-white tracking-tight font-jakarta font-normal -mt-4 leading-snug">
+            <h1 className="text-5xl sm:text-7xl md:text-9xl text-white tracking-tight font-jakarta font-normal -mt-4 leading-snug">
               {t.title.line2}
             </h1>
-            <h1 className="text-5xl sm:text-7xl md:text-9xl font-thin text-white tracking-tight font-jakarta font-normal -mt-4 leading-snug">
+            <h1 className="text-5xl sm:text-7xl md:text-9xl text-white tracking-tight font-jakarta font-normal -mt-4 leading-snug">
               {t.title.line3}
             </h1>
           </div>
