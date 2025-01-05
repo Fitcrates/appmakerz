@@ -33,7 +33,7 @@ const Hero = () => {
           </div>
 
           {/* Desktop View: Black Subtext and Arrow in Two Columns */}
-          <div className="hidden md:flex flex-row items-center justify-end w-full mt-20 md:mt-16 -mb-20 -space-x-6 md:-space-x-6">
+          <div className="hidden md:flex flex-row items-center justify-end w-full mt-20 md:mt-16 -mb-20 -space-x-6 md:-space-x-12">
             {/* Text Column */}
             <div className="text-left flex flex-col leading-loose">
               <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
