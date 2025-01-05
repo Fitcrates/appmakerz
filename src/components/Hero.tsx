@@ -17,7 +17,7 @@ const Hero = () => {
     >
       <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
         {/* Main Content */}
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full pb-8">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full">
           {/* Centered Text Section */}
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             {/* Large White Headings */}
