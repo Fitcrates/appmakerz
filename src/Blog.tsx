@@ -124,32 +124,32 @@ const Blog = () => {
       >
         <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
           {/* Main Content */}
-          <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full pb-8">
+          <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full">
             {/* Centered Text Section */}
             <div className="flex flex-col items-center text-center md:items-start md:text-left">
               {/* Large White Headings */}
-              <h1 className="text-5xl sm:text-7xl md:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-snug -mt-4">
+              <h1 className="text-5xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta font-normal leading-snug -mt-4">
                 {t.header1}
               </h1>
-              <h1 className="text-5xl sm:text-7xl md:text-9xl font-light text-white tracking-tight font-jakarta font-normal leading-snug -mt-4">
+              <h1 className="text-5xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta font-normal leading-snug -mt-4">
                 {t.header2}
               </h1>
             </div>
 
             {/* Desktop View: Black Subtext and Arrow in Two Columns */}
-            <div className="hidden md:flex flex-row items-center justify-end w-full mt-20 md:mt-16 -mb-20 -space-x-6 md:-space-x-6">
+            <div className="hidden md:flex flex-row items-center justify-end w-full mt-20 md:mt-16 -mb-20 -space-x-6 md:-space-x-12">
               {/* Text Column */}
               <div className="text-left flex flex-col leading-loose">
-                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
+                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-normal font-jakarta font-extralight -mt-1">
                   {t.header3}
                 </span>
-                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
+                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-normal font-jakarta font-extralight -mt-1">
                   {t.header4}
                 </span>
-                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
+                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-normal font-jakarta font-extralight -mt-1">
                   {t.header5}
                 </span>
-                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-wide font-jakarta font-extralight -mt-1">
+                <span className="text-lg sm:text-xl md:text-3xl text-black tracking-normal font-jakarta font-extralight -mt-1">
                   {t.header6}
                 </span>
               </div>
