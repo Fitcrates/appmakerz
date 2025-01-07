@@ -120,7 +120,7 @@ const Blog = () => {
         {/* Hero Section */}
         <section
         id="blog-hero"
-        className="hero-section  min-h-screen h-screen w-full flex items-end pb-24 overflow-x-hidden"
+        className="hero-section  min-h-screen h-screen w-full flex items-end pb-12 overflow-x-hidden"
       >
         <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
           {/* Main Content */}
