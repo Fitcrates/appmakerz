@@ -1,126 +1,37 @@
-import React, { memo, useState } from 'react';
-import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import React, { memo } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 
-// Memoize the entire Hero component
 const Hero = memo(() => {
   const { language } = useLanguage();
   const t = translations[language].hero;
 
-  // Pre-calculate styles to avoid runtime calculations
-  const containerStyle = {
-    minHeight: typeof window !== 'undefined' ? 
-      window.innerWidth < 640 ? 'calc(3.6em)' :
-      window.innerWidth < 768 ? 'calc(3.8em)' :
-      'calc(4.2em)' : 'calc(4.2em)',
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    justifyContent: 'flex-start',
-    overflow: 'hidden'
-  };
-
-  const headingStyle = {
-    lineHeight: '1.1',
-    opacity: '0',
-    animation: 'fadeIn 0.3s ease-in forwards',
-    maxWidth: '100%',
-    wordWrap: 'break-word' as const
-  };
-
-  // State to manage hover
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
-    <section
-      id="home"
-      className="hero-section w-full flex items-end pb-24 overflow-x-hidden"
-      style={{ height: '100vh' }}
-    >
-      <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
-        {/* Main Content */}
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full">
-          {/* Centered Text Section */}
-          <div className="flex flex-col items-center text-center md:items-start md:text-left w-full">
-            {/* Container with fixed dimensions - mobile optimized */}
-            <div className="heading-container" style={containerStyle}>
-              {[t.title.line1, t.title.line2, t.title.line3].map((line, index) => (
-                <h1
-                  key={index}
-                  className="text-4xl sm:text-6xl md:text-8xl text-white tracking-tight font-jakarta font-normal"
-                  style={{
-                    ...headingStyle,
-                    animationDelay: `${(index + 1) * 0.1}s`
-                  }}
-                >
-                  {line}
-                </h1>
-              ))}
-            </div>
-          </div>
-
-          {/* Desktop View: Black Subtext and Arrow in Two Columns */}
-          <div className="hidden md:flex flex-row items-center justify-end w-full mt-20 md:mt-16 -mb-20 -space-x-6 md:-space-x-12">
-            {/* Text Column */}
-            <div className="text-left flex flex-col leading-loose">
-              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-normal font-jakarta font-extralight -mt-1">
-                {t.subtitle.line1}
-              </span>
-              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-normal font-jakarta font-extralight -mt-1">
-                {t.subtitle.line2}
-              </span>
-              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-normal font-jakarta font-extralight -mt-1">
-                {t.subtitle.line3}
-              </span>
-              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-normal font-jakarta font-extralight -mt-1">
-                {t.subtitle.line4}
-              </span>
-            </div>
-
-            {/* Arrow Section */}
-            <div
-              className="flex items-end md:ml-8 mt-6 md:mt-0 cursor-pointer"
-              onMouseEnter={() => setIsHovered(true)} // Handle hover start
-              onMouseLeave={() => setIsHovered(false)} // Handle hover end
-            >
-              <a
-                href="#about"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+    <section className="hero-section w-full flex items-end overflow-x-hidden">
+      <div className="hero-content max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full relative">
+          {/* Text Container */}
+          <div className="hero-text flex flex-col items-center md:items-start w-full">
+            {[t.title.line1, t.title.line2, t.title.line3].map((line, index) => (
+              <h1
+                key={index}
+                className="hero-heading text-4xl sm:text-6xl md:text-8xl mb-2 md:mb-0"
+                style={{
+                  animationDelay: `${(index + 1) * 0.1}s`
                 }}
-                className="text-white hover:text-indigo-500 transform transition-transform duration-1000 flex items-center"
               >
-                {isHovered ? (
-                  <ArrowDown
-                    className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000 transform rotate-360"
-                    strokeWidth={0.7}
-                    strokeLinecap="butt"
-                  />
-                ) : (
-                  <ArrowUpRight
-                    className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000"
-                    strokeWidth={0.7}
-                    strokeLinecap="butt"
-                  />
-                )}
-              </a>
-            </div>
+                {line}
+              </h1>
+            ))}
           </div>
 
-          {/* Mobile View: Centered Button */}
-          <div className="md:hidden flex flex-col items-center justify-center w-full mt-12 mb-36">
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="py-3 px-6 bg-teal-300 text-gray-900 rounded-full hover:bg-teal-600 transition-colors duration-300 flex items-center space-x-2 font-jakarta font-medium text-lg"
-            >
-              <span>Learn More</span>
-              <ArrowUpRight className="w-5 h-5" />
-            </button>
+          {/* Desktop View: Black Subtext and Arrow - Positioned absolutely on mobile */}
+          <div className="fixed md:relative bottom-8 left-0 right-0 md:bottom-auto md:left-auto md:right-auto w-full md:w-auto flex justify-center md:justify-end">
+            <div className="text-center md:text-left px-4 md:px-0">
+              <span className="text-lg sm:text-xl md:text-3xl text-black tracking-normal font-extralight block">
+                {t.subtitle}
+              </span>
+            </div>
           </div>
         </div>
       </div>
