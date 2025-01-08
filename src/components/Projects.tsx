@@ -84,11 +84,17 @@ const Projects = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="h-3/5 p-6 flex flex-col">
-              <h3 className="text-2xl font-light text-white mt-2 font-jakarta">
+            <div className="h-3/5 p-6 flex flex-col relative">
+              {/* Background Image */}
+              <img
+                src="/media/tlokarta1.webp"
+                alt="Custom Website"
+                className="absolute top-0 left-0 w-full h-full object-cover opacity-50"
+              />
+              <h3 className="text-2xl font-light text-white mt-2 font-jakarta z-10">
                 {t.categories.web.title}
               </h3>
-              <p className="text-white mt-4 font-extralight leading-relaxed text-sm">
+              <p className="text-white mt-4 font-extralight leading-relaxed text-sm z-10">
                 {t.categories.web.description.line1}{' '}
                 {t.categories.web.description.line2}{' '}
                 {t.categories.web.description.line3}{' '}
@@ -96,7 +102,7 @@ const Projects = () => {
               </p>
               <a
                 href="#"
-                className="text-white hover:text-teal-300 mt-auto inline-flex items-center space-x-1"
+                className="text-white hover:text-teal-300 mt-auto inline-flex items-center space-x-1 z-10"
               >
                 <span>{t.viewProject}</span>
                 <ArrowUpRight className="w-5 h-5" />
@@ -118,23 +124,29 @@ const Projects = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="h-3/5 p-6 flex flex-col">
-              <h3 className="text-2xl font-light text-white mt-2 font-jakarta">
+            <div className="h-3/5 p-6 flex flex-col relative">
+              {/* Background Image */}
+              <img
+                src="/media/tlokarta2.webp"
+                alt="Mobile App"
+                className="absolute top-0 left-0 w-full h-full object-cover opacity-50"
+              />
+              <h3 className="text-2xl font-light text-white mt-2 font-jakarta z-10">
                 {t.categories.mobile.title}
               </h3>
-              <p className="text-white mt-4 font-extralight leading-snug text-sm">
+              <p className="text-white mt-4 font-extralight leading-snug text-sm z-10">
                 {t.categories.mobile.description.line1}{' '}
                 {t.categories.mobile.description.line2}{' '}
                 {t.categories.mobile.description.line3}
               </p>
-              <span className="text-white mt-1 font-extralight leading-snug tracking-wide text-sm">
+              <span className="text-white mt-1 font-extralight leading-snug tracking-wide text-sm z-10">
                 {t.categories.mobile.description.line4}
               </span>
               <a
                 href="https://www.appsheet.com/start/9a9a55ba-971a-44dd-bb24-67241f296c46"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white hover:text-teal-300 mt-auto inline-flex items-center space-x-1"
+                className="text-white hover:text-teal-300 mt-auto inline-flex items-center space-x-1 z-10"
               >
                 <span>{t.viewProject}</span>
                 <ArrowUpRight className="w-5 h-5" />
@@ -156,18 +168,24 @@ const Projects = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="h-3/5 p-6 flex flex-col">
-              <h3 className="text-2xl font-light text-white mt-2 font-jakarta">
+            <div className="h-3/5 p-6 flex flex-col relative">
+              {/* Background Image */}
+              <img
+                src="/media/tlokarta3.webp"
+                alt="Private app"
+                className="absolute top-0 left-0 w-full h-full object-cover opacity-50"
+              />
+              <h3 className="text-2xl font-light text-white mt-2 font-jakarta z-10">
                 {t.categories.design.title}
               </h3>
-              <p className="text-white mt-4 font-extralight leading-snug text-sm">
+              <p className="text-white mt-4 font-extralight leading-snug text-sm z-10">
                 {t.categories.design.description.line1}{' '}
                 {t.categories.design.description.line2}{' '}
                 {t.categories.design.description.line3}
               </p>
               <a
                 href="#"
-                className="text-white hover:text-teal-300 mt-auto inline-flex items-center space-x-1"
+                className="text-white hover:text-teal-300 mt-auto inline-flex items-center space-x-1 z-10"
               >
                 <span>Private</span>
                 <ShieldX className="w-6 h-6" />
