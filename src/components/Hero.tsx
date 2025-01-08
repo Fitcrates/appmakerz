@@ -13,21 +13,22 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="hero-section min-h-screen h-screen w-full flex items-end pb-12 overflow-x-hidden"
+      className="hero-section w-full flex items-end pb-24 overflow-x-hidden"
+      style={{ height: '100vh' }}
     >
       <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
         {/* Main Content */}
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full">
           {/* Centered Text Section */}
-          <div className="flex flex-col items-center text-center md:items-start md:text-left">
+          <div className="flex flex-col items-center text-center md:items-start md:text-left" style={{ minHeight: '200px' }}>
             {/* Large White Headings */}
-            <h1 className="text-5xl sm:text-7xl md:text-8xl text-white tracking-tight font-jakarta font-normal leading-snug">
+            <h1 className="text-5xl sm:text-7xl md:text-8xl text-white tracking-tight font-jakarta font-normal leading-snug" style={{ height: 'auto', minHeight: '1.2em' }}>
               {t.title.line1}
             </h1>
-            <h1 className="text-5xl sm:text-7xl md:text-8xl text-white tracking-tight font-jakarta font-normal -mt-4 leading-snug">
+            <h1 className="text-5xl sm:text-7xl md:text-8xl text-white tracking-tight font-jakarta font-normal leading-snug -mt-4" style={{ height: 'auto', minHeight: '1.2em' }}>
               {t.title.line2}
             </h1>
-            <h1 className="text-5xl sm:text-7xl md:text-8xl text-white tracking-tight font-jakarta font-normal -mt-4 leading-snug">
+            <h1 className="text-5xl sm:text-7xl md:text-8xl text-white tracking-tight font-jakarta font-normal leading-snug -mt-4" style={{ height: 'auto', minHeight: '1.2em' }}>
               {t.title.line3}
             </h1>
           </div>
