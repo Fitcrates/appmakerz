@@ -22,7 +22,7 @@ const Hero = () => {
   return (
     <section className="hero-section min-h-screen h-screen w-full flex items-center sm:items-end pb-12 sm:pb-24 overflow-x-hidden">
       <div className="max-w-7xl mx-auto w-full flex flex-col justify-center sm:justify-end px-4 sm:px-6 lg:px-8 h-full">
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full pb-8">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full">
           {/* Text Container */}
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             {[t.title.line1, t.title.line2, t.title.line3].map((line, index) => (
