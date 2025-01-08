@@ -20,17 +20,60 @@ const Hero = () => {
         {/* Main Content */}
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full">
           {/* Centered Text Section */}
-          <div className="flex flex-col items-center text-center md:items-start md:text-left" style={{ minHeight: '200px' }}>
-            {/* Large White Headings */}
-            <h1 className="text-5xl sm:text-7xl md:text-8xl text-white tracking-tight font-jakarta font-normal leading-snug" style={{ height: 'auto', minHeight: '1.2em' }}>
-              {t.title.line1}
-            </h1>
-            <h1 className="text-5xl sm:text-7xl md:text-8xl text-white tracking-tight font-jakarta font-normal leading-snug -mt-4" style={{ height: 'auto', minHeight: '1.2em' }}>
-              {t.title.line2}
-            </h1>
-            <h1 className="text-5xl sm:text-7xl md:text-8xl text-white tracking-tight font-jakarta font-normal leading-snug -mt-4" style={{ height: 'auto', minHeight: '1.2em' }}>
-              {t.title.line3}
-            </h1>
+          <div className="flex flex-col items-center text-center md:items-start md:text-left w-full">
+            {/* Container with fixed dimensions - mobile optimized */}
+            <div className="heading-container" style={{ 
+              minHeight: {
+                xs: 'calc(3.6em)',  /* Mobile height */
+                sm: 'calc(3.8em)',  /* Tablet height */
+                md: 'calc(4.2em)'   /* Desktop height */
+              }[window.innerWidth < 640 ? 'xs' : window.innerWidth < 768 ? 'sm' : 'md'],
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              overflow: 'hidden'    /* Prevent any potential overflow */
+            }}>
+              <h1 
+                className="text-4xl sm:text-6xl md:text-8xl text-white tracking-tight font-jakarta font-normal"
+                style={{
+                  lineHeight: '1.1',  /* Tighter line height for mobile */
+                  opacity: '0',
+                  animation: 'fadeIn 0.3s ease-in forwards',
+                  animationDelay: '0.1s',
+                  maxWidth: '100%',   /* Ensure text doesn't overflow */
+                  wordWrap: 'break-word'
+                }}
+              >
+                {t.title.line1}
+              </h1>
+              <h1 
+                className="text-4xl sm:text-6xl md:text-8xl text-white tracking-tight font-jakarta font-normal"
+                style={{
+                  lineHeight: '1.1',
+                  opacity: '0',
+                  animation: 'fadeIn 0.3s ease-in forwards',
+                  animationDelay: '0.2s',
+                  maxWidth: '100%',
+                  wordWrap: 'break-word'
+                }}
+              >
+                {t.title.line2}
+              </h1>
+              <h1 
+                className="text-4xl sm:text-6xl md:text-8xl text-white tracking-tight font-jakarta font-normal"
+                style={{
+                  lineHeight: '1.1',
+                  opacity: '0',
+                  animation: 'fadeIn 0.3s ease-in forwards',
+                  animationDelay: '0.3s',
+                  maxWidth: '100%',
+                  wordWrap: 'break-word'
+                }}
+              >
+                {t.title.line3}
+              </h1>
+            </div>
           </div>
 
           {/* Desktop View: Black Subtext and Arrow in Two Columns */}
