@@ -94,7 +94,7 @@ const Projects = () => {
               <h3 className="text-2xl font-light text-white mt-2 font-jakarta z-10">
                 {t.categories.web.title}
               </h3>
-              <p className="text-white mt-4 font-jakarta font-extralight leading-relaxed text-sm z-10">
+              <p className="text-white mt-4 font-jakarta font-light leading-relaxed text-sm z-10">
                 {t.categories.web.description.line1}{' '}
                 {t.categories.web.description.line2}{' '}
                 {t.categories.web.description.line3}{' '}
@@ -134,12 +134,12 @@ const Projects = () => {
               <h3 className="text-2xl font-light text-white mt-2 font-jakarta z-10">
                 {t.categories.mobile.title}
               </h3>
-              <p className="text-white mt-4 font-jakarta font-extralight leading-snug text-sm z-10">
+              <p className="text-white mt-4 font-jakarta font-light leading-snug text-sm z-10">
                 {t.categories.mobile.description.line1}{' '}
                 {t.categories.mobile.description.line2}{' '}
                 {t.categories.mobile.description.line3}
               </p>
-              <span className="text-white mt-1 font-extralight leading-snug tracking-wide text-sm z-10">
+              <span className="text-white mt-1 font-jakarta font-light leading-snug tracking-wide text-sm z-10">
                 {t.categories.mobile.description.line4}
               </span>
               <a
@@ -178,7 +178,7 @@ const Projects = () => {
               <h3 className="text-2xl font-light text-white mt-2 font-jakarta z-10">
                 {t.categories.design.title}
               </h3>
-              <p className="text-white mt-4 font-jakarta font-extralight leading-snug text-sm z-10">
+              <p className="text-white mt-4 font-jakarta font-light leading-snug text-sm z-10">
                 {t.categories.design.description.line1}{' '}
                 {t.categories.design.description.line2}{' '}
                 {t.categories.design.description.line3}
