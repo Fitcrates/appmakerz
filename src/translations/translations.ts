@@ -12,11 +12,12 @@ export const translations = {
         line2: "experiences",
         line3: "with passion",
         line4: "and precision."
-      }
+      },
+      learnMore: "Learn More"
     },
     // Footer section
     footer: {
-      copyright: "© {year} Arkadiusz Wawrzyniak. All Rights Reserved.",
+      copyright: " {year} Arkadiusz Wawrzyniak. All Rights Reserved.",
       blog: "Blog",
       pricing: "Pricing",
       cookies: "Cookies",
@@ -239,11 +240,12 @@ export const translations = {
         line2: "doświadczenia",
         line3: "z pasją",
         line4: "i precyzją."
-      }
+      },
+      learnMore: "Dowiedz się więcej"
     },
     // Footer
     footer: {
-      copyright: "© {year} Arkadiusz Wawrzyniak. Wszelkie prawa zastrzeżone.",
+      copyright: " {year} Arkadiusz Wawrzyniak. Wszelkie prawa zastrzeżone.",
       blog: "Blog",
       pricing: "Cennik",
       cookies: "Pliki cookie",
