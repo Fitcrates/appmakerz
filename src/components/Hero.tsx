@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
@@ -7,6 +7,17 @@ const Hero = () => {
   const { language } = useLanguage();
   const t = translations[language].hero;
   const [isHovered, setIsHovered] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <section className="hero-section min-h-screen h-screen w-full flex items-end pb-24 overflow-x-hidden">
@@ -17,9 +28,9 @@ const Hero = () => {
             {[t.title.line1, t.title.line2, t.title.line3].map((line, index) => (
               <h1
                 key={index}
-                className="text-5xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta font-normal leading-snug -mt-4"
+                className="text-4xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta leading-snug -mt-4 md:animate-fadeIn"
                 style={{
-                  animationDelay: `${(index + 1) * 0.1}s`
+                  animationDelay: windowWidth > 768 ? `${(index + 1) * 0.1}s` : '0s'
                 }}
               >
                 {line}
