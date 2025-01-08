@@ -89,7 +89,7 @@ const Projects = () => {
               <img
                 src="/media/tlokarta1.webp"
                 alt="Custom Website"
-                className="absolute top-0 left-0 w-full h-full object-cover opacity-50"
+                className="absolute top-0 left-0 w-full h-full object-cover"
               />
               <h3 className="text-2xl font-light text-white mt-2 font-jakarta z-10">
                 {t.categories.web.title}
@@ -129,7 +129,7 @@ const Projects = () => {
               <img
                 src="/media/tlokarta2.webp"
                 alt="Mobile App"
-                className="absolute top-0 left-0 w-full h-full object-cover opacity-50"
+                className="absolute top-0 left-0 w-full h-full object-cover"
               />
               <h3 className="text-2xl font-light text-white mt-2 font-jakarta z-10">
                 {t.categories.mobile.title}
@@ -173,7 +173,7 @@ const Projects = () => {
               <img
                 src="/media/tlokarta3.webp"
                 alt="Private app"
-                className="absolute top-0 left-0 w-full h-full object-cover opacity-50"
+                className="absolute top-0 left-0 w-full h-full object-cover"
               />
               <h3 className="text-2xl font-light text-white mt-2 font-jakarta z-10">
                 {t.categories.design.title}
