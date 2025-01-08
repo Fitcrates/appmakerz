@@ -60,6 +60,43 @@ html, body {
   z-index: 1;
 }
 
+/* Mobile-first media queries */
+@media screen and (max-width: 767px) {
+  .hero-section {
+    background-attachment: scroll; /* Use scroll instead of fixed on mobile */
+    will-change: auto; /* Remove will-change hint on mobile */
+  }
+  
+  .hero-heading {
+    font-size: 2rem;
+    line-height: 1.2;
+    /* Reduce text-shadow complexity on mobile */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Desktop styles */
+@media screen and (min-width: 768px) {
+  .hero-section {
+    background-attachment: fixed;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in forwards;
+  }
+}
+
 /* Mobile Optimizations */
 @media screen and (max-width: 767px) {
   section.hero-section {
