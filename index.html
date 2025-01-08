@@ -1,39 +1,30 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="AppCrates - Innovative web solutions for your business." />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Google tag (gtag.js) -->
+
+   <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="AppCrates - Innovative web solutions for your business." />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<!-- Preload critical fonts -->
+<link
+  rel="preload"
+  href="/fonts/PlusJakartaSans-Regular.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+    <link rel="stylesheet" href="/path/to/your/styles.css" />
+          <!-- Favicon -->
+          <link rel="icon" type="image/x-icon" href="/media/favicon.ico" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/media/favicon-32x32.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/media/favicon-16x16.png" />
     
-    <!-- Preload critical fonts -->
-    <link
-      rel="preload"
-      href="/fonts/PlusJakartaSans-Regular.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    
-    <!-- Critical CSS -->
-    <link rel="stylesheet" href="/src/critical.css" />
-    
-    <!-- Non-critical CSS -->
-    <link 
-      rel="stylesheet" 
-      href="/src/index.css"
-      media="print" 
-      onload="this.media='all'"
-    />
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/media/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/media/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/media/favicon-16x16.png" />
-    
-    <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/media/apple-touch-icon.png" />
-    
+          <!-- Apple Touch Icon -->
+          <link rel="apple-touch-icon" sizes="180x180" href="/media/apple-touch-icon.png" />
+          
           <!-- Web Manifest -->
           <link rel="manifest" href="/media/site.webmanifest" />
           
@@ -41,13 +32,13 @@
           <meta name="theme-color" content="#140F2D" />
     
     <title>AppCrates</title>
+    
   </head>
   <body>
     <div id="root"></div>
     <noscript>
       This application requires JavaScript to run. Please enable JavaScript in your browser settings.
     </noscript>
-    <script type="module" src="/src/main.tsx"></script>
      <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
