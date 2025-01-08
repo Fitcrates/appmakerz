@@ -43,6 +43,13 @@ html, body {
   background-repeat: no-repeat;
 }
 
+/* iOS Safari specific styles */
+@supports (-webkit-touch-callout: none) {
+  .hero-section {
+    background-attachment: scroll;
+  }
+}
+
 .hero-section::before {
   content: '';
   position: absolute;
@@ -62,11 +69,6 @@ html, body {
 
 /* Mobile-first media queries */
 @media screen and (max-width: 767px) {
-  .hero-section {
-    background-attachment: scroll; /* Use scroll instead of fixed on mobile */
-    will-change: auto; /* Remove will-change hint on mobile */
-  }
-  
   .hero-heading {
     font-size: 2rem;
     line-height: 1.2;
@@ -77,10 +79,6 @@ html, body {
 
 /* Desktop styles */
 @media screen and (min-width: 768px) {
-  .hero-section {
-    background-attachment: fixed;
-  }
-  
   @keyframes fadeIn {
     from {
       opacity: 0;
