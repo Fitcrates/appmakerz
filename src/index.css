@@ -1,15 +1,21 @@
 /* Critical CSS - Load this first */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') layer(critical);
 
-/* Base Tailwind - Essential */
+/* Font optimization */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Plus Jakarta Sans'),
+       url('/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Base styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Critical Styles */
-:root {
-  --font-jakarta: 'Plus Jakarta Sans', Arial, sans-serif;
-}
 
 /* Essential Reset */
 html, body {
@@ -18,9 +24,9 @@ html, body {
   min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
-  font-family: var(--font-jakarta);
-  text-rendering: optimizeLegibility;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Optimized Hero Section */
@@ -29,6 +35,8 @@ html, body {
   overflow: hidden;
   contain: layout style paint;
   will-change: transform;
+  min-height: 100vh;
+  width: 100%;
 }
 
 .hero-section::before {
@@ -38,7 +46,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('../public/media/tinypng-cropedbackground-min.png');
+  background-image: url('../public/media/tinypng-cropedbackground-min.webp');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -69,6 +77,49 @@ html, body {
   }
 }
 
+/* Hero Content */
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 6rem; /* Space for button */
+}
+
+/* Text alignment */
+.hero-text {
+  text-align: center;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .hero-text {
+    text-align: left;
+  }
+}
+
+/* Heading styles */
+.hero-heading {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color: white;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in forwards;
+}
+
+/* Mobile optimization */
+@media screen and (max-width: 767px) {
+  .hero-section {
+    padding-bottom: 120px; /* Extra space for button */
+  }
+  
+  .hero-heading {
+    font-size: 2.5rem;
+    line-height: 1.1;
+  }
+}
+
 /* Optimized Animation */
 @keyframes fadeIn {
   from {
@@ -82,16 +133,6 @@ html, body {
 }
 
 /* Non-critical styles can be loaded later */
-
-/* Font Preload */
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Plus Jakarta Sans'),
-       url('/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
-}
 
 /* Global Reset */
 *, *::before, *::after {
