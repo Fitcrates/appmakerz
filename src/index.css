@@ -19,15 +19,27 @@ html, body {
   box-sizing: inherit;
 }
 
+/* Font Preload */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Plus Jakarta Sans'),
+       url('/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
+}
+
 /* Hero Section */
 .hero-section {
   position: relative;
   overflow: hidden;
+  min-height: 100vh; /* Explicitly set height */
+  width: 100%;
 }
 
 .hero-section::before {
   content: '';
-  position: fixed;
+  position: absolute; /* Changed from fixed to absolute */
   top: 0;
   left: 0;
   width: 100%;
@@ -37,6 +49,7 @@ html, body {
   background-size: cover;
   background-repeat: no-repeat;
   z-index: -1;
+  will-change: transform; /* Optimize for GPU acceleration */
 }
 
 .hero-section > div {
@@ -56,16 +69,6 @@ h1 {
   color: #ffffff;
   line-height: 1.2; /* Improve readability */
   text-align: center; /* Align text */
-}
-
-/* Font Loading Optimization */
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap; /* Ensure text appears quickly */
-  src: url('/path/to/fonts/PlusJakartaSans-Regular.woff2') format('woff2'),
-       url('/path/to/fonts/PlusJakartaSans-Regular.woff') format('woff');
 }
 
 /* Text Shadows */
