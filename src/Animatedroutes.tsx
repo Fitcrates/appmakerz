@@ -1,24 +1,74 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import App from './App';
-import Blog from './Blog';
-import Pricing from './Pricing';
-import StudioPage from './StudioPage';
-import BlogPostPage from './components/BlogPostPage';
-import PrivacyPolicy from './components/PrivacyPolicy';
 
+// Lazy load components
+const App = lazy(() => import('./App'));
+const Blog = lazy(() => import('./Blog'));
+const Pricing = lazy(() => import('./Pricing'));
+const StudioPage = lazy(() => import('./StudioPage'));
+const BlogPostPage = lazy(() => import('./components/BlogPostPage'));
+const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-pulse">Loading...</div>
+  </div>
+);
 
 const AnimatedRoutes = () => {
   const location = useLocation();
 
   return (
     <Routes location={location} key={location.pathname}>
-      <Route path="/" element={<App />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/:slug" element={<BlogPostPage />} />
-      <Route path="/pricing" element={<Pricing />} />
-      <Route path="/studio" element={<StudioPage />} />
-      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route
+        path="/"
+        element={
+          <Suspense fallback={<LoadingFallback />}>
+            <App />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/blog"
+        element={
+          <Suspense fallback={<LoadingFallback />}>
+            <Blog />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/blog/:slug"
+        element={
+          <Suspense fallback={<LoadingFallback />}>
+            <BlogPostPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/pricing"
+        element={
+          <Suspense fallback={<LoadingFallback />}>
+            <Pricing />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/studio"
+        element={
+          <Suspense fallback={<LoadingFallback />}>
+            <StudioPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/privacy-policy"
+        element={
+          <Suspense fallback={<LoadingFallback />}>
+            <PrivacyPolicy />
+          </Suspense>
+        }
+      />
     </Routes>
   );
 };
