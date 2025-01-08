@@ -1,11 +1,33 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 
-const Hero = () => {
+// Memoize the entire Hero component
+const Hero = memo(() => {
   const { language } = useLanguage();
   const t = translations[language].hero;
+
+  // Pre-calculate styles to avoid runtime calculations
+  const containerStyle = {
+    minHeight: typeof window !== 'undefined' ? 
+      window.innerWidth < 640 ? 'calc(3.6em)' :
+      window.innerWidth < 768 ? 'calc(3.8em)' :
+      'calc(4.2em)' : 'calc(4.2em)',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    justifyContent: 'flex-start',
+    overflow: 'hidden'
+  };
+
+  const headingStyle = {
+    lineHeight: '1.1',
+    opacity: '0',
+    animation: 'fadeIn 0.3s ease-in forwards',
+    maxWidth: '100%',
+    wordWrap: 'break-word' as const
+  };
 
   // State to manage hover
   const [isHovered, setIsHovered] = useState(false);
@@ -22,57 +44,19 @@ const Hero = () => {
           {/* Centered Text Section */}
           <div className="flex flex-col items-center text-center md:items-start md:text-left w-full">
             {/* Container with fixed dimensions - mobile optimized */}
-            <div className="heading-container" style={{ 
-              minHeight: {
-                xs: 'calc(3.6em)',  /* Mobile height */
-                sm: 'calc(3.8em)',  /* Tablet height */
-                md: 'calc(4.2em)'   /* Desktop height */
-              }[window.innerWidth < 640 ? 'xs' : window.innerWidth < 768 ? 'sm' : 'md'],
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-start',
-              overflow: 'hidden'    /* Prevent any potential overflow */
-            }}>
-              <h1 
-                className="text-4xl sm:text-6xl md:text-8xl text-white tracking-tight font-jakarta font-normal"
-                style={{
-                  lineHeight: '1.1',  /* Tighter line height for mobile */
-                  opacity: '0',
-                  animation: 'fadeIn 0.3s ease-in forwards',
-                  animationDelay: '0.1s',
-                  maxWidth: '100%',   /* Ensure text doesn't overflow */
-                  wordWrap: 'break-word'
-                }}
-              >
-                {t.title.line1}
-              </h1>
-              <h1 
-                className="text-4xl sm:text-6xl md:text-8xl text-white tracking-tight font-jakarta font-normal"
-                style={{
-                  lineHeight: '1.1',
-                  opacity: '0',
-                  animation: 'fadeIn 0.3s ease-in forwards',
-                  animationDelay: '0.2s',
-                  maxWidth: '100%',
-                  wordWrap: 'break-word'
-                }}
-              >
-                {t.title.line2}
-              </h1>
-              <h1 
-                className="text-4xl sm:text-6xl md:text-8xl text-white tracking-tight font-jakarta font-normal"
-                style={{
-                  lineHeight: '1.1',
-                  opacity: '0',
-                  animation: 'fadeIn 0.3s ease-in forwards',
-                  animationDelay: '0.3s',
-                  maxWidth: '100%',
-                  wordWrap: 'break-word'
-                }}
-              >
-                {t.title.line3}
-              </h1>
+            <div className="heading-container" style={containerStyle}>
+              {[t.title.line1, t.title.line2, t.title.line3].map((line, index) => (
+                <h1
+                  key={index}
+                  className="text-4xl sm:text-6xl md:text-8xl text-white tracking-tight font-jakarta font-normal"
+                  style={{
+                    ...headingStyle,
+                    animationDelay: `${(index + 1) * 0.1}s`
+                  }}
+                >
+                  {line}
+                </h1>
+              ))}
             </div>
           </div>
 
@@ -142,6 +126,8 @@ const Hero = () => {
       </div>
     </section>
   );
-};
+});
+
+Hero.displayName = 'Hero';
 
 export default Hero;
