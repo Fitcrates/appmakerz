@@ -1,5 +1,12 @@
 /* Critical CSS - Load this first */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400&display=swap&text=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') layer(critical);
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Plus Jakarta Sans'),
+       url('/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
+}
 
 @tailwind base;
 @tailwind components;
