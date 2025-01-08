@@ -104,9 +104,76 @@ const Projects = () => {
             </div>
           </motion.div>
 
-          {/* Add similar structure for the other two cards */}
           {/* Custom App Card */}
+          <motion.div
+            key={1}
+            variants={cardVariants}
+            className="h-[30rem] w-full max-w-2xl lg:max-w-md rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 
+            ring-1 ring-white ring-opacity-80 flex flex-col relative mb-8 lg:mb-0"
+          >
+            <div className="h-2/5 bg-[#140F2D] overflow-hidden">
+              <img
+                src="/media/flixapp.png"
+                alt="Mobile App"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="h-3/5 p-6 flex flex-col">
+              <h3 className="text-2xl font-light text-white mt-2 font-jakarta">
+                {t.categories.mobile.title}
+              </h3>
+              <p className="text-white mt-4 font-extralight leading-snug text-sm">
+                {t.categories.mobile.description.line1}{' '}
+                {t.categories.mobile.description.line2}{' '}
+                {t.categories.mobile.description.line3}
+              </p>
+              <span className="text-white mt-1 font-extralight leading-snug tracking-wide text-sm">
+                {t.categories.mobile.description.line4}
+              </span>
+              <a
+                href="https://www.appsheet.com/start/9a9a55ba-971a-44dd-bb24-67241f296c46"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:text-teal-300 mt-auto inline-flex items-center space-x-1"
+              >
+                <span>{t.viewProject}</span>
+                <ArrowUpRight className="w-5 h-5" />
+              </a>
+            </div>
+          </motion.div>
+
           {/* Design Card */}
+          <motion.div
+            key={2}
+            variants={cardVariants}
+            className="h-[30rem] w-full max-w-2xl lg:max-w-md rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 
+            ring-1 ring-white ring-opacity-80 flex flex-col relative"
+          >
+            <div className="h-2/5 bg-[#140F2D] overflow-hidden">
+              <img
+                src="/media/glide1.png"
+                alt="Design"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="h-3/5 p-6 flex flex-col">
+              <h3 className="text-2xl font-light text-white mt-2 font-jakarta">
+                {t.categories.design.title}
+              </h3>
+              <p className="text-white mt-4 font-extralight leading-snug text-sm">
+                {t.categories.design.description.line1}{' '}
+                {t.categories.design.description.line2}{' '}
+                {t.categories.design.description.line3}
+              </p>
+              <a
+                href="#"
+                className="text-white hover:text-teal-300 mt-auto inline-flex items-center space-x-1"
+              >
+                <span>Private</span>
+                <ShieldX className="w-6 h-6" />
+              </a>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
