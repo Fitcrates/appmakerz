@@ -33,13 +33,13 @@ html, body {
 .hero-section {
   position: relative;
   overflow: hidden;
-  min-height: 100vh; 
+  min-height: 100vh; /* Explicitly set height */
   width: 100%;
 }
 
 .hero-section::before {
   content: '';
-  position: fixed; 
+  position: absolute; /* Changed from fixed to absolute */
   top: 0;
   left: 0;
   width: 100%;
@@ -55,6 +55,48 @@ html, body {
 .hero-section > div {
   position: relative;
   z-index: 1;
+}
+
+/* Heading Container */
+.heading-container {
+  contain: layout style paint;  /* Optimize rendering */
+  position: relative;          /* Create new stacking context */
+  width: 100%;
+  max-width: 100vw;           /* Prevent horizontal overflow */
+  overflow-x: hidden;         /* Prevent horizontal scrolling */
+}
+
+/* Mobile-specific optimizations */
+@media screen and (max-width: 640px) {
+  .heading-container {
+    contain: strict;          /* Stricter containment for mobile */
+    transform: translateZ(0); /* Force GPU acceleration */
+  }
+  
+  .heading-container h1 {
+    word-break: break-word;   /* Handle long words on mobile */
+    hyphens: auto;           /* Enable hyphenation if needed */
+    overflow-wrap: break-word;
+  }
+}
+
+.heading-container h1 {
+  transform: translateZ(0);    /* Force GPU acceleration */
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  max-width: 100%;            /* Ensure text stays within bounds */
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Headings */
