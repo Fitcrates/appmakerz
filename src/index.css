@@ -1,19 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* Tailwind Base */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Global Reset */
 html, body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   width: 100%;
   box-sizing: border-box;
+  font-family: 'Plus Jakarta Sans', Arial, sans-serif; /* Set default font */
 }
 
 *, *::before, *::after {
   box-sizing: inherit;
 }
 
+/* Hero Section */
 .hero-section {
   position: relative;
   overflow: hidden;
@@ -36,6 +42,30 @@ html, body {
 .hero-section > div {
   position: relative;
   z-index: 1;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Plus Jakarta Sans', Arial, sans-serif; /* Ensure fallback */
+  font-weight: 700; /* Bold weight for headings */
+  margin: 0;
+}
+
+h1 {
+  font-size: 2.5rem; /* Adjust based on your design */
+  color: #ffffff;
+  line-height: 1.2; /* Improve readability */
+  text-align: center; /* Align text */
+}
+
+/* Font Loading Optimization */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap; /* Ensure text appears quickly */
+  src: url('/path/to/fonts/PlusJakartaSans-Regular.woff2') format('woff2'),
+       url('/path/to/fonts/PlusJakartaSans-Regular.woff') format('woff');
 }
 
 /* Text Shadows */
@@ -89,15 +119,11 @@ html, body {
   text-align-last: justify; /* For better balance */
 }
 
-h1 {
-  font-size: 1.5rem; /* Adjust to your design */
-  font-weight: bold;
-  margin-top: 1rem;
-}
 strong {
   font-weight: bold;
 }
 
+/* Hover Effects */
 .hover-text-shadow {
   transition: text-shadow 0.3s ease, color 0.3s ease;
 }
@@ -106,6 +132,7 @@ strong {
   text-shadow: 0px 8px 12px rgba(13, 148, 136, 0.6);
 }
 
+/* Autofill Styling */
 input:-webkit-autofill {
   background-color: transparent !important;
   color: inherit !important;
@@ -131,6 +158,7 @@ textarea:-webkit-autofill:focus {
   -webkit-text-fill-color: inherit !important;
 }
 
+/* Animation Effects */
 .hover-bounce {
   display: inline-block; /* Ensure the word acts like a block for animation */
   transition: transform 0.3s ease; /* Smooth transition */
