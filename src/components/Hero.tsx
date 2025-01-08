@@ -28,7 +28,12 @@ const Hero = () => {
             {[t.title.line1, t.title.line2, t.title.line3].map((line, index) => (
               <h1
                 key={index}
-                className="text-3xl font-light text-white tracking-normal font-jakarta leading-tight -mt-4 sm:text-7xl sm:tracking-tight sm:leading-snug md:text-8xl"
+                className="text-3xl font-jakarta text-white leading-tight -mt-2 sm:text-7xl md:text-8xl sm:tracking-tight sm:leading-snug"
+                style={{
+                  fontWeight: 300,
+                  willChange: 'auto',
+                  contentVisibility: 'auto'
+                }}
               >
                 {line}
               </h1>
