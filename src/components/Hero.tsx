@@ -7,45 +7,32 @@ const Hero = () => {
   const { language } = useLanguage();
   const t = translations[language].hero;
   const [isHovered, setIsHovered] = useState(false);
-  const [isMobile, setIsMobile] = useState(true);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
     };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
-
-  const renderTitle = (line: string, index: number) => {
-    if (isMobile) {
-      return (
-        <h1 key={index} className="text-2xl font-light text-white font-jakarta">
-          {line}
-        </h1>
-      );
-    }
-    return (
-      <h1
-        key={index}
-        className="text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta leading-snug -mt-4"
-        style={{
-          animationDelay: `${(index + 1) * 0.1}s`
-        }}
-      >
-        {line}
-      </h1>
-    );
-  };
 
   return (
     <section className="hero-section min-h-screen h-screen w-full flex items-end pb-24 overflow-x-hidden">
       <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full pb-8">
           {/* Text Container */}
-          <div className="flex flex-col items-center text-center md:items-start md:text-left space-y-2 md:space-y-0">
-            {[t.title.line1, t.title.line2, t.title.line3].map((line, index) => renderTitle(line, index))}
+          <div className="flex flex-col items-center text-center md:items-start md:text-left">
+            {[t.title.line1, t.title.line2, t.title.line3].map((line, index) => (
+              <h1
+                key={index}
+                className="text-3xl font-light text-white tracking-normal font-jakarta leading-tight -mt-4 sm:text-7xl sm:tracking-tight sm:leading-snug md:text-8xl"
+              >
+                {line}
+              </h1>
+            ))}
           </div>
 
           {/* Desktop View: Black Subtext and Arrow in Two Columns */}
@@ -72,28 +59,43 @@ const Hero = () => {
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-              <ArrowDown
-                className={`w-12 h-12 transition-transform duration-300 ${
-                  isHovered ? 'transform translate-y-2' : ''
-                }`}
-              />
+              <a
+                href="#about"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-white hover:text-indigo-500 text-shadow-fuchsia transform transition-transform duration-1000 flex items-center"
+              >
+                {isHovered ? (
+                  <ArrowDown
+                    className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000 transform rotate-360"
+                    strokeWidth={0.7}
+                    strokeLinecap="butt"
+                  />
+                ) : (
+                  <ArrowUpRight
+                    className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000"
+                    strokeWidth={0.7}
+                    strokeLinecap="butt"
+                  />
+                )}
+              </a>
             </div>
           </div>
 
-          {/* Mobile View: Black Subtext */}
-          <div className="md:hidden text-center mt-8">
-            <span className="text-lg text-black tracking-wide font-jakarta font-extralight block">
-              {t.subtitle.line1}
-            </span>
-            <span className="text-lg text-black tracking-wide font-jakarta font-extralight block">
-              {t.subtitle.line2}
-            </span>
-            <span className="text-lg text-black tracking-wide font-jakarta font-extralight block">
-              {t.subtitle.line3}
-            </span>
-            <span className="text-lg text-black tracking-wide font-jakarta font-extralight block">
-              {t.subtitle.line4}
-            </span>
+          {/* Mobile View: Centered Button */}
+          <div className="md:hidden flex flex-col items-center justify-center w-full mt-12 mb-36">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="py-3 px-6 bg-teal-300 text-gray-900 rounded-full hover:bg-teal-600 transition-colors duration-300 flex items-center space-x-2 font-jakarta font-medium text-lg"
+            >
+              <span>Learn More</span>
+              <ArrowUpRight className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>
