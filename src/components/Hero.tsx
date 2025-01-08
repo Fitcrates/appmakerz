@@ -20,15 +20,15 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="hero-section min-h-screen h-screen w-full flex items-end pb-24 overflow-x-hidden">
-      <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
+    <section className="hero-section min-h-screen h-screen w-full flex items-center sm:items-end pb-12 sm:pb-24 overflow-x-hidden">
+      <div className="max-w-7xl mx-auto w-full flex flex-col justify-center sm:justify-end px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full pb-8">
           {/* Text Container */}
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
             {[t.title.line1, t.title.line2, t.title.line3].map((line, index) => (
               <h1
                 key={index}
-                className="text-3xl font-jakarta text-white leading-tight -mt-2 sm:text-7xl md:text-8xl sm:tracking-tight sm:leading-snug"
+                className="text-5xl font-jakarta text-white leading-tight -mt-2 sm:text-7xl md:text-8xl sm:tracking-tight sm:leading-snug"
                 style={{
                   fontWeight: 300,
                   willChange: 'auto',
@@ -90,16 +90,16 @@ const Hero = () => {
           </div>
 
           {/* Mobile View: Centered Button */}
-          <div className="md:hidden flex flex-col items-center justify-center w-full mt-12 mb-36">
+          <div className="md:hidden flex flex-col items-center justify-center w-full mt-16">
             <button
               onClick={(e) => {
                 e.preventDefault();
                 document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="py-3 px-6 bg-teal-300 text-gray-900 rounded-full hover:bg-teal-600 transition-colors duration-300 flex items-center space-x-2 font-jakarta font-medium text-lg"
+              className="py-2 px-4 bg-teal-300 text-gray-900 rounded-full hover:bg-teal-600 transition-colors duration-300 flex items-center space-x-2 font-jakarta font-normal text-base"
             >
-              <span>Learn More</span>
-              <ArrowUpRight className="w-5 h-5" />
+              <span>{t.learnMore}</span>
+              <ArrowUpRight className="w-4 h-4" />
             </button>
           </div>
         </div>
