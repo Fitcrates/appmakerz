@@ -91,7 +91,7 @@ export const translations = {
     // Pricing section
     pricing: {
       title: "Pricing",
-      subtitle: "Table",
+      subtitle: "Plans",
       right1: "Choose plan",
       right2: "perfect for",
       right3: "your",
