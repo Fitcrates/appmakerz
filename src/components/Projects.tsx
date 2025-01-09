@@ -91,14 +91,14 @@ const Projects = () => {
             </div>
 
             {/* Text Content */}
-            <div
-              className="h-3/5 p-8 flex flex-col relative"
-              style={{
-                backgroundImage: 'url(https://i.postimg.cc/7YkLfyC9/tlokarta1.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'bottom',
-              }}
-            >
+            <div className="h-3/5 p-8 flex flex-col relative">
+              <img
+                src="media/tlokarta1.webp" 
+                alt="Custom Website"
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
+            </div>
               <h3 className="text-2xl font-light text-white text-left mt-2 font-jakarta font-normal">
                 {t.categories.web.title}
               </h3>
@@ -136,14 +136,13 @@ const Projects = () => {
             </div>
 
             {/* Text Content */}
-            <div
-              className="h-3/5 p-8 flex flex-col relative"
-              style={{
-                backgroundImage: 'url(https://i.postimg.cc/VksLWBWb/tlokarta2.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'bottom',
-              }}
-            >
+            <img
+                src="media/tlokarta2.webp" 
+                alt="Mobile App"
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
+            </div>
               <h3 className="text-2xl font-light text-white text-left mt-2 font-jakarta font-normal">
                 {t.categories.mobile.title}
               </h3>
@@ -185,14 +184,13 @@ const Projects = () => {
             </div>
 
             {/* Text Content */}
-            <div
-              className="h-3/5 p-8 flex flex-col relative"
-              style={{
-                backgroundImage: 'url(https://i.postimg.cc/jS8qgwM3/tlokarta3.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'bottom',
-              }}
-            >
+           <img
+                src="media/tlokarta3.webp" 
+                alt="Glide App"
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
+            </div>
               <h3 className="text-2xl font-light text-white text-left mt-2 font-jakarta font-normal">
                 {t.categories.design.title} 
               </h3>
