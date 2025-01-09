@@ -96,24 +96,27 @@ const Projects = () => {
                 src="media/tlokarta1.webp" 
                 alt="Custom Website"
                 loading="lazy"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover absolute inset-0"
               />
-            </div>
-              <h3 className="text-2xl font-light text-white text-left mt-2 font-jakarta font-normal">
-                {t.categories.web.title}
-              </h3>
-              <p className="text-white text-left mt-8 font-extralight font-jakarta leading-relaxed tracking-wide text-left text-sm">
-                {t.categories.web.description.line1} {t.categories.web.description.line2} {t.categories.web.description.line3} {t.categories.web.description.line4}
-              </p>
-              
-              <div className="absolute bottom-8 left-8 space-x-2">
-                <a
-                  href="#"
-                  className="text-white hover:text-teal-300 transition duration-300 inline-flex items-center space-x-1"
-                >
-                  <span>{t.viewProject}</span>
-                  <ArrowUpRight className="w-5 h-5" />
-                </a>
+              <div className="relative z-10 h-full flex flex-col">
+                <div>
+                  <h3 className="text-2xl font-light text-white text-left mt-2 font-jakarta font-normal">
+                    {t.categories.web.title}
+                  </h3>
+                  <p className="text-white text-left mt-8 font-extralight font-jakarta leading-relaxed tracking-wide text-left text-sm">
+                    {t.categories.web.description.line1} {t.categories.web.description.line2} {t.categories.web.description.line3} {t.categories.web.description.line4}
+                  </p>
+                </div>
+                
+                <div className="mt-auto">
+                  <a
+                    href="#"
+                    className="text-white hover:text-teal-300 transition duration-300 inline-flex items-center space-x-1"
+                  >
+                    <span>{t.viewProject}</span>
+                    <ArrowUpRight className="w-5 h-5" />
+                  </a>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -136,32 +139,37 @@ const Projects = () => {
             </div>
 
             {/* Text Content */}
-            <img
+            <div className="h-3/5 p-8 flex flex-col relative">
+              <img
                 src="media/tlokarta2.webp" 
                 alt="Mobile App"
                 loading="lazy"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover absolute inset-0"
               />
-            </div>
-              <h3 className="text-2xl font-light text-white text-left mt-2 font-jakarta font-normal">
-                {t.categories.mobile.title}
-              </h3>
-              <p className="text-white text-left mt-8 font-extralight font-jakarta leading-snug tracking-wide text-left text-sm">
-                {t.categories.mobile.description.line1} {t.categories.mobile.description.line2} {t.categories.mobile.description.line3} 
-              </p>
-              <span className="text-white text-left mt-1 font-extralight font-jakarta leading-snug tracking-wide text-left text-sm">
-                {t.categories.mobile.description.line4}
-              </span>
-              <div className="absolute bottom-8 left-8 space-x-2">
-                <a
-                  href="https://www.appsheet.com/start/9a9a55ba-971a-44dd-bb24-67241f296c46"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-teal-300 transition duration-300 inline-flex items-center space-x-1"
-                >
-                  <span>{t.viewProject}</span>
-                  <ArrowUpRight className="w-5 h-5" />
-                </a>
+              <div className="relative z-10 h-full flex flex-col">
+                <div>
+                  <h3 className="text-2xl font-light text-white text-left mt-2 font-jakarta font-normal">
+                    {t.categories.mobile.title}
+                  </h3>
+                  <p className="text-white text-left mt-8 font-extralight font-jakarta leading-snug tracking-wide text-left text-sm">
+                    {t.categories.mobile.description.line1} {t.categories.mobile.description.line2} {t.categories.mobile.description.line3} 
+                  </p>
+                  <span className="text-white text-left mt-1 font-extralight font-jakarta leading-snug tracking-wide text-left text-sm">
+                    {t.categories.mobile.description.line4}
+                  </span>
+                </div>
+                
+                <div className="mt-auto">
+                  <a
+                    href="https://www.appsheet.com/start/9a9a55ba-971a-44dd-bb24-67241f296c46"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-teal-300 transition duration-300 inline-flex items-center space-x-1"
+                  >
+                    <span>{t.viewProject}</span>
+                    <ArrowUpRight className="w-5 h-5" />
+                  </a>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -184,27 +192,32 @@ const Projects = () => {
             </div>
 
             {/* Text Content */}
-           <img
+            <div className="h-3/5 p-8 flex flex-col relative">
+              <img
                 src="media/tlokarta3.webp" 
                 alt="Glide App"
                 loading="lazy"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover absolute inset-0"
               />
-            </div>
-              <h3 className="text-2xl font-light text-white text-left mt-2 font-jakarta font-normal">
-                {t.categories.design.title} 
-              </h3>
-              <p className="text-white text-left mt-8 font-extralight font-jakarta leading-snug tracking-wide text-left text-sm">
-                {t.categories.design.description.line1} {t.categories.design.description.line2} {t.categories.design.description.line3}
-              </p>
-              <div className="absolute bottom-8 left-8 space-x-2">
-                <a
-                  href="#"
-                  className="text-white hover:text-teal-300 transition duration-300 inline-flex items-center space-x-1"
-                >
-                  <span>Private</span>
-                  <ShieldX className="w-6 h-6" />
-                </a>
+              <div className="relative z-10 h-full flex flex-col">
+                <div>
+                  <h3 className="text-2xl font-light text-white text-left mt-2 font-jakarta font-normal">
+                    {t.categories.design.title} 
+                  </h3>
+                  <p className="text-white text-left mt-8 font-extralight font-jakarta leading-snug tracking-wide text-left text-sm">
+                    {t.categories.design.description.line1} {t.categories.design.description.line2} {t.categories.design.description.line3}
+                  </p>
+                </div>
+                
+                <div className="mt-auto">
+                  <a
+                    href="#"
+                    className="text-white hover:text-teal-300 transition duration-300 inline-flex items-center space-x-1"
+                  >
+                    <span>Private</span>
+                    <ShieldX className="w-6 h-6" />
+                  </a>
+                </div>
               </div>
             </div>
           </motion.div>
