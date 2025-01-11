@@ -118,7 +118,7 @@ const Blog = () => {
       <Header />
       <main className="relative">
         {/* Hero Section */}
-        <section className="hero-section min-h-screen h-screen w-full flex items-end pb-12 overflow-x-hidden">
+        <section className="hero-section min-h-screen h-screen w-full flex items-end pb-20 overflow-x-hidden">
           <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
             <div className="flex flex-col md:flex-row justify-between items-center md:items-end w-full">
               {/* Text Container */}
