@@ -42,17 +42,21 @@ export const translations = {
       cards: {
         development: {
           title: "Development",
-          description: "Building custom websites and applications for small and medium businesses"
+          description: "Building custom websites and applications for small and medium businesses",
+          more: "I will select the best solution for your needs and budget. Choose a tech stack and provide you with tools to maintain your website or application."
         },
         design: {
           title: "Design",
-          description: "Creating beautiful and intuitive user interfaces"
+          description: "Creating beautiful and intuitive user interfaces",
+          more: "I will create a design that is not only visually appealing, but also user-friendly and easy to navigate. Whether it's a simple website or a complex application, I will ensure a seamless user experience."
         },
         strategy: {
           title: "Strategy",
-          description: "Developing effective solutions to meet business goals"
+          description: "Developing effective solutions to meet business goals",
+          more: "I will develop strategies to help you achieve your business goals. I will guide you through the process of identifying your target audience, defining your goals, and developing a plan to achieve them. Together we will decide on the best tool and approach for your needs."
         }
-      }
+      },
+      viewMore: "View"
     },
     // Projects section
     projects: {
@@ -268,17 +272,21 @@ export const translations = {
       cards: {
         development: {
           title: "Development",
-          description: "Tworzenie indywidualnych stron oraz aplikacji dla małych i średnich firm"
+          description: "Tworzeniu indywidualnych stron oraz aplikacji dla małych i średnich firm",
+          more: "Wybiorę najlepsze rozwiązanie zgodnie z Twoimi potrzebami i budżetem. Wybierzemy stos technologiczny i dostarczymy narzędzia do utrzymania Twojej strony internetowej lub aplikacji."
         },
         design: {
           title: "Design",
-          description: "Tworzenie pięknych i intuicyjnych interfejsów"
+          description: "Tworzeniu pięknych i intuicyjnych interfejsów",
+          more: "Stworzę projekt, który będzie nie tylko atrakcyjny wizualnie, ale także przyjazny dla użytkownika i łatwy w nawigacji. Bez względu na to, czy to prosta strona internetowa, czy złożona aplikacja, zapewnię płynne doświadczenie użytkownika."
         },
         strategy: {
           title: "Strategia",
-          description: "Opracowywanie skutecznych rozwiązań dla celów biznesowych"
+          description: "Opracowywaniu skutecznych rozwiązania dla Twoich celów biznesowych",
+          more: "Opracuję strategie, które pomogą Ci osiągnąć Twoje cele biznesowe. Poprowadzę Cię przez proces identyfikacji grupy docelowej, definiowania celów i opracowania planu ich realizacji. Wspólnie zdecydujemy, jakie narzędzia i podejście będą najlepsze dla Twoich potrzeb."
         }
-      }
+      },
+      viewMore: "Zobacz"
     },
     // Projects section
     projects: {
