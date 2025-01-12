@@ -129,7 +129,7 @@ const Accordion = ({ content }) => {
                   {card.id}
                 </span>
                 
-                <div className="absolute top-24 left-1/2 -translate-x-1/2 w-48 h-28">
+                <div className="absolute top-24 left-1/2 -translate-x-1/2 w-56 h-28">
                   <div className={`w-full h-3/4 ${card.bgColor} rounded-full blur-2xl transform -rotate-[2deg]`} />
                 </div>
 
