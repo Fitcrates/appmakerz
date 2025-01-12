@@ -117,7 +117,7 @@ const Accordion = ({ content }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-36 mb-16">
           {cards.map((card) => (
-            <div key={card.id} className="flex flex-col space-y-4">
+            <div key={card.id} className="flex flex-col space-y-4 pb-20 lg:pb-0">
               <motion.div
                 variants={cardVariants}
                 initial="hidden"
