@@ -137,7 +137,7 @@ const Accordion = ({ content }) => {
                   <h3 className="text-2xl text-white font-jakarta font-medium">
                     {card.title}
                   </h3>
-                  <p className="text-white mt-4 font-jakarta tracking-wide">
+                  <p className="text-white mt-8 font-jakarta tracking-wide">
                     {card.description}
                   </p>
                 </div>
