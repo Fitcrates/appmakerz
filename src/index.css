@@ -316,3 +316,39 @@ main {
   z-index: 1;
   background: transparent;
 }
+
+/* Swiper pagination styles */
+.swiper-pagination {
+  position: relative !important;
+  bottom: 0 !important;
+  margin-top: 1rem;
+}
+
+.swiper-pagination-bullet {
+  background-color: #5eead4 !important; /* teal-300 */
+  opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #5eead4 !important; /* teal-300 */
+  opacity: 1;
+}
+
+/* Swiper container styles */
+.custom-swiper {
+  padding: 1rem !important;
+  margin: -1rem !important;
+  overflow: hidden !important;
+}
+
+.swiper-slide {
+  height: auto !important;
+}
+
+/* Ensure container doesn't get cut off on mobile */
+@media (max-width: 640px) {
+  .custom-swiper {
+    padding: 0.5rem !important;
+    margin: -0.5rem !important;
+  }
+}
