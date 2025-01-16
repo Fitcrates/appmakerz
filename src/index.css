@@ -344,6 +344,10 @@ main {
 .swiper-slide {
   height: auto !important;
 }
+.custom-swiper button {
+  position: relative;
+  z-index: 10; /* Ensure buttons are on top */
+}
 
 /* Ensure container doesn't get cut off on mobile */
 @media (max-width: 640px) {
