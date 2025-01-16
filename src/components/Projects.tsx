@@ -209,7 +209,7 @@ const Projects = () => {
           </Swiper>
 
           {/* Custom Navigation Buttons */}
-<div className="flex justify-center items-center space-x-4">
+<div className="hidden lg:flex justify-center items-center space-x-4">
   <button
     ref={navigationPrevRef}
     className="text-white px-4 py-2 rounded hover:text-teal-400 transition"
