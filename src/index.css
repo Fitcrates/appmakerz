@@ -308,11 +308,66 @@ main {
   background: transparent;
 }
 
-/* Swiper pagination styles */
+/* Navigation buttons styling */
+.swiper-navigation-buttons {
+  display: none;
+  position: relative;
+  z-index: 20;
+  margin-top: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .swiper-navigation-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  position: static !important;
+  width: 22px !important;
+  height: 22px !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  color: white !important;
+  transform: none !important;
+  cursor: pointer !important;
+  z-index: 20 !important;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: rgb(94 234 212) !important;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 16px !important;
+  font-weight: bold !important;
+}
+
+/* Remove any previous display: none that might be affecting the buttons */
+.swiper-button-prev,
+.swiper-button-next {
+  display: block !important;
+}
+
+/* Custom Swiper container styles */
+.custom-swiper {
+  padding: 1rem !important;
+  margin: -1rem !important;
+  overflow: hidden !important;
+}
+
+/* Ensure pagination is visible */
 .swiper-pagination {
   position: relative !important;
   bottom: 0 !important;
-  margin-top: 1rem;
+  margin-top: 1rem !important;
+  z-index: 20 !important;
 }
 
 .swiper-pagination-bullet {
@@ -325,13 +380,36 @@ main {
   opacity: 1;
 }
 
-/* Hide default Swiper navigation buttons */
-.swiper-button-next,
-.swiper-button-prev {
-  display: none !important;
+/* Style Swiper navigation buttons */
+.swiper-button-prev,
+.swiper-button-next {
+  position: static !important;
+  color: white !important;
+  margin: 0 !important;
+  transform: none !important;
 }
 
-/* Swiper container styles */
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: rgb(94 234 212) !important; /* teal-400 */
+}
+
+/* Container for navigation buttons */
+.swiper-navigation-buttons {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .swiper-navigation-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Custom Swiper container styles */
 .custom-swiper {
   padding: 1rem !important;
   margin: -1rem !important;
