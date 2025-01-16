@@ -4,11 +4,12 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 
-
 // Import Swiper styles
-import 'swiper/swiper-bundle.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper';
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -121,36 +122,35 @@ const Projects = () => {
           viewport={{ once: true, margin: "-100px" }}
         >
           <Swiper
-  className="custom-swiper"
-  spaceBetween={30}
-  slidesPerView={1}
-  pagination={{ clickable: true, el: '.swiper-pagination' }}
-  modules={[Navigation, Pagination]}
-  navigation={{
-    prevEl: navigationPrevRef.current,
-    nextEl: navigationNextRef.current,
-  }}
-  onInit={(swiper) => {
-    swiper.params.navigation.prevEl = navigationPrevRef.current;
-    swiper.params.navigation.nextEl = navigationNextRef.current;
-    swiper.navigation.init();
-    swiper.navigation.update();
-  }}
-  breakpoints={{
-    640: {
-      slidesPerView: 1,
-      spaceBetween: 20,
-    },
-    768: {
-      slidesPerView: 2,
-      spaceBetween: 30,
-    },
-    1024: {
-      slidesPerView: 3,
-      spaceBetween: 30,
-    },
-  }}
->
+            modules={[Navigation, Pagination]}
+            navigation={{
+              prevEl: navigationPrevRef.current,
+              nextEl: navigationNextRef.current,
+            }}
+            onBeforeInit={(swiper) => {
+              // @ts-ignore
+              swiper.params.navigation.prevEl = navigationPrevRef.current;
+              // @ts-ignore
+              swiper.params.navigation.nextEl = navigationNextRef.current;
+            }}
+            spaceBetween={30}
+            slidesPerView={1}
+            pagination={{ clickable: true, el: '.swiper-pagination' }}
+            breakpoints={{
+              640: {
+                slidesPerView: 1,
+                spaceBetween: 20,
+              },
+              768: {
+                slidesPerView: 2,
+                spaceBetween: 30,
+              },
+              1024: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+              },
+            }}
+          >
             {projects.map((project) => (
               <SwiperSlide key={project.id}>
                 <motion.div
