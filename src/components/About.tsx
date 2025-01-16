@@ -101,7 +101,7 @@ const Accordion = ({ content }) => {
   ];
 
   return (
-    <section id="about" className="py-20" style={{ backgroundColor: '#140F2D' }}>
+    <section id="about" className="py-10" style={{ backgroundColor: '#140F2D' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-left text-4xl sm:text-6xl mb-16"
@@ -117,7 +117,7 @@ const Accordion = ({ content }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-36 mb-16">
           {cards.map((card) => (
-            <div key={card.id} className="flex flex-col space-y-4 pb-20 lg:pb-0">
+            <div key={card.id} className="flex flex-col space-y-4  lg:pb-0">
               <motion.div
                 variants={cardVariants}
                 initial="hidden"
