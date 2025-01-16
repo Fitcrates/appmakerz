@@ -121,22 +121,13 @@ const Projects = () => {
         >
           <Swiper
             className="custom-swiper"
+            modules={[Navigation, Pagination]}
             spaceBetween={30}
             slidesPerView={1}
-            pagination={{ clickable: true, el: '.swiper-pagination' }}
-            modules={[Navigation, Pagination]}
+            pagination={{ clickable: true }}
             navigation={{
-              prevEl: navigationPrevRef.current,
-              nextEl: navigationNextRef.current,
-              enabled: true,
-              disabledClass: 'swiper-button-disabled',
-              hiddenClass: 'swiper-button-hidden'
-            }}
-            onAfterInit={(swiper) => {
-              if (navigationPrevRef.current && navigationNextRef.current) {
-                swiper.navigation.init();
-                swiper.navigation.update();
-              }
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
             }}
             breakpoints={{
               640: {
@@ -209,23 +200,12 @@ const Projects = () => {
             {/* Add custom pagination container */}
             <div className="swiper-pagination"></div>
           </Swiper>
-
-          {/* Custom Navigation Buttons */}
-          <div className="hidden lg:flex justify-center items-center space-x-4 mt-2">
-            <button
-              ref={navigationPrevRef}
-              className="text-white px-4 py-2 rounded hover:text-teal-400 transition"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-              ref={navigationNextRef}
-              className="text-white px-4 py-2 rounded hover:text-teal-400 transition"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
+          
+          {/* Navigation Buttons Container */}
+          <div className="swiper-navigation-buttons">
+            <button className="swiper-button-prev" aria-label="Previous slide"></button>
+            <button className="swiper-button-next" aria-label="Next slide"></button>
           </div>
-
         </motion.div>
       </div>
     </section>
