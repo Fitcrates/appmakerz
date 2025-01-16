@@ -95,11 +95,11 @@ const Pricing = () => {
           <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
             <div className="flex flex-col lg:flex-row justify-between items-center lg:items-end w-full">
               {/* Text Container */}
-              <div className="flex flex-col items-center text-center md:items-start md:text-left">
-                <h1 className="text-5xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta font-normal leading-none -mt-1">
+              <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
+                <h1 className="text-5xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta font-normal leading-none  -mt-1">
                   {t.title}
                 </h1>
-                <h1 className="text-5xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta font-normal leading-none -mt-1">
+                <h1 className="text-5xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta font-normal leading-none  -mt-1">
                   {t.subtitle}
                 </h1>
               </div>
