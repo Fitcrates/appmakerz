@@ -121,30 +121,36 @@ const Projects = () => {
           viewport={{ once: true, margin: "-100px" }}
         >
           <Swiper
-            className="custom-swiper"
-            spaceBetween={30}
-            slidesPerView={1}
-            pagination={{ clickable: true, el: '.swiper-pagination' }}
-            modules={[Navigation, Pagination]}
-            onBeforeInit={(swiper) => {
-              swiper.params.navigation.prevEl = navigationPrevRef.current;
-              swiper.params.navigation.nextEl = navigationNextRef.current;
-            }}
-            breakpoints={{
-              640: {
-                slidesPerView: 1,
-                spaceBetween: 20,
-              },
-              768: {
-                slidesPerView: 2,
-                spaceBetween: 30,
-              },
-              1024: {
-                slidesPerView: 3,
-                spaceBetween: 30,
-              },
-            }}
-          >
+  className="custom-swiper"
+  spaceBetween={30}
+  slidesPerView={1}
+  pagination={{ clickable: true, el: '.swiper-pagination' }}
+  modules={[Navigation, Pagination]}
+  navigation={{
+    prevEl: navigationPrevRef.current,
+    nextEl: navigationNextRef.current,
+  }}
+  onInit={(swiper) => {
+    swiper.params.navigation.prevEl = navigationPrevRef.current;
+    swiper.params.navigation.nextEl = navigationNextRef.current;
+    swiper.navigation.init();
+    swiper.navigation.update();
+  }}
+  breakpoints={{
+    640: {
+      slidesPerView: 1,
+      spaceBetween: 20,
+    },
+    768: {
+      slidesPerView: 2,
+      spaceBetween: 30,
+    },
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 30,
+    },
+  }}
+>
             {projects.map((project) => (
               <SwiperSlide key={project.id}>
                 <motion.div
@@ -204,17 +210,17 @@ const Projects = () => {
 
           {/* Custom Navigation Buttons */}
 <div className="flex justify-center items-center space-x-4">
-  <button 
-    ref={navigationPrevRef} 
+  <button
+    ref={navigationPrevRef}
     className="text-white px-4 py-2 rounded hover:text-teal-400 transition"
   >
-    <ChevronLeft className="w-6 h-6" /> {/* Chevron Left Icon */}
+    <ChevronLeft className="w-6 h-6" />
   </button>
-  <button 
-    ref={navigationNextRef} 
+  <button
+    ref={navigationNextRef}
     className="text-white px-4 py-2 rounded hover:text-teal-400 transition"
   >
-    <ChevronRight className="w-6 h-6" /> {/* Chevron Right Icon */}
+    <ChevronRight className="w-6 h-6" />
   </button>
 </div>
 
