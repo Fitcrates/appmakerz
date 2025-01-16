@@ -59,9 +59,14 @@ export const translations = {
       viewMore: "View"
     },
     // Projects section
+
     projects: {
       title: "Projects",
       viewProject: "View Project",
+      buttons: {
+        previous: "Previous",
+        next: "Next",
+      },
       categories: {
         all: "Some of my recent work",
         web: {
@@ -89,6 +94,16 @@ export const translations = {
             line2: "to manage cleaning schedule",
             line3: "and purchase of cleaning products at the apartment."
           }
+        },
+        anime: {
+          title: "Anime Website",
+          description: {
+            line1: "Website created",
+            line2: "with use of public API",
+            line3: "for anime search and detailed information about them.",
+            line4: "Showcase of fullstack project implementation."
+          }
+          
         }
       }
     },
@@ -289,9 +304,14 @@ export const translations = {
       viewMore: "Zobacz"
     },
     // Projects section
+    
     projects: {
       title: "Projekty",
       viewProject: "Zobacz projekt",
+      buttons: {
+        previous: "Poprzedni",
+        next: "Następny",
+      },
       categories: {
         all: "Niektóre z moich ostatnich projektów",
         web: {
@@ -318,6 +338,15 @@ export const translations = {
             line1: "Prywatna aplikacja, stworzona ",
             line2: "do zarządzania grafikiem sprzątania",
             line3: "oraz zakupami środków czystości w mieszkaniu."
+          }
+        },
+        anime: {
+          title: "Anime Website",
+          description: {
+            line1: "Strona internetowa, stworzona ",
+            line2: "z wykorzystaniem publicznego API",
+            line3: "do wyszukiwania anime i szczegółowych informacji na ich temat.",
+            line4: "Przykład implementacjifullstackowego projektu."
           }
         }
       }
