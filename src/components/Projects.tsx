@@ -129,6 +129,7 @@ const Projects = () => {
               nextEl: '.swiper-button-next',
               prevEl: '.swiper-button-prev',
             }}
+            loop={true}
             breakpoints={{
               640: {
                 slidesPerView: 1,
