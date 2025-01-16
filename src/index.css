@@ -12,15 +12,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Font optimization */
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Plus Jakarta Sans'),
-       url('/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
-}
 
 html, body {
   margin: 0;
@@ -332,6 +323,12 @@ main {
 .swiper-pagination-bullet-active {
   background-color: #5eead4 !important; /* teal-300 */
   opacity: 1;
+}
+
+/* Hide default Swiper navigation buttons */
+.swiper-button-next,
+.swiper-button-prev {
+  display: none !important;
 }
 
 /* Swiper container styles */
