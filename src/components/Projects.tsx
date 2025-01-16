@@ -96,7 +96,7 @@ const Projects = () => {
       id="projects"
       className="py-20 sm:py-40 bg-[#140F2D] overflow-x-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 sm:-mt-36">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 lg:-mt-5">
         {/* Heading */}
         <motion.div 
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-16 gap-2 sm:gap-4"
