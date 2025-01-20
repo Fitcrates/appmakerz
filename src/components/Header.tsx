@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, X } from 'lucide-react';
 import { HashLink } from 'react-router-hash-link';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 
@@ -9,17 +9,25 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const { language, setLanguage } = useLanguage();
   const t = translations[language];
+  const navigate = useNavigate();
+
+const handleLogoClick = () => {
+    navigate('/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <header className="fixed w-full backdrop-blur-sm z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-6 border-b border-white">
           {/* Logo */}
-          <Link to="/" className="text-2xl font-light flex-shrink-0">
+          <button 
+            onClick={handleLogoClick} 
+            className="text-2xl font-light flex-shrink-0"
+          >
             <span className="text-white font-bold">app</span>
             <span className="text-white font-thin font-jakarta">crates</span>
-          </Link>
-
+          </button>
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex space-x-6 mx-6 flex-grow flex justify-end items-center">
             <button
