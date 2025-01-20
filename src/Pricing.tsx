@@ -39,16 +39,17 @@ const Pricing = () => {
   useScrollToTop();
 
   const handlePlanClick = (planName) => {
-    const url = new URL(window.location.href);
-    url.hash = 'contact';
+    const contactSection = document.getElementById('contact'); 
     const searchParams = new URLSearchParams();
     searchParams.set('plan', planName);
+    const url = new URL(window.location.href);
+    url.hash = 'contact';
     window.history.replaceState({}, '', `${url.hash}?${searchParams.toString()}`);
     window.dispatchEvent(new Event('hashchange'));
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth',
-    });
+  
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const plans = [
