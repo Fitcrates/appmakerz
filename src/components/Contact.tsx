@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, ArrowUpRight } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
 import { useEmailForm } from '../hooks/useEmailForm';
 import { useLanguage } from '../context/LanguageContext';
@@ -80,7 +80,7 @@ const Contact: React.FC<ContactProps> = ({ id }) => {
                     className="inline-flex items-center px-6 py-2 text-slate-900 rounded-full border-2 border-slate-900 hover:bg-slate-900 hover:text-teal-200 transition-colors duration-300 font-jakarta font-normal"
                   >
                     {isSubmitting ? t.form.sending : t.form.submit}
-                    <Send className="ml-2" size={16} />
+                    <ArrowUpRight className="ml-2" size={16} />
                   </button>
                   <p className="text-sm text-slate-800 text-right font-jakarta">
                     {t.form.privacy.text} <br /> {t.form.privacy.to}{' '}
