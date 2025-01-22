@@ -98,10 +98,10 @@ export const translations = {
         anime: {
           title: "Anime Website",
           description: {
-            line1: "Website created",
-            line2: "with use of public API",
-            line3: "for anime search and detailed information about them.",
-            line4: "Showcase of fullstack project implementation."
+            line1: "Website created with use of public API",
+            line2: "for anime search and detailed information about them.",
+            line3: "Showcase of fullstack project creation,",
+            line4: "SQL cloud database, Google Oauth and more."
           }
           
         }
@@ -343,10 +343,10 @@ export const translations = {
         anime: {
           title: "Anime Website",
           description: {
-            line1: "Strona internetowa, stworzona ",
-            line2: "z wykorzystaniem publicznego API",
-            line3: "do wyszukiwania anime i szczegółowych informacji na ich temat.",
-            line4: "Przykład implementacjifullstackowego projektu."
+            line1: "Strona stworzona na bazie publicznego API",
+            line2: "do wyszukiwania anime i informacji na ich temat.",
+            line3: "Pokaz stworzenia projektu Fullstack",
+            line4: "z bazą danych SQL w chmurze, Google Oauth i więcej."
           }
         }
       }
