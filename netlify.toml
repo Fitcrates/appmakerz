@@ -1,4 +1,5 @@
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/robots.txt"
+  to = "/robots.txt"
   status = 200
+  force = true
