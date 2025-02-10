@@ -28,15 +28,28 @@ const validateEmailConfig = () => {
 
 // Helper function to send email
 const sendEmail = async (subscriber: any, post: any, isTest = false) => {
+  console.log('Sending email with post data:', post);
+  console.log('To subscriber:', subscriber);
+
+  // Extract title from the localized object
+  const postTitle = post.title?.en || post.title?.pl || 'New Blog Post';
+  
+  // Get categories from the webhook payload
+  const categories = Array.isArray(post.categories) 
+    ? post.categories.map((cat: any) => cat.title || cat).join(', ')
+    : 'General';
+
   const templateParams = {
-    categories: post.categories.join(', '),
-    blog_title: post.title,
-    snippet: post.snippet,
-    blog_url: `${process.env.SITE_URL}/blog/${post.slug.current}`,
+    post_title: postTitle,
+    post_url: `${process.env.SITE_URL}/blog/${post.slug.current}`,
+    categories: categories,
     unsubscribe_url: `${process.env.SITE_URL}/unsubscribe?token=${subscriber.unsubscribeToken}`,
     to_email: subscriber.email,
-    is_test: isTest ? '[TEST] ' : '' // Prefix test emails
+    is_test: isTest ? '[TEST] ' : '',
+    author_name: 'Arkadiusz Wawrzyniak'
   };
+
+  console.log('Sending with template params:', templateParams);
 
   try {
     const result = await emailjs.send(
@@ -57,6 +70,8 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
 };
 
 const handler: Handler = async (event) => {
+  console.log('Received webhook event:', event.body);
+
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
@@ -70,51 +85,64 @@ const handler: Handler = async (event) => {
     validateEmailConfig();
 
     const body = JSON.parse(event.body || '{}');
+    console.log('Parsed webhook body:', body);
+
+    // Handle both test mode and webhook payload
     const isTestMode = body.isTest === true;
     
-    // For test mode, we don't require a specific _type
     if (!isTestMode && (!body._type || body._type !== 'post')) {
       return {
         statusCode: 400,
-        body: 'Invalid webhook payload'
+        body: JSON.stringify({ error: 'Invalid webhook payload' })
       };
     }
 
-    // Get the full post data
-    const post = await client.fetch(
-      `*[_type == "post" && _id == $id][0]{
-        title,
-        slug,
-        categories,
-        "snippet": array::join(string::split(pt::text(body[0...1]), "")[0...200], "") + "..."
-      }`,
-      { id: body._id }
-    );
+    // For webhook events, use the data directly from the webhook
+    // For test mode, fetch the post data
+    const post = isTestMode 
+      ? await client.fetch(
+          `*[_type == "post" && _id == $id][0]{
+            _id,
+            _type,
+            title,
+            slug,
+            categories[]->
+          }`,
+          { id: body._id }
+        )
+      : body; // Use webhook payload directly
 
-    if (!post) {
+    console.log('Post data:', post);
+
+    if (!post || !post.slug?.current) {
       return {
         statusCode: 404,
-        body: 'Post not found'
+        body: JSON.stringify({ error: 'Invalid post data' })
       };
     }
 
     // Get subscribers based on mode
     const subscribersQuery = isTestMode
-      ? // In test mode, get only the subscriber who triggered the test
-        `*[_type == "subscriber" && email == $testEmail]{
+      ? `*[_type == "subscriber" && email == $testEmail]{
           email,
           unsubscribeToken
         }`
-      : // In normal mode, get all active subscribers for the post categories
-        `*[_type == "subscriber" && isActive == true && count(subscribedCategories[@ in $categories]) > 0]{
+      : `*[_type == "subscriber" && isActive == true && count(subscribedCategories[@ in $categories]) > 0]{
           email,
           unsubscribeToken
         }`;
 
+    // Extract category titles for the query
+    const categoryTitles = Array.isArray(post.categories)
+      ? post.categories.map((cat: any) => cat.title || cat)
+      : ['General'];
+
     const subscribers = await client.fetch(
       subscribersQuery,
-      isTestMode ? { testEmail: body.testEmail } : { categories: post.categories }
+      isTestMode ? { testEmail: body.testEmail } : { categories: categoryTitles }
     );
+
+    console.log('Found subscribers:', subscribers);
 
     if (subscribers.length === 0) {
       return {
@@ -122,7 +150,8 @@ const handler: Handler = async (event) => {
         body: JSON.stringify({ 
           message: isTestMode 
             ? 'No test subscriber found with the provided email' 
-            : 'No subscribers found for the post categories' 
+            : 'No subscribers found for the post categories',
+          categories: categoryTitles
         })
       };
     }
@@ -132,13 +161,16 @@ const handler: Handler = async (event) => {
       sendEmail(subscriber, post, isTestMode)
     );
 
-    await Promise.all(emailPromises);
+    const results = await Promise.all(emailPromises);
+    console.log('Email sending results:', results);
 
     return {
       statusCode: 200,
       body: JSON.stringify({ 
         message: `Notifications sent successfully to ${subscribers.length} subscriber(s)`,
-        testMode: isTestMode
+        testMode: isTestMode,
+        categories: categoryTitles,
+        results: results
       })
     };
   } catch (error: any) {
