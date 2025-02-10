@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions';
 import sanityClient from '@sanity/client';
-import emailjs from '@emailjs/browser';
+import * as emailjs from '@emailjs/nodejs';
 
 // Helper function to validate email configuration
 const validateEmailConfig = () => {
