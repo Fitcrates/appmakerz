@@ -61,23 +61,27 @@ const getTitle = (title: any): string => {
 // Helper function to send email
 const sendEmail = async (subscriber: any, post: any, isTest = false) => {
   console.log('Starting email send process');
+  console.log('Post data received:', JSON.stringify(post, null, 2));
   
   try {
+    if (!post || !post.slug || !post.title) {
+      throw new Error('Invalid post data received');
+    }
+
     console.log('Preparing email template params');
     
     const blogTitle = getTitle(post.title);
-    const blogUrl = `${process.env.SITE_URL}/blog/${post.slug.current}`;
+    const blogUrl = `${process.env.SITE_URL}/blog/${post.slug}`;
     const unsubscribeUrl = `${process.env.SITE_URL}/unsubscribe?token=${subscriber.unsubscribeToken}`;
 
     // Ensure categories is an array and join with commas
     const categories = Array.isArray(post.categories) 
-      ? post.categories.map(cat => typeof cat === 'string' ? cat : getTitle(cat?.title)).filter(Boolean).join(', ')
+      ? post.categories.join(', ')
       : '';
 
     const templateParams = {
       categories,
       blog_title: blogTitle,
-      snippet: post.snippet || '',
       blog_url: blogUrl,
       unsubscribe_url: unsubscribeUrl,
       to_email: subscriber.email,
@@ -85,10 +89,11 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
     };
 
     console.log('Email template params prepared:', {
-      ...templateParams,
+      categories,
+      blog_title: blogTitle,
       blog_url: blogUrl,
-      unsubscribe_url: '[HIDDEN]',
-      to_email: '[HIDDEN]'
+      to_email: '[HIDDEN]',
+      unsubscribe_url: '[HIDDEN]'
     });
 
     // Initialize EmailJS
@@ -178,21 +183,23 @@ const handler: Handler = async (event) => {
       console.log('Fetching post data for ID:', body._id);
       const post = await client.fetch(
         `*[_type == "post" && _id == $id][0]{
+          _id,
           title {
             en,
             pl
           },
-          slug,
-          "categories": categories[]->title,
-          "snippet": array::join(string::split(pt::text(body[0...1]), "")[0...200], "") + "..."
+          "slug": slug.current,
+          categories,
+          "snippet": pt::text(body)
         }`,
         { id: body._id }
       );
 
       console.log('Retrieved post data:', { 
         found: !!post,
+        id: post?._id,
         title: post?.title,
-        slug: post?.slug?.current,
+        slug: post?.slug,
         categoriesCount: post?.categories?.length
       });
 
