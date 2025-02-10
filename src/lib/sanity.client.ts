@@ -2,25 +2,37 @@ import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
+// Validate environment variables
+const requiredEnvVars = {
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
+  dataset: import.meta.env.VITE_SANITY_DATASET,
+};
+
+// Log environment variables to verify they're loaded
+console.log('Sanity Config:', {
+  projectId: requiredEnvVars.projectId,
+  dataset: requiredEnvVars.dataset,
+  tokenLength: import.meta.env.VITE_SANITY_AUTH_TOKEN?.length || 0
+});
+
+if (!requiredEnvVars.projectId || !requiredEnvVars.dataset) {
+  throw new Error(
+    `Missing required environment variables. Make sure VITE_SANITY_PROJECT_ID and VITE_SANITY_DATASET are set in your .env file.`
+  );
+}
+
 // Create two clients - one for reading (with CDN) and one for writing
 export const readClient = createClient({
-  projectId: '867nk643',
-  dataset: 'production',
+  projectId: requiredEnvVars.projectId,
+  dataset: requiredEnvVars.dataset,
   useCdn: true, // Enable CDN for faster reads
   apiVersion: '2024-02-20',
   perspective: 'published',
 });
 
-// Log environment variables to verify they're loaded
-console.log('Sanity Config:', {
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
-  dataset: import.meta.env.VITE_SANITY_DATASET,
-  tokenLength: import.meta.env.VITE_SANITY_AUTH_TOKEN?.length || 0
-});
-
 export const writeClient = createClient({
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
-  dataset: import.meta.env.VITE_SANITY_DATASET,
+  projectId: requiredEnvVars.projectId,
+  dataset: requiredEnvVars.dataset,
   useCdn: false, // Disable CDN for mutations
   apiVersion: '2024-02-20',
   perspective: 'published',
