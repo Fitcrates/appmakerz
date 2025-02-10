@@ -2,22 +2,27 @@ import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
+// Get environment variables with fallbacks to non-VITE prefixed versions
+const getEnvVar = (viteKey: string, regularKey: string) => {
+  return import.meta.env[viteKey] || import.meta.env[regularKey];
+};
+
 // Validate environment variables
 const requiredEnvVars = {
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
-  dataset: import.meta.env.VITE_SANITY_DATASET,
+  projectId: getEnvVar('VITE_SANITY_PROJECT_ID', 'SANITY_PROJECT_ID'),
+  dataset: getEnvVar('VITE_SANITY_DATASET', 'SANITY_DATASET'),
 };
 
 // Log environment variables to verify they're loaded
 console.log('Sanity Config:', {
   projectId: requiredEnvVars.projectId,
   dataset: requiredEnvVars.dataset,
-  tokenLength: import.meta.env.VITE_SANITY_AUTH_TOKEN?.length || 0
+  tokenLength: (getEnvVar('VITE_SANITY_AUTH_TOKEN', 'SANITY_TOKEN'))?.length || 0
 });
 
 if (!requiredEnvVars.projectId || !requiredEnvVars.dataset) {
   throw new Error(
-    `Missing required environment variables. Make sure VITE_SANITY_PROJECT_ID and VITE_SANITY_DATASET are set in your .env file.`
+    `Missing required environment variables. Make sure either VITE_SANITY_PROJECT_ID and VITE_SANITY_DATASET or SANITY_PROJECT_ID and SANITY_DATASET are set in your environment.`
   );
 }
 
@@ -36,7 +41,7 @@ export const writeClient = createClient({
   useCdn: false, // Disable CDN for mutations
   apiVersion: '2024-02-20',
   perspective: 'published',
-  token: import.meta.env.VITE_SANITY_AUTH_TOKEN,
+  token: getEnvVar('VITE_SANITY_AUTH_TOKEN', 'SANITY_TOKEN'),
 });
 
 const builder = imageUrlBuilder(readClient);
