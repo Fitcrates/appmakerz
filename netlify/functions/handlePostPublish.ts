@@ -56,10 +56,16 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
   
   try {
     console.log('Preparing email template params');
+    
+    // Handle multilingual title
+    const blogTitle = typeof post.title === 'object' 
+      ? post.title.en || post.title.pl || 'New Blog Post'  // Prefer English, fallback to Polish
+      : post.title || 'New Blog Post';
+
     const templateParams = {
-      categories: post.categories?.join(', ') || '',
-      blog_title: post.title,
-      snippet: post.snippet,
+      categories: Array.isArray(post.categories) ? post.categories.join(', ') : post.categories || '',
+      blog_title: blogTitle,
+      snippet: post.snippet || '',
       blog_url: `${process.env.SITE_URL}/blog/${post.slug.current}`,
       unsubscribe_url: `${process.env.SITE_URL}/unsubscribe?token=${subscriber.unsubscribeToken}`,
       to_email: subscriber.email,
@@ -73,17 +79,17 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
       to_email: '[HIDDEN]'
     });
 
-    // Initialize EmailJS with both public and private keys
+    // Initialize EmailJS
     console.log('Initializing EmailJS');
-    
+    emailjs.init({
+      publicKey: process.env.EMAILJS_PUBLIC_KEY!,
+      privateKey: process.env.EMAILJS_PRIVATE_KEY!,
+    });
+
     const result = await emailjs.send(
       process.env.EMAILJS_SERVICE_ID!,
       process.env.EMAILJS_TEMPLATE_ID!,
-      templateParams,
-      {
-        publicKey: process.env.EMAILJS_PUBLIC_KEY!,
-        privateKey: process.env.EMAILJS_PRIVATE_KEY!,
-      }
+      templateParams
     );
 
     console.log('Email sent successfully:', {
