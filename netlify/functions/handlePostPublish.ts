@@ -4,6 +4,8 @@ import emailjs from '@emailjs/browser';
 
 // Helper function to validate email configuration
 const validateEmailConfig = () => {
+  console.log('Starting email config validation');
+  
   const requiredEnvVars = [
     'EMAILJS_SERVICE_ID',
     'EMAILJS_TEMPLATE_ID',
@@ -12,10 +14,26 @@ const validateEmailConfig = () => {
     'SITE_URL'
   ];
 
+  // Log all env vars (without their values)
+  console.log('Available environment variables:', {
+    ...Object.keys(process.env).reduce((acc, key) => ({
+      ...acc,
+      [key]: key.includes('KEY') || key.includes('TOKEN') ? '[HIDDEN]' : !!process.env[key]
+    }), {})
+  });
+
+  // Check each required var individually
+  requiredEnvVars.forEach(varName => {
+    console.log(`Checking ${varName}:`, !!process.env[varName]);
+  });
+
   const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
   if (missingVars.length > 0) {
+    console.error('Missing environment variables:', missingVars);
     throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
   }
+
+  console.log('Email config validation successful');
 };
 
 // Helper function to validate sanity configuration
@@ -34,17 +52,30 @@ const validateSanityConfig = () => {
 
 // Helper function to send email
 const sendEmail = async (subscriber: any, post: any, isTest = false) => {
-  const templateParams = {
-    categories: post.categories.join(', '),
-    blog_title: post.title,
-    snippet: post.snippet,
-    blog_url: `${process.env.SITE_URL}/blog/${post.slug.current}`,
-    unsubscribe_url: `${process.env.SITE_URL}/unsubscribe?token=${subscriber.unsubscribeToken}`,
-    to_email: subscriber.email,
-    is_test: isTest ? '[TEST] ' : '' // Prefix test emails
-  };
-
+  console.log('Starting email send process');
+  
   try {
+    console.log('Preparing email template params');
+    const templateParams = {
+      categories: post.categories?.join(', ') || '',
+      blog_title: post.title,
+      snippet: post.snippet,
+      blog_url: `${process.env.SITE_URL}/blog/${post.slug.current}`,
+      unsubscribe_url: `${process.env.SITE_URL}/unsubscribe?token=${subscriber.unsubscribeToken}`,
+      to_email: subscriber.email,
+      is_test: isTest ? '[TEST] ' : ''
+    };
+
+    console.log('Email template params prepared:', {
+      ...templateParams,
+      blog_url: templateParams.blog_url,
+      unsubscribe_url: '[HIDDEN]',
+      to_email: '[HIDDEN]'
+    });
+
+    // Initialize EmailJS with both public and private keys
+    console.log('Initializing EmailJS');
+    
     const result = await emailjs.send(
       process.env.EMAILJS_SERVICE_ID!,
       process.env.EMAILJS_TEMPLATE_ID!,
@@ -54,10 +85,16 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
         privateKey: process.env.EMAILJS_PRIVATE_KEY!,
       }
     );
-    console.log(`Email sent to ${subscriber.email}:`, result);
+
+    console.log('Email sent successfully:', {
+      status: result.status,
+      text: result.text,
+      subscriber: subscriber.email
+    });
+    
     return result;
   } catch (error) {
-    console.error(`Failed to send email to ${subscriber.email}:`, error);
+    console.error('Failed to send email:', error);
     throw error;
   }
 };
