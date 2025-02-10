@@ -1,5 +1,25 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  SANITY_STUDIO_API_PROJECT_ID = "867nk643"
+  SANITY_STUDIO_API_DATASET = "production"
+  SANITY_STUDIO_PROJECT_NAME = "appcrates-portfolio"
+
 [[redirects]]
-  from = "/robots.txt"
-  to = "/robots.txt"
+  from = "/studio/*"
+  to = "/studio/index.html"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
