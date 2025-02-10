@@ -52,10 +52,22 @@ const validateSanityConfig = () => {
 
 // Helper function to get title from multilingual object
 const getTitle = (title: any): string => {
-  if (!title) return 'New Blog Post';
-  if (typeof title === 'string') return title;
-  // Prefer English, fallback to Polish, then to default
-  return title.en || title.pl || 'New Blog Post';
+  console.log('Getting title from:', JSON.stringify(title, null, 2));
+  
+  if (!title) {
+    console.log('Title is empty, returning default');
+    return 'New Blog Post';
+  }
+  
+  if (typeof title === 'string') {
+    console.log('Title is a string:', title);
+    return title;
+  }
+  
+  // Handle multilingual title
+  const extractedTitle = title.en || title.pl || 'New Blog Post';
+  console.log('Extracted multilingual title:', extractedTitle);
+  return extractedTitle;
 };
 
 // Helper function to send email
@@ -65,12 +77,21 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
   
   try {
     if (!post || !post.slug || !post.title) {
+      console.error('Invalid post data:', {
+        hasPost: !!post,
+        hasSlug: !!post?.slug,
+        hasTitle: !!post?.title,
+        titleType: typeof post?.title,
+        titleValue: post?.title
+      });
       throw new Error('Invalid post data received');
     }
 
     console.log('Preparing email template params');
     
     const blogTitle = getTitle(post.title);
+    console.log('Final blog title:', blogTitle);
+    
     const blogUrl = `${process.env.SITE_URL}/blog/${post.slug}`;
     const unsubscribeUrl = `${process.env.SITE_URL}/unsubscribe?token=${subscriber.unsubscribeToken}`;
 
@@ -85,13 +106,15 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
       blog_url: blogUrl,
       unsubscribe_url: unsubscribeUrl,
       to_email: subscriber.email,
-      is_test: isTest ? '[TEST] ' : ''
+      is_test: isTest ? '[TEST] ' : '',
+      author_name: 'AppCrates Team' // Adding author name as it's in the template
     };
 
     console.log('Email template params prepared:', {
       categories,
       blog_title: blogTitle,
       blog_url: blogUrl,
+      author_name: templateParams.author_name,
       to_email: '[HIDDEN]',
       unsubscribe_url: '[HIDDEN]'
     });
@@ -184,30 +207,17 @@ const handler: Handler = async (event) => {
       const post = await client.fetch(
         `*[_type == "post" && _id == $id][0]{
           _id,
-          title {
-            en,
-            pl
-          },
+          title,
           "slug": slug.current,
-          categories,
-          "snippet": pt::text(body)
+          categories
         }`,
         { id: body._id }
       );
 
-      console.log('Retrieved post data:', { 
-        found: !!post,
-        id: post?._id,
-        title: post?.title,
-        slug: post?.slug,
-        categoriesCount: post?.categories?.length
-      });
+      console.log('Raw post data from Sanity:', JSON.stringify(post, null, 2));
 
       if (!post) {
-        return {
-          statusCode: 404,
-          body: JSON.stringify({ error: 'Post not found' })
-        };
+        throw new Error(`Post not found with ID: ${body._id}`);
       }
 
       // Get all subscribers
