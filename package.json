@@ -5,10 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:web && npm run build:studio",
-    "build:web": "tsc && vite build",
-    "build:studio": "cd sanity.studio && sanity build ../dist/studio -y",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "sanity": "sanity dev",
     "sanity-deploy": "sanity deploy",
