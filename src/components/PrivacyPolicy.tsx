@@ -88,7 +88,7 @@ const PrivacyPolicy: React.FC = () => {
     <div className="min-h-screen bg-[#140F2D]">
       <Header />
       <main>
-        <div className="container mx-auto px-48 py-8">
+        <div className="container mx-auto px-2 md:px-12 lg:px-24 py-8">
           <h1 className="text-5xl text-center text-white font-bold text-slate-900 mb-8 font-jakarta mt-48">
             {content[language].title}
           </h1>
