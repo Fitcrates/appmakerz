@@ -63,6 +63,11 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
 };
 
 const handler: Handler = async (event) => {
+  console.log('Function triggered with event:', {
+    method: event.httpMethod,
+    body: event.body ? JSON.parse(event.body) : null
+  });
+
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
@@ -72,6 +77,18 @@ const handler: Handler = async (event) => {
   }
 
   try {
+    // Log environment variables (without sensitive values)
+    console.log('Environment variables check:', {
+      SANITY_PROJECT_ID: !!process.env.SANITY_PROJECT_ID,
+      SANITY_DATASET: !!process.env.SANITY_DATASET,
+      SANITY_TOKEN: !!process.env.SANITY_TOKEN,
+      EMAILJS_SERVICE_ID: !!process.env.EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ID: !!process.env.EMAILJS_TEMPLATE_ID,
+      EMAILJS_PUBLIC_KEY: !!process.env.EMAILJS_PUBLIC_KEY,
+      EMAILJS_PRIVATE_KEY: !!process.env.EMAILJS_PRIVATE_KEY,
+      SITE_URL: process.env.SITE_URL
+    });
+
     // Validate configurations first
     validateEmailConfig();
     validateSanityConfig();
@@ -109,10 +126,12 @@ const handler: Handler = async (event) => {
       { id: body._id }
     );
 
+    console.log('Retrieved post:', { id: body._id, found: !!post, post });
+
     if (!post) {
       return {
         statusCode: 404,
-        body: 'Post not found'
+        body: JSON.stringify({ error: 'Post not found' })
       };
     }
 
