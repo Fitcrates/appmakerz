@@ -50,6 +50,14 @@ const validateSanityConfig = () => {
   }
 };
 
+// Helper function to get title from multilingual object
+const getTitle = (title: any): string => {
+  if (!title) return 'New Blog Post';
+  if (typeof title === 'string') return title;
+  // Prefer English, fallback to Polish, then to default
+  return title.en || title.pl || 'New Blog Post';
+};
+
 // Helper function to send email
 const sendEmail = async (subscriber: any, post: any, isTest = false) => {
   console.log('Starting email send process');
@@ -57,24 +65,28 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
   try {
     console.log('Preparing email template params');
     
-    // Handle multilingual title
-    const blogTitle = typeof post.title === 'object' 
-      ? post.title.en || post.title.pl || 'New Blog Post'  // Prefer English, fallback to Polish
-      : post.title || 'New Blog Post';
+    const blogTitle = getTitle(post.title);
+    const blogUrl = `${process.env.SITE_URL}/blog/${post.slug.current}`;
+    const unsubscribeUrl = `${process.env.SITE_URL}/unsubscribe?token=${subscriber.unsubscribeToken}`;
+
+    // Ensure categories is an array and join with commas
+    const categories = Array.isArray(post.categories) 
+      ? post.categories.map(cat => typeof cat === 'string' ? cat : getTitle(cat?.title)).filter(Boolean).join(', ')
+      : '';
 
     const templateParams = {
-      categories: Array.isArray(post.categories) ? post.categories.join(', ') : post.categories || '',
+      categories,
       blog_title: blogTitle,
       snippet: post.snippet || '',
-      blog_url: `${process.env.SITE_URL}/blog/${post.slug.current}`,
-      unsubscribe_url: `${process.env.SITE_URL}/unsubscribe?token=${subscriber.unsubscribeToken}`,
+      blog_url: blogUrl,
+      unsubscribe_url: unsubscribeUrl,
       to_email: subscriber.email,
       is_test: isTest ? '[TEST] ' : ''
     };
 
     console.log('Email template params prepared:', {
       ...templateParams,
-      blog_url: templateParams.blog_url,
+      blog_url: blogUrl,
       unsubscribe_url: '[HIDDEN]',
       to_email: '[HIDDEN]'
     });
@@ -166,9 +178,12 @@ const handler: Handler = async (event) => {
       console.log('Fetching post data for ID:', body._id);
       const post = await client.fetch(
         `*[_type == "post" && _id == $id][0]{
-          title,
+          title {
+            en,
+            pl
+          },
           slug,
-          categories,
+          "categories": categories[]->title,
           "snippet": array::join(string::split(pt::text(body[0...1]), "")[0...200], "") + "..."
         }`,
         { id: body._id }
