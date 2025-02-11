@@ -42,7 +42,7 @@ exports.handler = async (event) => {
           .set({
             isActive: true,
             categories: categories || [],
-            updatedAt: new Date().toISOString()
+            subscribedAt: new Date().toISOString()
           })
           .commit();
 
@@ -61,11 +61,10 @@ exports.handler = async (event) => {
     const result = await client.create({
       _type: 'subscriber',
       email,
-      subscribedCategories: categories || [],
+      categories: categories || [],
       unsubscribeToken: crypto.randomUUID(),
       isActive: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      subscribedAt: new Date().toISOString()
     });
 
     return {
