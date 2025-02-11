@@ -238,53 +238,77 @@ const handler: Handler = async (event) => {
         throw new Error(`Post not found with ID: ${body._id}`);
       }
 
-      // Use transaction to prevent race conditions
-      const tx = client.transaction();
-      
+      // Log post details for debugging
+      console.log('Post details:', {
+        id: post._id,
+        publishedAt: post.publishedAt,
+        updatedAt: post._updatedAt,
+        emailsSent: post.emailsSent,
+        title: post.title
+      });
+
+      // Check if this is a new publication or an update
+      const isNewPublication = post.publishedAt && 
+        (!post._updatedAt || new Date(post.publishedAt) >= new Date(post._updatedAt));
+
       if (!isTestMode) {
-        // Verify again that emails haven't been sent
-        const currentPost = await client.fetch('*[_type == "post" && _id == $id][0]', { id: body._id });
-        if (currentPost.emailsSent) {
-          console.log('Emails have already been sent for this post (verified in transaction)');
+        if (post.emailsSent) {
+          console.log('Emails have already been sent for this post');
           return {
             statusCode: 200,
             body: JSON.stringify({ message: 'Emails already sent for this post' })
           };
         }
-        
-        // Mark as sent immediately to prevent concurrent executions
+
+        if (!isNewPublication) {
+          console.log('Post is either a draft or being updated, not sending emails', {
+            publishedAt: post.publishedAt,
+            updatedAt: post._updatedAt
+          });
+          return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Post is not newly published, skipping emails' })
+          };
+        }
+
+        // Mark as sent only if we're actually going to send emails
+        const tx = client.transaction();
         tx.patch(post._id, { set: { emailsSent: true } });
         await tx.commit();
-      }
-
-      if (!isTestMode && (!post.publishedAt || new Date(post._updatedAt) > new Date(post.publishedAt))) {
-        console.log('Post is either a draft or being updated, not sending emails');
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ message: 'Post is not newly published, skipping emails' })
-        };
       }
 
       const subscribers = await client.fetch(
         `*[_type == "subscriber" && !(_id in path("drafts.**")) && isActive == true]{
           email,
-          unsubscribeToken
+          unsubscribeToken,
+          subscribedCategories
         }`
       );
 
-      if (subscribers.length === 0) {
-        console.log('No active subscribers found');
+      // Filter subscribers based on categories if the post has categories
+      const relevantSubscribers = subscribers.filter(subscriber => {
+        if (!post.categories || post.categories.length === 0) return true;
+        if (!subscriber.subscribedCategories || subscriber.subscribedCategories.length === 0) return true;
+        return post.categories.some(category => 
+          subscriber.subscribedCategories.includes(category)
+        );
+      });
+
+      if (relevantSubscribers.length === 0) {
+        console.log('No matching subscribers found for this post');
         return {
           statusCode: 200,
-          body: JSON.stringify({ message: 'No active subscribers to notify' })
+          body: JSON.stringify({ message: 'No matching subscribers to notify' })
         };
       }
+
+      console.log(`Found ${relevantSubscribers.length} matching subscribers`);
 
       // Process subscribers in smaller batches to prevent overwhelming EmailJS
       const BATCH_SIZE = 3;
       const batches = [];
-      for (let i = 0; i < subscribers.length; i += BATCH_SIZE) {
-        batches.push(subscribers.slice(i, i + BATCH_SIZE));
+      for (let i = 0; i < relevantSubscribers.length; i += BATCH_SIZE) {
+        batches.push(relevantSubscribers.slice(i, i + BATCH_SIZE));
       }
 
       const failures = [];
@@ -313,7 +337,7 @@ const handler: Handler = async (event) => {
           body: JSON.stringify({ 
             error: 'Some emails failed to send',
             failureCount: failures.length,
-            totalCount: subscribers.length
+            totalCount: relevantSubscribers.length
           })
         };
       }
@@ -322,7 +346,7 @@ const handler: Handler = async (event) => {
         statusCode: 200,
         body: JSON.stringify({ 
           message: 'Emails sent successfully',
-          count: subscribers.length
+          count: relevantSubscribers.length
         })
       };
 
