@@ -28,15 +28,20 @@ const Unsubscribe: React.FC = () => {
       }
 
       try {
-        await unsubscribeWithToken(token);
-        setStatus('success');
-        // Redirect to home page after 2 seconds if using token
-        setTimeout(() => {
-          navigate('/');
-        }, 2000);
+        const result = await unsubscribeWithToken(token);
+        if (result.success) {
+          setStatus('success');
+          // Redirect to home page after 2 seconds if using token
+          setTimeout(() => {
+            navigate('/');
+          }, 2000);
+        } else {
+          throw new Error(result.message || 'Failed to unsubscribe');
+        }
       } catch (error) {
         console.error('Error:', error);
         setStatus('error');
+        setError(error instanceof Error ? error.message : 'Failed to unsubscribe');
       }
     };
 
@@ -93,16 +98,16 @@ const Unsubscribe: React.FC = () => {
 
       case 'error':
         return (
-          <div className="min-h-screen bg-[#140F2D] text-white p-8">
+          <div className="min-h-screen bg-[#140F2D] text-white p-8 mt-24">
             <div className="max-w-2xl mx-auto text-center">
-              <h1 className="text-3xl font-bold mb-4">Error</h1>
-              <p className="mb-6">{t.note.line2}</p>
+              <h1 className="text-3xl font-bold mb-4">{t.error?.line1 || 'Error'}</h1>
+              <p className="mb-6">{error || t.error?.line2 || 'There was an error processing your unsubscribe request.'}</p>
               <div className="mt-6">
                 <button 
                   onClick={() => setStatus('input')}
                   className="text-teal-300 hover:text-teal-400 transition-colors"
                 >
-                  Try manual unsubscribe
+                  {t.error?.line3 || 'Try manual unsubscribe'}
                 </button>
               </div>
             </div>
@@ -117,7 +122,7 @@ const Unsubscribe: React.FC = () => {
               <form onSubmit={handleManualUnsubscribe} className="space-y-4">
                 <div>
                   <label htmlFor="email" className="block mb-2">
-                    {t.title.line2}
+                    {t.title.line1}
                   </label>
                   <input
                     type="email"
