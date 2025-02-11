@@ -11,7 +11,7 @@ export default {
       validation: (Rule: any) => Rule.required().email(),
     },
     {
-      name: 'categories',
+      name: 'subscribedCategories',  
       title: 'Subscribed Categories',
       type: 'array',
       of: [{ type: 'string' }],
@@ -55,11 +55,11 @@ export default {
     select: {
       email: 'email',
       isActive: 'isActive',
-      categories: 'categories',
+      subscribedCategories: 'subscribedCategories',  
       subscribedAt: 'subscribedAt'
     },
     prepare(selection: any) {
-      const { email, isActive, categories, subscribedAt } = selection;
+      const { email, isActive, subscribedCategories, subscribedAt } = selection;
       const date = subscribedAt 
         ? new Date(subscribedAt).toLocaleString('en-US', {
             year: 'numeric',
@@ -71,7 +71,7 @@ export default {
         : 'Unknown date';
       return {
         title: email,
-        subtitle: `${isActive ? 'Active' : 'Inactive'} • ${date} • Categories: ${categories?.join(', ')}`,
+        subtitle: `${isActive ? 'Active' : 'Inactive'} • ${date} • Categories: ${subscribedCategories?.join(', ')}`,
         media: () => '📧'
       };
     },
