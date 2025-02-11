@@ -81,14 +81,14 @@ const Unsubscribe: React.FC = () => {
     switch (status) {
       case 'loading':
         return (
-          <div className="min-h-screen bg-[#140F2D] text-white flex items-center justify-center">
+          <div className="min-h-screen bg-[#140F2D] text-white flex items-center justify-center mt-24">
             <div className="animate-pulse">Loading...</div>
           </div>
         );
 
       case 'success':
         return (
-          <div className="min-h-screen bg-[#140F2D] text-white p-8">
+          <div className="min-h-screen bg-[#140F2D] text-white p-8 mt-24">
             <div className="max-w-2xl mx-auto text-center">
               <h1 className="text-3xl font-bold mb-4">{t.title.line1}</h1>
               <p className="mb-6">{t.note.line2}</p>
@@ -116,13 +116,13 @@ const Unsubscribe: React.FC = () => {
 
       default:
         return (
-          <div className="min-h-screen bg-[#140F2D] text-white p-8 ">
+          <div className="h-[90vh] bg-[#140F2D] text-white p-8 ">
             <div className="max-w-2xl mx-auto mt-24">
               <h1 className="text-3xl font-bold mb-4 text-center">{t.title.line1}</h1>
               <form onSubmit={handleManualUnsubscribe} className="space-y-4">
                 <div>
                   <label htmlFor="email" className="block mb-2">
-                    {t.title.line1}
+                    {t.title.line2}
                   </label>
                   <input
                     type="email"
@@ -130,7 +130,7 @@ const Unsubscribe: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-4 py-2 rounded bg-white/90 border border-white/20 text-white"
+                    className="w-full px-4 py-2 rounded bg-white/90 border border-white/20 text-black"
                     placeholder={t.title.line3}
                   />
                 </div>
