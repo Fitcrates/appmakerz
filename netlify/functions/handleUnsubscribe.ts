@@ -6,7 +6,7 @@ const client = createClient({
   projectId: process.env.SANITY_PROJECT_ID!,
   dataset: process.env.SANITY_DATASET!,
   token: process.env.SANITY_TOKEN!,
-  apiVersion: '2024-02-20',
+  apiVersion: '2023-03-25',
   useCdn: false,
 });
 
@@ -22,7 +22,7 @@ export const handler: Handler = async (event) => {
   try {
     const { token, email } = JSON.parse(event.body || '{}');
 
-    // If token is provided, use it to find and delete subscriber
+    // If token is provided, use it to find and patch subscriber status
     if (token) {
       const subscriberId = await client.fetch(
         `*[_type == "subscriber" && unsubscribeToken == $token][0]._id`,
@@ -36,9 +36,12 @@ export const handler: Handler = async (event) => {
         };
       }
 
-      await client.delete(subscriberId);
+      await client
+        .patch(subscriberId)
+        .set({ status: 'inactive' })
+        .commit();
     }
-    // If email is provided, use it to find and delete subscriber
+    // If email is provided, use it to find and patch subscriber status
     else if (email) {
       const subscriberId = await client.fetch(
         `*[_type == "subscriber" && email == $email][0]._id`,
@@ -52,7 +55,10 @@ export const handler: Handler = async (event) => {
         };
       }
 
-      await client.delete(subscriberId);
+      await client
+        .patch(subscriberId)
+        .set({ status: 'inactive' })
+        .commit();
     }
     else {
       return {
