@@ -17,6 +17,47 @@ exports.handler = async (event) => {
   try {
     const { email, categories } = JSON.parse(event.body);
 
+    // Check if email already exists and is active
+    const existingSubscriber = await client.fetch(
+      `*[_type == "subscriber" && email == $email][0]{
+        _id,
+        isActive
+      }`,
+      { email }
+    );
+
+    if (existingSubscriber) {
+      if (existingSubscriber.isActive) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({
+            success: false,
+            message: 'This email is already subscribed to the newsletter.'
+          })
+        };
+      } else {
+        // Reactivate the subscription
+        await client
+          .patch(existingSubscriber._id)
+          .set({
+            isActive: true,
+            categories: categories || [],
+            updatedAt: new Date().toISOString()
+          })
+          .commit();
+
+        return {
+          statusCode: 200,
+          body: JSON.stringify({
+            success: true,
+            message: 'Your subscription has been reactivated.',
+            subscriberId: existingSubscriber._id
+          })
+        };
+      }
+    }
+
+    // Create new subscriber
     const result = await client.create({
       _type: 'subscriber',
       email,
@@ -24,11 +65,16 @@ exports.handler = async (event) => {
       unsubscribeToken: crypto.randomUUID(),
       isActive: true,
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     });
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, subscriberId: result._id }),
+      body: JSON.stringify({ 
+        success: true,
+        message: 'Successfully subscribed to the newsletter.',
+        subscriberId: result._id 
+      }),
     };
   } catch (error) {
     console.error('Subscription error:', error);
@@ -36,7 +82,7 @@ exports.handler = async (event) => {
       statusCode: 500,
       body: JSON.stringify({ 
         success: false, 
-        message: 'Failed to create subscription' 
+        message: 'Failed to process subscription request'
       }),
     };
   }
