@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { client } from '../lib/sanity.client';
+import { client, writeClient } from '../lib/sanity.client';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { v4 as uuidv4 } from 'uuid';
@@ -37,41 +37,33 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setIsSubmitting(true);
-
-    if (!email) {
-      setError('Email is required');
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (categories.length === 0) {
-      setError('Please select at least one category');
-      setIsSubmitting(false);
-      return;
-    }
+    setError('');
 
     try {
-      // Create subscriber document in Sanity
-      await client.create({
+      const result = await writeClient.create({
         _type: 'subscriber',
         email,
         subscribedCategories: categories,
         unsubscribeToken: uuidv4(),
         isActive: true,
+        createdAt: new Date().toISOString(),
       });
 
-      setSuccess(true);
-      setTimeout(() => {
-        onClose();
-        setSuccess(false);
-        setEmail('');
-        setCategories([]);
-      }, 2000);
-    } catch (err) {
+      if (result._id) {
+        setSuccess(true);
+        setTimeout(() => {
+          onClose();
+          setSuccess(false);
+          setEmail('');
+          setCategories([]);
+        }, 2000);
+      } else {
+        throw new Error('Failed to create subscriber');
+      }
+    } catch (error) {
+      console.error('Error creating subscriber:', error);
       setError('Failed to subscribe. Please try again.');
-      console.error('Error creating subscriber:', err);
     } finally {
       setIsSubmitting(false);
     }
