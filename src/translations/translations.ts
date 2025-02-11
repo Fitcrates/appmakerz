@@ -10,7 +10,12 @@ export const translations = {
       },
       note: {
         line1: "You have been successfully unsubscribed from our newsletter.",
-        line2: "There was an error processing your unsubscribe request."
+        line2: "You will be redirected to the homepage."
+      },
+      error: {
+        line1: "Unsubscribe Error",
+        line2: "There was an error processing your unsubscribe request.",
+        line3: "Try manual unsubscribe"
       }
     },
     // NewsletterModal
@@ -304,11 +309,16 @@ export const translations = {
         line1: "Anuluj subksrybcję z Newslettera",
         line2: "Adres email",
         line3: "Wprowadź swój adres email",
-        line4: "Anuluj subskrybcję"
+        line4: "Anuluj subskrypcję"
       },
       note: {
-        line1: "Anulowanie subskrybcji z newslettera zakończone powodzeniem.",
-        line2: "Nastąpił błąd podczas procesu anulowania subskrybcji."
+        line1: "Pomyślnie anulowano subskrypcję newslettera.",
+        line2: "Zostaniesz przekierowany na stronę główną."
+      },
+      error: {
+        line1: "Błąd anulowania subskrypcji",
+        line2: "Wystąpił błąd podczas przetwarzania prośby o anulowanie subskrypcji.",
+        line3: "Spróbuj anulować ręcznie"
       }
     },
     // NewsletterModal
