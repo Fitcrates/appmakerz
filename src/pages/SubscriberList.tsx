@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { readClient } from '../lib/sanity.client';
 import { motion } from 'framer-motion';
 
 interface Subscriber {
@@ -18,15 +17,11 @@ const SubscriberList = () => {
   useEffect(() => {
     const fetchSubscribers = async () => {
       try {
-        const result = await readClient.fetch<Subscriber[]>(
-          `*[_type == "subscriber"] | order(subscribedAt desc) {
-            _id,
-            email,
-            subscribedCategories,
-            isActive,
-            subscribedAt
-          }`
-        );
+        const response = await fetch('/.netlify/functions/getSubscribers');
+        if (!response.ok) {
+          throw new Error('Failed to fetch subscribers');
+        }
+        const result = await response.json();
         setSubscribers(result);
       } catch (err) {
         console.error('Error fetching subscribers:', err);
