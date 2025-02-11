@@ -22,7 +22,7 @@ exports.handler = async (event) => {
       `*[_type == "subscriber" && email == $email][0]{
         _id,
         isActive,
-        categories
+        subscribedCategories
       }`,
       { email }
     );
@@ -38,12 +38,12 @@ exports.handler = async (event) => {
         };
       } else {
         // Reactivate the subscription with existing or new categories
-        const updatedCategories = categories || existingSubscriber.categories || [];
+        const updatedCategories = categories || existingSubscriber.subscribedCategories || [];
         await client
           .patch(existingSubscriber._id)
           .set({
             isActive: true,
-            categories: updatedCategories,
+            subscribedCategories: updatedCategories,
             subscribedAt: new Date().toISOString()
           })
           .commit();
@@ -74,7 +74,7 @@ exports.handler = async (event) => {
     const result = await client.create({
       _type: 'subscriber',
       email,
-      categories: categories,
+      subscribedCategories: categories,
       unsubscribeToken: crypto.randomUUID(),
       isActive: true,
       subscribedAt: new Date().toISOString()
