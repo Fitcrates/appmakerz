@@ -5,33 +5,23 @@ interface UnsubscribeResponse {
   message?: string;
 }
 
-const handleResponse = async (response: any): Promise<UnsubscribeResponse> => {
-  if (response.error) {
-    throw new Error(response.error.message);
-  }
-
-  return { success: true };
-};
-
 export const unsubscribeWithToken = async (token: string): Promise<UnsubscribeResponse> => {
   try {
-    // Find and update the subscriber document
-    const subscriber = await client.fetch(
-      `*[_type == "subscriber" && unsubscribeToken == $token][0]`,
-      { token }
-    );
+    const response = await fetch('/.netlify/functions/handleUnsubscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+    });
 
-    if (!subscriber) {
-      throw new Error('Invalid unsubscribe token');
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to unsubscribe');
     }
 
-    // Update the subscriber's status
-    const response = await client
-      .patch(subscriber._id)
-      .set({ isActive: false })
-      .commit();
-
-    return handleResponse(response);
+    return data;
   } catch (error) {
     if (error instanceof Error) {
       throw error;
@@ -42,27 +32,21 @@ export const unsubscribeWithToken = async (token: string): Promise<UnsubscribeRe
 
 export const unsubscribeWithEmail = async (email: string): Promise<UnsubscribeResponse> => {
   try {
-    // Find the subscriber document by email
-    const subscriber = await client.fetch(
-      `*[_type == "subscriber" && email == $email][0]`,
-      { email }
-    );
+    const response = await fetch('/.netlify/functions/handleUnsubscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
 
-    if (!subscriber) {
-      throw new Error('No subscription found for this email address');
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to unsubscribe');
     }
 
-    if (!subscriber.isActive) {
-      throw new Error('This email is already unsubscribed');
-    }
-
-    // Update the subscriber's status
-    const response = await client
-      .patch(subscriber._id)
-      .set({ isActive: false })
-      .commit();
-
-    return handleResponse(response);
+    return data;
   } catch (error) {
     if (error instanceof Error) {
       throw error;
