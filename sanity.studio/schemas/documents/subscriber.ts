@@ -12,12 +12,13 @@ export default {
     },
     {
       name: 'categories',
-      title: 'Categories',
+      title: 'Subscribed Categories',
       type: 'array',
       of: [{ type: 'string' }],
       options: {
         list: [
           {title: 'Tech', value: 'Tech'},
+          {title: 'React', value: 'React'},
           {title: 'Nature', value: 'Nature'},
           {title: 'Appsheets', value: 'Appsheets'}
         ]
