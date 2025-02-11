@@ -70,10 +70,49 @@ const getTitle = (title: any): string => {
   return extractedTitle;
 };
 
+// Add a simple in-memory lock mechanism
+const locks = new Map<string, boolean>();
+const LOCK_TIMEOUT = 60000; // 60 seconds
+
+const acquireLock = async (lockId: string): Promise<boolean> => {
+  if (locks.get(lockId)) {
+    return false;
+  }
+  locks.set(lockId, true);
+  setTimeout(() => locks.delete(lockId), LOCK_TIMEOUT);
+  return true;
+};
+
+const releaseLock = (lockId: string) => {
+  locks.delete(lockId);
+};
+
+// Rate limiting mechanism
+const rateLimits = new Map<string, number>();
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const MAX_EMAILS_PER_WINDOW = 5;
+
+const checkRateLimit = (email: string): boolean => {
+  const now = Date.now();
+  const lastSent = rateLimits.get(email) || 0;
+  
+  if (now - lastSent < RATE_LIMIT_WINDOW) {
+    return false;
+  }
+  
+  rateLimits.set(email, now);
+  return true;
+};
+
 // Helper function to send email
 const sendEmail = async (subscriber: any, post: any, isTest = false) => {
   console.log('Starting email send process');
-  console.log('Post data received:', JSON.stringify(post, null, 2));
+  
+  // Check rate limit for this subscriber
+  if (!isTest && !checkRateLimit(subscriber.email)) {
+    console.log(`Rate limit exceeded for ${subscriber.email}`);
+    throw new Error('Rate limit exceeded');
+  }
   
   try {
     if (!post || !post.slug || !post.title) {
@@ -87,18 +126,10 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
       throw new Error('Invalid post data received');
     }
 
-    console.log('Preparing email template params');
-    
     const blogTitle = getTitle(post.title);
-    console.log('Final blog title:', blogTitle);
-    
     const blogUrl = `${process.env.SITE_URL}/blog/${post.slug}`;
     const unsubscribeUrl = `${process.env.SITE_URL}/unsubscribe?token=${subscriber.unsubscribeToken}`;
-
-    // Ensure categories is an array and join with commas
-    const categories = Array.isArray(post.categories) 
-      ? post.categories.join(', ')
-      : '';
+    const categories = Array.isArray(post.categories) ? post.categories.join(', ') : '';
 
     const templateParams = {
       categories,
@@ -107,24 +138,19 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
       unsubscribe_url: unsubscribeUrl,
       to_email: subscriber.email,
       is_test: isTest ? '[TEST] ' : '',
-      author_name: 'AppCrates Team' // Adding author name as it's in the template
+      author_name: 'AppCrates Team'
     };
 
-    console.log('Email template params prepared:', {
-      categories,
-      blog_title: blogTitle,
-      blog_url: blogUrl,
-      author_name: templateParams.author_name,
-      to_email: '[HIDDEN]',
-      unsubscribe_url: '[HIDDEN]'
-    });
-
     // Initialize EmailJS
-    console.log('Initializing EmailJS');
     emailjs.init({
       publicKey: process.env.EMAILJS_PUBLIC_KEY!,
       privateKey: process.env.EMAILJS_PRIVATE_KEY!,
     });
+
+    // Add delay between emails to prevent overwhelming the service
+    if (!isTest) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
 
     const result = await emailjs.send(
       process.env.EMAILJS_SERVICE_ID!,
@@ -146,13 +172,23 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
 };
 
 const handler: Handler = async (event) => {
+  const lockId = event.body ? JSON.parse(event.body)._id : 'default';
+  
+  // Try to acquire lock
+  if (!await acquireLock(lockId)) {
+    console.log('Function is already running for this post');
+    return {
+      statusCode: 429,
+      body: JSON.stringify({ message: 'Function is already processing this post' })
+    };
+  }
+  
   try {
     console.log('Function triggered with event:', {
       method: event.httpMethod,
       body: event.body ? JSON.parse(event.body) : null
     });
 
-    // Only allow POST requests
     if (event.httpMethod !== 'POST') {
       return {
         statusCode: 405,
@@ -161,23 +197,9 @@ const handler: Handler = async (event) => {
     }
 
     try {
-      // Log environment variables (without sensitive values)
-      console.log('Environment variables check:', {
-        SANITY_PROJECT_ID: !!process.env.SANITY_PROJECT_ID,
-        SANITY_DATASET: !!process.env.SANITY_DATASET,
-        SANITY_TOKEN: !!process.env.SANITY_TOKEN,
-        EMAILJS_SERVICE_ID: !!process.env.EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID: !!process.env.EMAILJS_TEMPLATE_ID,
-        EMAILJS_PUBLIC_KEY: !!process.env.EMAILJS_PUBLIC_KEY,
-        EMAILJS_PRIVATE_KEY: !!process.env.EMAILJS_PRIVATE_KEY,
-        SITE_URL: process.env.SITE_URL
-      });
-
-      // Validate configurations first
       validateEmailConfig();
       validateSanityConfig();
 
-      // Initialize Sanity client inside the handler
       const client = sanityClient({
         projectId: process.env.SANITY_PROJECT_ID,
         dataset: process.env.SANITY_DATASET,
@@ -186,14 +208,9 @@ const handler: Handler = async (event) => {
         apiVersion: '2023-05-03'
       });
 
-      console.log('Sanity client initialized');
-
       const body = JSON.parse(event.body || '{}');
-      console.log('Parsed webhook body:', body);
-      
       const isTestMode = body.isTest === true;
       
-      // For test mode, we don't require a specific _type
       if (!isTestMode && (!body._type || body._type !== 'post')) {
         console.log('Invalid webhook payload:', body);
         return {
@@ -202,46 +219,92 @@ const handler: Handler = async (event) => {
         };
       }
 
-      // Get the full post data
-      console.log('Fetching post data for ID:', body._id);
+      // Double-check if emails have already been sent (with transaction)
       const post = await client.fetch(
         `*[_type == "post" && _id == $id][0]{
           _id,
           title,
           "slug": slug.current,
-          categories
+          categories,
+          emailsSent,
+          _createdAt,
+          _updatedAt,
+          publishedAt
         }`,
         { id: body._id }
       );
-
-      console.log('Raw post data from Sanity:', JSON.stringify(post, null, 2));
 
       if (!post) {
         throw new Error(`Post not found with ID: ${body._id}`);
       }
 
-      // Get all subscribers
-      console.log('Fetching subscribers');
+      // Use transaction to prevent race conditions
+      const tx = client.transaction();
+      
+      if (!isTestMode) {
+        // Verify again that emails haven't been sent
+        const currentPost = await client.fetch('*[_type == "post" && _id == $id][0]', { id: body._id });
+        if (currentPost.emailsSent) {
+          console.log('Emails have already been sent for this post (verified in transaction)');
+          return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Emails already sent for this post' })
+          };
+        }
+        
+        // Mark as sent immediately to prevent concurrent executions
+        tx.patch(post._id, { set: { emailsSent: true } });
+        await tx.commit();
+      }
+
+      if (!isTestMode && (!post.publishedAt || new Date(post._updatedAt) > new Date(post.publishedAt))) {
+        console.log('Post is either a draft or being updated, not sending emails');
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ message: 'Post is not newly published, skipping emails' })
+        };
+      }
+
       const subscribers = await client.fetch(
-        `*[_type == "subscriber" && !(_id in path("drafts.**"))]{
+        `*[_type == "subscriber" && !(_id in path("drafts.**")) && isActive == true]{
           email,
           unsubscribeToken
         }`
       );
 
-      console.log(`Found ${subscribers.length} subscribers`);
+      if (subscribers.length === 0) {
+        console.log('No active subscribers found');
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ message: 'No active subscribers to notify' })
+        };
+      }
 
-      // Send emails to all subscribers
-      const emailPromises = subscribers.map(subscriber => 
-        sendEmail(subscriber, post, isTestMode)
-          .catch(error => {
-            console.error(`Failed to send email to ${subscriber.email}:`, error);
-            return { error, subscriber };
-          })
-      );
+      // Process subscribers in smaller batches to prevent overwhelming EmailJS
+      const BATCH_SIZE = 3;
+      const batches = [];
+      for (let i = 0; i < subscribers.length; i += BATCH_SIZE) {
+        batches.push(subscribers.slice(i, i + BATCH_SIZE));
+      }
 
-      const results = await Promise.all(emailPromises);
-      const failures = results.filter(r => r.error);
+      const failures = [];
+      for (const batch of batches) {
+        const emailPromises = batch.map(subscriber => 
+          sendEmail(subscriber, post, isTestMode)
+            .catch(error => {
+              console.error(`Failed to send email to ${subscriber.email}:`, error);
+              return { error, subscriber };
+            })
+        );
+
+        const results = await Promise.all(emailPromises);
+        failures.push(...results.filter(r => r.error));
+
+        // Add delay between batches
+        if (!isTestMode) {
+          await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+      }
       
       if (failures.length > 0) {
         console.error(`Failed to send ${failures.length} emails:`, failures);
@@ -274,7 +337,6 @@ const handler: Handler = async (event) => {
       };
     }
   } catch (error: any) {
-    // Catch any JSON parsing errors or other top-level errors
     console.error('Top-level error:', error);
     return {
       statusCode: 500,
@@ -284,6 +346,9 @@ const handler: Handler = async (event) => {
         stack: error.stack
       })
     };
+  } finally {
+    // Always release the lock
+    releaseLock(lockId);
   }
 };
 
