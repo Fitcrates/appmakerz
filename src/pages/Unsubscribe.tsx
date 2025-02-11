@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { writeClient as client } from '../lib/sanity.client';
 
 const Unsubscribe = () => {
   const [searchParams] = useSearchParams();
@@ -19,22 +18,17 @@ const Unsubscribe = () => {
       }
 
       try {
-        // Find and update the subscriber
-        const subscriber = await client.fetch(
-          `*[_type == "subscriber" && unsubscribeToken == $token][0]._id`,
-          { token }
-        );
+        const response = await fetch('/.netlify/functions/handleUnsubscribe', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token }),
+        });
 
-        if (!subscriber) {
-          setStatus('error');
-          return;
+        if (!response.ok) {
+          throw new Error('Failed to unsubscribe');
         }
-
-        // Update the subscriber to inactive
-        await client
-          .patch(subscriber)
-          .set({ isActive: false })
-          .commit();
 
         setStatus('success');
         // Redirect to home page after 2 seconds if using token
@@ -42,7 +36,7 @@ const Unsubscribe = () => {
           navigate('/');
         }, 2000);
       } catch (error) {
-        console.error('Error unsubscribing:', error);
+        console.error('Error:', error);
         setStatus('error');
       }
     };
@@ -52,112 +46,97 @@ const Unsubscribe = () => {
 
   const handleManualUnsubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setIsSubmitting(true);
+    setError('');
 
     try {
-      // Find subscriber by email
-      const subscriber = await client.fetch(
-        `*[_type == "subscriber" && email == $email && isActive == true][0]`,
-        { email }
-      );
+      const response = await fetch('/.netlify/functions/handleUnsubscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
 
-      if (!subscriber) {
-        setError('No active subscription found for this email.');
-        setIsSubmitting(false);
-        return;
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Failed to unsubscribe');
       }
-
-      // Update the subscriber to inactive
-      await client
-        .patch(subscriber._id)
-        .set({ isActive: false })
-        .commit();
 
       setStatus('success');
       // Redirect to home page after 2 seconds
       setTimeout(() => {
         navigate('/');
       }, 2000);
-    } catch (err) {
-      console.error('Error unsubscribing:', err);
-      setError('Failed to process unsubscribe request. Please try again.');
+    } catch (error) {
+      console.error('Error:', error);
+      setError(error instanceof Error ? error.message : 'Failed to unsubscribe');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-[#140F2D] text-white flex items-center justify-center">
+        <div className="animate-pulse">Loading...</div>
+      </div>
+    );
+  }
+
+  if (status === 'success') {
+    return (
+      <div className="min-h-screen bg-[#140F2D] text-white p-8">
+        <div className="max-w-2xl mx-auto text-center">
+          <h1 className="text-3xl font-bold mb-4">Successfully Unsubscribed</h1>
+          <p className="mb-6">You have been successfully unsubscribed from our newsletter.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <div className="min-h-screen bg-[#140F2D] text-white p-8">
+        <div className="max-w-2xl mx-auto text-center">
+          <h1 className="text-3xl font-bold mb-4">Error</h1>
+          <p className="mb-6">There was an error processing your unsubscribe request.</p>
+          <div className="mt-6">
+            {setStatus('input')}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-t from-[#140F2D]/80 via-teal-300 to-[#140F2D]/80 flex items-center justify-center px-4">
-      <div className="bg-[#140F2D]/80 rounded-lg p-8 max-w-md w-full mx-4">
-        {status === 'loading' && (
-          <div className="text-center">
-            <h4 className="text-2xl text-white font-bold mb-4">Processing...</h4>
-            <p className="text-white/80">Please wait while we process your unsubscribe request.</p>
+    <div className="min-h-screen bg-[#140F2D] text-white p-8">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-3xl font-bold mb-4 text-center">Unsubscribe from Newsletter</h1>
+        <form onSubmit={handleManualUnsubscribe} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-2 rounded bg-white/10 border border-white/20 text-white"
+              placeholder="Enter your email address"
+            />
           </div>
-        )}
-
-        {status === 'success' && (
-          <div className="text-center">
-            <h4 className="text-2xl text-white font-bold mb-4">Successfully Unsubscribed</h4>
-            <p className="text-white/80">
-              You have been successfully unsubscribed from our newsletter.
-              You will no longer receive email notifications about new blog posts.
-            </p>
-          </div>
-        )}
-
-        {status === 'error' && (
-          <div className="text-center">
-            <h4 className="text-2xl text-white font-bold mb-4">Error</h4>
-            <p className="text-white/80">
-              We couldn't process your unsubscribe request.
-              The link might be invalid or expired.
-              Try entering your email below to unsubscribe manually.
-            </p>
-            {/* Show manual unsubscribe form when token is invalid */}
-            <div className="mt-6">
-              {setStatus('input')}
-            </div>
-          </div>
-        )}
-
-        {status === 'input' && (
-          <>
-            <h4 className="text-2xl text-white font-bold mb-4">Unsubscribe from Newsletter</h4>
-            <form onSubmit={handleManualUnsubscribe}>
-              <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium text-white mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-300"
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              {error && (
-                <div className="text-red-400 text-sm mb-4">
-                  {error}
-                </div>
-              )}
-
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="GlowButton px-4 py-2 text-sm font-medium text-white"
-                >
-                  {isSubmitting ? 'Processing...' : 'Unsubscribe'}
-                </button>
-              </div>
-            </form>
-          </>
-        )}
+          {error && <p className="text-red-500">{error}</p>}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full px-6 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 transition-colors disabled:opacity-50"
+          >
+            {isSubmitting ? 'Unsubscribing...' : 'Unsubscribe'}
+          </button>
+        </form>
       </div>
     </div>
   );
