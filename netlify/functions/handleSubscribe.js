@@ -1,9 +1,10 @@
 const { createClient } = require('@sanity/client');
+const crypto = require('crypto');
 
 const client = createClient({
-  projectId: process.env.SANITY_PROJECT_ID,
-  dataset: process.env.SANITY_DATASET,
-  token: process.env.SANITY_AUTH_TOKEN,
+  projectId: process.env.VITE_SANITY_PROJECT_ID,
+  dataset: process.env.VITE_SANITY_DATASET,
+  token: process.env.VITE_SANITY_AUTH_TOKEN,
   useCdn: false,
   apiVersion: '2024-02-20',
 });
