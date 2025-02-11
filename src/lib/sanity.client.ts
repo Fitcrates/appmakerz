@@ -28,6 +28,9 @@ export const client = createClient({
   perspective: 'published',
 });
 
+// Export the client as readClient for backward compatibility
+export const readClient = client;
+
 const builder = imageUrlBuilder(client);
 
 export const urlFor = (source: SanityImageSource) => builder.image(source);
