@@ -229,7 +229,8 @@ const handler: Handler = async (event) => {
           emailsSent,
           _createdAt,
           _updatedAt,
-          publishedAt
+          publishedAt,
+          "revision": _rev
         }`,
         { id: body._id }
       );
@@ -241,15 +242,16 @@ const handler: Handler = async (event) => {
       // Log post details for debugging
       console.log('Post details:', {
         id: post._id,
+        revision: post.revision,
         publishedAt: post.publishedAt,
+        createdAt: post._createdAt,
         updatedAt: post._updatedAt,
         emailsSent: post.emailsSent,
         title: post.title
       });
 
-      // Check if this is a new publication or an update
-      const isNewPublication = post.publishedAt && 
-        (!post._updatedAt || new Date(post.publishedAt) >= new Date(post._updatedAt));
+      // Check if this is a new publication
+      const isNewPublication = post.publishedAt && !post.emailsSent;
 
       if (!isTestMode) {
         if (post.emailsSent) {
@@ -260,11 +262,16 @@ const handler: Handler = async (event) => {
           };
         }
 
+        if (!post.publishedAt) {
+          console.log('Post is not published yet');
+          return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Post is not published yet' })
+          };
+        }
+
         if (!isNewPublication) {
-          console.log('Post is either a draft or being updated, not sending emails', {
-            publishedAt: post.publishedAt,
-            updatedAt: post._updatedAt
-          });
+          console.log('Post is being updated, not sending emails');
           return {
             statusCode: 200,
             body: JSON.stringify({ message: 'Post is not newly published, skipping emails' })
@@ -273,7 +280,12 @@ const handler: Handler = async (event) => {
 
         // Mark as sent only if we're actually going to send emails
         const tx = client.transaction();
-        tx.patch(post._id, { set: { emailsSent: true } });
+        tx.patch(post._id, { 
+          set: { 
+            emailsSent: true,
+            emailsSentAt: new Date().toISOString()
+          } 
+        });
         await tx.commit();
       }
 
