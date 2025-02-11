@@ -12,7 +12,6 @@ const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
 const ProjectDetails = lazy(() => import('./components/ProjectDetails'));
 const Unsubscribe = lazy(() => import('./pages/Unsubscribe'));
 const SubscriberList = lazy(() => import('./pages/SubscriberList'));
-const NewsletterTest = lazy(() => import('./components/NewsletterTest'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -97,14 +96,7 @@ const AnimatedRoutes = () => {
             </Suspense>
           }
         />
-        <Route
-          path="/newsletter-test"
-          element={
-            <Suspense fallback={<LoadingFallback />}>
-              <NewsletterTest />
-            </Suspense>
-          }
-        />
+      
       </Routes>
     </AnimatePresence>
   );
