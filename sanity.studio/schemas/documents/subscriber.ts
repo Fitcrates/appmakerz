@@ -11,11 +11,31 @@ export default {
       validation: (Rule: any) => Rule.required().email(),
     },
     {
-      name: 'subscribedCategories',
-      title: 'Subscribed Categories',
+      name: 'categories',
+      title: 'Categories',
       type: 'array',
       of: [{ type: 'string' }],
+      options: {
+        list: [
+          {title: 'Tech', value: 'Tech'},
+          {title: 'Nature', value: 'Nature'},
+          {title: 'Appsheets', value: 'Appsheets'}
+        ]
+      },
       validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'subscribedAt',
+      title: 'Subscribed At',
+      type: 'datetime',
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+        timeFormat: 'HH:mm',
+        timeStep: 15,
+        calendarTodayLabel: 'Today'
+      },
+      validation: (Rule: any) => Rule.required(),
+      initialValue: () => new Date().toISOString()
     },
     {
       name: 'isActive',
@@ -29,29 +49,12 @@ export default {
       type: 'string',
       hidden: true,
     },
-    {
-      name: 'subscribedAt',
-      title: 'Subscribed At',
-      type: 'datetime',
-      options: {
-        dateFormat: 'YYYY-MM-DD',
-        timeFormat: 'HH:mm',
-        timeStep: 15,
-        calendarTodayLabel: 'Today'
-      },
-      validation: (Rule: any) => Rule.required(),
-      initialValue: () => {
-        const now = new Date().toISOString();
-        console.log('Setting initial subscribedAt:', now);
-        return now;
-      }
-    },
   ],
   preview: {
     select: {
       email: 'email',
       isActive: 'isActive',
-      categories: 'subscribedCategories',
+      categories: 'categories',
       subscribedAt: 'subscribedAt'
     },
     prepare(selection: any) {
