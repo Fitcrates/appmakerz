@@ -289,15 +289,16 @@ const handler: Handler = async (event) => {
         await tx.commit();
       }
 
-      const subscribers = await client.fetch(
-        `*[_type == "subscriber" && !(_id in path("drafts.**")) && isActive == true]{
+      // Get all active subscribers
+      const subscribers = await client.fetch(`
+        *[_type == "subscriber" && isActive == true]{
           email,
-          unsubscribeToken,
-          subscribedCategories
-        }`
-      );
+          subscribedCategories,
+          unsubscribeToken
+        }
+      `);
 
-      // Filter subscribers based on categories if the post has categories
+      // Filter subscribers based on post categories
       const relevantSubscribers = subscribers.filter(subscriber => {
         if (!post.categories || post.categories.length === 0) return true;
         if (!subscriber.subscribedCategories || subscriber.subscribedCategories.length === 0) return true;
