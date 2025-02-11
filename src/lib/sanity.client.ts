@@ -11,12 +11,11 @@ const getEnvVar = (viteKey: string, regularKey: string) => {
 const requiredEnvVars = {
   projectId: getEnvVar('VITE_SANITY_PROJECT_ID', 'SANITY_PROJECT_ID'),
   dataset: getEnvVar('VITE_SANITY_DATASET', 'SANITY_DATASET'),
-  token: getEnvVar('VITE_SANITY_AUTH_TOKEN', 'SANITY_AUTH_TOKEN'),
 };
 
-if (!requiredEnvVars.projectId || !requiredEnvVars.dataset || !requiredEnvVars.token) {
+if (!requiredEnvVars.projectId || !requiredEnvVars.dataset) {
   throw new Error(
-    `Missing required environment variables. Make sure either VITE_SANITY_PROJECT_ID, VITE_SANITY_DATASET and VITE_SANITY_AUTH_TOKEN or SANITY_PROJECT_ID, SANITY_DATASET and SANITY_AUTH_TOKEN are set in your environment.`
+    `Missing required environment variables. Make sure either VITE_SANITY_PROJECT_ID and VITE_SANITY_DATASET or SANITY_PROJECT_ID and SANITY_DATASET are set in your environment.`
   );
 }
 
@@ -27,15 +26,6 @@ export const client = createClient({
   useCdn: true,
   apiVersion: '2024-02-20',
   perspective: 'published',
-});
-
-// Create a write client with token for mutations
-export const writeClient = createClient({
-  projectId: requiredEnvVars.projectId,
-  dataset: requiredEnvVars.dataset,
-  useCdn: false, // We need this false for mutations
-  apiVersion: '2024-02-20',
-  token: requiredEnvVars.token,
 });
 
 // Export the client as readClient for backward compatibility
@@ -129,7 +119,7 @@ export const incrementPostView = async (postId: string) => {
     
     if (isDevelopment) {
       // In development, increment view count directly using Sanity client
-      const result = await writeClient.patch(postId)
+      const result = await client.patch(postId)
         .setIfMissing({ viewCount: 0 })
         .inc({ viewCount: 1 })
         .commit();
