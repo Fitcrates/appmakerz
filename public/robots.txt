@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-Allow: /favicon.ico
-Sitemap: https://appcrates.netlify.app/sitemap.xml
