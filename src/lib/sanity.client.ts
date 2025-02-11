@@ -1,43 +1,47 @@
-import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
-// Get environment variables with fallbacks to non-VITE prefixed versions
-const getEnvVar = (viteKey: string, regularKey: string) => {
-  return import.meta.env[viteKey] || import.meta.env[regularKey];
+// Only use public configuration
+const config = {
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
+  dataset: import.meta.env.VITE_SANITY_DATASET,
 };
 
-// Validate environment variables
-const requiredEnvVars = {
-  projectId: getEnvVar('VITE_SANITY_PROJECT_ID', 'SANITY_PROJECT_ID'),
-  dataset: getEnvVar('VITE_SANITY_DATASET', 'SANITY_DATASET'),
-};
-
-if (!requiredEnvVars.projectId || !requiredEnvVars.dataset) {
+if (!config.projectId || !config.dataset) {
   throw new Error(
-    `Missing required environment variables. Make sure either VITE_SANITY_PROJECT_ID and VITE_SANITY_DATASET or SANITY_PROJECT_ID and SANITY_DATASET are set in your environment.`
+    'Missing required environment variables. Make sure VITE_SANITY_PROJECT_ID and VITE_SANITY_DATASET are set in your environment.'
   );
 }
 
-// Create a read-only client
-export const client = createClient({
-  projectId: requiredEnvVars.projectId,
-  dataset: requiredEnvVars.dataset,
-  useCdn: true,
-  apiVersion: '2024-02-20',
-  perspective: 'published',
+// Create an image builder (this doesn't require authentication)
+const builder = imageUrlBuilder({
+  projectId: config.projectId,
+  dataset: config.dataset,
 });
-
-// Export the client as readClient for backward compatibility
-export const readClient = client;
-
-const builder = imageUrlBuilder(client);
 
 export const urlFor = (source: SanityImageSource) => builder.image(source);
 
+// Helper function to execute Sanity queries through Netlify function
+async function executeQuery<T>(query: string, params?: Record<string, any>): Promise<T> {
+  const response = await fetch('/.netlify/functions/handleSanityQuery', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query, params }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to execute query');
+  }
+
+  return response.json();
+}
+
 // Fetch posts with basic information
 export async function getPosts() {
-  return client.fetch(`
+  return executeQuery(`
     *[_type == "post"] | order(publishedAt desc) {
       _id,
       title {
@@ -63,8 +67,8 @@ export async function getPosts() {
 }
 
 // Fetch a single post by slug
-export const getPost = async (slug: string) =>
-  client.fetch(
+export async function getPost(slug: string) {
+  return executeQuery(
     `*[_type == "post" && slug.current == $slug][0]{
       _id,
       title {
@@ -88,10 +92,11 @@ export const getPost = async (slug: string) =>
     }`,
     { slug }
   );
+}
 
 // Fetch a single project by slug
 export async function getProject(slug: string): Promise<any> {
-  return client.fetch(
+  return executeQuery(
     `*[_type == "project" && slug.current == $slug][0]{
       _id,
       title,
@@ -111,45 +116,31 @@ export async function getProject(slug: string): Promise<any> {
   );
 }
 
-// Increment post view - now using the Netlify function
-export const incrementPostView = async (postId: string) => {
+// Increment post view - using Netlify function
+export async function incrementPostView(postId: string) {
   try {
-    // Check if we're in development environment
-    const isDevelopment = import.meta.env.DEV;
-    
-    if (isDevelopment) {
-      // In development, increment view count directly using Sanity client
-      const result = await client.patch(postId)
-        .setIfMissing({ viewCount: 0 })
-        .inc({ viewCount: 1 })
-        .commit();
-      return result;
-    } else {
-      // In production, use the Netlify function
-      const response = await fetch('/.netlify/functions/incrementViewCount', {
-        method: 'POST',
-        body: JSON.stringify({ postId }),
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
+    const response = await fetch('/.netlify/functions/incrementViewCount', {
+      method: 'POST',
+      body: JSON.stringify({ postId }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-      if (!response.ok) {
-        throw new Error('Failed to increment view count');
-      }
-
-      const data = await response.json();
-      return data;
+    if (!response.ok) {
+      throw new Error('Failed to increment view count');
     }
+
+    return response.json();
   } catch (error) {
     console.error('Error incrementing view count:', error);
     throw error;
   }
-};
+}
 
 // Fetch popular posts
-export const getPopularPosts = async () =>
-  client.fetch(`
+export async function getPopularPosts() {
+  return executeQuery(`
     *[_type == "post"] | order(viewCount desc) [0...3] {
       _id,
       title {
@@ -164,3 +155,4 @@ export const getPopularPosts = async () =>
       tags
     }
   `);
+}
