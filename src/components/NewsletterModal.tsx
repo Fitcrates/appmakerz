@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { client, writeClient } from '../lib/sanity.client';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,9 +23,18 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
     // Fetch unique categories from posts
     const fetchCategories = async () => {
       const query = `*[_type == "post"].categories[]`;
-      const result = await client.fetch(query);
+      const result = await fetch('/.netlify/functions/fetchCategories', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query,
+        }),
+      });
+      const data = await result.json();
       // Get unique categories
-      const uniqueCategories = [...new Set(result.flat())];
+      const uniqueCategories = [...new Set(data.flat())];
       setAvailableCategories(uniqueCategories);
     };
 
@@ -41,29 +49,33 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
     setError('');
 
     try {
-      const result = await writeClient.create({
-        _type: 'subscriber',
-        email,
-        subscribedCategories: categories,
-        unsubscribeToken: uuidv4(),
-        isActive: true,
-        createdAt: new Date().toISOString(),
+      const response = await fetch('/.netlify/functions/handleSubscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          categories,
+        }),
       });
 
-      if (result._id) {
-        setSuccess(true);
-        setTimeout(() => {
-          onClose();
-          setSuccess(false);
-          setEmail('');
-          setCategories([]);
-        }, 2000);
-      } else {
-        throw new Error('Failed to create subscriber');
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to subscribe');
       }
+
+      setSuccess(true);
+      setTimeout(() => {
+        onClose();
+        setSuccess(false);
+        setEmail('');
+        setCategories([]);
+      }, 2000);
     } catch (error) {
       console.error('Error creating subscriber:', error);
-      setError('Failed to subscribe. Please try again.');
+      setError(t.error.line1);
     } finally {
       setIsSubmitting(false);
     }
