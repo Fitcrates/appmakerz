@@ -21,7 +21,8 @@ exports.handler = async (event) => {
     const existingSubscriber = await client.fetch(
       `*[_type == "subscriber" && email == $email][0]{
         _id,
-        isActive
+        isActive,
+        categories
       }`,
       { email }
     );
@@ -36,12 +37,13 @@ exports.handler = async (event) => {
           })
         };
       } else {
-        // Reactivate the subscription
+        // Reactivate the subscription with existing or new categories
+        const updatedCategories = categories || existingSubscriber.categories || [];
         await client
           .patch(existingSubscriber._id)
           .set({
             isActive: true,
-            categories: categories || [],
+            categories: updatedCategories,
             subscribedAt: new Date().toISOString()
           })
           .commit();
@@ -57,11 +59,22 @@ exports.handler = async (event) => {
       }
     }
 
+    // Validate categories
+    if (!categories || !Array.isArray(categories) || categories.length === 0) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          success: false,
+          message: 'Please select at least one category'
+        })
+      };
+    }
+
     // Create new subscriber
     const result = await client.create({
       _type: 'subscriber',
       email,
-      categories: categories || [],
+      categories: categories,
       unsubscribeToken: crypto.randomUUID(),
       isActive: true,
       subscribedAt: new Date().toISOString()
