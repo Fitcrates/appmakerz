@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { writeClient as client } from '../lib/sanity.client';
-import { v4 as uuidv4 } from 'uuid';
+import { client } from '../lib/sanity.client';
 
 interface NewsletterModalProps {
   isOpen: boolean;
@@ -48,14 +47,22 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
     }
 
     try {
-      // Create subscriber document in Sanity
-      await client.create({
-        _type: 'subscriber',
-        email,
-        subscribedCategories: categories,
-        unsubscribeToken: uuidv4(),
-        isActive: true,
+      const response = await fetch('/.netlify/functions/handleNewsletterSubscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          categories,
+        }),
       });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to subscribe');
+      }
 
       setSuccess(true);
       setTimeout(() => {
@@ -83,9 +90,9 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/80 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-white/80  flex items-center justify-center z-50">
       <div className="bg-[#140F2D]/80 rounded-lg p-8 max-w-md w-full mx-4">
-        <h4 className="text-2xl text-white font-bold mb-4">Subscribe to Newsletter</h4>
+        <h4 className="text-2xl text-white font-jakarta font-light mb-4">Subscribe to Newsletter</h4>
         
         {success ? (
           <div className="text-green-600 font-medium">
@@ -94,61 +101,53 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-white mb-1">
-                Email
-              </label>
               <input
                 type="email"
-                id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-300"
                 placeholder="Enter your email"
+                className="w-full p-2 rounded bg-white/10 text-white placeholder-white/50 border border-white/20"
+                required
               />
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-white mb-2">
-                Select Categories
-              </label>
+              <p className="text-white mb-2">Select categories you're interested in:</p>
               <div className="space-y-2">
                 {availableCategories.map((category) => (
-                  <label key={category} className="flex items-center">
+                  <label key={category} className="flex items-center space-x-2 text-white">
                     <input
                       type="checkbox"
                       checked={categories.includes(category)}
                       onChange={() => handleCategoryToggle(category)}
-                      className="peer hidden"
-/>
-<div className="w-4 h-4 border-2 border-white rounded-md flex items-center justify-center peer-checked:bg-teal-300 peer-checked:border-teal-300">
-✓
-      </div>
-                    <span className="ml-2 text-white">{category}</span>
+                      className="form-checkbox"
+                    />
+                    <span>{category}</span>
                   </label>
                 ))}
               </div>
             </div>
 
             {error && (
-              <div className="text-red-600 text-sm mb-4">
+              <div className="text-red-500 mb-4">
                 {error}
               </div>
             )}
 
-            <div className="flex justify-end space-x-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-white hover:text-teal-300"
-              >
-                Cancel
-              </button>
+            <div className="flex justify-between">
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="GlowButton px-4 py-2 text-sm font-medium "
+                className="bg-white text-[#140F2D] px-4 py-2 rounded hover:bg-white/90 transition-colors disabled:opacity-50"
               >
                 {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="text-white hover:text-white/80 transition-colors"
+              >
+                Cancel
               </button>
             </div>
           </form>
