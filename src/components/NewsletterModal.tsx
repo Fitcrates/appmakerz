@@ -22,20 +22,29 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   useEffect(() => {
     // Fetch unique categories from posts
     const fetchCategories = async () => {
-      const query = `*[_type == "post"].categories[]`;
-      const result = await fetch('/.netlify/functions/fetchCategories', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query,
-        }),
-      });
-      const data = await result.json();
-      // Get unique categories
-      const uniqueCategories = [...new Set(data.flat())];
-      setAvailableCategories(uniqueCategories);
+      try {
+        const response = await fetch('/.netlify/functions/handleSanityQuery', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: '*[_type == "post"].categories[]'
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch categories');
+        }
+
+        const result = await response.json();
+        // Get unique categories
+        const uniqueCategories = [...new Set(result.flat())];
+        setAvailableCategories(uniqueCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setError('Failed to load categories');
+      }
     };
 
     if (isOpen) {
@@ -82,7 +91,7 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   };
 
   const handleCategoryToggle = (category: string) => {
-    setCategories(prev => 
+    setCategories(prev =>
       prev.includes(category)
         ? prev.filter(c => c !== category)
         : [...prev, category]
