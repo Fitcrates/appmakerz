@@ -84,7 +84,7 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
       }, 2000);
     } catch (error) {
       console.error('Error creating subscriber:', error);
-      setError(t.error.line1);
+      setError(t.error?.line1 || 'Failed to subscribe. Please try again later.');
     } finally {
       setIsSubmitting(false);
     }
