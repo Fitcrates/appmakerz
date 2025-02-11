@@ -17,39 +17,31 @@ const Header = () => {
   };
 
   const scrollToSection = (sectionId: string) => {
-    // If we're not on the homepage, navigate there first
-    if (location.pathname !== '/') {
-      navigate('/');
-      // Wait for navigation to complete before scrolling
-      setTimeout(() => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          element.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'start'
-          });
-          // Additional offset for header
-          window.scrollBy({
-            top: -100,  // Adjust this value based on your header height
-            behavior: 'smooth'
-          });
-        }
-      }, 100);
-    } else {
-      // If we're already on the homepage, just scroll
+    const scrollToElement = () => {
       const element = document.getElementById(sectionId);
       if (element) {
-        element.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
-        });
-        // Additional offset for header
-        window.scrollBy({
-          top: -100,  // Adjust this value based on your header height
+        const headerOffset = 100; // Adjust this value based on your header height
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
           behavior: 'smooth'
         });
       }
+    };
+
+    // If we're not on the homepage, navigate there first
+    if (location.pathname !== '/') {
+      navigate('/');
+      // Wait for navigation and lazy loading to complete
+      setTimeout(scrollToElement, 500); // Increased timeout to account for lazy loading
+    } else {
+      scrollToElement();
     }
+    
+    // Close mobile menu if open
+    setIsMenuOpen(false);
   };
 
   return (
@@ -73,7 +65,7 @@ const Header = () => {
               {language === 'en' ? 'PL' : 'EN'}
             </button>
             <button
-              onClick={() => scrollToSection('home')}
+              onClick={() => scrollToSection('hero')}
               className="text-white font-thin font-jakarta hover:scale-110 hover:text-teal-300 transform transition-transform duration-300 tracking-wide"
             >
               {t.navigation.home}
