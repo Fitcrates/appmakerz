@@ -39,9 +39,9 @@ const validateEmailConfig = () => {
 // Helper function to validate sanity configuration
 const validateSanityConfig = () => {
   const requiredEnvVars = [
-    'SANITY_PROJECT_ID',
-    'SANITY_DATASET',
-    'SANITY_TOKEN'
+    'VITE_SANITY_PROJECT_ID',
+    'VITE_SANITY_DATASET',
+    'VITE_SANITY_AUTH_TOKEN'
   ];
 
   const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
@@ -201,9 +201,9 @@ const handler: Handler = async (event) => {
       validateSanityConfig();
 
       const client = sanityClient({
-        projectId: process.env.SANITY_PROJECT_ID,
-        dataset: process.env.SANITY_DATASET,
-        token: process.env.SANITY_TOKEN,
+        projectId: process.env.VITE_SANITY_PROJECT_ID,
+        dataset: process.env.VITE_SANITY_DATASET,
+        token: process.env.VITE_SANITY_AUTH_TOKEN,
         useCdn: false,
         apiVersion: '2023-05-03'
       });
