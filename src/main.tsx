@@ -23,13 +23,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LanguageProvider>
       <Router>
-        <React.Suspense fallback={
-          <div className="min-h-screen flex items-center justify-center bg-[#140F2D]">
-            <div className="animate-pulse">Loading...</div>
-          </div>
-        }>
           <AnimatedRoutes />
-        </React.Suspense>
       </Router>
     </LanguageProvider>
   </StrictMode>
