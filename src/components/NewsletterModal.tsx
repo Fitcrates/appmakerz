@@ -102,7 +102,7 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
 
   return (
     <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
-      <div className="bg-[#140F2D]/80 rounded-lg p-8 max-w-md w-full mx-4">
+      <div className="bg-[#140F2D]/95 rounded-lg p-8 max-w-md w-full mx-4">
         <h4 className="text-2xl text-white font-jakarta font-light mb-4">{t.title.line1}</h4>
         
         {success ? (
