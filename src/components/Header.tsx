@@ -101,8 +101,8 @@ const Header = () => {
     initial={{ y: -20, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
     exit={{ y: -20, opacity: 0 }}
-    transition={{ duration: 0.3, ease: 'easeInOut' }}
-    className="lg:hidden absolute top-full left-0 right-0 bg-gradient-to-tl from-[#140F2D] via-[#140F2D]/60 to-teal-300/70 backdrop-blur-sm"
+    transition={{ duration: 0.6, ease: 'easeInOut' }}
+    className="lg:hidden absolute top-full left-0 right-0 bg-gradient-to-tl from-[#140F2D] via-[#140F2D]/90 to-teal-300/70 backdrop-blur-sm"
   >
     <nav className="flex flex-col space-y-4 p-4 text-center">
       {[
