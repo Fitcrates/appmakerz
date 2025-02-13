@@ -22,6 +22,7 @@ export default defineConfig({
     historyApiFallback: true,
   },
   optimizeDeps: {
-    include: ['lucide-react']
-  }
+    include: ['lucide-react', 'sanity']
+  },
+  base: '/'
 });
