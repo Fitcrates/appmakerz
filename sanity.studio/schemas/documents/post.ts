@@ -36,7 +36,7 @@ export default {
       name: 'author',
       title: 'Author',
       type: 'reference',
-      to: { type: 'author' },
+      to: {type: 'author'},
     },
     {
       name: 'mainImage',
@@ -50,7 +50,7 @@ export default {
       name: 'categories',
       title: 'Categories',
       type: 'array',
-      of: [{ type: 'string' }],
+      of: [{type: 'string'}],
     },
     {
       name: 'publishedAt',
@@ -62,14 +62,6 @@ export default {
       title: 'View Count',
       type: 'number',
       initialValue: 0,
-    },
-    {
-      name: 'emailsSent',
-      title: 'Notification Emails Sent',
-      type: 'boolean',
-      description: 'Indicates whether notification emails have been sent for this post',
-      initialValue: false,
-      readOnly: true,
     },
     {
       name: 'excerpt',
@@ -103,18 +95,60 @@ export default {
             {
               type: 'block',
               styles: [
-                { title: 'Normal', value: 'normal' },
-                { title: 'H1', value: 'h1' },
-                { title: 'H2', value: 'h2' },
-                { title: 'H3', value: 'h3' },
-                { title: 'H4', value: 'h4' },
-                { title: 'Quote', value: 'blockquote' },
+                {title: 'Normal', value: 'normal'},
+                {title: 'H1', value: 'h1'},
+                {title: 'H2', value: 'h2'},
+                {title: 'H3', value: 'h3'},
+                {title: 'H4', value: 'h4'},
+                {title: 'Quote', value: 'blockquote'}
               ],
+              marks: {
+                decorators: [
+                  {title: 'Strong', value: 'strong'},
+                  {title: 'Emphasis', value: 'em'},
+                  {title: 'Code', value: 'code'}
+                ],
+                annotations: [
+                  {
+                    title: 'URL',
+                    name: 'link',
+                    type: 'object',
+                    fields: [
+                      {
+                        title: 'URL',
+                        name: 'href',
+                        type: 'url'
+                      }
+                    ]
+                  }
+                ]
+              }
             },
             {
               type: 'image',
-              options: { hotspot: true },
+              options: {
+                hotspot: true,
+              }
             },
+            {
+              title: 'Code Block',
+              type: 'code',
+              options: {
+                language: 'javascript',
+                languageAlternatives: [
+                  {title: 'Javascript', value: 'javascript'},
+                  {title: 'HTML', value: 'html'},
+                  {title: 'CSS', value: 'css'},
+                  {title: 'TypeScript', value: 'typescript'},
+                  {title: 'JSX', value: 'jsx'},
+                  {title: 'TSX', value: 'tsx'},
+                  {title: 'Python', value: 'python'},
+                  {title: 'PHP', value: 'php'},
+                  {title: 'JSON', value: 'json'},
+                  {title: 'Bash', value: 'bash'},
+                ]
+              }
+            }
           ],
         },
         {
@@ -125,18 +159,60 @@ export default {
             {
               type: 'block',
               styles: [
-                { title: 'Normal', value: 'normal' },
-                { title: 'H1', value: 'h1' },
-                { title: 'H2', value: 'h2' },
-                { title: 'H3', value: 'h3' },
-                { title: 'H4', value: 'h4' },
-                { title: 'Quote', value: 'blockquote' },
+                {title: 'Normal', value: 'normal'},
+                {title: 'H1', value: 'h1'},
+                {title: 'H2', value: 'h2'},
+                {title: 'H3', value: 'h3'},
+                {title: 'H4', value: 'h4'},
+                {title: 'Quote', value: 'blockquote'}
               ],
+              marks: {
+                decorators: [
+                  {title: 'Strong', value: 'strong'},
+                  {title: 'Emphasis', value: 'em'},
+                  {title: 'Code', value: 'code'}
+                ],
+                annotations: [
+                  {
+                    title: 'URL',
+                    name: 'link',
+                    type: 'object',
+                    fields: [
+                      {
+                        title: 'URL',
+                        name: 'href',
+                        type: 'url'
+                      }
+                    ]
+                  }
+                ]
+              }
             },
             {
               type: 'image',
-              options: { hotspot: true },
+              options: {
+                hotspot: true,
+              }
             },
+            {
+              title: 'Code Block',
+              type: 'code',
+              options: {
+                language: 'javascript',
+                languageAlternatives: [
+                  {title: 'Javascript', value: 'javascript'},
+                  {title: 'HTML', value: 'html'},
+                  {title: 'CSS', value: 'css'},
+                  {title: 'TypeScript', value: 'typescript'},
+                  {title: 'JSX', value: 'jsx'},
+                  {title: 'TSX', value: 'tsx'},
+                  {title: 'Python', value: 'python'},
+                  {title: 'PHP', value: 'php'},
+                  {title: 'JSON', value: 'json'},
+                  {title: 'Bash', value: 'bash'},
+                ]
+              }
+            }
           ],
         },
       ],
@@ -144,18 +220,13 @@ export default {
   ],
   preview: {
     select: {
-      titleEn: 'title.en',
-      titlePl: 'title.pl',
+      title: 'title.en',
       author: 'author.name',
       media: 'mainImage',
     },
     prepare(selection: any) {
-      const { titleEn, titlePl, author, media } = selection;
-      return {
-        title: titleEn || titlePl || 'Untitled',
-        subtitle: author ? `by ${author}` : '',
-        media,
-      };
+      const {author} = selection
+      return {...selection, subtitle: author && `by ${author}`}
     },
   },
-};
+}
