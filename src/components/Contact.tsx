@@ -17,7 +17,7 @@ const Contact: React.FC<ContactProps> = ({ id }) => {
   return (
     <section
       id="contact"
-      className="py-10"
+      className="relative py-10"
       style={{ backgroundColor: '#140F2D' }}
     >
       <Toaster position="center" />
@@ -28,7 +28,7 @@ const Contact: React.FC<ContactProps> = ({ id }) => {
               className="rounded-3xl p-8 shadow-xl"
               style={{ backgroundColor: '#29E7CD' }}
             >
-              <h2 className="text-4xl sm:text-6xl font-bold text-slate-900 mb-16 font-jakarta font-normal">{t.title}</h2>
+              <h2 className="text-4xl sm:text-6xl  text-slate-900 mb-16 font-jakarta font-normal">{t.title}</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>

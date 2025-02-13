@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
   const t = translations[language].footer;
 
   return (
-    <footer className="bg-[#140F2D] text-white py-8 md:py-12 font-jakarta">
+    <footer className="relative bg-[#140F2D] text-white py-8 md:py-12 font-jakarta">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="border-t border-white/20 mt-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center pt-8 gap-6 md:gap-0">
