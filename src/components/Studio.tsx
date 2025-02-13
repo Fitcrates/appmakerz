@@ -13,7 +13,6 @@ const studioStyles = {
 export default function StudioPage() {
   useEffect(() => {
     document.body.classList.add('sanity-studio');
-    
     return () => {
       document.body.classList.remove('sanity-studio');
     }
