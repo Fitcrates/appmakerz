@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-  "build": "tsc && vite build && cp public/_redirects public/robots.txt public/sitemap.xml dist/",
-
+  "build": "tsc && vite build && sanity build ../dist/studio -y && cp public/_redirects public/robots.txt public/sitemap.xml dist/",
     "preview": "vite preview",
     "sanity": "sanity dev",
     "sanity-deploy": "sanity deploy",
