@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import AutoRefreshHandler from './utils/AutoRefreshHandler';
 
 // Import critical components normally
 const LoadingFallback = () => <div className="h-screen animate-pulse bg-[#140F2D]" />;
@@ -15,6 +16,8 @@ const CookieConsent = lazy(() => import('./components/CookieConsent'));
 function App() {
   return (
     <div className="bg-[#140F2D] min-h-screen">
+            <AutoRefreshHandler />
+
       <Header />
       <main>
       <Suspense fallback={<LoadingFallback />}>
