@@ -10,7 +10,7 @@ export const config = defineConfig({
 
   projectId: '867nk643',
   dataset: 'production',
-
+  
   basePath: '/studio',
 
   plugins: [deskTool(), visionTool(), codeInput()],
