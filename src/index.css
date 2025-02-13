@@ -32,6 +32,111 @@ html, body {
   box-sizing: inherit;
 }
 
+.fixed-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('./media/tinypng-cropedbackground-min.webp') no-repeat center center;
+  background-size: cover;
+  z-index: -1;
+}
+
+/* Ensure hero-section remains above the background */
+.hero-section {
+  position: relative;
+  z-index: 1;
+}
+/* iOS-specific fixes */
+.ios-main {
+  position: relative;
+  z-index: 1;
+}
+
+.bg-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.ios-bg-wrapper {
+  position: absolute;
+  height: 100vh;
+  /* Prevent background stretching on iOS */
+  background-size: cover;
+  background-attachment: scroll;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Force hardware acceleration */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+.ios-section {
+  /* Ensure proper rendering on iOS */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Prevent unwanted stretching */
+  height: 100vh;
+  /* Use viewport units for iOS */
+  height: -webkit-fill-available;
+}
+
+/* Force proper aspect ratio on iOS */
+@supports (-webkit-touch-callout: none) {
+  .fixed-bg {
+    background-attachment: scroll;
+    /* Maintain aspect ratio */
+    aspect-ratio: 16/9;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Mobile-first media queries */
+@media screen and (max-width: 767px) {
+  .hero-heading {
+    font-size: 2rem;
+    line-height: 1.2;
+    /* Reduce text-shadow complexity on mobile */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Desktop styles */
+@media screen and (min-width: 768px) {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in forwards;
+  }
+}
+
+/* Mobile Optimizations */
+@media screen and (max-width: 767px) {
+  section.hero-section {
+    padding-bottom: 2rem;
+  }
+  
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
 /* Hero Section */
 .hero-section {
   position: relative;
