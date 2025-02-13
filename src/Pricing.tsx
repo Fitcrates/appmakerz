@@ -89,12 +89,15 @@ const Pricing = () => {
     <>
       <Header />
       <main>
-        <section
-          id="pricing-hero"
-          className="hero-section min-h-screen h-screen w-full flex items-end pb-20 overflow-x-hidden"
-        >
-          <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
-            <div className="flex flex-col lg:flex-row justify-between items-center lg:items-end w-full">
+      <div className="fixed-bg"></div>
+
+<section 
+  id="pricing-hero" 
+  className="min-h-screen h-screen w-full flex items-end pb-20 overflow-x-hidden"
+
+>
+<div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
+<div className="flex flex-col lg:flex-row justify-between items-center lg:items-end w-full">
               {/* Text Container */}
               <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
                 <h1 className="text-5xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta  leading-none  -mt-1">
