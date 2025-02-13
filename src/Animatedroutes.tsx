@@ -73,7 +73,7 @@ const AnimatedRoutes = () => {
           }
         />
         <Route
-          path="/studio"
+          path="/studio/*"
           element={
             <Suspense fallback={<LoadingFallback />}>
               <StudioPage />
