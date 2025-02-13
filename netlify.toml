@@ -4,9 +4,16 @@
   functions = "netlify/functions"
 
 [[redirects]]
+  from = "/studio"
+  to = "/studio/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/studio/*"
   to = "/studio/index.html"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/api/*"
