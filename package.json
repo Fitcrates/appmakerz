@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run build-studio",
-    "build-studio": "sanity build sanity.studio -y && mkdir -p dist/studio && cp -r sanity.studio/dist/* dist/studio/",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "sanity": "sanity dev",
     "sanity-deploy": "sanity deploy",
