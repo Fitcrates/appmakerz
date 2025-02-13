@@ -1,10 +1,11 @@
 import { defineConfig } from 'sanity';
 import { deskTool } from 'sanity/desk';
 import { visionTool } from '@sanity/vision';
+import { codeInput } from '@sanity/code-input';
 import { schemaTypes } from './schemas';
 import deskStructure from './deskStructure';
 
-export default defineConfig({
+export const config = defineConfig({
   name: 'appcrates-portfolio',
   title: 'AppCrates Portfolio',
   
@@ -17,10 +18,13 @@ export default defineConfig({
     deskTool({
       structure: deskStructure
     }),
-    visionTool()
+    visionTool(),
+    codeInput()
   ],
-  
+
   schema: {
     types: schemaTypes,
   },
 });
+
+export default config;
