@@ -1,15 +1,33 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
-export const LanguageToggle: React.FC = () => {
+const LanguageToggle = () => {
   const { language, setLanguage } = useLanguage();
 
   return (
-    <button
-      onClick={() => setLanguage(language === 'en' ? 'pl' : 'en')}
-      className="fixed top-4 right-4 z-50 px-3 py-8 rounded-md bg-white/30 text-white hover:bg-teal-300 transition-colors"
-    >
-      {language === 'en' ? 'PL' : 'EN'}
-    </button>
+    <div className="flex rounded-full overflow-hidden bg-white/10 border border-white/20">
+      <button
+        onClick={() => setLanguage('en')}
+        className={` transition-colors ${
+          language === 'en'
+            ? 'bg-teal-300 text-black rounded-full px-4'
+            : 'text-white hover:text-teal-300 px-1'
+        }`}
+      >
+        ENG
+      </button>
+      <button
+        onClick={() => setLanguage('pl')}
+        className={`  transition-colors ${
+          language === 'pl'
+            ? 'bg-teal-300 text-black rounded-full px-4'
+            : 'text-white hover:text-teal-300 px-1'
+        }`}
+      >
+        PL
+      </button>
+    </div>
   );
 };
+
+export default LanguageToggle;
