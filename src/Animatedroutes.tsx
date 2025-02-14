@@ -15,7 +15,9 @@ const SubscriberList = lazy(() => import('./pages/SubscriberList'));
 
 // Loading fallback component
 const LoadingFallback = () => (
-  <div className="h-screen animate-pulse bg-[#140F2D]" />
+  <div className="h-screen bg-[#140F2D] text-white flex items-center justify-center">
+  Loading...
+  </div>
 );
 
 const AnimatedRoutes = () => {
