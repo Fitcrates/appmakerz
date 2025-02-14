@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { v4 as uuidv4 } from 'uuid';
@@ -11,6 +11,7 @@ interface NewsletterModalProps {
 const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) => {
   const { language } = useLanguage();
   const t = translations[language].modal;
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const [email, setEmail] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
@@ -18,9 +19,26 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [mathProblem, setMathProblem] = useState({ num1: 0, num2: 0, answer: 0 });
+  const [userAnswer, setUserAnswer] = useState('');
 
   useEffect(() => {
-    // Fetch unique categories from posts
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await fetch('/.netlify/functions/handleSanityQuery', {
@@ -38,7 +56,6 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
         }
 
         const result = await response.json();
-        // Get unique categories
         const uniqueCategories = [...new Set(result.flat())];
         setAvailableCategories(uniqueCategories);
       } catch (error) {
@@ -49,11 +66,30 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
 
     if (isOpen) {
       fetchCategories();
+      generateMathProblem();
     }
   }, [isOpen]);
 
+  const generateMathProblem = () => {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    setMathProblem({
+      num1,
+      num2,
+      answer: num1 + num2
+    });
+    setUserAnswer('');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (parseInt(userAnswer) !== mathProblem.answer) {
+      setError(t.error?.captcha || 'Incorrect CAPTCHA answer. Please try again.');
+      generateMathProblem();
+      return;
+    }
+
     setIsSubmitting(true);
     setError('');
 
@@ -101,71 +137,100 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50">
-      <div className="bg-[#140F2D]/95 rounded-lg p-8 max-w-md w-full mx-4">
-        <h4 className="text-2xl text-white font-jakarta font-light mb-4">{t.title.line1}</h4>
-        
-        {success ? (
-          <div className="text-green-600 font-medium">
-            {t.notify}
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t.title.line2}
-                required
-                className="w-full p-2 rounded bg-white/10 text-white placeholder-white/50 border border-white/20 focus:border-white/50 outline-none"
-              />
-            </div>
+    <div className="fixed inset-0 bg-white/80 backdrop-blur flex flex-col items-center justify-center z-50 space-y-1">
+      <div ref={modalRef} className="space-y-1">
+        {/* Newsletter Modal */}
+        <div className="bg-[#140F2D]/95 rounded-lg p-8 max-w-md w-full mx-6">
+          <h4 className="text-2xl text-white font-jakarta font-light mb-4">{t.title.line1}</h4>
 
-            <div className="mb-4">
-              <p className="text-white mb-2">{t.subtitle.line1}</p>
-              <div className="space-y-2">
-                {availableCategories.map((category) => (
-                  <label key={category} className="flex items-center space-x-2 text-white">
-                    <input
-                      type="checkbox"
-                      checked={categories.includes(category)}
-                      onChange={() => handleCategoryToggle(category)}
-                      className="peer hidden"
-                    />
-                    <div className="w-4 h-4 border-2 GlowButton border-white rounded-md flex items-center justify-center peer-checked:bg-teal-300 peer-checked:text-black relative">
-                      <span className="opacity-0 peer-checked:opacity-100 transition-opacity">✓</span>
-                    </div>
-                    <span>{category}</span>
-                  </label>
-                ))}
+          {success ? (
+            <div className="text-green-600 font-medium">{t.notify}</div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t.title.line2}
+                  required
+                  className="w-full p-2 rounded bg-white/10 text-white placeholder-white/50 border border-white/20 focus:border-white/50 outline-none"
+                />
               </div>
-            </div>
 
-            {error && (
-              <div className="text-red-500 mb-4">
-                {error}
+              <div className="mb-4">
+                <p className="text-white mb-2">{t.subtitle.line1}</p>
+                <div className="space-y-2">
+                  {availableCategories.map((category) => (
+                    <label key={category} className="flex items-center space-x-2 text-white">
+                      <input
+                        type="checkbox"
+                        checked={categories.includes(category)}
+                        onChange={() => handleCategoryToggle(category)}
+                        className="peer hidden"
+                      />
+                      <div className="w-4 h-4 border-2 GlowButton border-white rounded-md flex items-center justify-center peer-checked:bg-teal-300 peer-checked:text-black relative">
+                        <span className="opacity-0 peer-checked:opacity-100 transition-opacity">✓</span>
+                      </div>
+                      <span>{category}</span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            )}
-
-            <div className="flex space-x-4">
+              {error && <div className="text-red-500 mt-4">{error}</div>}
+              <div className="flex space-x-8">
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="GlowButton mt-4"
+                disabled={parseInt(userAnswer) !== mathProblem.answer || isSubmitting}
+                className={`GlowButton mt-4 ${parseInt(userAnswer) !== mathProblem.answer ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {isSubmitting ? 'Subscribing...' : t.subtitle.line2}
               </button>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="text-white hover:text-teal-300 transition-colors mt-6"
+                >
+                  {t.subtitle.line3}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+
+        {/* CAPTCHA Section */}
+        <div className="bg-[#140F2D]/95 rounded-lg p-2 w-full max-w-md mx-6">
+          <p className="text-white font-jakarta text-sm ml-4 mb-2">
+            {t.captcha} {mathProblem.num1} + {mathProblem.num2}?
+          </p>
+          <div className="relative w-full max-w-xs ml-4 pb-2">
+            <input
+              type="number"
+              value={userAnswer}
+              onChange={(e) => setUserAnswer(e.target.value)}
+              placeholder={t.captcha2}
+              required
+              className="peer-hidden w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 border border-white/20 focus:border-white/50 outline-none no-arrows"
+            />
+            {/* Custom Buttons */}
+            <div className="absolute inset-y-0 right-0 flex flex-col items-center">
               <button
                 type="button"
-                onClick={onClose}
-                className="text-white hover:text-teal-300 transition-colors mt-4"
+                onClick={() => setUserAnswer((prev) => (prev ? Number(prev) + 1 : 1))}
+                className="w-4 h-[1.3rem] text-teal-300 text-xs flex items-center justify-center rounded-tr-lg border border-white/20 hover:bg-teal-400 hover:text-black"
               >
-                {t.subtitle.line3}
+                ▲
+              </button>
+              <button
+                type="button"
+                onClick={() => setUserAnswer((prev) => (prev && prev > 0 ? Number(prev) - 1 : 0))}
+                className="w-4 h-[1.3rem] text-teal-300 text-xs flex items-center justify-center rounded-br-lg border border-white/20 hover:bg-teal-400 hover:text-black"
+              >
+                ▼
               </button>
             </div>
-          </form>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
