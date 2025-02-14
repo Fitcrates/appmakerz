@@ -29,7 +29,9 @@ export const translations = {
         line2: "Subscribe",
         line3: "Cancel"
       },
-      notify: "Successfully subscribed! Thank you."
+      notify: "Successfully subscribed! Thank you.",
+      captcha: "CAPTCHA: What is",
+      captcha2: "Enter your answer"
     },
     // Hero section
     hero: {
@@ -54,6 +56,7 @@ export const translations = {
       cookies: "Cookies",
       privacyPolicy: "Privacy Policy",
       graphicDesign: "Graphic design: Weronika Grzesiowska",
+      newsletter: "Subscribe to newsletter",
       unsubscribe: "Unsubscribe from newsletter"
     },
 
@@ -247,7 +250,7 @@ export const translations = {
       relatedPosts: "Related Posts",
       readingTime: "min read",
       newsletter: "Subscribe to newsletter",
-
+     
       searchPlaceholder: "Search posts...",
       loading: "Loading posts...",
       page: "Page",
@@ -332,7 +335,9 @@ export const translations = {
         line2: "Subskrybuj",
         line3: "Anuluj"
       },
-      notify: "Subskrybcja zakończona powodzeniem! Dziękuję."
+      notify: "Subskrybcja zakończona powodzeniem! Dziękuję.",
+      captcha: "CAPTCHA: Ile to jest",
+      captcha2: "Wprowadź odpowiedź"
     },
     // Hero section
     hero: {
@@ -357,6 +362,7 @@ export const translations = {
       cookies: "Pliki cookie",
       privacyPolicy: "Polityka prywatności",
       graphicDesign: "Projekt graficzny: Weronika Grzesiowska",
+      newsletter: "Subskrybuj newsletter",
       unsubscribe: "Unsubskrybuj newsletter"
     },
     // Also Check
@@ -547,6 +553,7 @@ export const translations = {
       relatedPosts: "Podobne Posty",
       readingTime: "min czytania",
       newsletter: "Subskrybuj newsletter",
+      
       searchPlaceholder: "Szukaj wpisów...",
       loading: "Ładowanie wpisów...",
       page: "Strona",
