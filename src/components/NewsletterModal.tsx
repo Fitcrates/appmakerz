@@ -137,16 +137,16 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/80 backdrop-blur flex flex-col items-center justify-center z-50 space-y-1">
-      <div ref={modalRef} className="space-y-1">
+    <div className="fixed inset-0 bg-white/80 backdrop-blur flex flex-col items-center justify-center z-50 p-4 overflow-y-auto">
+      <div ref={modalRef} className="space-y-4 w-full max-w-[95%] md:max-w-2xl">
         {/* Newsletter Modal */}
-        <div className="bg-[#140F2D]/95 rounded-lg p-8 max-w-md w-full mx-6">
-          <h4 className="text-2xl text-white font-jakarta font-light mb-4">{t.title.line1}</h4>
+        <div className="bg-[#140F2D]/95 rounded-lg p-4 sm:p-8 md:p-12 w-full">
+          <h4 className="text-xl sm:text-2xl text-white font-jakarta font-light mb-4">{t.title.line1}</h4>
 
           {success ? (
             <div className="text-green-600 font-medium">{t.notify}</div>
           ) : (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="mb-4">
                 <input
                   type="email"
@@ -154,15 +154,15 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t.title.line2}
                   required
-                  className="w-full p-2 rounded bg-white/10 text-white placeholder-white/50 border border-white/20 focus:border-white/50 outline-none"
+                  className="w-full p-2 rounded bg-white/10 text-white placeholder-white/50 border border-white/20 focus:border-white/50 outline-none text-sm sm:text-base"
                 />
               </div>
 
               <div className="mb-4">
-                <p className="text-white mb-2">{t.subtitle.line1}</p>
-                <div className="space-y-2">
+                <p className="text-white mb-2 text-sm sm:text-base">{t.subtitle.line1}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {availableCategories.map((category) => (
-                    <label key={category} className="flex items-center space-x-2 text-white">
+                    <label key={category} className="flex items-center space-x-2 text-white text-sm sm:text-base">
                       <input
                         type="checkbox"
                         checked={categories.includes(category)}
@@ -177,19 +177,19 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
                   ))}
                 </div>
               </div>
-              {error && <div className="text-red-500 mt-4">{error}</div>}
-              <div className="flex space-x-8">
-              <button
-                type="submit"
-                disabled={parseInt(userAnswer) !== mathProblem.answer || isSubmitting}
-                className={`GlowButton mt-4 ${parseInt(userAnswer) !== mathProblem.answer ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                {isSubmitting ? 'Subscribing...' : t.subtitle.line2}
-              </button>
+              {error && <div className="text-red-500 mt-4 text-sm sm:text-base">{error}</div>}
+              <div className="flex flex-col sm:flex-row sm:space-x-8 space-y-4 sm:space-y-0 items-center">
+                <button
+                  type="submit"
+                  disabled={parseInt(userAnswer) !== mathProblem.answer || isSubmitting}
+                  className={`GlowButton w-auto sm:w-auto justify-center ${parseInt(userAnswer) !== mathProblem.answer ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {isSubmitting ? 'Subscribing...' : t.subtitle.line2}
+                </button>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="text-white hover:text-teal-300 transition-colors mt-6"
+                  className="text-white hover:text-teal-300 transition-colors text-center sm:text-left"
                 >
                   {t.subtitle.line3}
                 </button>
@@ -199,18 +199,18 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
         </div>
 
         {/* CAPTCHA Section */}
-        <div className="bg-[#140F2D]/95 rounded-lg p-2 w-full max-w-md mx-6">
-          <p className="text-white font-jakarta text-sm ml-4 mb-2">
+        <div className="bg-[#140F2D]/95 rounded-lg p-4 sm:p-8 w-full">
+          <p className="text-white font-jakarta text-sm sm:text-base mb-2">
             {t.captcha} {mathProblem.num1} + {mathProblem.num2}?
           </p>
-          <div className="relative w-full max-w-xs ml-4 pb-2">
+          <div className="relative w-full max-w-xs">
             <input
               type="number"
               value={userAnswer}
               onChange={(e) => setUserAnswer(e.target.value)}
               placeholder={t.captcha2}
               required
-              className="peer-hidden w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 border border-white/20 focus:border-white/50 outline-none no-arrows"
+              className="peer-hidden w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 border border-white/20 focus:border-white/50 outline-none no-arrows text-sm sm:text-base"
             />
             {/* Custom Buttons */}
             <div className="absolute inset-y-0 right-0 flex flex-col items-center">
