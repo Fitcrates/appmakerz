@@ -87,9 +87,7 @@ const Header = () => {
           </nav>
 
           <div className="lg:hidden flex items-center gap-4">
-            <button onClick={() => setLanguage(language === 'en' ? 'pl' : 'en')} className="px-3 py-1 rounded-md bg-white/30 text-white hover:bg-teal-300 transition-colors">
-              {language === 'en' ? 'PL' : 'EN'}
-            </button>
+            <LanguageToggle />
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu" className="text-white">
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
