@@ -30,7 +30,7 @@ export const translations = {
         line3: "Cancel"
       },
       notify: "Successfully subscribed! Thank you.",
-      captcha: "CAPTCHA: What is",
+      captcha: "Fill in CAPTCHA to submit: What is",
       captcha2: "Enter your answer"
     },
     // Hero section
@@ -336,7 +336,7 @@ export const translations = {
         line3: "Anuluj"
       },
       notify: "Subskrybcja zakończona powodzeniem! Dziękuję.",
-      captcha: "CAPTCHA: Ile to jest",
+      captcha: "Wypełnij CAPTCHA, aby zatwierdzić : Ile to jest",
       captcha2: "Wprowadź odpowiedź"
     },
     // Hero section
