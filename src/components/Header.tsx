@@ -3,6 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
+import LanguageToggle from './LanguageToggle';
 
 import { translations } from '../translations/translations';
 
@@ -76,9 +77,7 @@ const Header = () => {
             <span className="text-white font-thin font-jakarta">crates</span>
           </button>
           <nav className="hidden lg:flex space-x-6 mx-6 flex-grow flex justify-end items-center">
-            <button onClick={() => setLanguage(language === 'en' ? 'pl' : 'en')} className="px-3 py-1 rounded-md bg-white/30 text-white hover:bg-teal-300 transition-colors mr-4">
-              {language === 'en' ? 'PL' : 'EN'}
-            </button>
+          <LanguageToggle />
             <button onClick={() => scrollToSection('hero')} className="text-white hover:text-teal-300 transition">{t.navigation.home}</button>
             <Link to="/blog" className="text-white hover:text-teal-300 transition">{t.navigation.blog}</Link>
             <button onClick={() => scrollToSection('about')} className="text-white hover:text-teal-300 transition">{t.navigation.about}</button>
@@ -102,7 +101,7 @@ const Header = () => {
     animate={{ y: 0, opacity: 1 }}
     exit={{ y: -20, opacity: 0 }}
     transition={{ duration: 0.6, ease: 'easeInOut' }}
-    className="lg:hidden absolute top-full left-0 right-0 bg-gradient-to-tl from-[#140F2D] via-[#140F2D]/90 to-teal-300/70 backdrop-blur-sm"
+    className="lg:hidden absolute top-full left-0 right-0 bg-gradient-to-tl from-[#140F2D] via-[#140F2D]/95 to-teal-300/95 backdrop-blur-sm"
   >
     <nav className="flex flex-col space-y-4 p-4 text-center">
       {[
