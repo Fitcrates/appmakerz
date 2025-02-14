@@ -145,9 +145,7 @@ const BlogPostPage = () => {
     return Array.isArray(post.body) ? post.body : (post.body[language] || post.body.en || []);
 };
 
-if (error || !post) {
-    return <div>{error || 'Post not found'}</div>;
-}
+
 
   return (
     <>
