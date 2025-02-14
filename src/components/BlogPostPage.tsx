@@ -145,9 +145,11 @@ const BlogPostPage = () => {
     return Array.isArray(post.body) ? post.body : (post.body[language] || post.body.en || []);
 };
 
+if (!post) {
+  return <div className="text-white bg-[#140F2D] text-center">Loading post...</div>;
+}
 
-
-  return (
+return (
     <>
       <Header />
       <main className="bg-[#140F2D] min-h-screen text-white py-8">
