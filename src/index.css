@@ -753,7 +753,7 @@ main {
   --glow-spread-color: rgba(41, 231, 205, 0.6);
   --btn-color: rgba(0, 0, 0, 0.1); /* Black background */
 
-  border: 0.15em solid var(--glow-color); /* Border color */
+  border: 0.10em solid var(--glow-color); /* Border color */
   padding: 0.5rem 0.75rem;
   color: var(--glow-color);
   font-size: 16px;
@@ -809,4 +809,16 @@ main {
     0 0 0.6em 0.25em var(--glow-color),
     0 0 3em 2em var(--glow-spread-color),
     inset 0 0 0.5em 0.25em var(--glow-color);
+}
+
+/* Hide number input arrows in WebKit browsers */
+.no-arrows::-webkit-inner-spin-button,
+.no-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide number input arrows in Firefox */
+.no-arrows {
+  -moz-appearance: textfield;
 }
