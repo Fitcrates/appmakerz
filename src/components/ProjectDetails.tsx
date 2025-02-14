@@ -51,17 +51,7 @@ const ProjectDetails = () => {
     preventOrphans();
   }, [project]);
 
-  if (error || !project) {
-    return (
-      <>
-        <Header />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-red-500">{error || 'Project not found'}</div>
-        </div>
-        <Footer />
-      </>
-    );
-  }
+  
 
   return (
     <>
