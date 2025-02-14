@@ -50,18 +50,18 @@ const ProjectDetails = () => {
 
     preventOrphans();
   }, [project]);
-if (!project) {
+
+  if (!project) {
     return (
       <>
         <Header />
         <div className="min-h-screen flex items-center justify-center">
-          <div className="text-white bg-[#140F2D]">Loading project...</div>
+          <div className="text-white bg-[#140F2D] text-center">Loading project...</div>
         </div>
         <Footer />
       </>
     );
   }
-  
 
   return (
     <>
