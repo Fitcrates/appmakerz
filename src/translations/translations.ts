@@ -1,5 +1,12 @@
 export const translations = {
   en: {
+    // Project details
+    details: {
+      demo: "Live Demo",
+      sourceCode: "Source Code",
+      blogPost: "Blog Post",
+    },
+
     // Unsub
     unsub: {
       title: {
@@ -68,7 +75,10 @@ export const translations = {
     },
      // Projects page
      backToProjects: {
-      title: "Back to Projects"
+      title: "Back to Projects",
+      demo: "Live Demo",
+      sourceCode: "Source Code",
+      blogPost: "Blog Post"
     },
 
     // About section
@@ -306,6 +316,12 @@ export const translations = {
   },
 
   pl: {
+    // Project details
+    details: {
+      demo: "Wersja demonstracyjna",
+      sourceCode: "Kod źródłowy",
+      blogPost: "Post na blogu",
+    },
      // Unsub
      unsub: {
       title: {
@@ -373,7 +389,10 @@ export const translations = {
     },
      // Projects page
      backToProjects: {
-      title: "Wróć do projektów"
+      title: "Wróć do projektów",
+      demo: "Wersja demonstracyjna",
+      sourceCode: "Kod źródłowy",
+      blogPost: "Post na blogu"
     },
     // About section
     about: {
