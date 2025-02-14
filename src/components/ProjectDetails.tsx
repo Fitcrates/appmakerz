@@ -51,23 +51,6 @@ const ProjectDetails = () => {
     preventOrphans();
   }, [project]);
 
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="animate-pulse space-y-4">
-            <div className="h-48 w-96 bg-gray-200 rounded-lg"></div>
-            <div className="h-8 w-72 bg-gray-200 rounded"></div>
-            <div className="h-4 w-64 bg-gray-200 rounded"></div>
-            <div className="h-4 w-56 bg-gray-200 rounded"></div>
-          </div>
-        </div>
-        <Footer />
-      </>
-    );
-  }
-
   if (error || !project) {
     return (
       <>
@@ -126,7 +109,7 @@ const ProjectDetails = () => {
                   className="inline-flex items-center text-teal-300 rounded-full py-1 px-1 hover:bg-teal-300 hover:text-black"
                 >
                   <Globe className="w-4 h-4 mr-2" />
-                  Live Demo
+                  {translations[language].backToProjects.demo}
                 </a>
               )}
               {project.githubUrl && (
@@ -137,7 +120,7 @@ const ProjectDetails = () => {
                   className="inline-flex items-center text-teal-300 rounded-full py-1 px-1 hover:bg-teal-300 hover:text-black"
                 >
                   <Github className="w-4 h-4 mr-2" />
-                  Source Code
+                  {translations[language].backToProjects.sourceCode}
                 </a>
               )}
               {project.blogUrl && (
@@ -148,7 +131,7 @@ const ProjectDetails = () => {
                   className="inline-flex items-center text-teal-300 rounded-full py-1 px-1 hover:bg-teal-300 hover:text-black"
                 >
                   <Feather className="w-4 h-4 mr-2" />
-                  Blog Post
+                  {translations[language].backToProjects.blogPost}
                 </a>
               )}
             </div>
