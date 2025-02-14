@@ -55,8 +55,8 @@ const ProjectDetails = () => {
     return (
       <>
         <Header />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-white bg-[#140F2D] text-center">Loading project...</div>
+        <div className="min-h-screen flex items-center justify-center bg-[#140F2D]">
+          <div className="text-white text-center">Loading project...</div>
         </div>
         <Footer />
       </>
