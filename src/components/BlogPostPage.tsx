@@ -143,15 +143,11 @@ const BlogPostPage = () => {
   const getBody = (post: Post) => {
     if (!post?.body) return [];
     return Array.isArray(post.body) ? post.body : (post.body[language] || post.body.en || []);
-  };
+};
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error || !post) {
+if (error || !post) {
     return <div>{error || 'Post not found'}</div>;
-  }
+}
 
   return (
     <>
