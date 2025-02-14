@@ -146,8 +146,12 @@ const BlogPostPage = () => {
 };
 
 if (!post) {
-  return <div className="text-white bg-[#140F2D] text-center">Loading post...</div>;
-}
+  return (
+  <div className="min-h-screen flex items-center justify-center bg-[#140F2D]">
+  <div className="text-white text-center">Loading project...</div>
+</div>
+)}
+
 
 return (
     <>
