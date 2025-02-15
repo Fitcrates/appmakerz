@@ -137,8 +137,8 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/80 backdrop-blur flex flex-col items-center justify-center z-50 p-4 overflow-y-auto">
-      <div ref={modalRef} className="space-y-4 w-full max-w-[95%] md:max-w-2xl">
+    <div className="fixed inset-0 bg-white/90 flex flex-col items-center justify-center z-50 p-4 overflow-y-auto">
+      <div ref={modalRef} className="space-y-0.5 w-full max-w-[95%] md:max-w-2xl">
         {/* Newsletter Modal */}
         <div className="bg-[#140F2D]/95 rounded-lg p-4 sm:p-8 md:p-12 w-full">
           <h4 className="text-xl sm:text-2xl text-white font-jakarta font-light mb-4">{t.title.line1}</h4>
@@ -178,22 +178,7 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
                 </div>
               </div>
               {error && <div className="text-red-500 mt-4 text-sm sm:text-base">{error}</div>}
-              <div className="flex flex-col sm:flex-row sm:space-x-8 space-y-4 sm:space-y-0 items-center">
-                <button
-                  type="submit"
-                  disabled={parseInt(userAnswer) !== mathProblem.answer || isSubmitting}
-                  className={`GlowButton w-auto sm:w-auto justify-center ${parseInt(userAnswer) !== mathProblem.answer ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  {isSubmitting ? 'Subscribing...' : t.subtitle.line2}
-                </button>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="text-white hover:text-teal-300 transition-colors text-center sm:text-left"
-                >
-                  {t.subtitle.line3}
-                </button>
-              </div>
+              
             </form>
           )}
         </div>
@@ -229,6 +214,22 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
                 ▼
               </button>
             </div>
+            <div className="flex flex-col sm:flex-row sm:space-x-8 space-y-4 sm:space-y-0 items-center mt-4">
+                <button
+                  type="submit"
+                  disabled={parseInt(userAnswer) !== mathProblem.answer || isSubmitting}
+                  className={`GlowButton w-auto sm:w-auto justify-center ${parseInt(userAnswer) !== mathProblem.answer ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {isSubmitting ? 'Subscribing...' : t.subtitle.line2}
+                </button>
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="text-white hover:text-teal-300 transition-colors text-center sm:text-left"
+                >
+                  {t.subtitle.line3}
+                </button>
+              </div>
           </div>
         </div>
       </div>
