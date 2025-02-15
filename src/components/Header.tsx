@@ -77,20 +77,22 @@ const Header = () => {
             <span className="text-white font-thin font-jakarta">crates</span>
           </button>
           <nav className="hidden lg:flex space-x-6 mx-6 flex-grow flex justify-end items-center">
-          <LanguageToggle />
+          
             <button onClick={() => scrollToSection('hero')} className="text-white hover:text-teal-300 transition">{t.navigation.home}</button>
             <Link to="/blog" className="text-white hover:text-teal-300 transition">{t.navigation.blog}</Link>
             <button onClick={() => scrollToSection('about')} className="text-white hover:text-teal-300 transition">{t.navigation.about}</button>
             <button onClick={() => scrollToSection('projects')} className="text-white hover:text-teal-300 transition">{t.navigation.projects}</button>
             <Link to="/pricing" className="text-white hover:text-teal-300 transition">{t.navigation.pricing}</Link>
             <button onClick={() => scrollToSection('contact')} className="text-white hover:text-teal-300 transition">{t.navigation.contact}</button>
+            <LanguageToggle />
           </nav>
 
           <div className="lg:hidden flex items-center gap-4">
-            <LanguageToggle />
+            
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu" className="text-white">
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />} 
             </button>
+            <LanguageToggle />
           </div>
 
           {isMenuOpen && (
