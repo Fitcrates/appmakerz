@@ -18,4 +18,51 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+<url>
+    <loc>https://appcrates.netlify.app/blog/fixed-backgrounds-in-safari-browser</loc>
+    <lastmod>2025-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://appcrates.netlify.app/blog/how-i-started-programming-and-making-apps</loc>
+    <lastmod>2025-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://appcrates.netlify.app/blog/react-beggining</loc>
+    <lastmod>2025-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+<url>
+    <loc>https://appcrates.netlify.app/project/anime-platform</loc>
+    <lastmod>2025-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://appcrates.netlify.app/project/flixstock-app</loc>
+    <lastmod>2025-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://appcrates.netlify.app/project/personal-portfolio-website</loc>
+    <lastmod>2025-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+
+
+
+
+
+
+
+
+
+
 </urlset>
