@@ -34,12 +34,12 @@ const Hero = () => {
             {/* Text Container */}
             <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
               {[t.title.line1, t.title.line2, t.title.line3].map((line, index) => (
-                <h1
+                <div
                   key={index}
                   className="text-5xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta leading-none -mt-1"
                 >
                   {line}
-                </h1>
+                </div>
               ))}
             </div>
 
