@@ -753,7 +753,7 @@ main {
   --glow-spread-color: rgba(41, 231, 205, 0.6);
   --btn-color: rgba(0, 0, 0, 0.1); /* Black background */
 
-  border: 0.10em solid var(--glow-color); /* Border color */
+  border: 0.08em solid var(--glow-color); /* Border color */
   padding: 0.5rem 0.75rem;
   color: var(--glow-color);
   font-size: 16px;
