@@ -49,9 +49,10 @@ export const translations = {
       },
       subtitle: {
         line1: "Crafting digital",
-        line2: "experiences",
-        line3: "with passion",
-        line4: "and precision."
+        line2: "solutions",
+        line3: "to achieve",
+        line4: "your goals."
+        
       },
       learnMore: "Learn More"
     },
@@ -183,16 +184,17 @@ export const translations = {
       monthly: "Choose plan",
       yearly: "Yearly",
       entry: {
-        title: "'Entry App' Plan",
+        title: "'AppSheets Basic' Plan",
         price: "$100",
         description: "Perfect for small projects",
         features: [
           "1 functionality",
           "Implementation into workspace"
-        ]
+        ],
+        tag: "Data manager",
       },
       basic: {
-        title: "'Basic App' Plan",
+        title: "'AppSheets Plus' Plan",
         price: "from $400",
         description: "For growing businesses",
         features: [
@@ -200,10 +202,11 @@ export const translations = {
           "Priority support",
           "Advanced Features",
           "Implementation into workspace"
-        ]
+        ],
+        tag: "Data manager"
       },
       custom: {
-        title: "'Custom App' Plan",
+        title: "'AppSheets Custom' Plan",
         price: "Custom Pricing",
         description: "For complex needs",
         features: [
@@ -211,7 +214,8 @@ export const translations = {
           "Dedicated & Continuous Support",
           "Custom Integrations",
           "Implementation into workspace"
-        ]
+        ],
+        tag: "Data manager",
       },
       portfolio: {
         title: "'Portfolio Website' Plan",
@@ -220,12 +224,26 @@ export const translations = {
         features: [
           "Featured Portfolio",
           "Responsive Design",
-          "Contact Form - SMTP"
-        ]
+          "Graphic Design"
+        ],
+        tag: "Website",
+      },
+      portfolioPlus: {
+        title: "'Portfolio Website Plus' Plan",
+        price: "from $350",
+        description: "For personal branding",
+        features: [
+          "Featured Portfolio",
+          "Responsive Design",
+          "Graphic Design",
+          "Contact Form - SMTP",
+          "CMS"
+        ],
+        tag: "Website",
       },
       customWebsite: {
         title: "'Custom Website' Plan",
-        price: "From $700",
+        price: "from $700",
         description: "For personalalized websites",
         features: [
           "Fullstack implementation",
@@ -237,18 +255,19 @@ export const translations = {
           "Contact Form - SMTP",
           "API implementation",
           "Custom designed",
-          "Advanced optimasation"
-        ]
+          "Advanced optimasation and SEO"
+        ],
+        tag: "Web platform"
       }
     },
     // Blog section
     blog: {
       header1: "Blog",
       header2: "Posts",
-      header3: "Project descriptions",
-      header4: "travel",
-      header5: "fitness, diet",
-      header6: "and motivation",
+      header3: "Programming tips",
+      header4: "project descriptions",
+      header5: "solutions",
+      header6: "...travel and fitness",
       title: "Blog",
       readMore: "Read More",
       publishedAt: "Published at",
@@ -365,8 +384,8 @@ export const translations = {
       subtitle: {
         line1: "Tworzę cyfrowe",
         line2: "doświadczenia",
-        line3: "z pasją",
-        line4: "i precyzją."
+        line3: "aby osiągać",
+        line4: "Twoje cele."
       },
       learnMore: "Dowiedz się więcej"
     },
@@ -495,27 +514,29 @@ export const translations = {
       monthly: "Wybierz plan",
       yearly: "Rocznie",
       entry: {
-        title: "Plan 'Entry App'",
+        title: "Plan 'AppSheets Bazowy'",
         price: "400 zł",
         description: "Idealny na start",
         features: [
           "1 funkcjonalność",
           "Implementacja w workspace"
-        ]
+        ],
+        tag: "Menadżer danych",
       },
       basic: {
-        title: "Plan 'Basic App'",
-        price: "1500 zł",
+        title: "Plan 'AppSheets Plus'",
+        price: "od 1500 zł",
         description: "Dla rozwijających się firm",
         features: [
           "Do 5 funkcjonalności",
           "Priorytetowe wsparcie",
           "Zaawansowane funkcje",
           "Implementacja w workspace"
-        ]
+        ],
+        tag: "Menadżer danych",
       },
       custom: {
-        title: "Plan 'Custom App'",
+        title: "Plan 'AppSheets custom'",
         price: "Wycena indywidualna",
         description: "Dla złożonych projektów",
         features: [
@@ -523,21 +544,36 @@ export const translations = {
           "Dedykowane wsparcie",
           "Własne integracje",
           "Implementacja w workspace"
-        ]
+        ],
+        tag: "Menadżer danych",
       },
       portfolio: {
         title: "Plan 'Strona Portfolio'",
         price: "800 zł",
         description: "Dla marki osobistej",
         features: [
-          "Portfolio",
+          "Prezentacja portfolio",
           "Responsywny design",
-          "Formularz kontaktowy - SMTP"
-        ]
+          "Design graficzny"
+        ],
+        tag: "Strona internetowa",
+      },
+      portfolioPlus: {
+        title: "Plan 'Strona Portfolio Plus'",
+        price: "od 1200 zł",
+        description: "Dla marki osobistej",
+        features: [
+          "Prezentacja portfolio",
+          "Responsywny design",
+          "Design graficzny",
+          "Formularz kontaktowy - SMTP",
+          "CMS"
+        ],
+        tag: "Strona internetowa",
       },
       customWebsite: {
         title: "Plan 'Strona indywidualna'",
-        price: "Od 2000 zł",
+        price: "od 2000 zł",
         description: "Dla indywidualnych potrzeb",
         features: [
           "Implementacja fullstack",
@@ -549,18 +585,19 @@ export const translations = {
           "Formularz kontaktowy - SMTP",
           "Implementacja API",
           "Własny design",
-          "Zaawansowane optimalizacje"
-        ]
+          "Zaawansowane optimalizacje i SEO"
+        ],
+        tag: "Platforma internetowa",
       }
     },
     // Blog section
     blog: {
       header1: "Wpisy",
       header2: "Na blogu",
-      header3: "Opisy projektów",
-      header4: "podróży",
-      header5: "fitness, dieta",
-      header6: "i motywacja",
+      header3: "Porady programowania",
+      header4: "opisy projektów",
+      header5: "rozwiązania",
+      header6: "...podróże i fitness",
       title: "Blog",
       readMore: "Czytaj więcej",
       publishedAt: "Opublikowano",
