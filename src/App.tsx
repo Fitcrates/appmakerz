@@ -2,11 +2,6 @@ import React, { Suspense, lazy } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import AutoRefreshHandler from './utils/AutoRefreshHandler';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-
-const queryClient = new QueryClient();
-
 
 // Import critical components normally
 const LoadingFallback = () => <div className="h-screen bg-[#140F2D]" />;
@@ -20,17 +15,13 @@ const CookieConsent = lazy(() => import('./components/CookieConsent'));
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-
     <div className="bg-[#140F2D] min-h-screen">
-       <AutoRefreshHandler />
-        <Header />
+      <AutoRefreshHandler />
+      <Header />
     
       <main>
-      
-      <Hero />
+        <Hero />
     
-      
         <Suspense fallback={<LoadingFallback />}>
           <About />
         </Suspense>
@@ -48,8 +39,6 @@ function App() {
         <CookieConsent />
       </Suspense>
     </div>
-    </QueryClientProvider>
-
   );
 }
 
