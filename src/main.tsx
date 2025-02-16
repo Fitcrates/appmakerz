@@ -3,6 +3,18 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import { LanguageProvider } from './context/LanguageContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 30 * 60 * 1000, // 30 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 // Lazy load EmailJS initialization
 const initEmailJs = async () => {
@@ -21,10 +33,12 @@ const AnimatedRoutes = React.lazy(() => import('./Animatedroutes'));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <LanguageProvider>
-      <Router>
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <Router>
           <AnimatedRoutes />
-      </Router>
-    </LanguageProvider>
+        </Router>
+      </LanguageProvider>
+    </QueryClientProvider>
   </StrictMode>
 );
