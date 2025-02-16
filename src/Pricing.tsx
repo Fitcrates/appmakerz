@@ -34,7 +34,7 @@ const cardVariants = {
 const Pricing = () => {
   const { language } = useLanguage();
   const t = translations[language].pricing;
-  const [isHovered, setIsHovered] = useState(false);
+  const [hoveredButton, setHoveredButton] = useState(null);
 
   useScrollToTop();
 
@@ -53,35 +53,48 @@ const Pricing = () => {
   };
 
   const plans = [
-    {
-      name: t.entry.title,
-      price: t.entry.price,
-      description: t.entry.description,
-      features: t.entry.features,
-    },
-    {
-      name: t.basic.title,
-      price: t.basic.price,
-      description: t.basic.description,
-      features: t.basic.features,
-    },
-    {
-      name: t.custom.title,
-      price: t.custom.price,
-      description: t.custom.description,
-      features: t.custom.features,
-    },
+   
     {
       name: t.portfolio.title,
       price: t.portfolio.price,
       description: t.portfolio.description,
       features: t.portfolio.features,
+      tag: t.portfolio.tag, 
+    },
+    {
+      name: t.portfolioPlus.title,
+      price: t.portfolioPlus.price,
+      description: t.portfolioPlus.description,
+      features: t.portfolioPlus.features,
+      tag: t.portfolioPlus.tag, 
     },
     {
       name: t.customWebsite.title,
       price: t.customWebsite.price,
       description: t.customWebsite.description,
       features: t.customWebsite.features,
+      tag: t.customWebsite.tag, 
+    },
+    {
+      name: t.entry.title,
+      price: t.entry.price,
+      description: t.entry.description,
+      features: t.entry.features,
+      tag: t.entry.tag, 
+    },
+    {
+      name: t.basic.title,
+      price: t.basic.price,
+      description: t.basic.description,
+      features: t.basic.features,
+      tag: t.basic.tag, 
+    },
+    {
+      name: t.custom.title,
+      price: t.custom.price,
+      description: t.custom.description,
+      features: t.custom.features,
+      tag: t.custom.tag, 
     },
   ];
 
@@ -129,8 +142,8 @@ const Pricing = () => {
                 {/* Arrow Section */}
                 <div
                   className="flex items-end md:ml-8 mt-6 md:mt-0 cursor-pointer"
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
+                  onMouseEnter={() => setHoveredButton('hero')}
+                  onMouseLeave={() => setHoveredButton(null)}
                 >
                   <a
                     href="#pricing-plans"
@@ -140,7 +153,7 @@ const Pricing = () => {
                     }}
                     className="text-white hover:text-indigo-500 text-shadow-fuchsia transform transition-transform duration-1000 flex items-center"
                   >
-                    {isHovered ? (
+                    {hoveredButton === 'hero' ? (
                       <ArrowDownRight
                         className="w-20 h-72 sm:w-72 sm:h-72 md:w-72 md:h-72 mb-0 transition-transform duration-1000 transform rotate-360"
                         strokeWidth={0.7}
@@ -163,12 +176,12 @@ const Pricing = () => {
                   onClick={() => {
                     document.getElementById('pricing-plans')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
+                  onMouseEnter={() => setHoveredButton('mobile-hero')}
+                  onMouseLeave={() => setHoveredButton(null)}
                   className="GlowButton py-2 px-4 flex items-center space-x-2 font-jakarta font-normal text-base"
                 >
                   <span>{t.monthly}</span>
-                  {isHovered ? (
+                  {hoveredButton === 'mobile-hero' ? (
         <ArrowDownRight className="w-6 h-6" />
       ) : (
         <ArrowUpRight className="w-4 h-4" />
@@ -194,10 +207,17 @@ const Pricing = () => {
               <motion.div
                 key={index}
                 variants={cardVariants}
-                className="bg-gradient-to-br from-[#140F2D] to-white/15 rounded-lg p-8 flex flex-col hover:shadow-lg hover:shadow-teal-500 hover:bg-[#140F2D]/10 transition-all duration-300"
+                className="bg-gradient-to-br from-white/10 via-[#140F2D] to-[#140F2D] rounded-lg p-8 flex flex-col hover:shadow-lg hover:shadow-teal-500 hover:bg-[#140F2D]/10 transition-all duration-300 ring-1 ring-white/10 relative mt-6"
                 whileHover={{ scale: 1.02 }}
               >
-                <h3 className="text-2xl font-light text-white mb-4 font-jakarta">{plan.name}</h3>
+                {/* Banner Tag */}
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                  <div className="bg-teal-300 text-black px-2 py-1 rounded-lg font-jakarta text-sm font-normal shadow-lg  text-center">
+                    {plan.tag}
+                  </div>
+                </div>
+ {/* COntent */}
+                <h3 className="text-2xl font-light text-white mb-4 font-jakarta mt-4">{plan.name}</h3>
                 <p className="text-3xl text-teal-300 mb-8 font-jakarta">{plan.price}</p>
                 <p className="text-white/80 mb-4 font-jakarta font-light">{plan.description}</p>
                 <ul className="flex-grow space-y-4 mb-8">
@@ -210,26 +230,23 @@ const Pricing = () => {
                       transition={{ delay: index * 0.1 + featureIndex * 0.1 }}
                     >
                       <span className="mr-2">•</span>
-                      <span className="font-jakarta">{feature}</span>
+                      <span className="font-jakarta font-normal text-base">{feature}</span>
                     </motion.li>
                   ))}
                 </ul>
                 <motion.button
-  onClick={() => handlePlanClick(plan.name)}
-  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-  className="GlowButton font-jakarta bg-teal-300 text-gray-900 px-4 py-2 text-sm inline-flex items-center justify-center gap-2 mx-auto hover:bg-teal-400 active:scale-95"
->
-  <span>{t.monthly}</span>
-  {isHovered ? (
-        <ArrowDownRight className="w-6 h-6" />
-      ) : (
-        <ArrowUpRight className="w-4 h-4" />
-      )}
-</motion.button>
-
-
-
+                  onClick={() => handlePlanClick(plan.name)}
+                  onMouseEnter={() => setHoveredButton(`plan-${index}`)}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  className="GlowButton font-jakarta bg-teal-300 text-gray-900 px-4 py-2 inline-flex items-center justify-center gap-2 mx-auto hover:bg-teal-400 active:scale-95"
+                >
+                  <span>{t.monthly}</span>
+                  {hoveredButton === `plan-${index}` ? (
+                    <ArrowDownRight className="w-6 h-6" />
+                  ) : (
+                    <ArrowUpRight className="w-4 h-4" />
+                  )}
+                </motion.button>
               </motion.div>
             ))}
           </div>
