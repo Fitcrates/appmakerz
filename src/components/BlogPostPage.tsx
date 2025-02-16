@@ -13,6 +13,8 @@ import PopularPosts from './PopularPosts';
 import ProposedPosts from './ProposedPosts';
 import { translations } from '../translations/translations';
 import { useNavigate } from 'react-router-dom';
+import { useScrollToTop } from '../hooks/useScrollToTop';
+
 
 const BlogPostPage = () => {
   const { slug } = useParams();
@@ -30,6 +32,8 @@ const BlogPostPage = () => {
   useEffect(() => {
     let isMounted = true;
 
+    useScrollToTop();
+    
     const fetchData = async () => {
       try {
         if (slug) {
