@@ -15,7 +15,6 @@ import { translations } from '../translations/translations';
 import { useNavigate } from 'react-router-dom';
 import { useScrollToTop } from '../hooks/useScrollToTop';
 
-
 const BlogPostPage = () => {
   const { slug } = useParams();
   const [post, setPost] = useState<Post | null>(null);
@@ -29,11 +28,12 @@ const BlogPostPage = () => {
   const t = translations[language].blog;
   const navigate = useNavigate();
 
+  // Call useScrollToTop at the top level
+  useScrollToTop();
+
   useEffect(() => {
     let isMounted = true;
 
-    useScrollToTop();
-    
     const fetchData = async () => {
       try {
         if (slug) {
@@ -102,10 +102,10 @@ const BlogPostPage = () => {
           }
         }
       } catch (err) {
-        if (!isMounted) return;
-        setError('Error loading post');
-        setLoading(false);
-        console.error('Error:', err);
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : 'An error occurred');
+          setLoading(false);
+        }
       }
     };
 
@@ -113,9 +113,9 @@ const BlogPostPage = () => {
     return () => {
       isMounted = false;
     };
-  }, [slug]);
+  }, [slug, language]);
 
-  // New useEffect for preventing orphans
+  // useEffect for preventing orphans
   useEffect(() => {
     const preventOrphans = () => {
       document.querySelectorAll('.blog-content p').forEach((el) => {
