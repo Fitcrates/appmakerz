@@ -1,55 +1,35 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getPost, getPosts, getPopularPosts } from '../lib/sanity.client';
-import type { Post } from '../types/sanity.types';
-
-export const queryKeys = {
-  posts: ['posts'] as const,
-  popularPosts: ['popularPosts'] as const,
-  post: (slug: string) => ['post', slug] as const,
-  relatedPosts: (categories: string[]) => ['relatedPosts', categories] as const,
-};
+import { useState } from 'react';
+import type { Post } from '../types/admin.types';
 
 export const usePosts = () => {
-  return useQuery({
-    queryKey: queryKeys.posts,
-    queryFn: getPosts,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 30 * 60 * 1000, // 30 minutes
-    refetchOnWindowFocus: false,
-  });
-};
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
 
-export const usePost = (slug: string | undefined) => {
-  return useQuery({
-    queryKey: queryKeys.post(slug || ''),
-    queryFn: () => getPost(slug || ''),
-    enabled: !!slug,
-    staleTime: 5 * 60 * 1000,
-    cacheTime: 30 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-};
+  const addPost = (post: Omit<Post, 'id' | 'createdAt'>) => {
+    const newPost: Post = {
+      ...post,
+      id: Date.now(),
+      createdAt: new Date().toISOString()
+    };
+    setPosts([...posts, newPost]);
+  };
 
-export const usePopularPosts = () => {
-  return useQuery({
-    queryKey: queryKeys.popularPosts,
-    queryFn: getPopularPosts,
-    staleTime: 5 * 60 * 1000,
-    cacheTime: 30 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-};
+  const updatePost = (updatedPost: Post) => {
+    setPosts(posts.map(post => 
+      post.id === updatedPost.id ? updatedPost : post
+    ));
+  };
 
-export const usePrefetchPost = () => {
-  const queryClient = useQueryClient();
+  const deletePost = (id: number) => {
+    setPosts(posts.filter(post => post.id !== id));
+  };
 
-  return (slug: string) => {
-    if (!slug) return;
-    
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.post(slug),
-      queryFn: () => getPost(slug),
-      staleTime: 5 * 60 * 1000,
-    });
+  return {
+    posts,
+    editingPost,
+    setEditingPost,
+    addPost,
+    updatePost,
+    deletePost
   };
 };
