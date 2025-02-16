@@ -5,7 +5,6 @@ import Contact from './components/Contact';
 import BlogPost from './components/BlogPost';
 import PopularPosts from './components/PopularPosts';
 import NewsletterModal from './components/NewsletterModal';
-import { getPosts } from './lib/sanity.client';
 import type { Post } from './types/sanity.types';
 import { useScrollToTop } from './hooks/useScrollToTop';
 import { ArrowDownRight, ChevronLeft, ChevronRight, Search, ArrowUpRight } from 'lucide-react';
@@ -13,39 +12,22 @@ import { useLanguage } from './context/LanguageContext';
 import { translations } from './translations/translations';
 import ProposedPosts from './components/ProposedPosts';
 import Footer from './components/Footer';
+import { usePosts, usePrefetchPost } from './hooks/useBlogPosts';
 
 const POSTS_PER_PAGE = 5;
 
 const Blog = () => {
   const { language } = useLanguage();
   const t = translations[language].blog;
-  const [posts, setPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const location = useLocation();
-  // State to manage hover
   const [isHovered, setIsHovered] = useState(false);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const fetchedPosts = await getPosts();
-        setPosts(fetchedPosts);
-        setFilteredPosts(fetchedPosts);
-      } catch (err) {
-        setError('Failed to fetch posts. Please try again later.');
-        console.error('Error fetching posts:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
+  const { data: posts = [], isLoading, error } = usePosts();
+  const prefetchPost = usePrefetchPost();
 
   useEffect(() => {
     // Scroll to the blog posts section when the component mounts
@@ -240,7 +222,7 @@ const Blog = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main Content */}
               <div className="lg:col-span-2">
-                {loading ? (
+                {isLoading ? (
                   <div className="text-white">{t.loading}</div>
                 ) : error ? (
                   <div className="text-red-500">{error}</div>
@@ -249,7 +231,12 @@ const Blog = () => {
                     {/* Blog Posts */}
                     <div className="space-y-8">
                       {getCurrentPagePosts().map((post) => (
-                        <Link key={post._id} to={`/blog/${post.slug.current}`}>
+                        <Link
+                          key={post._id}
+                          to={`/blog/${post.slug.current}`}
+                          onMouseEnter={() => prefetchPost(post.slug.current)}
+                          className="block group"
+                        >
                           <BlogPost post={post} />
                         </Link>
                       ))}
