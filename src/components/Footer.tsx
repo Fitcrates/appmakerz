@@ -3,12 +3,20 @@ import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import NewsletterModal from './NewsletterModal';
 import { ChevronUp } from 'lucide-react';
+import { usePrefetchRoute } from '../hooks/usePrefetchRoute';
+import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language].footer;
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
+  const prefetchRoute = usePrefetchRoute();
+
+  const handleMouseEnter = (path: string) => {
+    prefetchRoute(path);
+  };
 
   return (
     <>
@@ -22,15 +30,27 @@ const Footer: React.FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8">
-                <a href="/pricing" className="text-sm text-white/80 hover:text-teal-300 transition-colors">
+                <Link 
+                  to="/pricing" 
+                  onMouseEnter={() => handleMouseEnter('/pricing')}
+                  className="text-sm text-white/80 hover:text-teal-300 transition-colors"
+                >
                   {t.pricing}
-                </a>
-                <a href="/blog" className="text-sm text-white/80 hover:text-teal-300 transition-colors">
+                </Link>
+                <Link 
+                  to="/blog"
+                  onMouseEnter={() => handleMouseEnter('/blog')}
+                  className="text-sm text-white/80 hover:text-teal-300 transition-colors"
+                >
                   {t.blog}
-                </a>
-                <a href="/privacy-policy" className="text-sm text-white/80 hover:text-teal-300 transition-colors">
+                </Link>
+                <Link 
+                  to="/privacy-policy"
+                  onMouseEnter={() => handleMouseEnter('/privacy-policy')}
+                  className="text-sm text-white/80 hover:text-teal-300 transition-colors"
+                >
                   {t.privacyPolicy}
-                </a>
+                </Link>
                 
                 {/* Newsletter Dropdown */}
                 <div className="relative">
@@ -48,12 +68,13 @@ const Footer: React.FC = () => {
                       >
                         {t.newsletter}
                       </button>
-                      <a
-                        href="/unsubscribe"
+                      <Link
+                        to="/unsubscribe"
+                        onMouseEnter={() => handleMouseEnter('/unsubscribe')}
                         className="block w-full text-left px-4 py-2 text-sm hover:text-teal-300 hover:bg-[#3e3766] rounded-lg"
                       >
                         {t.unsubscribe}
-                      </a>
+                      </Link>
                     </div>
                   )}
                 </div>
