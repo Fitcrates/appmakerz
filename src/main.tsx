@@ -16,18 +16,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Lazy load EmailJS initialization
-const initEmailJs = async () => {
-  const emailjs = await import('@emailjs/browser');
-  const { EMAIL_CONFIG } = await import('./config/email.config');
-  emailjs.default.init(EMAIL_CONFIG.PUBLIC_KEY);
-};
-
-// Initialize EmailJS after initial render
-window.requestIdleCallback?.(() => {
-  initEmailJs();
-}) ?? setTimeout(initEmailJs, 1000);
-
 // Lazy load routes
 const AnimatedRoutes = React.lazy(() => import('./Animatedroutes'));
 
@@ -36,7 +24,9 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <Router>
-          <AnimatedRoutes />
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <AnimatedRoutes />
+          </React.Suspense>
         </Router>
       </LanguageProvider>
     </QueryClientProvider>
