@@ -231,9 +231,7 @@ const Projects = () => {
           <span className="text-4xl sm:text-6xl text-white font-normal font-jakarta">
             {t.title}
           </span>
-          <span className="text-xl sm:text-3xl text-teal-300 font-biglight font-jakarta text-left lg:text-right mt-2 lg:mt-0 lg:-mb-10">
-            {t.categories.all}
-          </span>
+          
         </motion.div>
 
         <motion.div 
