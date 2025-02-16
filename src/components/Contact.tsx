@@ -99,17 +99,17 @@ const Contact: React.FC<ContactProps> = ({ id }) => {
 
           <div className="space-y-20 text-white">
             <div>
-              <h3 className="text-teal-200 text-xl font-jakarta">{t.info.mail}</h3>
+              <h3 className="text-teal-200 text-xl font-jakarta font-normal">{t.info.mail}</h3>
               <p>aeonofshreds@gmail.com</p>
             </div>
 
             <div>
-              <h3 className="text-teal-200 text-xl font-jakarta">{t.info.phone}</h3>
+              <h3 className="text-teal-200 text-xl font-jakarta font-normal">{t.info.phone}</h3>
               <p>+48 733 433 230</p>
             </div>
 
             <div>
-              <h3 className="text-teal-200 text-xl font-jakarta">{t.info.location}</h3>
+              <h3 className="text-teal-200 text-xl font-jakarta font-normal">{t.info.location}</h3>
               <p>Wrocław, Poland</p>
             </div>
           </div>
