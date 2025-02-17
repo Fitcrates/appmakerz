@@ -41,6 +41,8 @@ const Blog = () => {
 
   useEffect(() => {
     const filtered = posts.filter((post) => {
+      const query = searchQuery.toLowerCase();
+      
       // Handle both string and object title formats
       const getTitle = () => {
         if (typeof post.title === 'string') return post.title;
@@ -53,37 +55,33 @@ const Blog = () => {
         return (post.excerpt?.[language] || post.excerpt?.en || '');
       };
 
-      // Handle both array and object body formats
-      const getBody = () => {
-        if (Array.isArray(post.body)) return post.body;
-        return (post.body?.[language] || post.body?.en || []);
+      // Extract text from post body blocks
+      const getBodyText = () => {
+        if (!post.body) return '';
+        return post.body
+          .filter(block => block._type === 'block')
+          .map(block => {
+            if (!block.children) return '';
+            return block.children
+              .map(child => child.text || '')
+              .join(' ');
+          })
+          .join(' ');
       };
 
-      const titleMatch = getTitle().toLowerCase().includes(searchQuery.toLowerCase());
-      const tagsMatch = post.tags?.some((tag) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase())
+      const title = getTitle().toLowerCase();
+      const excerpt = getExcerpt().toLowerCase();
+      const bodyText = getBodyText().toLowerCase();
+
+      return (
+        title.includes(query) || 
+        excerpt.includes(query) || 
+        bodyText.includes(query)
       );
-      const contentMatch = post.body ? searchInPortableText(getBody()) : false;
-      const excerptMatch = getExcerpt().toLowerCase().includes(searchQuery.toLowerCase());
-
-      return titleMatch || tagsMatch || contentMatch || excerptMatch;
     });
+
     setFilteredPosts(filtered);
-    setCurrentPage(1); // Reset to the first page when search changes
-  }, [searchQuery, posts, language]);
-
-  const searchInPortableText = (blocks: any[]) => {
-    return blocks.some((block) => {
-      if (block._type === 'block' && block.children) {
-        return block.children.some(
-          (child: any) =>
-            child.text &&
-            child.text.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      }
-      return false;
-    });
-  };
+  }, [posts, searchQuery, language]);
 
   const getCurrentPagePosts = () => {
     const indexOfLastPost = currentPage * POSTS_PER_PAGE;
