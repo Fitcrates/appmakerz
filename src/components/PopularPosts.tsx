@@ -46,7 +46,7 @@ const PopularPosts = () => {
     <div className="rounded-lg sticky top-4"
     style={{ backgroundColor: '#140F2D' }}
     >
-      <h3 className="text-xl font-bold mb-4 text-white">{t.title}</h3>
+      <h3 className="text-xl font-bold mb-4 text-white">{t.popularPosts}</h3>
       <div className="space-y-4">
         {popularPosts.map((post) => (
           <Link 
