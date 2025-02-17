@@ -50,18 +50,31 @@ export async function getPosts() {
       },
       slug,
       mainImage,
-      publishedAt,
-      author->{
-        name,
-        image
+      categories[]->{
+        _id,
+        name
       },
+      publishedAt,
       excerpt {
         en,
         pl
       },
-      viewCount,
-      categories,
-      tags
+      author->{
+        name,
+        image
+      },
+      views,
+      tags,
+      body[] {
+        ...,
+        _type == "block" => {
+          ...,
+          children[] {
+            ...,
+            text
+          }
+        }
+      }
     }
   `);
 }
