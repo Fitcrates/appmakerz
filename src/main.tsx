@@ -24,7 +24,7 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <Router>
-          <React.Suspense fallback={<div>Loading...</div>}>
+          <React.Suspense fallback={<div className='bg-[#140F2D] min-h-screen'>Loading...</div>}>
             <AnimatedRoutes />
           </React.Suspense>
         </Router>
