@@ -8,7 +8,6 @@ const routeComponents: Record<string, () => Promise<any>> = {
   '/studio': () => import('../StudioPage'),
   '/privacy': () => import('../components/PrivacyPolicy'),
   '/unsubscribe': () => import('../pages/Unsubscribe'),
-  '/subscriber-list': () => import('../pages/SubscriberList'),
   '/project': () => import('../components/ProjectDetails'),
 };
 
