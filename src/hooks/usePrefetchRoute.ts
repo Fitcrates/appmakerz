@@ -9,6 +9,7 @@ const routeComponents: Record<string, () => Promise<any>> = {
   '/privacy': () => import('../components/PrivacyPolicy'),
   '/unsubscribe': () => import('../pages/Unsubscribe'),
   '/subscriber-list': () => import('../pages/SubscriberList'),
+  '/project': () => import('../components/ProjectDetails'),
 };
 
 export const usePrefetchRoute = () => {
