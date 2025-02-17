@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { Link } from 'react-router-dom';
+import { usePrefetchRoute } from '../hooks/usePrefetchRoute';
 
 import 'swiper/swiper-bundle.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -52,6 +53,7 @@ const Projects = () => {
   const [preloadedImages, setPreloadedImages] = useState<{[key: string]: boolean}>({});
   const [shouldPreload, setShouldPreload] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const prefetchRoute = usePrefetchRoute();
 
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
@@ -213,6 +215,10 @@ const Projects = () => {
     }));
   };
 
+  const handleMouseEnter = (slug: string) => {
+    prefetchRoute(`/project/${slug}`);
+  };
+
   return (
     <section 
       ref={sectionRef}
@@ -304,6 +310,7 @@ const Projects = () => {
                       <div className="fixed bottom-12 md:bottom-12 sm:bottom-14 lg:bottom-4">
                         <Link
                           to={`/project/${project.slug}`}
+                          onMouseEnter={() => handleMouseEnter(project.slug)}
                           className="inline-flex items-center text-white hover:text-teal-300"
                         >
                           {t.viewProject} <ArrowUpRight className="w-4 h-4 ml-1" />
