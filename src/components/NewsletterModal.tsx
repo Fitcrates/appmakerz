@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { v4 as uuidv4 } from 'uuid';
-import { useCategories, usePrefetchCategories } from '../hooks/useCategories';
 
 interface NewsletterModalProps {
   isOpen: boolean;
@@ -14,20 +13,14 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   const t = translations[language].modal;
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const prefetchCategories = usePrefetchCategories();
-  const { data: availableCategories = [], isLoading, error } = useCategories();
-
   const [email, setEmail] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorState, setError] = useState('');
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [mathProblem, setMathProblem] = useState({ num1: 0, num2: 0, answer: 0 });
   const [userAnswer, setUserAnswer] = useState('');
-
-  useEffect(() => {
-    prefetchCategories();
-  }, [prefetchCategories]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -46,7 +39,33 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   }, [isOpen, onClose]);
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/.netlify/functions/handleSanityQuery', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: '*[_type == "post"].categories[]'
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch categories');
+        }
+
+        const result = await response.json();
+        const uniqueCategories = [...new Set(result.flat())];
+        setAvailableCategories(uniqueCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setError('Failed to load categories');
+      }
+    };
+
     if (isOpen) {
+      fetchCategories();
       generateMathProblem();
     }
   }, [isOpen]);
@@ -141,33 +160,24 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
 
               <div className="mb-4">
                 <p className="text-white mb-2 text-sm sm:text-base">{t.subtitle.line1}</p>
-                <div 
-                  onMouseEnter={prefetchCategories}
-                  className="grid grid-cols-1 sm:grid-cols-2 gap-2"
-                >
-                  {isLoading ? (
-                    <p>Loading categories...</p>
-                  ) : error ? (
-                    <p>Error loading categories.</p>
-                  ) : (
-                    availableCategories.map((category) => (
-                      <label key={category} className="flex items-center space-x-2 text-white text-sm sm:text-base">
-                        <input
-                          type="checkbox"
-                          checked={categories.includes(category)}
-                          onChange={() => handleCategoryToggle(category)}
-                          className="peer hidden"
-                        />
-                        <div className="w-4 h-4 border-2 GlowButton border-white rounded-md flex items-center justify-center peer-checked:bg-teal-300 peer-checked:text-black relative">
-                          <span className="opacity-0 peer-checked:opacity-100 transition-opacity">✓</span>
-                        </div>
-                        <span>{category}</span>
-                      </label>
-                    ))
-                  )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {availableCategories.map((category) => (
+                    <label key={category} className="flex items-center space-x-2 text-white text-sm sm:text-base">
+                      <input
+                        type="checkbox"
+                        checked={categories.includes(category)}
+                        onChange={() => handleCategoryToggle(category)}
+                        className="peer hidden"
+                      />
+                      <div className="w-4 h-4 border-2 GlowButton border-white rounded-md flex items-center justify-center peer-checked:bg-teal-300 peer-checked:text-black relative">
+                        <span className="opacity-0 peer-checked:opacity-100 transition-opacity">✓</span>
+                      </div>
+                      <span>{category}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
-              {errorState && <div className="text-red-500 mt-4 text-sm sm:text-base">{errorState}</div>}
+              {error && <div className="text-red-500 mt-4 text-sm sm:text-base">{error}</div>}
               
             </form>
           )}
