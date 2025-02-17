@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import Header from './Header';
+import Footer from './Footer';
 
 const PrivacyPolicy: React.FC = () => {
   const { language } = useLanguage();
@@ -127,14 +128,7 @@ Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktu
           </div>
         </div>
       </main>
-      <footer className="bg-[#140F2D] text-xs text-white py-8 text-jakarta">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>
-            &copy; {new Date().getFullYear()} Portfolio of Arkadiusz Wawrzyniak.
-            <br /> Graphic design by Weronika Grzesiowska
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
