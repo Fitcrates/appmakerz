@@ -116,7 +116,6 @@ export async function getProject(slug: string): Promise<any> {
   );
 }
 
-// Fetch categories
 export async function getCategories() {
   return executeQuery(
     `*[_type == "category"] {
