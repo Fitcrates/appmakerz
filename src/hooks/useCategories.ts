@@ -8,7 +8,7 @@ export const queryKeys = {
 // Custom hook for fetching categories
 export const useCategories = () => {
   return useQuery({
-    queryKey: queryKeys.categories,
+    queryKey: [queryKeys.categories],
     queryFn: getCategories,
     staleTime: 5 * 60 * 1000, // 5 minutes
     cacheTime: 30 * 60 * 1000, // 30 minutes
@@ -22,7 +22,7 @@ export const usePrefetchCategories = () => {
 
   return () => {
     queryClient.prefetchQuery({
-      queryKey: queryKeys.categories,
+      queryKey: [queryKeys.categories],
       queryFn: getCategories,
       staleTime: 5 * 60 * 1000,
     });
