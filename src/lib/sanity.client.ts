@@ -60,7 +60,7 @@ export async function getPosts() {
         name,
         image
       },
-      views,
+      viewCount,
       tags,
       body[] {
         ...,
@@ -161,6 +161,24 @@ export async function incrementPostView(postId: string) {
 
 // Fetch popular posts
 export async function getPopularPosts() {
+  return executeQuery(`
+    *[_type == "post"] | order(viewCount desc) [0...3] {
+      _id,
+      title {
+        en,
+        pl
+      },
+      slug,
+      mainImage,
+      publishedAt,
+      viewCount,
+      categories,
+      tags
+    }
+  `);
+}
+// Fetch proposed posts
+export async function getProposedPosts() {
   return executeQuery(`
     *[_type == "post"] | order(viewCount desc) [0...3] {
       _id,
