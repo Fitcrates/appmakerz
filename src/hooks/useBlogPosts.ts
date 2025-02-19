@@ -40,6 +40,16 @@ export const usePopularPosts = () => {
   });
 };
 
+export const useProposedPosts = () => {
+  return useQuery({
+    queryKey: queryKeys.proposedPosts,
+    queryFn: getProposedPosts,
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 30 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+};
+
 export const usePrefetchPost = () => {
   const queryClient = useQueryClient();
 
