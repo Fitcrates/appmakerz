@@ -30,6 +30,21 @@ const Pricing = () => {
 
   useScrollToTop();
 
+  // Go to contact form with selected plan
+  const handlePlanClick = (planName) => {
+    const contactSection = document.getElementById('contact'); 
+    const searchParams = new URLSearchParams();
+    searchParams.set('plan', planName);
+    const url = new URL(window.location.href);
+    url.hash = 'contact';
+    window.history.replaceState({}, '', `${url.hash}?${searchParams.toString()}`);
+    window.dispatchEvent(new Event('hashchange'));
+  
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   // Define a mapping between category keys and their translated values
   const categoryKeyToTranslation = {
     "websites": t.tabs.websites,
