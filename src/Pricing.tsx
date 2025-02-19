@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Contact from './components/Contact';
@@ -12,91 +12,99 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.3
-    }
+    transition: { staggerChildren: 0.2, delayChildren: 0.3 }
   }
 };
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut"
-    }
-  }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
 };
 
 const Pricing = () => {
   const { language } = useLanguage();
   const t = translations[language].pricing;
+  // Use a language-independent category key instead of the translated text
+  const [selectedCategoryKey, setSelectedCategoryKey] = useState("websites");
   const [hoveredButton, setHoveredButton] = useState(null);
 
   useScrollToTop();
 
-  const handlePlanClick = (planName) => {
-    const contactSection = document.getElementById('contact'); 
-    const searchParams = new URLSearchParams();
-    searchParams.set('plan', planName);
-    const url = new URL(window.location.href);
-    url.hash = 'contact';
-    window.history.replaceState({}, '', `${url.hash}?${searchParams.toString()}`);
-    window.dispatchEvent(new Event('hashchange'));
-  
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    }
+  // Define a mapping between category keys and their translated values
+  const categoryKeyToTranslation = {
+    "websites": t.tabs.websites,
+    "platforms": t.tabs.platforms,
+    "appsheets": t.tabs.appsheets
+  };
+
+  // Temporary translation until Wordpress is in offer
+  const comingSoon = {
+    en: {
+      message: 'Coming soon... Wordpress websites',
+      
+    },
+    pl: {
+      message: 'Już wkrótce... Strony internetowe z Wordpress.',
+      
+    },
   };
 
   const plans = [
-   
-    {
-      name: t.portfolio.title,
-      price: t.portfolio.price,
-      description: t.portfolio.description,
-      features: t.portfolio.features,
+    { 
+      name: t.portfolio.title, 
+      price: t.portfolio.price, 
+      description: t.portfolio.description, 
+      features: t.portfolio.features, 
       tag: t.portfolio.tag, 
+      categoryKey: "websites"
     },
-    {
-      name: t.portfolioPlus.title,
-      price: t.portfolioPlus.price,
-      description: t.portfolioPlus.description,
-      features: t.portfolioPlus.features,
+    { 
+      name: t.portfolioPlus.title, 
+      price: t.portfolioPlus.price, 
+      description: t.portfolioPlus.description, 
+      features: t.portfolioPlus.features, 
       tag: t.portfolioPlus.tag, 
+      categoryKey: "websites"
     },
-    {
-      name: t.customWebsite.title,
-      price: t.customWebsite.price,
-      description: t.customWebsite.description,
-      features: t.customWebsite.features,
+    { 
+      name: t.customWebsite.title, 
+      price: t.customWebsite.price, 
+      description: t.customWebsite.description, 
+      features: t.customWebsite.features, 
       tag: t.customWebsite.tag, 
+      categoryKey: "platforms"
     },
-    {
-      name: t.entry.title,
-      price: t.entry.price,
-      description: t.entry.description,
-      features: t.entry.features,
+    { 
+      name: t.entry.title, 
+      price: t.entry.price, 
+      description: t.entry.description, 
+      features: t.entry.features, 
       tag: t.entry.tag, 
+      categoryKey: "appsheets"
     },
-    {
-      name: t.basic.title,
-      price: t.basic.price,
-      description: t.basic.description,
-      features: t.basic.features,
+    { 
+      name: t.basic.title, 
+      price: t.basic.price, 
+      description: t.basic.description, 
+      features: t.basic.features, 
       tag: t.basic.tag, 
+      categoryKey: "appsheets"
     },
-    {
-      name: t.custom.title,
-      price: t.custom.price,
-      description: t.custom.description,
-      features: t.custom.features,
+    { 
+      name: t.custom.title, 
+      price: t.custom.price, 
+      description: t.custom.description, 
+      features: t.custom.features, 
       tag: t.custom.tag, 
+      categoryKey: "appsheets"
     },
   ];
+
+  // Use the category keys array instead of translated texts
+  const categoryKeys = ["websites", "platforms", "appsheets"];
+  
+  // Filter plans by the categoryKey rather than the translated text
+  const filteredPlans = plans.filter(plan => plan.categoryKey === selectedCategoryKey);
 
   return (
     <>
@@ -107,7 +115,6 @@ const Pricing = () => {
 <section 
   id="pricing-hero" 
   className="min-h-screen h-screen w-full flex items-end pb-20 overflow-x-hidden"
-
 >
 <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
 <div className="flex flex-col lg:flex-row justify-between items-center lg:items-end w-full">
@@ -182,55 +189,58 @@ const Pricing = () => {
                 >
                   <span>{t.monthly}</span>
                   {hoveredButton === 'mobile-hero' ? (
-        <ArrowDownRight className="w-6 h-6" />
-      ) : (
-        <ArrowUpRight className="w-4 h-4" />
-      )}
+                    <ArrowDownRight className="w-6 h-6" />
+                  ) : (
+                    <ArrowUpRight className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Pricing Cards Grid */}
+        {/* Pricing Cards */}
         <motion.section 
           id="pricing-plans"
           className="py-16"
           style={{ backgroundColor: '#140F2D' }}
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
+          animate="visible"
         >
+           {/* Category Tabs - Use the keys and map to translations */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-center space-x-4">
+            {categoryKeys.map(categoryKey => (
+              <button
+                key={categoryKey}
+                onClick={() => setSelectedCategoryKey(categoryKey)}
+                className={`rounded-full text-sm font-jakarta font-normal transition-all 
+                  ${selectedCategoryKey === categoryKey ? "bg-teal-300 text-black px-4 py-2" : "px-2 py-1 text-teal-300 border border-teal-300/90 hover:bg-gray-600"}`}
+              >
+                {categoryKeyToTranslation[categoryKey]}
+              </button>
+            ))}
+          </div>
+
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {plans.map((plan, index) => (
+            {filteredPlans.map((plan, index) => (
               <motion.div
                 key={index}
                 variants={cardVariants}
                 className="bg-gradient-to-br from-white/10 via-[#140F2D] to-[#140F2D] rounded-lg p-8 flex flex-col hover:shadow-lg hover:shadow-teal-500 hover:bg-[#140F2D]/10 transition-all duration-300 ring-1 ring-white/10 relative mt-6"
                 whileHover={{ scale: 1.02 }}
               >
-                {/* Banner Tag */}
-                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-teal-300 text-black px-2 py-1 rounded-lg font-jakarta text-sm font-normal shadow-lg  text-center">
-                    {plan.tag}
-                  </div>
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-teal-300 text-black px-2 py-1 rounded-lg text-sm text-center shadow-lg">
+                  {plan.tag}
                 </div>
- {/* COntent */}
-                <h3 className="text-2xl font-light text-white mb-4 font-jakarta mt-4">{plan.name}</h3>
-                <p className="text-3xl text-teal-300 mb-8 font-jakarta">{plan.price}</p>
-                <p className="text-white/80 mb-4 font-jakarta font-light">{plan.description}</p>
+                <h3 className="text-2xl font-light text-white mb-4 mt-4">{plan.name}</h3>
+                <p className="text-3xl text-teal-300 mb-8">{plan.price}</p>
+                <p className="text-white/80 mb-4">{plan.description}</p>
                 <ul className="flex-grow space-y-4 mb-8">
                   {plan.features.map((feature, featureIndex) => (
-                    <motion.li
-                      key={featureIndex}
-                      className="flex items-start text-white font-light"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 + featureIndex * 0.1 }}
-                    >
+                    <motion.li key={featureIndex} className="flex items-start text-white font-light">
                       <span className="mr-2">•</span>
-                      <span className="font-jakarta font-normal text-base">{feature}</span>
+                      <span className="text-base">{feature}</span>
                     </motion.li>
                   ))}
                 </ul>
@@ -251,6 +261,11 @@ const Pricing = () => {
             ))}
           </div>
         </motion.section>
+
+        {/* Temp part, delete when cards are ready */}
+        <div className="flex justify-center items-center h-24 text-white font-jakarta bg-[#140F2D]">
+            {comingSoon[language].message}
+        </div>
       </main>
       <Contact />
       <Footer />
