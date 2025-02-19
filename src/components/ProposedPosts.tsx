@@ -3,6 +3,7 @@ import { Link,  } from 'react-router-dom';
 import { urlFor } from '../lib/sanity.client';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
+import { useProposedPosts } from '../hooks/useBlogPosts';
 
 interface Post {
   _id: string;
@@ -60,7 +61,7 @@ const ProposedPosts: React.FC<ProposedPostsProps> = ({ posts }) => {
                 {getTitle(post)}
               </h3>
               <p className="text-sm text-white/60 mt-1">
-                {new Date(post.publishedAt).toLocaleDateString()} • {post.viewCount || 0} {t.views}
+              {post.viewCount || 0} {t.views} • {new Date(post.publishedAt).toLocaleDateString()}
               </p>
               {post.categories && post.categories.length > 0 && (
                 <div className="flex gap-2 mt-2">
