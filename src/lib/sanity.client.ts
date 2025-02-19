@@ -50,10 +50,7 @@ export async function getPosts() {
       },
       slug,
       mainImage,
-      categories[]->{
-        _id,
-        name
-      },
+      categories,
       publishedAt,
       excerpt {
         en,
@@ -129,14 +126,16 @@ export async function getProject(slug: string): Promise<any> {
   );
 }
 
+
 export async function getCategories() {
   return executeQuery(
-    `*[_type == "category"] {
-      _id,
+    `*[_type == "post"] { ..., categories[]->{ title } } {
+     
       name
     }`
   );
 }
+
 
 // Increment post view - using Netlify function
 export async function incrementPostView(postId: string) {
