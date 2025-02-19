@@ -208,19 +208,23 @@ const Pricing = () => {
           initial="hidden"
           animate="visible"
         >
-           {/* Category Tabs - Use the keys and map to translations */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-center space-x-4">
-            {categoryKeys.map(categoryKey => (
-              <button
-                key={categoryKey}
-                onClick={() => setSelectedCategoryKey(categoryKey)}
-                className={`rounded-full text-sm font-jakarta font-normal transition-all 
-                  ${selectedCategoryKey === categoryKey ? "bg-teal-300 text-black px-4 py-2" : "px-2 py-1 text-teal-300 border border-teal-300/90 hover:bg-gray-600"}`}
-              >
-                {categoryKeyToTranslation[categoryKey]}
-              </button>
-            ))}
-          </div>
+          
+          {/* Category selector */}
+           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-wrap justify-center gap-4 mb-8"> 
+  {categoryKeys.map(categoryKey => (
+    <button
+      key={categoryKey}
+      onClick={() => setSelectedCategoryKey(categoryKey)}
+      className={`min-w-[140px] md:min-w-[160px] px-4 py-1 rounded-full text-sm font-jakarta font-normal text-center transition-all 
+        ${selectedCategoryKey === categoryKey 
+          ? "bg-teal-300 text-black" 
+          : "text-teal-300 border border-teal-300/90 hover:bg-gray-600"
+        }`}
+    >
+      {categoryKeyToTranslation[categoryKey]}
+    </button>
+  ))}
+</div>
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPlans.map((plan, index) => (
