@@ -26,17 +26,26 @@ const ProjectDetails = () => {
   React.useEffect(() => {
     const fetchProject = async () => {
       try {
-        if (!slug) throw new Error('No slug provided');
+        if (!slug) throw new Error("No slug provided");
+  
+        // Try loading from cache first
+        const cachedProject = localStorage.getItem(`project-${slug}`);
+        if (cachedProject) {
+          setProject(JSON.parse(cachedProject));
+          return; // Avoid making another API call
+        }
+  
+        // Fetch from Sanity if not cached
         const fetchedProject = await getProject(slug);
         setProject(fetchedProject);
       } catch (err) {
-        setError('Failed to fetch project details');
-        console.error('Error fetching project:', err);
+        setError("Failed to fetch project details");
+        console.error("Error fetching project:", err);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchProject();
   }, [slug]);
 
