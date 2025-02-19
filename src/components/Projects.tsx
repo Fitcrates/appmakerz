@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { Link } from 'react-router-dom';
 import { usePrefetchRoute } from '../hooks/usePrefetchRoute';
+import { getProject } from '../lib/sanity.client';
 
 import 'swiper/swiper-bundle.css';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -214,9 +215,17 @@ const Projects = () => {
       [slug]: true
     }));
   };
-
+  const prefetchProject = async (slug: string) => {
+    try {
+      const data = await getProject(slug);
+      localStorage.setItem(`project-${slug}`, JSON.stringify(data));
+    } catch (err) {
+      console.error("Prefetch failed", err);
+    }
+  };
+  
   const handleMouseEnter = (slug: string) => {
-    prefetchRoute(`/project/${slug}`);
+    prefetchProject(slug);
   };
 
   return (
