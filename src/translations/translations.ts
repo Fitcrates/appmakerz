@@ -183,6 +183,11 @@ export const translations = {
       right4: "individual needs",
       monthly: "Choose plan",
       yearly: "Yearly",
+      tabs: {
+        websites: "Websites",
+        platforms: "Web platforms",
+        appsheets: "Data manager",
+      },
       entry: {
         title: "'AppSheets Basic' Plan",
         price: "$100",
@@ -513,6 +518,11 @@ export const translations = {
       right4: "indywidualnych potrzeb",
       monthly: "Wybierz plan",
       yearly: "Rocznie",
+      tabs: {
+        websites: "Strony internetowe",
+        platforms: "Platformy webowe",
+        appsheets: "Menadżer danych",
+      },
       entry: {
         title: "Plan 'AppSheets Bazowy'",
         price: "400 zł",
