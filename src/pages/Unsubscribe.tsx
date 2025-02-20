@@ -116,35 +116,71 @@ const Unsubscribe: React.FC = () => {
 
       default:
         return (
-          <div className="h-[90vh] bg-[#140F2D] text-white p-8 ">
-            <div className="max-w-2xl mx-auto mt-24">
-              <h1 className="text-3xl font-bold mb-4 text-center">{t.title.line1}</h1>
-              <form onSubmit={handleManualUnsubscribe} className="space-y-4">
-                <div>
-                  <label htmlFor="email" className="block mb-2">
-                    {t.title.line2}
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full px-4 py-2 rounded bg-white/90 border border-white/20 text-black"
-                    placeholder={t.title.line3}
-                  />
-                </div>
-                {error && <p className="text-red-500">{error}</p>}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full px-6 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 transition-colors disabled:opacity-50"
-                >
-                  {isSubmitting ? 'Unsubscribing...' : t.title.line4}
-                </button>
-              </form>
-            </div>
+          
+          <div className="h-[90vh] bg-[#140F2D] relative text-white p-8 overflow-hidden">
+            {/* Diagonal glow stripe from corner to corner */}
+            <div 
+              className="absolute h-24 "
+              style={{
+                background: 'rgba(45, 212, 191, 0.35)',
+                filter: 'blur(45px)',
+                boxShadow: '0 0 70px 50px rgba(45, 212, 191, 0.35)',
+                width: '200vw', // Make it wider than the screen
+                right: '-50vw', // Position it to extend beyond left edge
+                top: '40%',
+                transform: 'rotate(17deg)', // Adjust angle as needed
+                transformOrigin: 'center center'
+                
+              }}
+            />
+            
+            {/*  light enhancement  */}
+            <div 
+              className="absolute h-24"
+              style={{
+                background: 'rgba(45, 212, 191, 0.17)',
+                filter: 'blur(45px)',
+                width: '150vw',
+                right: '-25vw',
+                top: '45%',
+                transform: 'rotate(17deg)',
+                transformOrigin: 'center center',
+               
+              }}
+            />
+            
+          
+          {/* Content box */}
+          <div className="flex items-center justify-center min-h-screen">
+          <div className=" relative max-w-2xl  mx-auto ring-1 ring-white/20 p-16 bg-white/5 backdrop-blur-lg rounded-lg">
+            <h1 className="text-3xl font-bold mb-4 text-center">{t.title.line1}</h1>
+            <form onSubmit={handleManualUnsubscribe} className="space-y-4" id="unsubscribe-form">
+              <div>
+                <label htmlFor="email" className="block mb-2">
+                  {t.title.line2}
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 border border-white/20 focus:border-white/50 outline-none no-arrows text-sm sm:text-base"
+                  placeholder={t.title.line3}
+                />
+              </div>
+              {error && <p className="text-red-500">{error}</p>}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="GlowButton  justify-center w-full px-6 py-2 bg-teal-500 text-white rounded hover:bg-teal-600 transition-colors disabled:opacity-50"
+              >
+                {isSubmitting ? 'Unsubscribing...' : t.title.line4}
+              </button>
+            </form>
           </div>
+          </div>
+        </div>
         );
     }
   };
@@ -153,7 +189,7 @@ const Unsubscribe: React.FC = () => {
     <>
       <Header />
       {renderContent()}
-      <Footer />
+      <Footer  />
     </>
   );
 };
