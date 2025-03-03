@@ -204,16 +204,16 @@ const Header = () => {
                   onClick={() => setIsMenuOpen(false)}
                 />
                 
-                {/* Menu panel */}
+                {/* Menu panel with flex column layout to position footer at bottom */}
                 <motion.div
-                  className="lg:hidden fixed top-0 bottom-0 right-0 w-4/5 max-w-xs bg-gradient-to-br from-[#140F2D] via-[#140F2D]/95 to-teal-800/90 backdrop-blur-md z-50 mobile-menu-container shadow-xl"
+                  className="lg:hidden fixed top-0 bottom-0 right-0 w-4/5 max-w-xs bg-gradient-to-br from-[#140F2D] via-[#140F2D]/95 to-teal-600/90 backdrop-blur-md z-50 mobile-menu-container shadow-xl flex flex-col"
                   variants={menuPanelVariants}
                   initial="hidden"
                   animate="visible"
                   exit="exit"
                 >
                   {/* Menu header */}
-                  <div className="flex justify-between items-center p-6 border-b border-white/10">
+                  <div className="flex justify-between items-center p-6 border-b border-white/10 ">
                     <span className="text-xl text-white font-medium">{t.navigation.menu || 'Menu'}</span>
                     <motion.button 
                       onClick={() => setIsMenuOpen(false)}
@@ -224,8 +224,8 @@ const Header = () => {
                     </motion.button>
                   </div>
                   
-                  {/* Menu items */}
-                  <nav className="flex flex-col p-6 space-y-6 bg-gradient-to-tr from-[#140F2D] via-[#140F2D]/95 to-teal-800/90 h-screen">
+                  {/* Menu items - using flex-grow to push footer to bottom */}
+                  <nav className="flex flex-col p-6 space-y-6 flex-grow bg-gradient-to-tr from-[#140F2D] via-[#140F2D]/95 to-teal-600/90  h-screen ">
                     {menuItems.map((item, index) => (
                       <motion.div
                         key={index}
@@ -234,7 +234,7 @@ const Header = () => {
                         initial="hidden"
                         animate="visible"
                         exit="exit"
-                        className="relative "
+                        className="relative"
                       >
                         {item.link ? (
                           <Link 
@@ -263,9 +263,24 @@ const Header = () => {
                             />
                             <span className="pl-10">{item.text}</span>
                           </motion.button>
+                          
                         )}
                       </motion.div>
                     ))}
+                    {/* Menu footer - now at the bottom of the flex container */}
+                  <motion.div 
+                    className="p-6 border-t border-white/30 text-white/70 text-sm mt-auto   h-screen"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ 
+                      opacity: 1, 
+                      y: 0,
+                      transition: { delay: 0.8, duration: 0.5 } 
+                    }}
+                    exit={{ opacity: 0, y: 20 }}
+                  >
+                    <div className="font-bold text-white">app<span className="font-thin">crates</span></div>
+                    <div className="mt-2">© {new Date().getFullYear()} All rights reserved</div>
+                  </motion.div>
                   </nav>
                   
                   
