@@ -1,28 +1,104 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import LanguageToggle from './LanguageToggle';
 import { usePrefetchRoute } from '../hooks/usePrefetchRoute';
 import { translations } from '../translations/translations';
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const { language, setLanguage } = useLanguage();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { language } = useLanguage();
   const t = translations[language];
   const navigate = useNavigate();
   const location = useLocation();
   const prefetchRoute = usePrefetchRoute();
 
-  const menuVariants = {
-    hidden: { y: -20, opacity: 0 },
-    visible: (index) => ({
-      y: 0,
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (isMenuOpen && !target.closest('.mobile-menu-container') && !target.closest('.menu-button')) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMenuOpen]);
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
+  const menuItemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: (index: number) => ({
       opacity: 1,
-      transition: { delay: index * 0.1, duration: 0.3, ease: 'easeInOut' },
+      x: 0,
+      transition: { 
+        delay: index * 0.1 + 0.3, 
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1] // Custom cubic bezier for spring-like effect
+      }
     }),
-    exit: { y: -20, opacity: 0, transition: { duration: 0.2 } },
+    exit: { 
+      opacity: 0, 
+      x: -20, 
+      transition: { 
+        duration: 0.3,
+        ease: "easeInOut"
+      } 
+    }
+  };
+
+  const menuBackgroundVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    },
+    exit: { 
+      opacity: 0,
+      transition: { 
+        delay: 0.3,
+        duration: 0.5
+      }
+    }
+  };
+
+  const menuPanelVariants = {
+    hidden: { x: "100%" },
+    visible: { 
+      x: "0%",
+      transition: { 
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    },
+    exit: { 
+      x: "100%",
+      transition: { 
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    }
+  };
+
+  const buttonVariants = {
+    tap: { scale: 0.95 }
   };
 
   // Smooth scrolling polyfill
@@ -48,7 +124,7 @@ const Header = () => {
     const scrollToElement = () => {
       const element = document.getElementById(sectionId);
       if (element) {
-        const headerOffset = 100; // Adjust this value based on your header height
+        const headerOffset = 100;
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
@@ -73,14 +149,24 @@ const Header = () => {
     prefetchRoute(path);
   };
 
+  const menuItems = [
+    { text: t.navigation.home, action: () => scrollToSection('hero'), path: '/' },
+    { text: t.navigation.blog, action: () => setIsMenuOpen(false), link: "/blog", path: '/blog' },
+    { text: t.navigation.about, action: () => scrollToSection('about'), path: '/' },
+    { text: t.navigation.projects, action: () => scrollToSection('projects'), path: '/' },
+    { text: t.navigation.pricing, action: () => setIsMenuOpen(false), link: "/pricing", path: '/pricing' },
+    { text: t.navigation.contact, action: () => scrollToSection('contact'), path: '/' },
+  ];
+
   return (
     <header className="fixed w-full backdrop-blur-sm z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-6 border-b border-white">
+        <div className="flex justify-between items-center py-6 border-b border-white/30">
           <button onClick={() => navigate('/')} className="text-2xl font-light flex-shrink-0">
             <span className="text-white font-bold">app</span>
             <span className="text-white font-thin font-jakarta">crates</span>
           </button>
+          {/* Desktop navigation - unchanged */}
           <nav className="hidden lg:flex space-x-6 mx-6 flex-grow flex justify-end items-center">
             <button onClick={() => scrollToSection('hero')} onMouseEnter={() => handleMouseEnter('/')} className="text-white hover:text-teal-300 transition">{t.navigation.home}</button>
             <Link to="/blog" onMouseEnter={() => handleMouseEnter('/blog')} className="text-white hover:text-teal-300 transition">{t.navigation.blog}</Link>
@@ -90,52 +176,103 @@ const Header = () => {
             <button onClick={() => scrollToSection('contact')} onMouseEnter={() => handleMouseEnter('/')} className="text-white hover:text-teal-300 transition">{t.navigation.contact}</button>
             <LanguageToggle />
           </nav>
-          <LanguageToggle />
+          {/* Mobile controls */}
           <div className="lg:hidden flex items-center gap-4">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu" className="text-white">
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />} 
-            </button>
+            <LanguageToggle />
+            <motion.button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)} 
+              aria-label="Toggle menu" 
+              className="text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors menu-button"
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </motion.button>
           </div>
 
-          {isMenuOpen && (
-            <motion.div
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.6, ease: 'easeInOut' }}
-              className="lg:hidden absolute top-full left-0 right-0 bg-gradient-to-tl from-[#140F2D] via-[#140F2D]/95 to-teal-300/95 backdrop-blur-sm"
-            >
-              <nav className="flex flex-col space-y-4 p-4 text-center">
-                {[
-                  { text: t.navigation.home, action: () => scrollToSection('hero'), path: '/' },
-                  { text: t.navigation.blog, action: () => setIsMenuOpen(false), link: "/blog", path: '/blog' },
-                  { text: t.navigation.about, action: () => scrollToSection('about'), path: '/' },
-                  { text: t.navigation.projects, action: () => scrollToSection('projects'), path: '/' },
-                  { text: t.navigation.pricing, action: () => setIsMenuOpen(false), link: "/pricing", path: '/pricing' },
-                  { text: t.navigation.contact, action: () => scrollToSection('contact'), path: '/' },
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    custom={index}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    variants={menuVariants}
-                  >
-                    {item.link ? (
-                      <Link to={item.link} onMouseEnter={() => handleMouseEnter(item.path)} onClick={item.action} className="text-white hover:text-teal-300 transition">
-                        {item.text}
-                      </Link>
-                    ) : (
-                      <button onMouseEnter={() => handleMouseEnter(item.path)} onClick={item.action} className="text-white hover:text-teal-300 transition">
-                        {item.text}
-                      </button>
-                    )}
-                  </motion.div>
-                ))}
-              </nav>
-            </motion.div>
-          )}
+          {/* Mobile menu with animation */}
+          <AnimatePresence>
+            {isMenuOpen && (
+              <>
+                {/* Backdrop overlay */}
+                <motion.div 
+                  className="lg:hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-40"
+                  variants={menuBackgroundVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  onClick={() => setIsMenuOpen(false)}
+                />
+                
+                {/* Menu panel */}
+                <motion.div
+                  className="lg:hidden fixed top-0 bottom-0 right-0 w-4/5 max-w-xs bg-gradient-to-br from-[#140F2D] via-[#140F2D]/95 to-teal-800/90 backdrop-blur-md z-50 mobile-menu-container shadow-xl"
+                  variants={menuPanelVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                >
+                  {/* Menu header */}
+                  <div className="flex justify-between items-center p-6 border-b border-white/10">
+                    <span className="text-xl text-white font-medium">{t.navigation.menu || 'Menu'}</span>
+                    <motion.button 
+                      onClick={() => setIsMenuOpen(false)}
+                      className="text-white p-2 rounded-full hover:bg-white/10 transition-colors"
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <X size={20} />
+                    </motion.button>
+                  </div>
+                  
+                  {/* Menu items */}
+                  <nav className="flex flex-col p-6 space-y-6 bg-gradient-to-tr from-[#140F2D] via-[#140F2D]/95 to-teal-800/90 h-screen">
+                    {menuItems.map((item, index) => (
+                      <motion.div
+                        key={index}
+                        custom={index}
+                        variants={menuItemVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        className="relative "
+                      >
+                        {item.link ? (
+                          <Link 
+                            to={item.link} 
+                            onMouseEnter={() => handleMouseEnter(item.path)} 
+                            onClick={item.action} 
+                            className="text-white text-lg hover:text-teal-300 transition-colors flex items-center group"
+                          >
+                            <motion.span
+                              className="absolute left-0 w-0 h-0.5 bg-teal-300 group-hover:w-8 transition-all duration-300"
+                              whileHover={{ width: "2rem" }}
+                            />
+                            <span className="pl-10">{item.text}</span>
+                          </Link>
+                        ) : (
+                          <motion.button 
+                            onMouseEnter={() => handleMouseEnter(item.path)} 
+                            onClick={item.action} 
+                            className="text-white text-lg hover:text-teal-300 transition-colors flex items-center group w-full text-left"
+                            variants={buttonVariants}
+                            whileTap="tap"
+                          >
+                            <motion.span
+                              className="absolute left-0 w-0 h-0.5 bg-teal-300 group-hover:w-8 transition-all duration-300"
+                              whileHover={{ width: "2rem" }}
+                            />
+                            <span className="pl-10">{item.text}</span>
+                          </motion.button>
+                        )}
+                      </motion.div>
+                    ))}
+                  </nav>
+                  
+                  
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </header>
