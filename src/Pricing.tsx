@@ -225,15 +225,15 @@ const Pricing = () => {
         >
           
           {/* Category selector */}
-           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-wrap justify-center gap-4 mb-8"> 
+           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-wrap justify-center gap-4 mb-8 border-b border-white/20"> 
   {categoryKeys.map(categoryKey => (
     <button
       key={categoryKey}
       onClick={() => setSelectedCategoryKey(categoryKey)}
-      className={`min-w-[140px] md:min-w-[160px] px-4 py-1 rounded-full text-sm font-jakarta font-normal text-center transition-all 
+      className={`min-w-[140px] md:min-w-[160px] px-4 py-1  text-sm font-jakarta font-normal text-center transition-all 
         ${selectedCategoryKey === categoryKey 
-          ? "bg-teal-300 text-black" 
-          : "text-teal-300 border border-teal-300/90 hover:bg-gray-600"
+          ? "border-b border-teal-300 text-teal-300" 
+          : "text-white  hover:text-teal-300 "
         }`}
     >
       {categoryKeyToTranslation[categoryKey]}
