@@ -90,12 +90,11 @@ const Header = () => {
             <button onClick={() => scrollToSection('contact')} onMouseEnter={() => handleMouseEnter('/')} className="text-white hover:text-teal-300 transition">{t.navigation.contact}</button>
             <LanguageToggle />
           </nav>
-
+          <LanguageToggle />
           <div className="lg:hidden flex items-center gap-4">
             <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu" className="text-white">
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />} 
             </button>
-            <LanguageToggle />
           </div>
 
           {isMenuOpen && (
