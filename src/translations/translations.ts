@@ -103,7 +103,7 @@ export const translations = {
         strategy: {
           title: "Strategy",
           description: "Developing effective solutions to meet business goals",
-          more: "I will develop strategies to help you achieve your business goals. I will guide you through the process of identifying your target audience, defining your goals, and developing a plan to achieve them. Together we will decide on the best tool and approach for your needs."
+          more: "I will develop strategies to help you achieve your business goals. I will guide you through the process of identifying your target audience, defining your goals, and developing a plan to achieve them. I will guide you with regulations like: EAA, GPSR, OMNIBUS, BDO if needed."
         }
       },
       viewMore: "View"
@@ -439,7 +439,7 @@ export const translations = {
         strategy: {
           title: "Strategia",
           description: "Opracowywaniu skutecznych rozwiązania dla Twoich celów biznesowych",
-          more: "Opracuję strategie, które pomogą Ci osiągnąć Twoje cele biznesowe. Poprowadzę Cię przez proces identyfikacji grupy docelowej, definiowania celów i opracowania planu ich realizacji. Wspólnie zdecydujemy, jakie narzędzia i podejście będą najlepsze dla Twoich potrzeb."
+          more: "Opracuję strategie, które pomogą Ci osiągnąć Twoje cele biznesowe. Poprowadzę Cię przez proces identyfikacji grupy docelowej, definiowania celów i opracowania planu ich realizacji. Poprowadzę Cię przy implementacji regulacji takich jak: EAA, GPSR, OMNIBUS, BDO jeśli będzie to wymagane."
         }
       },
       viewMore: "Zobacz"
