@@ -93,17 +93,17 @@ export const translations = {
         development: {
           title: "Development",
           description: "Building custom websites and applications for small and medium businesses",
-          more: "We will select the best solution for your needs and budget. Choose a tech stack and provide you with tools to maintain your website or application. Whether it is a  portfolio website, blog or SaaS application, we have it covered for you."
+          more: "I will select the best solution for your needs and budget. Choose a tech stack and provide you with tools to maintain your website or application."
         },
         design: {
           title: "Design",
           description: "Creating beautiful and intuitive user interfaces",
-          more: "We will create a design that is not only visually appealing, but also user-friendly and easy to navigate. Whether it's a simple website or a complex application, We will ensure a seamless user experience."
+          more: "I will create a design that is not only visually appealing, but also user-friendly and easy to navigate. Whether it's a simple website or a complex application, I will ensure a seamless user experience."
         },
         strategy: {
           title: "Strategy",
           description: "Developing effective solutions to meet business goals",
-          more: "We will develop strategies to help you achieve your business goals. We will guide you through the process of identifying your target audience, defining your goals, and developing a plan to achieve them. We will guide you with regulations like: EAA, GPSR, OMNIBUS, BDO if needed."
+          more: "I will develop strategies to help you achieve your business goals. I will guide you through the process of identifying your target audience, defining your goals, and developing a plan to achieve them. Together we will decide on the best tool and approach for your needs."
         }
       },
       viewMore: "View"
@@ -282,6 +282,7 @@ export const translations = {
       categories: "Categories",
       popularPosts: "Popular Posts",
       relatedPosts: "Related Posts",
+      proposedPosts: "Recommended Posts",
       readingTime: "min read",
       newsletter: "Subscribe to newsletter",
      
@@ -429,17 +430,17 @@ export const translations = {
         development: {
           title: "Development",
           description: "Tworzeniu indywidualnych stron oraz aplikacji dla małych i średnich firm",
-          more: "Wybiorzemy najlepsze rozwiązanie zgodnie z Twoimi potrzebami i budżetem. Wybierzemy stos technologiczny i dostarczymy narzędzia do utrzymania Twojej strony internetowej lub aplikacji. Czy będzie to strona z portfolio, blog czy aplikacja SaaS, mamy to pod kontrolą za Ciebie."
+          more: "Wybiorę najlepsze rozwiązanie zgodnie z Twoimi potrzebami i budżetem. Wybierzemy stos technologiczny i dostarczymy narzędzia do utrzymania Twojej strony internetowej lub aplikacji."
         },
         design: {
           title: "Design",
           description: "Tworzeniu pięknych i intuicyjnych interfejsów",
-          more: "Stworzymy projekt, który będzie nie tylko atrakcyjny wizualnie, ale także przyjazny dla użytkownika i łatwy w nawigacji. Bez względu na to, czy to prosta strona internetowa, czy złożona aplikacja, zapewnimy płynne doświadczenie użytkownika."
+          more: "Stworzę projekt, który będzie nie tylko atrakcyjny wizualnie, ale także przyjazny dla użytkownika i łatwy w nawigacji. Bez względu na to, czy to prosta strona internetowa, czy złożona aplikacja, zapewnię płynne doświadczenie użytkownika."
         },
         strategy: {
           title: "Strategia",
           description: "Opracowywaniu skutecznych rozwiązania dla Twoich celów biznesowych",
-          more: "Opracujemy strategie, które pomogą Ci osiągnąć Twoje cele biznesowe. Poprowadzimy Cię przez proces identyfikacji grupy docelowej, definiowania celów i opracowania planu ich realizacji. Poprowadzimy Cię przy implementacji regulacji takich jak: EAA, GPSR, OMNIBUS, BDO jeśli będzie to wymagane."
+          more: "Opracuję strategie, które pomogą Ci osiągnąć Twoje cele biznesowe. Poprowadzę Cię przez proces identyfikacji grupy docelowej, definiowania celów i opracowania planu ich realizacji. Wspólnie zdecydujemy, jakie narzędzia i podejście będą najlepsze dla Twoich potrzeb."
         }
       },
       viewMore: "Zobacz"
@@ -611,14 +612,15 @@ export const translations = {
       title: "Blog",
       readMore: "Czytaj więcej",
       publishedAt: "Opublikowano",
-      views: "wyświetlenia",
+      views: "wyświetleń",
       author: "Autor",
-      recentPosts: "Ostatnie wpisy",
+      recentPosts: "Ostatnie Wpisy",
       categories: "Kategorie",
       popularPosts: "Popularne Wpisy",
-      relatedPosts: "Podobne Posty",
+      relatedPosts: "Powiązane Posty",
+      proposedPosts: "Polecane Posty",
       readingTime: "min czytania",
-      newsletter: "Subskrybuj newsletter",
+      newsletter: "Zapisz się do newslettera",
       
       searchPlaceholder: "Szukaj wpisów...",
       loading: "Ładowanie wpisów...",
@@ -645,7 +647,7 @@ export const translations = {
       title: "Popularne Posty",
       loading: "Ładowanie popularnych postów...",
       error: "Nie udało się załadować popularnych postów",
-      views: "wyświetlenia"
+      views: "wyświetleń"
     },
     // Contact section
     contact: {
