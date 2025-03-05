@@ -4,38 +4,46 @@ import { urlFor } from '../lib/sanity.client';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { useProposedPosts } from '../hooks/useBlogPosts';
-
-interface Post {
-  _id: string;
-  title: {
-    en: string;
-    pl: string;
-  } | string;
-  slug: {
-    current: string;
-  };
-  mainImage: any;
-  publishedAt: string;
-  categories?: string[];
-  tags?: string[];
-  viewCount?: number;
-}
+import type { Post, Category } from '../types/sanity.types';
 
 interface ProposedPostsProps {
-  posts: Post[];
+  posts?: Post[];
 }
 
-const ProposedPosts: React.FC<ProposedPostsProps> = ({ posts }) => {
+const ProposedPosts: React.FC<ProposedPostsProps> = ({ posts: propPosts }) => {
   const { language } = useLanguage();
   const t = translations[language].blog;
+  const { data: fetchedPosts = [], isLoading } = useProposedPosts();
+  
+  // Use provided posts if available, otherwise use fetched posts
+  const posts = propPosts && propPosts.length > 0 ? propPosts : fetchedPosts;
 
   const getTitle = (post: Post) => {
     if (!post?.title) return '';
     return typeof post.title === 'string' ? post.title : (post.title[language] || post.title.en || '');
   };
 
+  // Helper function to get category title based on language
+  const getCategoryTitle = (category) => {
+    if (typeof category === 'string') return category;
+    if (!category || !category.title) return '';
+    return category.title[language] || category.title.en || '';
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <div className="animate-pulse">
+          <div className="h-16 bg-white/10 rounded-lg mb-4"></div>
+          <div className="h-16 bg-white/10 rounded-lg mb-4"></div>
+          <div className="h-16 bg-white/10 rounded-lg"></div>
+        </div>
+      </div>
+    );
+  }
+
   if (!posts || posts.length === 0) {
-    return <p className="text-white/60">{t.noRelatedPosts}</p>;
+    return <p className="text-white/60 font-jakarta">{t.noRelatedPosts}</p>;
   }
 
   return (
@@ -57,10 +65,10 @@ const ProposedPosts: React.FC<ProposedPostsProps> = ({ posts }) => {
               </div>
             )}
             <div className="flex-1">
-              <h3 className="font-medium text-white group-hover:text-teal-300 transition-colors line-clamp-2">
+              <h3 className="font-medium text-white group-hover:text-teal-300 transition-colors line-clamp-2 font-jakarta">
                 {getTitle(post)}
               </h3>
-              <p className="text-sm text-white/60 mt-1">
+              <p className="text-sm text-white/60 mt-1 font-jakarta">
               {post.viewCount || 0} {t.views} • {new Date(post.publishedAt).toLocaleDateString()}
               </p>
               {post.categories && post.categories.length > 0 && (
@@ -68,9 +76,9 @@ const ProposedPosts: React.FC<ProposedPostsProps> = ({ posts }) => {
                   {post.categories.map((category, index) => (
                     <span 
                       key={index}
-                      className="text-xs px-2 py-1 rounded-full bg-teal-300/80 text-black"
+                      className="text-xs px-2 py-1 rounded-full bg-teal-300/80 text-black font-jakarta"
                     >
-                      {category}
+                      {getCategoryTitle(category)}
                     </span>
                   ))}
                 </div>
