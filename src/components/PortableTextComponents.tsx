@@ -52,7 +52,7 @@ export const portableTextComponents = {
           href={value?.href}
           target={target}
           rel={target === '_blank' ? 'noindex nofollow' : undefined}
-          className="text-blue-500 hover:text-blue-700 underline"
+          className="text-teal-300 hover:text-teal-500 underline"
         >
           {children}
         </a>
