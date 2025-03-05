@@ -306,7 +306,7 @@ return (
                     </Link>
                   )}
                 </div>
-              </article>
+              </motion.article>
             </div>
 
             {/* Sidebar */}
