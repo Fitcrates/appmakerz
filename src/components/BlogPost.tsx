@@ -24,6 +24,20 @@ const BlogPost: React.FC<BlogPostProps> = ({ post, allPosts = [] }) => {
     return post.excerpt?.[language] || post.excerpt?.en || '';
   };
 
+  // Helper function to get category title based on language
+  const getCategoryTitle = (category) => {
+    if (typeof category === 'string') return category;
+    if (!category || !category.title) return '';
+    return category.title[language] || category.title.en || '';
+  };
+
+  // Format categories for display
+  const formatCategories = () => {
+    if (!post.categories || post.categories.length === 0) return t.category;
+    
+    return post.categories.map(category => getCategoryTitle(category)).join(', ');
+  };
+
   return (
     <div className="flex flex-col lg:flex-row items-center lg:items-start mb-16 lg:space-x-6">
       {/* Image Section */}
@@ -43,9 +57,7 @@ const BlogPost: React.FC<BlogPostProps> = ({ post, allPosts = [] }) => {
       >
         {/* Category */}
         <p className="text-sm text-teal-300 uppercase mb-2">
-          {post.categories?.length > 0 
-            ? post.categories.join(', ') 
-            : t.category}
+          {formatCategories()}
         </p>
 
         {/* Title */}
