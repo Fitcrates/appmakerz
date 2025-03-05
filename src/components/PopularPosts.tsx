@@ -74,7 +74,7 @@ const PopularPosts = () => {
               <h4 className="font-medium text-white group-hover:text-teal-300 transition-colors duration-200 line-clamp-2 font-jakarta">
                 {typeof post.title === 'string' ? post.title : post.title?.[language] || post.title?.en}
               </h4>
-              <p className="text-sm text-white font-jakarta">
+              <p className="text-sm text-white/60 font-jakarta">
                 {post.viewCount || 0} {t.views} • {new Date(post.publishedAt).toLocaleDateString()}
               </p>
               {post.categories && post.categories.length > 0 && (
