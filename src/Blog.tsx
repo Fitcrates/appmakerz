@@ -35,11 +35,20 @@ const Blog = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [location]);
+  }, [location.pathname]); // Add location.pathname to the dependency array
 
   useScrollToTop();
 
+  // Helper function to get category title based on language
+  const getCategoryTitle = (category) => {
+    if (typeof category === 'string') return category;
+    if (!category || !category.title) return '';
+    return category.title[language] || category.title.en || '';
+  };
+
   useEffect(() => {
+    if (!posts || posts.length === 0) return;
+    
     const filtered = posts.filter((post) => {
       const query = searchQuery.toLowerCase();
       
@@ -58,15 +67,31 @@ const Blog = () => {
       // Extract text from post body blocks
       const getBodyText = () => {
         if (!post.body) return '';
-        return post.body
-          .filter(block => block._type === 'block')
-          .map(block => {
-            if (!block.children) return '';
-            return block.children
-              .map(child => child.text || '')
-              .join(' ');
-          })
-          .join(' ');
+        
+        // Handle both array and object body formats
+        if (Array.isArray(post.body)) {
+          return post.body
+            .filter(block => block._type === 'block')
+            .map(block => {
+              if (!block.children) return '';
+              return block.children
+                .map(child => child.text || '')
+                .join(' ');
+            })
+            .join(' ');
+        } else {
+          // Handle object body format (multilingual)
+          const bodyContent = post.body[language] || post.body.en || [];
+          return bodyContent
+            .filter(block => block._type === 'block')
+            .map(block => {
+              if (!block.children) return '';
+              return block.children
+                .map(child => child.text || '')
+                .join(' ');
+            })
+            .join(' ');
+        }
       };
 
       const title = getTitle().toLowerCase();
@@ -81,7 +106,7 @@ const Blog = () => {
     });
 
     setFilteredPosts(filtered);
-  }, [posts, searchQuery, language]);
+  }, [posts, searchQuery, language]); // Keep this dependency array as is
 
   const getCurrentPagePosts = () => {
     const indexOfLastPost = currentPage * POSTS_PER_PAGE;
@@ -267,7 +292,8 @@ const Blog = () => {
               {/* Sidebar */}
               <div className="lg:col-span-1">
                 <div className="sticky top-24">
-                  <div className="ring-1 rounded-lg p-4 ring-white/40">
+                  <div className="ring-1 rounded-lg p-4 ring-white/40 mb-6">
+                    
                     <PopularPosts posts={posts.slice(0, 5)} />
                   </div>
 
