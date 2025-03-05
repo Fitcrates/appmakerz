@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getPost, incrementPostView, getPosts } from '../lib/sanity.client';
-import type { Post } from '../types/sanity.types';
+import type { Post, Category } from '../types/sanity.types';
 import Header from './Header';
 import Footer from './Footer';
 import { PortableText } from '@portabletext/react';
@@ -12,7 +12,6 @@ import { useLanguage } from '../context/LanguageContext';
 import PopularPosts from './PopularPosts';
 import ProposedPosts from './ProposedPosts';
 import { translations } from '../translations/translations';
-import { useNavigate } from 'react-router-dom';
 import { useScrollToTop } from '../hooks/useScrollToTop';
 
 const BlogPostPage = () => {
@@ -30,6 +29,26 @@ const BlogPostPage = () => {
 
   // Call useScrollToTop at the top level
   useScrollToTop();
+
+  // Helper function to get category ID regardless of format
+  const getCategoryId = (category: string | Category): string => {
+    if (typeof category === 'string') return category;
+    return category._id;
+  };
+
+  // Helper function to check if two categories match
+  const categoriesMatch = (cat1: string | Category, cat2: string | Category): boolean => {
+    const id1 = getCategoryId(cat1);
+    const id2 = getCategoryId(cat2);
+    return id1 === id2;
+  };
+
+  // Helper function to get category title based on language
+  const getCategoryTitle = (category) => {
+    if (typeof category === 'string') return category;
+    if (!category || !category.title) return '';
+    return category.title[language] || category.title.en || '';
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -59,8 +78,10 @@ const BlogPostPage = () => {
             const relatedPosts = sortedPosts
               .filter(p => {
                 if (!fetchedPost.categories || !p.categories) return false;
-                return fetchedPost.categories.some(cat => 
-                  p.categories.includes(cat)
+                
+                // Check if any category in fetchedPost matches any category in p
+                return fetchedPost.categories.some(fetchedCat => 
+                  p.categories.some(pCat => categoriesMatch(fetchedCat, pCat))
                 );
               })
               .slice(0, 5);
@@ -103,39 +124,45 @@ const BlogPostPage = () => {
         }
       } catch (err) {
         if (isMounted) {
-          setError(err instanceof Error ? err.message : 'An error occurred');
+          console.error('Error fetching post:', err);
+          setError('Failed to load post');
           setLoading(false);
         }
       }
     };
 
+    setLoading(true);
     fetchData();
+
     return () => {
       isMounted = false;
     };
-  }, [slug, language]);
+  }, [slug]);
 
   // useEffect for preventing orphans
   useEffect(() => {
     const preventOrphans = () => {
-      document.querySelectorAll('.blog-content p').forEach((el) => {
+      // Target all text elements in the blog content
+      const textElements = document.querySelectorAll('.prose p, .prose li, .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6, .blog-content p, .blog-content li, .blog-content h1, .blog-content h2, .blog-content h3, .blog-content h4, .blog-content h5, .blog-content h6');
+      
+      textElements.forEach((el) => {
         // Replace the last space before common words with a non-breaking space
         el.innerHTML = el.innerHTML.replace(
-          /\s(a|I|the|an|to|of|in|on|and|or|but)\s/g, 
+          /\s(a|I|the|an|to|of|in|on|and|or|but|for|with|by|as|at|from|into|is|was|were|are|be|been|have|has|had|will|would|should|could|can|may|might)\s/g, 
           ' $1&nbsp;'
         );
         
         // Prevent the last two words from being separated
         el.innerHTML = el.innerHTML.replace(
-          /\s([^\s]+)$/,
-          '&nbsp;$1'
+          /\s([^\s<>]+)\s([^\s<>]+)$/,
+          '&nbsp;$1&nbsp;$2'
         );
       });
     };
 
     if (post) {
       // Small delay to ensure content is rendered
-      setTimeout(preventOrphans, 100);
+      setTimeout(preventOrphans, 300); // Increased delay to ensure content is fully rendered
     }
   }, [post]);
 
@@ -147,24 +174,42 @@ const BlogPostPage = () => {
   const getBody = (post: Post) => {
     if (!post?.body) return [];
     return Array.isArray(post.body) ? post.body : (post.body[language] || post.body.en || []);
-};
+  };
 
-if (!post) {
+  if (!post) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#140F2D]">
+        <div className="text-white text-center">Loading project...</div>
+      </div>
+    );
+  }
+
+  if (error || !post) {
+    return (
+      <>
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-white mb-4 font-jakarta">{t.error}</h1>
+            <p className="text-white/70 mb-8 font-jakarta">{error || t.postNotFound}</p>
+            <Link to="/blog" className="text-teal-300 hover:text-teal-400 font-jakarta">
+              {t.backToBlog}
+            </Link>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   return (
-  <div className="min-h-screen flex items-center justify-center bg-[#140F2D]">
-  <div className="text-white text-center">Loading project...</div>
-</div>
-)}
-
-
-return (
     <>
       <Header />
-      <main className="bg-[#140F2D] min-h-screen text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="bg-[#140F2D] min-h-screen text-white font-jakarta">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Directory Navigation */}
-          <div className="flex items-center space-x-2 text-sm mt-16 text-white/60">
-            <Link to="/" className="hover:text-white transition-colors">
+          <div className="flex items-center space-x-2 text-sm mt-12 mb-8 text-white/60">
+            <Link to="/" className="hover:text-teal-300 transition-colors">
               {translations[language].navigation.home}
             </Link>
             <span>›</span>
@@ -188,82 +233,144 @@ return (
             <span className="text-white">{getTitle(post)}</span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2">
-              <motion.article
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <h1 className="text-4xl text-white font-bold mb-4">
-                  {getTitle(post)}
-                </h1>
-                <div className="flex items-center text-white mb-6 space-x-3">
-                  {post.author?.image && (
-                    <img
-                      src={urlFor(post.author.image).width(40).height(40).url()}
-                      alt={post.author.name}
-                      className="w-10 h-10 rounded-full"
-                    />
-                  )}
-                  <div>
-                    <p className="font-medium text-teal-300">{post.author?.name}</p>
-                    <p className="text-sm">
-                      {new Date(post.publishedAt).toLocaleDateString()} • {post.viewCount || 0} views
-                    </p>
+              <article>
+                <header className="mb-8">
+                  <h1 className="text-4xl font-bold text-white mb-4 font-jakarta">
+                    {getTitle(post)}
+                  </h1>
+                  <div className="flex items-center text-white/70 mb-6 font-jakarta">
+                    <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                    <span className="mx-2">•</span>
+                    <span>{post.viewCount || 0} {t.views}</span>
+                    {post.categories && post.categories.length > 0 && (
+                      <>
+                        <span className="mx-2">•</span>
+                        <div className="flex flex-wrap gap-2">
+                          {post.categories.map((category, index) => (
+                            <span 
+                              key={index}
+                              className="text-xs px-2 py-1 rounded-full bg-teal-300/80 text-black font-jakarta"
+                            >
+                              {getCategoryTitle(category)}
+                            </span>
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
-                </div>
-                {post.mainImage && (
-                  <img
-                    src={urlFor(post.mainImage).width(1200).height(800).url()}
-                    alt={getTitle(post)}
-                    className="w-full rounded-lg shadow-lg mb-8"
-                  />
-                )}
-                <div className="text-white text-left font-jakarta blog-content">
+                  {post.mainImage && (
+                    <div className="w-full h-[400px] rounded-lg overflow-hidden mb-8">
+                      <img
+                        src={urlFor(post.mainImage).width(1200).height(800).url()}
+                        alt={getTitle(post)}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                </header>
+
+                <div className="prose prose-lg prose-invert max-w-none font-jakarta blog-content">
                   <PortableText
                     value={getBody(post)}
                     components={portableTextComponents}
                   />
                 </div>
 
-                {/* Post Navigation */}
-                <div className="mt-16 flex justify-between items-center">
+                {/* Author Section */}
+                {post.author && (
+                  <div className="mt-12 p-6 bg-white/5 rounded-lg">
+                    <div className="flex items-center">
+                      {post.author.image && (
+                        <img
+                          src={urlFor(post.author.image).width(80).height(80).url()}
+                          alt={post.author.name}
+                          className="w-16 h-16 rounded-full mr-4 object-cover"
+                        />
+                      )}
+                      <div>
+                        <h3 className="text-xl font-semibold text-white font-jakarta">{post.author.name}</h3>
+                        <p className="text-white/70 font-jakarta">{t.author}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Navigation between posts */}
+                <div className="mt-12 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                   {previousPost ? (
-                    <Link 
-                      to={`/blog/${previousPost.slug?.current}`}
-                      className="flex items-center space-x-2 text-white/60 hover:text-white transition-colors"
+                    <Link
+                      to={`/blog/${previousPost.slug.current}`}
+                      className="flex items-center text-teal-300 hover:text-teal-400 group font-jakarta"
                     >
-                      <span>←</span>
-                      <span>{getTitle(previousPost)}</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-2 transform group-hover:-translate-x-1 transition-transform"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 19l-7-7 7-7"
+                        />
+                      </svg>
+                      <span className="line-clamp-1">
+                        {typeof previousPost.title === 'string'
+                          ? previousPost.title
+                          : previousPost.title?.[language] || previousPost.title?.en}
+                      </span>
                     </Link>
-                  ) : <div />}
-                  
-                  {nextPost ? (
-                    <Link 
-                      to={`/blog/${nextPost.slug?.current}`}
-                      className="flex items-center space-x-2 text-white/60 hover:text-white transition-colors"
+                  ) : (
+                    <div></div>
+                  )}
+
+                  {nextPost && (
+                    <Link
+                      to={`/blog/${nextPost.slug.current}`}
+                      className="flex items-center text-teal-300 hover:text-teal-400 group ml-auto font-jakarta"
                     >
-                      <span>{getTitle(nextPost)}</span>
-                      <span>→</span>
+                      <span className="line-clamp-1">
+                        {typeof nextPost.title === 'string'
+                          ? nextPost.title
+                          : nextPost.title?.[language] || nextPost.title?.en}
+                      </span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
                     </Link>
-                  ) : <div />}
+                  )}
                 </div>
-              </motion.article>
+              </article>
             </div>
 
             {/* Sidebar */}
             <aside className="lg:col-span-1">
-              <div className="space-y-16 sticky top-24">
+              <div className="space-y-8 sticky top-24">
                 {/* Popular Posts */}
                 <div className="bg-[#140F2D] shadow-sm rounded-lg p-6 ring-1 ring-white/40">
+                  
                   <PopularPosts posts={allPosts} />
                 </div>
 
                 {/* Related Posts */}
                 <div className="bg-[#140F2D] shadow-sm rounded-lg p-6 ring-1 ring-white/40">
-                  <h2 className="text-xl font-bold mb-4 text-white">{t.relatedPosts}</h2>
+                  <h2 className="text-xl font-bold mb-4 text-white font-jakarta">{t.relatedPosts}</h2>
                   <ProposedPosts posts={relatedPosts} />
                 </div>
               </div>
