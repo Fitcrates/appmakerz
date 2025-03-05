@@ -1,28 +1,30 @@
-export default {
+import { defineField, defineType } from 'sanity';
+
+export default defineType({
   name: 'post',
   title: 'Post',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'title',
       title: 'Title',
       type: 'object',
       fields: [
-        {
+        defineField({
           name: 'en',
           title: 'English Title',
           type: 'string',
-          validation: (Rule: any) => Rule.required(),
-        },
-        {
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
           name: 'pl',
           title: 'Polish Title',
           type: 'string',
-          validation: (Rule: any) => Rule.required(),
-        },
+          validation: (Rule) => Rule.required(),
+        }),
       ],
-    },
-    {
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -30,64 +32,64 @@ export default {
         source: 'title.en',
         maxLength: 96,
       },
-      validation: (Rule: any) => Rule.required(),
-    },
-    {
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'author',
       title: 'Author',
       type: 'reference',
       to: {type: 'author'},
-    },
-    {
+    }),
+    defineField({
       name: 'mainImage',
       title: 'Main image',
       type: 'image',
       options: {
         hotspot: true,
       },
-    },
-    {
+    }),
+    defineField({
       name: 'categories',
       title: 'Categories',
       type: 'array',
-      of: [{type: 'string'}],
-    },
-    {
+      of: [{type: 'reference', to: {type: 'category'}}],
+    }),
+    defineField({
       name: 'publishedAt',
       title: 'Published at',
       type: 'datetime',
-    },
-    {
+    }),
+    defineField({
       name: 'viewCount',
       title: 'View Count',
       type: 'number',
       initialValue: 0,
-    },
-    {
+    }),
+    defineField({
       name: 'excerpt',
       title: 'Excerpt',
       type: 'object',
       fields: [
-        {
+        defineField({
           name: 'en',
           title: 'English Excerpt',
           type: 'text',
           rows: 4,
-        },
-        {
+        }),
+        defineField({
           name: 'pl',
           title: 'Polish Excerpt',
           type: 'text',
           rows: 4,
-        },
+        }),
       ],
-    },
-    {
+    }),
+    defineField({
       name: 'body',
       title: 'Body',
       type: 'object',
       fields: [
-        {
+        defineField({
           name: 'en',
           title: 'English Content',
           type: 'array',
@@ -150,8 +152,8 @@ export default {
               }
             }
           ],
-        },
-        {
+        }),
+        defineField({
           name: 'pl',
           title: 'Polish Content',
           type: 'array',
@@ -214,9 +216,9 @@ export default {
               }
             }
           ],
-        },
+        }),
       ],
-    },
+    }),
   ],
   preview: {
     select: {
@@ -224,9 +226,9 @@ export default {
       author: 'author.name',
       media: 'mainImage',
     },
-    prepare(selection: any) {
-      const {author} = selection
-      return {...selection, subtitle: author && `by ${author}`}
+    prepare(selection) {
+      const {author} = selection;
+      return {...selection, subtitle: author && `by ${author}`};
     },
   },
-}
+})
