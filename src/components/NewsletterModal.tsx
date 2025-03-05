@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { v4 as uuidv4 } from 'uuid';
+import { getCategories } from '../lib/sanity.client';
 
 interface NewsletterModalProps {
   isOpen: boolean;
@@ -15,7 +16,7 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
 
   const [email, setEmail] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
-  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+  const [availableCategories, setAvailableCategories] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -41,23 +42,8 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('/.netlify/functions/handleSanityQuery', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query: '*[_type == "post"].categories[]'
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch categories');
-        }
-
-        const result = await response.json();
-        const uniqueCategories = [...new Set(result.flat())];
-        setAvailableCategories(uniqueCategories);
+        const result = await getCategories();
+        setAvailableCategories(result);
       } catch (error) {
         console.error('Error fetching categories:', error);
         setError('Failed to load categories');
@@ -126,11 +112,18 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
     }
   };
 
-  const handleCategoryToggle = (category: string) => {
+  // Helper function to get category title based on language
+  const getCategoryTitle = (category) => {
+    if (typeof category === 'string') return category;
+    if (!category || !category.title) return '';
+    return category.title[language] || category.title.en || '';
+  };
+
+  const handleCategoryToggle = (categoryId: string, categoryTitle: string) => {
     setCategories(prev =>
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
+      prev.includes(categoryId)
+        ? prev.filter(c => c !== categoryId)
+        : [...prev, categoryId]
     );
   };
 
@@ -163,17 +156,17 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
                   <p className="text-white mb-2 text-sm sm:text-base">{t.subtitle.line1}</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {availableCategories.map((category) => (
-                      <label key={category} className="flex items-center space-x-2 text-white text-sm sm:text-base">
+                      <label key={category._id} className="flex items-center space-x-2 text-white text-sm sm:text-base">
                         <input
                           type="checkbox"
-                          checked={categories.includes(category)}
-                          onChange={() => handleCategoryToggle(category)}
+                          checked={categories.includes(category._id)}
+                          onChange={() => handleCategoryToggle(category._id, getCategoryTitle(category))}
                           className="peer hidden"
                         />
                         <div className="w-4 h-4 border-2 GlowButton border-white rounded-md flex items-center justify-center peer-checked:bg-teal-300 peer-checked:text-black relative">
                           <span className="opacity-0 peer-checked:opacity-100 transition-opacity">✓</span>
                         </div>
-                        <span>{category}</span>
+                        <span>{getCategoryTitle(category)}</span>
                       </label>
                     ))}
                   </div>
