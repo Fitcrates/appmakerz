@@ -1,0 +1,30 @@
+/* Critical CSS for above-the-fold content */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Plus Jakarta Sans'),
+       url('/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
+}
+
+/* Critical Tailwind utilities */
+.min-h-screen { min-height: 100vh; }
+.h-screen { height: 100vh; }
+.w-full { width: 100%; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.text-3xl { font-size: 1.875rem; }
+.text-white { color: rgb(255, 255, 255); }
+.font-jakarta { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+.leading-tight { line-height: 1.25; }
+.overflow-x-hidden { overflow-x: hidden; }
+
+/* Hero section specific styles */
+.hero-section {
+  background: linear-gradient(to bottom, #140F2D, #1E1637);
+  will-change: transform;
+  content-visibility: auto;
+}
