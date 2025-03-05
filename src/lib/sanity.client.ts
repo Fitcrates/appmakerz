@@ -50,7 +50,11 @@ export async function getPosts() {
       },
       slug,
       mainImage,
-      categories,
+      "categories": categories[]-> {
+        _id,
+        title,
+        slug
+      },
       publishedAt,
       excerpt {
         en,
@@ -97,7 +101,11 @@ export async function getPost(slug: string) {
         pl
       },
       viewCount,
-      categories,
+      "categories": categories[]-> {
+        _id,
+        title,
+        slug
+      },
       tags
     }`,
     { slug }
@@ -129,9 +137,10 @@ export async function getProject(slug: string): Promise<any> {
 
 export async function getCategories() {
   return executeQuery(
-    `*[_type == "post"] { ..., categories[]->{ title } } {
-     
-      name
+    `*[_type == "category"] {
+      _id,
+      title,
+      slug
     }`
   );
 }
@@ -172,7 +181,11 @@ export async function getPopularPosts() {
       mainImage,
       publishedAt,
       viewCount,
-      categories,
+      "categories": categories[]-> {
+        _id,
+        title,
+        slug
+      },
       tags
     }
   `);
@@ -190,7 +203,11 @@ export async function getProposedPosts() {
       mainImage,
       publishedAt,
       viewCount,
-      categories,
+      "categories": categories[]-> {
+        _id,
+        title,
+        slug
+      },
       tags
     }
   `);
