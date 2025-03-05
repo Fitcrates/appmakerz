@@ -121,7 +121,8 @@ const BlogPostPage = () => {
       document.querySelectorAll('.blog-content p').forEach((el) => {
         // Replace the last space before common words with a non-breaking space
         el.innerHTML = el.innerHTML.replace(
-          /\s(a|I|the|an|to|of|in|on|and|or|but)\s/g, 
+                    /\s(a|I|the|a|an|to|of|in|on|and|or|but|for|with|by|as|at|from|into|is|was|were|are|be|been|have|has|had|will|would|should|could|can|may|might)\s/g, 
+ 
           ' $1&nbsp;'
         );
         
@@ -228,29 +229,84 @@ return (
                   />
                 </div>
 
-                {/* Post Navigation */}
-                <div className="mt-16 flex justify-between items-center">
+                {/* Author Section */}
+                {post.author && (
+                  <div className="mt-12 p-6 bg-white/5 rounded-lg">
+                    <div className="flex items-center">
+                      {post.author.image && (
+                        <img
+                          src={urlFor(post.author.image).width(80).height(80).url()}
+                          alt={post.author.name}
+                          className="w-16 h-16 rounded-full mr-4 object-cover"
+                        />
+                      )}
+                      <div>
+                        <h3 className="text-xl font-semibold text-white font-jakarta">{post.author.name}</h3>
+                        <p className="text-white/70 font-jakarta">{t.author}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Navigation between posts */}
+                <div className="mt-12 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                   {previousPost ? (
-                    <Link 
-                      to={`/blog/${previousPost.slug?.current}`}
-                      className="flex items-center space-x-2 text-white/60 hover:text-white transition-colors"
+                    <Link
+                      to={`/blog/${previousPost.slug.current}`}
+                      className="flex items-center text-teal-300 hover:text-teal-400 group font-jakarta"
                     >
-                      <span>←</span>
-                      <span>{getTitle(previousPost)}</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-2 transform group-hover:-translate-x-1 transition-transform"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 19l-7-7 7-7"
+                        />
+                      </svg>
+                      <span className="line-clamp-1">
+                        {typeof previousPost.title === 'string'
+                          ? previousPost.title
+                          : previousPost.title?.[language] || previousPost.title?.en}
+                      </span>
                     </Link>
-                  ) : <div />}
-                  
-                  {nextPost ? (
-                    <Link 
-                      to={`/blog/${nextPost.slug?.current}`}
-                      className="flex items-center space-x-2 text-white/60 hover:text-white transition-colors"
+                  ) : (
+                    <div></div>
+                  )}
+
+                  {nextPost && (
+                    <Link
+                      to={`/blog/${nextPost.slug.current}`}
+                      className="flex items-center text-teal-300 hover:text-teal-400 group ml-auto font-jakarta"
                     >
-                      <span>{getTitle(nextPost)}</span>
-                      <span>→</span>
+                      <span className="line-clamp-1">
+                        {typeof nextPost.title === 'string'
+                          ? nextPost.title
+                          : nextPost.title?.[language] || nextPost.title?.en}
+                      </span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
                     </Link>
-                  ) : <div />}
+                  )}
                 </div>
-              </motion.article>
+              </article>
             </div>
 
             {/* Sidebar */}
