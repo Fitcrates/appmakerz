@@ -48,6 +48,15 @@ export interface Author {
   bio: any[];
 }
 
+export interface Category {
+  _id: string;
+  title: {
+    en: string;
+    pl: string;
+  };
+  slug: { current: string };
+}
+
 export interface Post {
   _id: string;
   title: string | {
@@ -58,7 +67,7 @@ export interface Post {
   mainImage: SanityImage;
   publishedAt: string;
   author: Author;
-  categories: string[];
+  categories: (string | Category)[];
   body: any[] | {
     en: any[];
     pl: any[];
