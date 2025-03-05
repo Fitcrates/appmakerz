@@ -1,10 +1,11 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getPost, getPosts, getPopularPosts } from '../lib/sanity.client';
+import { getPost, getPosts, getPopularPosts, getProposedPosts } from '../lib/sanity.client';
 import type { Post } from '../types/sanity.types';
 
 export const queryKeys = {
   posts: ['posts'] as const,
   popularPosts: ['popularPosts'] as const,
+  proposedPosts: ['proposedPosts'] as const,
   post: (slug: string) => ['post', slug] as const,
   relatedPosts: (categories: string[]) => ['relatedPosts', categories] as const,
 };
