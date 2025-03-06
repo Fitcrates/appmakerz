@@ -15,12 +15,14 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
 
   const [email, setEmail] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
-  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [mathProblem, setMathProblem] = useState({ num1: 0, num2: 0, answer: 0 });
   const [userAnswer, setUserAnswer] = useState('');
+
+  // Static categories
+  const availableCategories = ['Dev', 'No-code', 'Wellness'];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,33 +41,7 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('/.netlify/functions/handleSanityQuery', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query: '*[_type == "post"].categories[]'
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch categories');
-        }
-
-        const result = await response.json();
-        const uniqueCategories = [...new Set(result.flat())];
-        setAvailableCategories(uniqueCategories);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        setError('Failed to load categories');
-      }
-    };
-
     if (isOpen) {
-      fetchCategories();
       generateMathProblem();
     }
   }, [isOpen]);
@@ -139,7 +115,6 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   return (
     <div className="fixed inset-0 bg-white/90 flex flex-col items-center justify-center z-50 p-4 overflow-y-auto">
       <div ref={modalRef} className="w-full max-w-[95%] md:max-w-2xl">
-        {/* Single combined div for newsletter and CAPTCHA */}
         <div className="bg-[#140F2D]/95 rounded-lg p-4 sm:p-8 md:p-12 w-full">
           <form onSubmit={handleSubmit} className="space-y-6">
             <h4 className="text-xl sm:text-2xl text-white font-jakarta font-light mb-4">{t.title.line1}</h4>
@@ -179,7 +154,6 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
                   </div>
                 </div>
 
-                {/* CAPTCHA section now integrated into the same div */}
                 <div className="pt-4 border-t border-white/20">
                   <p className="text-white font-jakarta text-sm sm:text-base mb-2">
                     {t.captcha} {mathProblem.num1} + {mathProblem.num2}?
@@ -193,7 +167,6 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
                       required
                       className="peer-hidden w-full p-2 rounded-lg bg-white/10 text-white placeholder-white/50 border border-white/20 focus:border-white/50 outline-none no-arrows text-sm sm:text-base"
                     />
-                    {/* Custom Buttons */}
                     <div className="absolute inset-y-0 right-0 flex flex-col items-center">
                       <button
                         type="button"
