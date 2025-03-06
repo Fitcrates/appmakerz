@@ -234,7 +234,7 @@ const Projects = () => {
       id="projects"
       className="py-22 sm:py-20 bg-[#140F2D] overflow-x-hidden"
     >
-      {/* Rest of the JSX remains the same */}
+      {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:-mt-5">
         <motion.div 
           className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-16 gap-2 lg:gap-4"
@@ -244,9 +244,11 @@ const Projects = () => {
           variants={titleVariants}
         >
           <span className="text-4xl sm:text-6xl text-white font-normal font-jakarta">
-            {t.title}
+            {t.title} 
           </span>
-          
+          <span className="text-xl sm:text-3xl text-teal-300 font-biglight font-jakarta lg:text-right mt-2 lg:mt-0 lg:-mb-8">
+            {t.categories.all}
+          </span>
         </motion.div>
 
         <motion.div 
