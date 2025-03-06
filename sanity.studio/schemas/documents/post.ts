@@ -50,7 +50,18 @@ export default {
       name: 'categories',
       title: 'Categories',
       type: 'array',
-      of: [{type: 'string'}],
+      of: [
+        {
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Dev', value: 'Dev' },
+              { title: 'No-code', value: 'No-code' },
+              { title: 'Wellness', value: 'Wellness' },
+            ],
+          },
+        },
+      ],
     },
     {
       name: 'publishedAt',
