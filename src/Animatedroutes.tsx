@@ -90,15 +90,6 @@ const AnimatedRoutes = () => {
             </Suspense>
           }
         />
-        <Route
-          path="/subscribers"
-          element={
-            <Suspense fallback={<LoadingFallback />}>
-              <SubscriberList />
-            </Suspense>
-          }
-        />
-      
       </Routes>
     </AnimatePresence>
   );
