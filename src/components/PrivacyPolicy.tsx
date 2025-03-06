@@ -2,6 +2,7 @@ import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import Header from './Header';
 import Footer from './Footer';
+import Contact from './Contact';
 
 const PrivacyPolicy: React.FC = () => {
   const { language } = useLanguage();
@@ -59,7 +60,7 @@ We do not share your email address with third parties for marketing purposes
         We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.
 
         <h1> 7. Contact Us</h1>
-        If you have any questions about this Privacy Policy, please contact us at: https://appcrates.netlify.app/#contact
+        If you have any questions about this Privacy Policy, please contact us in the contact form below or directly to email adress: aeonofshreds@gmail.com 
       `,
     },
     pl: {
@@ -99,7 +100,7 @@ Wdrażamy różnorodne środki bezpieczeństwa, aby zapewnić ochronę Twoich da
 <h1>6. Zmiany w Polityce Prywatności</h1>
 Możemy od czasu do czasu aktualizować naszą Politykę Prywatności. Poinformujemy Cię o wszelkich zmianach, publikując nową Politykę Prywatności na tej stronie. Zalecamy okresowe przeglądanie tej Polityki Prywatności pod kątem ewentualnych zmian.
 <h1>7. Kontakt</h1>
-Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktuj się z nami pod adresem: https://appcrates.netlify.app/#contact
+Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktuj się z nami pod adresem w formularzu kontaktowym poniżej lub bezpośrednio na email: aeonofshreds@gmail.com 
       `,
     },
   };
@@ -128,6 +129,7 @@ Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktu
           </div>
         </div>
       </main>
+      <Contact />
       <Footer />
     </div>
   );
