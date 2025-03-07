@@ -4,7 +4,6 @@ import { useCallback } from 'react';
 const routeComponents: Record<string, () => Promise<any>> = {
   '/': () => import('../App'),
   '/blog': () => import('../Blog'),
-  '/pricing': () => import('../Pricing'),
   '/studio': () => import('../StudioPage'),
   '/privacy': () => import('../components/PrivacyPolicy'),
   '/unsubscribe': () => import('../pages/Unsubscribe'),
