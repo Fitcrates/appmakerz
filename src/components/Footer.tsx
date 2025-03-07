@@ -30,13 +30,7 @@ const Footer: React.FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8">
-                <Link 
-                  to="/pricing" 
-                  onMouseEnter={() => handleMouseEnter('/pricing')}
-                  className="text-sm text-white/80 hover:text-teal-300 transition-colors"
-                >
-                  {t.pricing}
-                </Link>
+                
                 <Link 
                   to="/blog"
                   onMouseEnter={() => handleMouseEnter('/blog')}
