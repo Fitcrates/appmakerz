@@ -113,9 +113,9 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({ isOpen, onClose }) =>
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/90 flex flex-col items-center justify-center z-50 p-4 overflow-y-auto">
-      <div ref={modalRef} className="w-full max-w-[95%] md:max-w-2xl">
-        <div className="bg-[#140F2D]/95 rounded-lg p-4 sm:p-8 md:p-12 w-full">
+    <div className="fixed inset-0 bg-black/90 flex flex-col items-center justify-center z-50 p-4 overflow-y-auto animate-fadeIn">
+      <div ref={modalRef} className="w-full max-w-[95%] md:max-w-2xl animate-scaleIn">
+        <div className="bg-[#140F2D] rounded-lg p-4 sm:p-8 md:p-12 w-full ring-1 ring-teal-300/30">
           <form onSubmit={handleSubmit} className="space-y-6">
             <h4 className="text-xl sm:text-2xl text-white font-jakarta font-light mb-4">{t.title.line1}</h4>
 
