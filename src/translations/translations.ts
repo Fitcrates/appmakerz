@@ -1,5 +1,12 @@
 export const translations = {
   en: {
+ // BlogPromoModal
+ modalblog: {
+  heading: "Stay Updated!",
+  subtitle: "Don't miss out the latest tips and dev notes on our blog!",
+  button: "Visit Our Blog",
+},
+
     // Project details
     details: {
       demo: "Live Demo",
@@ -177,7 +184,7 @@ export const translations = {
     pricing: {
       title: "Pricing",
       subtitle: "Plans",
-      right1: "Choose plan",
+      right1: "Select your match",
       right2: "perfect for",
       right3: "your",
       right4: "individual needs",
@@ -340,6 +347,12 @@ export const translations = {
   },
 
   pl: {
+    // BlogPromoModal
+      modalblog: {
+        heading: "Bądź na bieżąco!",
+        subtitle: "Nie przegap najnowszych wskazówek i notatek deweloperskich na naszym blogu!",
+        button: "Odwiedź Nasz Blog",
+      },
     // Project details
     details: {
       demo: "Wersja demonstracyjna",
@@ -512,7 +525,7 @@ export const translations = {
     pricing: {
       title: "Cennik",
       subtitle: "Usług",
-      right1: "Wybierz plan",
+      right1: "Wybierz plan dla siebie",
       right2: "idealny dla",
       right3: "twoich",
       right4: "indywidualnych potrzeb",
