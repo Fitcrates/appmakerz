@@ -154,7 +154,7 @@ const Header = () => {
     { text: t.navigation.blog, action: () => setIsMenuOpen(false), link: "/blog", path: '/blog' },
     { text: t.navigation.about, action: () => scrollToSection('about'), path: '/' },
     { text: t.navigation.projects, action: () => scrollToSection('projects'), path: '/' },
-    { text: t.navigation.pricing, action: () => setIsMenuOpen(false), link: "/pricing", path: '/pricing' },
+    { text: t.navigation.pricing, action: () => scrollToSection('pricing'), path: '/' },
     { text: t.navigation.contact, action: () => scrollToSection('contact'), path: '/' },
   ];
 
@@ -172,7 +172,7 @@ const Header = () => {
             <Link to="/blog" onMouseEnter={() => handleMouseEnter('/blog')} className="text-white hover:text-teal-300 transition">{t.navigation.blog}</Link>
             <button onClick={() => scrollToSection('about')} onMouseEnter={() => handleMouseEnter('/')} className="text-white hover:text-teal-300 transition">{t.navigation.about}</button>
             <button onClick={() => scrollToSection('projects')} onMouseEnter={() => handleMouseEnter('/')} className="text-white hover:text-teal-300 transition">{t.navigation.projects}</button>
-            <Link to="/pricing" onMouseEnter={() => handleMouseEnter('/pricing')} className="text-white hover:text-teal-300 transition">{t.navigation.pricing}</Link>
+            <button onClick={() => scrollToSection('pricing')} onMouseEnter={() => handleMouseEnter('/')} className="text-white hover:text-teal-300 transition">{t.navigation.pricing}</button>
             <button onClick={() => scrollToSection('contact')} onMouseEnter={() => handleMouseEnter('/')} className="text-white hover:text-teal-300 transition">{t.navigation.contact}</button>
             <LanguageToggle />
           </nav>
@@ -206,7 +206,7 @@ const Header = () => {
                 
                 {/* Menu panel with flex column layout to position footer at bottom */}
                 <motion.div
-                  className="lg:hidden fixed top-0 bottom-0 right-0 w-4/5 max-w-xs bg-gradient-to-br from-[#140F2D] via-[#140F2D]/95 to-teal-600/90 backdrop-blur-md z-50 mobile-menu-container shadow-xl flex flex-col"
+                  className="lg:hidden fixed top-0 bottom-0 right-0 w-4/5 max-w-xs bg-gradient-to-br from-[#140F2D] via-[#140F2D]/95 to-teal-600/90 backdrop-blur-md z-50 mobile-menu-container shadow-xl flex flex-col "
                   variants={menuPanelVariants}
                   initial="hidden"
                   animate="visible"
@@ -225,7 +225,7 @@ const Header = () => {
                   </div>
                   
                   {/* Menu items - using flex-grow to push footer to bottom */}
-                  <nav className="flex flex-col p-6 space-y-6 flex-grow bg-gradient-to-tr from-[#140F2D] via-[#140F2D]/95 to-teal-600/90  h-screen ">
+                  <nav className="flex flex-col p-6 space-y-6 flex-grow bg-gradient-to-tr from-[#140F2D] via-[#140F2D] to-teal-600/95  h-screen ">
                     {menuItems.map((item, index) => (
                       <motion.div
                         key={index}
@@ -241,7 +241,7 @@ const Header = () => {
                             to={item.link} 
                             onMouseEnter={() => handleMouseEnter(item.path)} 
                             onClick={item.action} 
-                            className="text-white text-lg hover:text-teal-300 transition-colors flex items-center group"
+                            className="text-white text-lg font-jakarta hover:text-teal-300 transition-colors flex items-center group"
                           >
                             <motion.span
                               className="absolute left-0 w-0 h-0.5 bg-teal-300 group-hover:w-8 transition-all duration-300"
@@ -253,7 +253,7 @@ const Header = () => {
                           <motion.button 
                             onMouseEnter={() => handleMouseEnter(item.path)} 
                             onClick={item.action} 
-                            className="text-white text-lg hover:text-teal-300 transition-colors flex items-center group w-full text-left"
+                            className="text-white text-lg font-jakarta hover:text-teal-300 transition-colors flex items-center group w-full text-left"
                             variants={buttonVariants}
                             whileTap="tap"
                           >
