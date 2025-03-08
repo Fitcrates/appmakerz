@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { usePrefetchRoute } from '../hooks/usePrefetchRoute';
+import { X } from 'lucide-react';
 
 const BlogPromoModal = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -107,7 +108,7 @@ const BlogPromoModal = () => {
         className="relative bg-[#140F2D] text-white rounded-lg shadow-xl p-4 sm:p-8 max-w-md mx-4 ring-1 ring-teal-300/30 w-full sm:w-[40rem] animate-scaleIn border-t border-white/10 overflow-hidden"
       >
         <button 
-  className="absolute top-2 right-2 text-white bg-teal-300/10 hover:text-black hover:bg-teal-300 rounded-full w-12 h-12 flex items-center justify-center text-xl transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-teal-300 cursor-pointer touch-action-manipulation"
+  className="absolute top-2 right-2 text-white bg-teal-300/10 hover:text-black hover:bg-teal-300 rounded-full  p-3 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-teal-300 cursor-pointer "
   onClick={closeModal}
   onTouchStart={(e) => {
     e.preventDefault(); 
@@ -116,7 +117,7 @@ const BlogPromoModal = () => {
   aria-label="Close modal"
   style={{ WebkitTapHighlightColor: 'transparent' }}
 >
-  ✕
+<X className="h-5 w-5" />
 </button>
         
         <div className="flex flex-col items-center text-center gap-4 sm:gap-8 relative z-10 mt-4">
