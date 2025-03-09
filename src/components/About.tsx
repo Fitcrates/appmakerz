@@ -101,7 +101,7 @@ const Accordion = ({ content }) => {
   ];
 
   return (
-    <section id="about" className="py-10" style={{ backgroundColor: '#140F2D' }}>
+    <section id="about" className="py-20" style={{ backgroundColor: '#140F2D' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-left text-4xl sm:text-6xl mb-16"
