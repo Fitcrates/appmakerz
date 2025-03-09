@@ -244,7 +244,7 @@ const PricingComponent = () => {
     <div id="pricing" className="pb-16  bg-[#140F2D]">
       <motion.section 
         id="pricing-plans"
-        className="py-16"
+        className="py-20 sm:py-20 "
         variants={sectionVariants}
         initial="hidden"
           whileInView="visible"
