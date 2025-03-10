@@ -11,6 +11,7 @@ const BlogPromoModal = () => {
   const { language } = useLanguage();
   const t = translations[language].modalblog;
   const modalRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const prefetchRoute = usePrefetchRoute();
 
   const handleMouseEnter = (path: string) => {
@@ -18,7 +19,11 @@ const BlogPromoModal = () => {
   };
 
   // Handle closing the modal
-  const closeModal = () => {
+  const closeModal = (e?: React.MouseEvent | React.TouchEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setIsVisible(false);
   };
 
@@ -85,14 +90,11 @@ const BlogPromoModal = () => {
       }
     };
 
-    // Add events with a small delay to avoid immediate triggering
-    const timeout = setTimeout(() => {
-      document.addEventListener('mousedown', handleOutsideClick);
-      document.addEventListener('touchstart', handleOutsideClick);
-    }, 100);
+    // Add events without delay for better responsiveness
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('touchstart', handleOutsideClick);
 
     return () => {
-      clearTimeout(timeout);
       document.removeEventListener('mousedown', handleOutsideClick);
       document.removeEventListener('touchstart', handleOutsideClick);
     };
@@ -108,13 +110,18 @@ const BlogPromoModal = () => {
         className="relative bg-[#140F2D] text-white rounded-lg shadow-xl p-4 sm:p-8 max-w-md mx-4 ring-1 ring-teal-300/30 w-full sm:w-[40rem] animate-scaleIn border-t border-white/10 overflow-hidden"
       >
         <button 
-  className="absolute top-2 right-2 text-white bg-teal-300/10 hover:text-black hover:bg-teal-300 rounded-full  p-3 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-teal-300 cursor-pointer "
-  onClick={closeModal}
-  aria-label="Close modal"
-  
->
-<X className="h-5 w-5" />
-</button>
+          ref={closeButtonRef}
+          className="absolute top-2 right-2 text-white bg-teal-300/10 hover:text-black hover:bg-teal-300 rounded-full p-4 sm:p-3 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-teal-300 cursor-pointer active:bg-teal-400"
+          onClick={closeModal}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            closeModal(e);
+          }}
+          aria-label="Close modal"
+          style={{ touchAction: 'manipulation' }}
+        >
+          <X className="h-6 w-6" />
+        </button>
         
         <div className="flex flex-col items-center text-center gap-4 sm:gap-8 relative z-10 mt-4">
           <h3 className="text-2xl sm:text-3xl font-bold mt-6 font-jakarta tracking-tight text-white">{t.heading}</h3>
