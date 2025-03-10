@@ -110,12 +110,8 @@ const BlogPromoModal = () => {
         <button 
   className="absolute top-2 right-2 text-white bg-teal-300/10 hover:text-black hover:bg-teal-300 rounded-full  p-3 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-teal-300 cursor-pointer "
   onClick={closeModal}
-  onTouchStart={(e) => {
-    e.preventDefault(); 
-    closeModal();
-  }}
   aria-label="Close modal"
-  style={{ WebkitTapHighlightColor: 'transparent' }}
+  
 >
 <X className="h-5 w-5" />
 </button>
