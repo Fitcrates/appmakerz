@@ -1,3 +1,7 @@
+# Redirect Netlify subdomain to primary domain
+https://appcrates.netlify.app/* https://appcrates.pl/:splat 301!
+http://appcrates.netlify.app/* https://appcrates.pl/:splat 301!
+
 # Static files
 /robots.txt /robots.txt 200
 /sitemap.xml /sitemap.xml 200
