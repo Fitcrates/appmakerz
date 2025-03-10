@@ -82,7 +82,7 @@ const Projects = () => {
         en: t.mobileApp.description,
         pl: t.mobileApp.description
       },
-      topImage: "media\\flixapp.webp",
+      topImage: "media\\packstockApp.webp",
       backgroundImage: "media/tlokarta2.webp",
       slug: 'flixstock-app'
     },
