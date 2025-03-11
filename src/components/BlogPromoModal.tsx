@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
@@ -10,8 +10,6 @@ const BlogPromoModal = () => {
   const [hasShown, setHasShown] = useState(false);
   const { language } = useLanguage();
   const t = translations[language].modalblog;
-  const modalRef = useRef<HTMLDivElement>(null);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const prefetchRoute = usePrefetchRoute();
 
   const handleMouseEnter = (path: string) => {
@@ -19,11 +17,7 @@ const BlogPromoModal = () => {
   };
 
   // Handle closing the modal
-  const closeModal = (e?: React.MouseEvent | React.TouchEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+  const closeModal = () => {
     setIsVisible(false);
   };
 
@@ -78,65 +72,58 @@ const BlogPromoModal = () => {
     };
   }, [hasShown]);
   
-  // Separate useEffect for click outside detection
-  useEffect(() => {
-    // Only add listeners if the modal is visible
-    if (!isVisible) return;
-    
-    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
-      // Simple check - if modal exists and click is outside it
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        closeModal();
-      }
-    };
-
-    // Add events without delay for better responsiveness
-    document.addEventListener('mousedown', handleOutsideClick);
-    document.addEventListener('touchstart', handleOutsideClick);
-
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-      document.removeEventListener('touchstart', handleOutsideClick);
-    };
-  }, [isVisible]);
-  
   // Don't render anything if modal should not be visible
   if (!isVisible) return null;
 
+  const handleContentClick = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/90 animate-fadeIn">
-      <div 
-        ref={modalRef} 
-        className="relative bg-[#140F2D] text-white rounded-lg shadow-xl p-4 sm:p-8 max-w-md mx-4 ring-1 ring-teal-300/30 w-full sm:w-[40rem] animate-scaleIn border-t border-white/10 overflow-hidden"
-      >
-        <button 
-          ref={closeButtonRef}
-          className="absolute top-2 right-2 text-white bg-teal-300/10 hover:text-black hover:bg-teal-300 rounded-full p-4 sm:p-3 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-teal-300 cursor-pointer active:bg-teal-400"
-          onClick={closeModal}
-          onTouchEnd={(e) => {
-            e.preventDefault();
-            closeModal(e);
-          }}
-          aria-label="Close modal"
-          style={{ touchAction: 'manipulation' }}
+    <div 
+      className="fixed inset-0 z-50 touch-none"
+      onClick={closeModal}
+      onTouchStart={(e) => e.stopPropagation()}
+      onTouchMove={(e) => e.stopPropagation()}
+      onTouchEnd={(e) => e.stopPropagation()}
+    >
+      {/* Backdrop */}
+      <div className="fixed inset-0 bg-black/90" />
+      
+      {/* Modal Content */}
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <div 
+          className="relative bg-[#140F2D] text-white rounded-lg shadow-xl p-4 sm:p-8 max-w-md mx-4 ring-1 ring-teal-300/30 w-full sm:w-[40rem] animate-scaleIn border-t border-white/10 overflow-hidden"
+          onClick={handleContentClick}
+          onTouchStart={handleContentClick}
+          onTouchMove={handleContentClick}
+          onTouchEnd={handleContentClick}
         >
-          <X className="h-6 w-6" />
-        </button>
-        
-        <div className="flex flex-col items-center text-center gap-4 sm:gap-8 relative z-10 mt-4">
-          <h3 className="text-2xl sm:text-3xl font-bold mt-6 font-jakarta tracking-tight text-white">{t.heading}</h3>
+          {/* Header with close button on the right */}
+          <div className="flex items-center justify-between mb-4">
+            <div></div> {/* Empty div to push the button to the right */}
+            <button
+              onClick={closeModal}
+              className="p-2 hover:bg-teal-300 text-white hover:text-black rounded-full transition-colors flex-shrink-0"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
           
-          <p className="mb-2 sm:mb-4 text-left font-jakarta font-light leading-relaxed text-white/90 text-base sm:text-lg">{t.subtitle}</p>
-          
-          <Link 
-            to="/blog" 
-            className="inline-block GlowButton relative "
-            onMouseEnter={() => handleMouseEnter('/blog')}
-            onClick={closeModal}
-          >
-            <span className="relative z-10 font-jakarta">{t.button}</span>
+          <div className="flex flex-col items-center text-center gap-4 sm:gap-8 relative z-10">
+            <h3 className="text-2xl sm:text-3xl font-bold font-jakarta tracking-tight text-white">{t.heading}</h3>
             
-          </Link>
+            <p className="mb-2 sm:mb-4 text-left font-jakarta font-light leading-relaxed text-white/90 text-base sm:text-lg">{t.subtitle}</p>
+            
+            <Link 
+              to="/blog" 
+              className="inline-block GlowButton relative"
+              onMouseEnter={() => handleMouseEnter('/blog')}
+              onClick={closeModal}
+            >
+              <span className="relative z-10 font-jakarta">{t.button}</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
