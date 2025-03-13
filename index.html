@@ -46,13 +46,13 @@
     
     <!-- Server-side language detection script -->
     <script>
-      // This script detects browser language and sets appropriate meta tags
+      // This detects browser language and sets meta tags
       (function() {
         var userLang = navigator.language || navigator.userLanguage;
         
         // If browser language starts with 'pl'
         if (userLang.indexOf('pl') === 0) {
-          // Update Open Graph for Polish
+          // Open Graph for Polish
           document.querySelector('meta[property="og:title"]').setAttribute('content', 'AppCrates - Rozwiązania w Zakresie Tworzenia i Projektowania Stron Internetowych');
           document.querySelector('meta[property="og:description"]').setAttribute('content', 'Innowacyjne rozwiązania internetowe dla Twojej firmy. Fullstack development aplikacji internetowych, stron portfolio, sklepów internetowych, blogów i baz danych. Profesjonalny dobór technologii.');
           document.querySelector('meta[property="og:locale"]').setAttribute('content', 'pl_PL');
@@ -98,14 +98,16 @@
       "@type": "WebSite",
       "name": "AppCrates",
       "url": "https://appcrates.pl",
-      "description": {
-        "@language": "en",
-        "@value": "Innovative web solutions for your business. Fullstack development and design of web apps, portfolio websites, web shops, blogs and databases."
-      },
-      "description": {
-        "@language": "pl",
-        "@value": "Innowacyjne rozwiązania internetowe dla Twojej firmy. Fullstack development i projektowanie aplikacji internetowych, stron portfolio, sklepów internetowych, blogów i baz danych."
-      },
+      "description": [
+        {
+          "@language": "en",
+          "@value": "Innovative web solutions for your business. Fullstack development and design of web apps, portfolio websites, web shops, blogs and databases."
+        },
+        {
+          "@language": "pl",
+          "@value": "Innowacyjne rozwiązania internetowe dla Twojej firmy. Fullstack development i projektowanie aplikacji internetowych, stron portfolio, sklepów internetowych, blogów i baz danych."
+        }
+      ],
       "potentialAction": {
         "@type": "SearchAction",
         "target": "https://appcrates.pl/search?q={search_term_string}",
