@@ -4,10 +4,17 @@
   functions = "netlify/functions"
 
 [[redirects]]
+  from = "https://appcrates.netlify.app/*"
+  to = "https://appcrates.pl/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "http://appcrates.netlify.app/*"
   to = "https://appcrates.pl/:splat"
   status = 301
   force = true
+
 
 [[redirects]]
   from = "/*"
