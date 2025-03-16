@@ -17,12 +17,12 @@
   
 [[redirects]]
   from = "/robots.txt"
-  to = "/public/robots.txt"
+  to = "/robots.txt"
   status = 200
 
 [[redirects]]
   from = "/sitemap.xml"
-  to = "/public/sitemap.xml"
+  to = "/sitemap.xml"
   status = 200
 
 [[redirects]]
