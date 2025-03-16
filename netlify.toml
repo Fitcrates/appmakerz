@@ -14,7 +14,21 @@
   to = "https://appcrates.pl/:splat"
   status = 301
   force = true
+  
+[[redirects]]
+  from = "/robots.txt"
+  to = "/robots.txt"
+  status = 200
 
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap.xml"
+  status = 200
+
+[[redirects]]
+  from = "/favicon.ico"
+  to = "/media/favicon.ico"
+  status = 200
 
 [[redirects]]
   from = "/*"
