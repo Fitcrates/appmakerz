@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Allow: /favicon.ico
+Sitemap: https://appcrates.pl/sitemap.xml
