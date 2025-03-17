@@ -8,12 +8,11 @@
   to = "https://appcrates.pl/:splat"
   status = 301
   force = true
-
+  
 [[redirects]]
-  from = "http://appcrates.netlify.app/*"
-  to = "https://appcrates.pl/:splat"
-  status = 301
-  force = true
+  from = "/*"
+  to = "/index.html"
+  status = 200
   
 [[redirects]]
   from = "/robots.txt"
@@ -28,11 +27,6 @@
 [[redirects]]
   from = "/favicon.ico"
   to = "/media/favicon.ico"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
   status = 200
 
 [[headers]]
