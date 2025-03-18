@@ -318,7 +318,7 @@ const Projects = () => {
     <section 
       ref={sectionRef}
       id="projects"
-      className="py-0 sm:py-20 bg-[#140F2D] overflow-x-hidden"
+      className="py-0 sm:py-20 bg-[#140F2D] overflow-x-hidden touch-pan-y"
     >
       {/* Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:-mt-5">
@@ -350,10 +350,17 @@ const Projects = () => {
             modules={[Navigation, Pagination]}
             spaceBetween={30}
             slidesPerView={1}
-            pagination={{ clickable: true }}
+            pagination={{ 
+              clickable: true,
+              el: '.swiper-pagination',
+              type: 'bullets',
+              bulletActiveClass: 'swiper-pagination-bullet-active',
+              renderBullet: (_index, className) => `<span class="${className} notranslate"></span>`
+            }}
             navigation={{
               nextEl: '.swiper-button-next',
               prevEl: '.swiper-button-prev',
+              disabledClass: 'swiper-button-disabled'
             }}
             loop={true}
             breakpoints={{
@@ -370,22 +377,25 @@ const Projects = () => {
                 spaceBetween: 30,
               },
             }}
-            // Safari-specific settings
+            touchEventsTarget="wrapper"
+            touchRatio={1}
+            touchAngle={45}
+            touchStartPreventDefault={true}
+            preventClicks={true}
+            preventClicksPropagation={true}
+            slideToClickedSlide={true}
+            grabCursor={true}
+            resistance={true}
+            resistanceRatio={0.85}
             {...(isSafari ? {
-              resistance: true,
-              resistanceRatio: 0.95,
-              longSwipes: false,
-              touchStartForcePreventDefault: false,
+              touchStartForcePreventDefault: true,
               touchReleaseOnEdges: true,
-              touchMoveStopPropagation: false,
-              preventInteractionOnTransition: true
-            } : {
-              // Non-Safari settings
-              resistanceRatio: 0.85,
-              threshold: 5,
-              touchAngle: 45,
-              touchStartPreventDefault: false
-            })}
+              touchMoveStopPropagation: true,
+              preventInteractionOnTransition: true,
+              longSwipes: false,
+              longSwipesRatio: 0.5,
+              threshold: 10
+            } : {})}
           >
             {projects.map((project) => (
               <SwiperSlide key={project.slug}>
@@ -444,9 +454,9 @@ const Projects = () => {
             <div className="swiper-pagination"></div>
           </Swiper>
           
-          <div className="swiper-navigation-buttons">
-            <button className="swiper-button-prev" aria-label="Previous slide"></button>
-            <button className="swiper-button-next" aria-label="Next slide"></button>
+          <div className="swiper-navigation-buttons pointer-events-none">
+            <button className="swiper-button-prev pointer-events-auto touch-none" aria-label="Previous slide"></button>
+            <button className="swiper-button-next pointer-events-auto touch-none" aria-label="Next slide"></button>
           </div>
         </motion.div>
       </div>
