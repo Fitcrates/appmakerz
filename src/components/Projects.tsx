@@ -318,12 +318,12 @@ const Projects = () => {
     <section 
       ref={sectionRef}
       id="projects"
-      className="py-0 sm:py-20 bg-[#140F2D] overflow-hidden touch-none select-none"
+      className="py-0 sm:py-20 bg-[#140F2D] overscroll-none"
     >
       {/* Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:-mt-5 touch-none">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:-mt-5">
         <motion.div 
-          className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-16 gap-2 lg:gap-4 touch-none"
+          className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-16 gap-2 lg:gap-4"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
@@ -342,7 +342,7 @@ const Projects = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className={`${isSafari ? "safari-swiper-container" : ""} touch-pan-y`}
+          className={isSafari ? "safari-swiper-container" : ""}
         >
           <Swiper
             ref={swiperRef}
@@ -380,18 +380,17 @@ const Projects = () => {
             touchEventsTarget="wrapper"
             touchRatio={1}
             touchAngle={45}
-            touchStartPreventDefault={true}
-            preventClicks={true}
-            preventClicksPropagation={true}
+            preventClicks={false}
+            preventClicksPropagation={false}
             slideToClickedSlide={true}
             grabCursor={true}
             resistance={true}
             resistanceRatio={0.85}
-            nested={true}
+            watchOverflow={true}
+            touchMoveStopPropagation={false}
+            cssMode={true}
             {...(isSafari ? {
-              touchStartForcePreventDefault: true,
               touchReleaseOnEdges: true,
-              touchMoveStopPropagation: true,
               preventInteractionOnTransition: true,
               longSwipes: false,
               longSwipesRatio: 0.5,
@@ -455,9 +454,9 @@ const Projects = () => {
             <div className="swiper-pagination"></div>
           </Swiper>
           
-          <div className="swiper-navigation-buttons pointer-events-none touch-none">
-            <button className="swiper-button-prev pointer-events-auto touch-none select-none" aria-label="Previous slide"></button>
-            <button className="swiper-button-next pointer-events-auto touch-none select-none" aria-label="Next slide"></button>
+          <div className="swiper-navigation-buttons">
+            <button className="swiper-button-prev" aria-label="Previous slide"></button>
+            <button className="swiper-button-next" aria-label="Next slide"></button>
           </div>
         </motion.div>
       </div>
