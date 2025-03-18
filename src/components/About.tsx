@@ -84,8 +84,8 @@ const About = () => {
       bgColor: 'bg-red-500',
       textColor: 'text-red-400',
       borderColor: 'border-red-500/10',
-      gradientFrom: 'from-red-900/10',
-      iconBg: 'bg-red-500/70',
+      gradientFrom: 'from-red-900/2',
+      iconBg: 'bg-red-500/90',
       icon: <Code size={50} />,
       accordionContent: t.cards.development.more,
     },
@@ -96,7 +96,7 @@ const About = () => {
       bgColor: 'bg-teal-500',
       textColor: 'text-teal-400',
       borderColor: 'border-teal-500/10',
-      gradientFrom: 'from-teal-900/10',
+      gradientFrom: 'from-teal-900/2',
       iconBg: 'bg-teal-500/70',
       icon: <Paintbrush size={50} />,
       accordionContent: t.cards.design.more,
@@ -105,12 +105,12 @@ const About = () => {
       id: '03',
       title: t.cards.strategy.title,
       description: t.cards.strategy.description,
-      bgColor: 'bg-purple-500',
+      bgColor: 'bg-purple-500/10',
       textColor: 'text-purple-400',
       borderColor: 'border-purple-500/10',
-      gradientFrom: 'from-purple-900/10',
+      gradientFrom: 'from-purple-900/2',
       iconBg: 'bg-purple-500/70',
-      icon: <ChartNoAxesCombined size={50} />,
+      icon: <ChartNoAxesCombined size={40} />,
       accordionContent: t.cards.strategy.more,
     },
   ];
@@ -140,17 +140,17 @@ const About = () => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                className="rounded-lg min-h-96 relative"
+                className="rounded-lg min-h-96 relative "
               >
                 <span className="absolute top-0 left-0 text-teal-300 text-sm font-jakarta">
                   {card.id}
                 </span>
                 
                 {/* Themed icon design with correct icons */}
-                <div className="absolute top-16 left-1/2 -translate-x-1/2 w-full max-w-xs flex justify-center items-center">
-                  <div className={`relative w-full h-48 flex items-center justify-center rounded-full bg-gradient-to-br ${card.gradientFrom} to-transparent`}>
+                <div className="absolute top-16 left-1/2 -translate-x-1/2 w-full max-w-xs flex justify-center items-center ">
+                  <div className={`relative w-[13rem] h-[6rem] flex items-center justify-center rounded-full bg-gradient-to-br ${card.gradientFrom} to-transparent`}>
                     {/* Background circular glow */}
-                    <div className={`absolute w-[17rem] h-40 rounded-full blur-2xl opacity-70 ${card.iconBg}`} />
+                    <div className={`absolute w-[13rem] h-[5rem] rounded-full blur-[45px]  overflow-hidden  opacity-70 ${card.iconBg}`} />
                     
                     {/* Themed icon */}
                     <div className={`relative z-10 ${card.textColor}`}>
