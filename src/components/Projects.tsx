@@ -318,12 +318,12 @@ const Projects = () => {
     <section 
       ref={sectionRef}
       id="projects"
-      className="py-0 sm:py-20 bg-[#140F2D] overflow-x-hidden touch-pan-y"
+      className="py-0 sm:py-20 bg-[#140F2D] overflow-hidden touch-none select-none"
     >
       {/* Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:-mt-5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:-mt-5 touch-none">
         <motion.div 
-          className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-16 gap-2 lg:gap-4"
+          className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-16 gap-2 lg:gap-4 touch-none"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
@@ -342,7 +342,7 @@ const Projects = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className={isSafari ? "safari-swiper-container" : ""}
+          className={`${isSafari ? "safari-swiper-container" : ""} touch-pan-y`}
         >
           <Swiper
             ref={swiperRef}
@@ -387,6 +387,7 @@ const Projects = () => {
             grabCursor={true}
             resistance={true}
             resistanceRatio={0.85}
+            nested={true}
             {...(isSafari ? {
               touchStartForcePreventDefault: true,
               touchReleaseOnEdges: true,
@@ -454,9 +455,9 @@ const Projects = () => {
             <div className="swiper-pagination"></div>
           </Swiper>
           
-          <div className="swiper-navigation-buttons pointer-events-none">
-            <button className="swiper-button-prev pointer-events-auto touch-none" aria-label="Previous slide"></button>
-            <button className="swiper-button-next pointer-events-auto touch-none" aria-label="Next slide"></button>
+          <div className="swiper-navigation-buttons pointer-events-none touch-none">
+            <button className="swiper-button-prev pointer-events-auto touch-none select-none" aria-label="Previous slide"></button>
+            <button className="swiper-button-next pointer-events-auto touch-none select-none" aria-label="Next slide"></button>
           </div>
         </motion.div>
       </div>
