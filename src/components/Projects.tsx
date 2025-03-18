@@ -215,6 +215,7 @@ const Projects = () => {
       [slug]: true
     }));
   };
+  
   const prefetchProject = async (slug: string) => {
     try {
       const data = await getProject(slug);
@@ -227,6 +228,13 @@ const Projects = () => {
   const handleMouseEnter = (slug: string) => {
     prefetchProject(slug);
   };
+  
+  // Navigate to project detail page
+const navigateToProject = async (slug: string) => {
+  // Prefetch first, then navigate
+  await prefetchProject(slug);
+  window.location.href = `/project/${slug}`;
+};
 
   return (
     <section 
@@ -282,6 +290,11 @@ const Projects = () => {
                 spaceBetween: 30,
               },
             }}
+            // Fix for mobile scrolling issues
+            resistanceRatio={0.85}
+            threshold={5}
+            touchAngle={45}
+            touchStartPreventDefault={false}
           >
             {projects.map((project) => (
               <SwiperSlide key={project.slug}>
@@ -290,7 +303,11 @@ const Projects = () => {
                   className="h-[30rem] w-full max-w-2xl lg:max-w-md rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 
                   ring-1 ring-white/20 ring-opacity-80 flex flex-col relative mb-8 lg:mb-0"
                 >
-                  <div className="h-1/2 relative overflow-hidden transform hover:scale-110 transition duration-300">
+                  <div 
+                    className="h-1/2 relative overflow-hidden  cursor-pointer"
+                    onClick={() => navigateToProject(project.slug)}
+  onMouseEnter={() => handleMouseEnter(project.slug)}
+                  >
                     <div 
                       className={`absolute inset-0 bg-gray-800 transition-opacity duration-500 ${
                         imagesLoaded[project.slug] ? 'opacity-0' : 'opacity-100'
