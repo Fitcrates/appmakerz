@@ -86,7 +86,7 @@ const About = () => {
       borderColor: 'border-red-500/10',
       gradientFrom: 'from-red-900/10',
       iconBg: 'bg-red-500/70',
-      icon: <Code size={60} />,
+      icon: <Code size={50} />,
       accordionContent: t.cards.development.more,
     },
     {
@@ -98,7 +98,7 @@ const About = () => {
       borderColor: 'border-teal-500/10',
       gradientFrom: 'from-teal-900/10',
       iconBg: 'bg-teal-500/70',
-      icon: <Paintbrush size={60} />,
+      icon: <Paintbrush size={50} />,
       accordionContent: t.cards.design.more,
     },
     {
@@ -110,7 +110,7 @@ const About = () => {
       borderColor: 'border-purple-500/10',
       gradientFrom: 'from-purple-900/10',
       iconBg: 'bg-purple-500/70',
-      icon: <ChartNoAxesCombined size={60} />,
+      icon: <ChartNoAxesCombined size={50} />,
       accordionContent: t.cards.strategy.more,
     },
   ];
