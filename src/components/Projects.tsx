@@ -54,7 +54,9 @@ const Projects = () => {
   const [preloadedImages, setPreloadedImages] = useState<{[key: string]: boolean}>({});
   const [shouldPreload, setShouldPreload] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const swiperRef = useRef<any>(null);
   const prefetchRoute = usePrefetchRoute();
+  const [isSafari, setIsSafari] = useState(false);
 
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
@@ -113,6 +115,78 @@ const Projects = () => {
       slug: 'cleaning-managament-app'
     }
   ];
+
+  // Detect Safari browser
+  useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    setIsSafari(
+      ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1 && ua.indexOf('android') === -1
+    );
+  }, []);
+
+  // Safari-specific touch handling
+  useEffect(() => {
+    if (!isSafari) return;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      const startX = touch.pageX;
+      const startY = touch.pageY;
+      
+      let isScrolling: boolean | null = null;
+      
+      const handleTouchMove = (e: TouchEvent) => {
+        if (!e.touches.length) return;
+        
+        const touch = e.touches[0];
+        const currentX = touch.pageX;
+        const currentY = touch.pageY;
+        
+        const diffX = Math.abs(currentX - startX);
+        const diffY = Math.abs(currentY - startY);
+        
+        // Determine direction if we haven't yet
+        if (isScrolling === null) {
+          isScrolling = diffY > diffX;
+        }
+        
+        // If scrolling vertically, prevent swiper from capturing the event
+        if (isScrolling && swiperRef.current) {
+          e.stopPropagation();
+          // Temporarily disable swiping
+          if (swiperRef.current.swiper) {
+            swiperRef.current.swiper.allowTouchMove = false;
+          }
+        }
+      };
+      
+      const handleTouchEnd = () => {
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+        
+        // Re-enable swiping
+        if (swiperRef.current && swiperRef.current.swiper) {
+          setTimeout(() => {
+            swiperRef.current.swiper.allowTouchMove = true;
+          }, 300);
+        }
+      };
+      
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd);
+    };
+    
+    const sectionElement = sectionRef.current;
+    if (sectionElement) {
+      sectionElement.addEventListener('touchstart', handleTouchStart, { passive: true });
+    }
+    
+    return () => {
+      if (sectionElement) {
+        sectionElement.removeEventListener('touchstart', handleTouchStart);
+      }
+    };
+  }, [isSafari]);
 
   // Preload function
   const preloadImage = (src: string) => {
@@ -230,11 +304,15 @@ const Projects = () => {
   };
   
   // Navigate to project detail page
-const navigateToProject = async (slug: string) => {
-  // Prefetch first, then navigate
-  await prefetchProject(slug);
-  window.location.href = `/project/${slug}`;
-};
+  const navigateToProject = async (slug: string) => {
+
+    // Prefetch first, then navigate
+  
+    await prefetchProject(slug);
+  
+    window.location.href = `/project/${slug}`;
+  
+  };
 
   return (
     <section 
@@ -264,8 +342,10 @@ const navigateToProject = async (slug: string) => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
+          className={isSafari ? "safari-swiper-container" : ""}
         >
           <Swiper
+            ref={swiperRef}
             className="custom-swiper"
             modules={[Navigation, Pagination]}
             spaceBetween={30}
@@ -290,11 +370,22 @@ const navigateToProject = async (slug: string) => {
                 spaceBetween: 30,
               },
             }}
-            // Fix for mobile scrolling issues
-            resistanceRatio={0.85}
-            threshold={5}
-            touchAngle={45}
-            touchStartPreventDefault={false}
+            // Safari-specific settings
+            {...(isSafari ? {
+              resistance: true,
+              resistanceRatio: 0.95,
+              longSwipes: false,
+              touchStartForcePreventDefault: false,
+              touchReleaseOnEdges: true,
+              touchMoveStopPropagation: false,
+              preventInteractionOnTransition: true
+            } : {
+              // Non-Safari settings
+              resistanceRatio: 0.85,
+              threshold: 5,
+              touchAngle: 45,
+              touchStartPreventDefault: false
+            })}
           >
             {projects.map((project) => (
               <SwiperSlide key={project.slug}>
@@ -306,7 +397,7 @@ const navigateToProject = async (slug: string) => {
                   <div 
                     className="h-1/2 relative overflow-hidden  cursor-pointer"
                     onClick={() => navigateToProject(project.slug)}
-  onMouseEnter={() => handleMouseEnter(project.slug)}
+                    onMouseEnter={() => handleMouseEnter(project.slug)}
                   >
                     <div 
                       className={`absolute inset-0 bg-gray-800 transition-opacity duration-500 ${
