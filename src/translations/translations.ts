@@ -229,12 +229,24 @@ export const translations = {
         ],
         tag: "Data manager",
       },
+      singlePage  : {
+        title: "'Landing Page' Plan",
+        price: "$150",
+        description: "For personal branding",
+        features: [
+          "Landing page",
+          "Responsive design",
+          "Graphic design"
+        ],
+        tag: "Website",
+      },
       portfolio: {
         title: "'Portfolio Website' Plan",
         price: "$200",
         description: "For personal branding",
         features: [
           "Featured Portfolio",
+          "Landing page",
           "Responsive Design",
           "Graphic Design"
         ],
@@ -246,10 +258,12 @@ export const translations = {
         description: "For personal branding",
         features: [
           "Featured Portfolio",
+          "Landing page",
           "Responsive Design",
           "Graphic Design",
           "Contact Form - SMTP",
-          "CMS"
+          "CMS/Blog",
+          "Additional selected functionality"
         ],
         tag: "Website",
       },
@@ -570,12 +584,24 @@ export const translations = {
         ],
         tag: "Menadżer danych",
       },
+      singlePage  : {
+        title: "Plan 'Strona Powitalna'",
+        price: "600 zł",
+        description: "Dla marki osobistej",
+        features: [
+          "Strona powitalna",
+          "Responsywny design",
+          "Design graficzny"
+        ],
+        tag: "Strona internetowa",
+      },
       portfolio: {
         title: "Plan 'Strona Portfolio'",
         price: "800 zł",
         description: "Dla marki osobistej",
         features: [
           "Prezentacja portfolio",
+          "Strona powitalna",
           "Responsywny design",
           "Design graficzny"
         ],
@@ -587,10 +613,13 @@ export const translations = {
         description: "Dla marki osobistej",
         features: [
           "Prezentacja portfolio",
+          "Strona powitalna",
           "Responsywny design",
           "Design graficzny",
           "Formularz kontaktowy - SMTP",
-          "CMS"
+          "CMS/Blog",
+          "Dodatkowa wybrana funkcjonalność"
+
         ],
         tag: "Strona internetowa",
       },
