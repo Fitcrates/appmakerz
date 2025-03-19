@@ -399,56 +399,56 @@ const Projects = () => {
           >
             {projects.map((project) => (
               <SwiperSlide key={project.slug}>
-                <motion.div
-                  variants={cardVariants}
-                  className="h-[30rem] w-full max-w-2xl lg:max-w-md rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 
-                  ring-1 ring-white/20 ring-opacity-80 flex flex-col relative mb-8 lg:mb-0"
-                >
-                  <div 
-                    className="h-1/2 relative overflow-hidden  cursor-pointer"
-                    onClick={() => navigateToProject(project.slug)}
-                    onMouseEnter={() => handleMouseEnter(project.slug)}
-                  >
-                    <div 
-                      className={`absolute inset-0 bg-gray-800 transition-opacity duration-500 ${
-                        imagesLoaded[project.slug] ? 'opacity-0' : 'opacity-100'
-                      }`}
-                    />
-                    <img
-                      src={preloadedImages[project.topImage] ? project.topImage : undefined}
-                      data-src={project.topImage}
-                      alt={project.title[language]}
-                      className={`lazy-image w-full h-full object-cover transition-opacity duration-500 ${
-                        imagesLoaded[project.slug] ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      onLoad={() => handleImageLoad(project.slug)}
-                    />
-                  </div>
+  <motion.div
+    variants={cardVariants}
+    className="h-[30rem] w-full max-w-2xl lg:max-w-md rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition duration-300 
+    ring-1 ring-white/20 ring-opacity-80 flex flex-col relative mb-8 lg:mb-0 mx-auto"
+  >
+    <div 
+      className="h-1/2 relative overflow-hidden cursor-pointer"
+      onClick={() => navigateToProject(project.slug)}
+      onMouseEnter={() => handleMouseEnter(project.slug)}
+    >
+      <div 
+        className={`absolute inset-0 bg-gray-800 transition-opacity duration-500 ${
+          imagesLoaded[project.slug] ? 'opacity-0' : 'opacity-100'
+        }`}
+      />
+      <img
+        src={preloadedImages[project.topImage] ? project.topImage : undefined}
+        data-src={project.topImage}
+        alt={project.title[language]}
+        className={`lazy-image w-full h-full object-cover transition-opacity duration-500 ${
+          imagesLoaded[project.slug] ? 'opacity-100' : 'opacity-0'
+        }`}
+        onLoad={() => handleImageLoad(project.slug)}
+      />
+    </div>
 
-                  <div className="h-1/2 p-4 flex flex-col relative">
-                    <img
-                      src={preloadedImages[project.backgroundImage] ? project.backgroundImage : undefined}
-                      data-src={project.backgroundImage}
-                      alt={project.title[language]}
-                      className="lazy-image absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div className="relative z-10">
-                      <h3 className="text-white text-2xl font-jakarta font-light mt-2">{project.title[language]}</h3>
-                      <p className="text-sm text-white font-jakarta font-light leading-relaxed tracking-[0.015em] mt-6">{project.description[language]}</p>
-                      
-                      <div className="fixed bottom-12 md:bottom-12 sm:bottom-14 lg:bottom-4">
-                        <Link
-                          to={`/project/${project.slug}`}
-                          onMouseEnter={() => handleMouseEnter(project.slug)}
-                          className="inline-flex items-center text-white hover:text-teal-300"
-                        >
-                          {t.viewProject} <ArrowUpRight className="w-4 h-4 ml-1" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </SwiperSlide>
+    <div className="h-1/2 p-4 flex flex-col relative">
+      <img
+        src={preloadedImages[project.backgroundImage] ? project.backgroundImage : undefined}
+        data-src={project.backgroundImage}
+        alt={project.title[language]}
+        className="lazy-image absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="relative z-10 flex flex-col h-full">
+        <h3 className="text-white text-2xl font-jakarta font-light mt-2">{project.title[language]}</h3>
+        <p className="text-sm text-white font-jakarta font-light leading-relaxed tracking-[0.015em] mt-6">{project.description[language]}</p>
+        
+        <div className="mt-auto pt-4">
+          <Link
+            to={`/project/${project.slug}`}
+            onMouseEnter={() => handleMouseEnter(project.slug)}
+            className="inline-flex items-center text-white hover:text-teal-300"
+          >
+            {t.viewProject} <ArrowUpRight className="w-4 h-4 ml-1" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  </motion.div>
+</SwiperSlide>
             ))}
 
             <div className="swiper-pagination"></div>
