@@ -185,6 +185,14 @@ const PricingComponent = () => {
 
   const plans = [
     { 
+      name: t.singlePage.title, 
+      price: t.singlePage.price, 
+      description: t.singlePage.description, 
+      features: t.singlePage.features, 
+      tag: t.singlePage.tag, 
+      categoryKey: "websites"
+    },
+    { 
       name: t.portfolio.title, 
       price: t.portfolio.price, 
       description: t.portfolio.description, 
