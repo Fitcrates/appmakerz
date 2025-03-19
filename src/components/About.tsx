@@ -86,7 +86,7 @@ const cards = [
     borderColor: 'border-red-500/10',
     gradientFrom: 'from-red-900/2',
     iconBg: 'bg-red-500/90',
-    icon: <Code size={50} />,
+    icon: <Code size={40} />,
     accordionContent: t.cards.development.more,
   },
   {
@@ -98,7 +98,7 @@ const cards = [
     borderColor: 'border-teal-500/10',
     gradientFrom: 'from-teal-900/2',
     iconBg: 'bg-teal-500/70',
-    icon: <Paintbrush size={50} />,
+    icon: <Paintbrush size={40} />,
     accordionContent: t.cards.design.more,
   },
   {
