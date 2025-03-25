@@ -44,6 +44,7 @@
     "swiper": "^11.2.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "three": "^0.174.0",
     "uuid": "^11.0.5"
   },
   "devDependencies": {
