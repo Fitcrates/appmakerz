@@ -11,8 +11,77 @@ const Hero = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    let scene, camera, renderer, stars, material, clock;
+    let scene: THREE.Scene, 
+        camera: THREE.PerspectiveCamera, 
+        renderer: THREE.WebGLRenderer, 
+        stars: THREE.Points, 
+        material: THREE.ShaderMaterial, 
+        clock: THREE.Clock, 
+        shootingStars: any[] = [];
     const numStars = 2500;
+
+    const createShootingStar = (frequency: number) => {
+      // Possible start positions (screen corners with randomization)
+      const startPositions = [
+        {
+          start: new THREE.Vector3(
+            5 + (Math.random() - 0.5) * 5,
+            5 + (Math.random() - 0.5) * 5,
+            -5
+          ),
+          end: new THREE.Vector3(-5, -5, -5)
+        },
+        {
+          start: new THREE.Vector3(
+            -5 + (Math.random() - 0.5) * 5,
+            5 + (Math.random() - 0.5) * 5,
+            -5
+          ),
+          end: new THREE.Vector3(5, -5, -5)
+        },
+        {
+          start: new THREE.Vector3(
+            5 + (Math.random() - 0.5) * 5,
+            -5 + (Math.random() - 0.5) * 5,
+            -5
+          ),
+          end: new THREE.Vector3(-5, 5, -5)
+        },
+        {
+          start: new THREE.Vector3(
+            -5 + (Math.random() - 0.5) * 5,
+            -5 + (Math.random() - 0.5) * 5,
+            -5
+          ),
+          end: new THREE.Vector3(5, 5, -5)
+        }
+      ];
+
+      const { start, end } = startPositions[Math.floor(Math.random() * startPositions.length)];
+
+      const geometry = new THREE.BufferGeometry().setFromPoints([
+        start,
+        start // Initially duplicate start point
+      ]);
+
+      const starMaterial = new THREE.LineBasicMaterial({ 
+        color: 0x29e7cd, 
+        transparent: true, 
+        opacity: 0.8 
+      });
+
+      const shootingStar = new THREE.Line(geometry, starMaterial);
+      scene.add(shootingStar);
+
+      return {
+        mesh: shootingStar,
+        start,
+        end,
+        progress: 0,
+        createdAt: clock.getElapsedTime(),
+        duration: 1 // duration of shooting star animation
+      };
+    };
 
     const init = () => {
       scene = new THREE.Scene();
@@ -21,10 +90,10 @@ const Hero = () => {
 
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      canvasRef.current.appendChild(renderer.domElement);
+      canvasRef.current?.appendChild(renderer.domElement);
 
       const geometry = new THREE.BufferGeometry();
-      const vertices = [];
+      const vertices: number[] = [];
 
       for (let i = 0; i < numStars; i++) {
         const x = (Math.random() - 0.5) * 10;
@@ -35,7 +104,6 @@ const Hero = () => {
 
       geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
 
-      // Shader for Color Shift + Twinkle (Safari-Friendly)
       material = new THREE.ShaderMaterial({
         uniforms: {
           time: { value: 0 },
@@ -55,13 +123,9 @@ const Hero = () => {
           varying vec3 vColor;
           
           void main() {
-            // Twinkle effect (more Safari-friendly)
             float twinkle = mix(0.3, 1.0, abs(sin(time + vColor.x * 2.0 + vColor.y * 3.0)));
-
-            // Smooth color shift towards #29E7CD
             vec3 baseColor = vec3(41.0 / 255.0, 231.0 / 255.0, 205.0 / 255.0);
             vec3 shiftColor = baseColor + 0.2 * abs(sin(time * 0.5));
-
             gl_FragColor = vec4(shiftColor, twinkle);
           }
         `,
@@ -77,8 +141,47 @@ const Hero = () => {
 
     const animate = () => {
       requestAnimationFrame(animate);
+      
       material.uniforms.time.value = clock.getElapsedTime();
       stars.rotation.y += 0.0005;
+
+      const currentTime = clock.getElapsedTime();
+
+      // Control the frequency of shooting stars
+      const shootingStarFrequency = 0.005; // Adjust this value to control frequency
+      if (Math.random() < shootingStarFrequency) {
+        shootingStars.push(createShootingStar(shootingStarFrequency));
+      }
+
+      shootingStars = shootingStars.filter(star => {
+        const elapsed = currentTime - star.createdAt;
+        if (elapsed > star.duration) {
+          scene.remove(star.mesh);
+          return false;
+        }
+        
+        star.progress = elapsed / star.duration;
+        
+        const currentPos = new THREE.Vector3(
+          star.start.x + (star.end.x - star.start.x) * star.progress,
+          star.start.y + (star.end.y - star.start.y) * star.progress,
+          star.start.z + (star.end.z - star.start.z) * star.progress
+        );
+        
+        const positions = star.mesh.geometry.attributes.position.array;
+        positions[0] = star.start.x;
+        positions[1] = star.start.y;
+        positions[2] = star.start.z;
+        positions[3] = currentPos.x;
+        positions[4] = currentPos.y;
+        positions[5] = currentPos.z;
+        star.mesh.geometry.attributes.position.needsUpdate = true;
+        
+        star.mesh.material.opacity = 1 - star.progress;
+        
+        return true;
+      });
+
       renderer.render(scene, camera);
     };
 
@@ -95,8 +198,7 @@ const Hero = () => {
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
     };
-  }, []);
-
+  }, []); 
   return (
     <>
       <div className="fixed-bg"></div>
