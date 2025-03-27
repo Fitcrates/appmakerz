@@ -148,7 +148,7 @@ const Hero = () => {
       const currentTime = clock.getElapsedTime();
 
       // Control the frequency of shooting stars
-      const shootingStarFrequency = 0.005; // Adjust this value to control frequency
+      const shootingStarFrequency = 0.003; // Adjust this value to control frequency
       if (Math.random() < shootingStarFrequency) {
         shootingStars.push(createShootingStar(shootingStarFrequency));
       }
