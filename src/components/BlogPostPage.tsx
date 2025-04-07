@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPost, incrementPostView, getPosts } from '../lib/sanity.client';
-import { Helmet } from 'react-helmet';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+
 import type { Post } from '../types/sanity.types';
 import Header from './Header';
 import Footer from './Footer';
@@ -209,59 +210,21 @@ return (
 
 return (
     <>
+        <HelmetProvider>
+
        <Helmet>
+  <title>{getTitle(post)}</title>
+  <meta name="description" content={getExcerpt(post)} />
+  <link rel="canonical" href={canonicalUrl} />
 
-<title>{getTitle(post)}</title>
-
-<meta name="description" content={getExcerpt(post)} />
-
-<link rel="canonical" href={canonicalUrl} />
-
-
-
-{/* Open Graph / Facebook */}
-
-<meta property="og:type" content="article" />
-
-<meta property="og:title" content={getTitle(post)} />
-
-<meta property="og:description" content={getExcerpt(post)} />
-
-<meta property="og:image" content={ogImageUrl} />
-
-<meta property="og:url" content={canonicalUrl} />
-
-<meta property="og:site_name" content="Your Site Name" />
-
-
-
-{/* Twitter Card */}
-
-<meta name="twitter:card" content="summary_large_image" />
-
-<meta name="twitter:title" content={getTitle(post)} />
-
-<meta name="twitter:description" content={getExcerpt(post)} />
-
-<meta name="twitter:image" content={ogImageUrl} />
-
-
-
-{/* Article specific metadata */}
-
-{post.publishedAt && (
-
-  <meta property="article:published_time" content={post.publishedAt} />
-
-)}
-
-{post.categories?.map((category, index) => (
-
-  <meta key={index} property="article:tag" content={category} />
-
-))}
-
+  {/* Open Graph / Facebook - ensure these override the defaults */}
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content={getTitle(post)} />
+  <meta property="og:description" content={getExcerpt(post)} />
+  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:url" content={canonicalUrl} />
 </Helmet>
+ </HelmetProvider>
 
 
       <Header />
