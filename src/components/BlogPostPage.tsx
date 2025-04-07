@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPost, incrementPostView, getPosts } from '../lib/sanity.client';
+import { Helmet } from 'react-helmet';
 import type { Post } from '../types/sanity.types';
 import Header from './Header';
 import Footer from './Footer';
@@ -145,21 +146,124 @@ const BlogPostPage = () => {
     return typeof post.title === 'string' ? post.title : (post.title[language] || post.title.en || '');
   };
 
+  const getExcerpt = (post: Post) => {
+
+    if (!post?.excerpt) return '';
+
+    return typeof post.excerpt === 'string' ? post.excerpt : (post.excerpt[language] || post.excerpt.en || '');
+
+  };
+
   const getBody = (post: Post) => {
     if (!post?.body) return [];
     return Array.isArray(post.body) ? post.body : (post.body[language] || post.body.en || []);
 };
+// Generate the OG image URL if post exists
 
-if (!post) {
-  return (
+const ogImageUrl = post?.mainImage 
+
+? urlFor(post.mainImage).width(1200).height(630).url() 
+
+: '';
+
+
+
+// Base URL for canonical and OG URLs
+
+const baseUrl = window.location.origin;
+
+const canonicalUrl = post?.slug ? `${baseUrl}/blog/${post.slug.current}` : baseUrl;
+
+
+
+if (loading) {
+
+return (
+
   <div className="min-h-screen flex items-center justify-center bg-[#140F2D]">
-  <div className="text-white text-center">Loading project...</div>
-</div>
-)}
+
+    <div className="text-white text-center">Loading project...</div>
+
+  </div>
+
+);
+
+}
+
+
+
+if (error || !post) {
+
+return (
+
+  <div className="min-h-screen flex items-center justify-center bg-[#140F2D]">
+
+    <div className="text-white text-center">{error || 'Post not found'}</div>
+
+  </div>
+
+);
+
+}
 
 
 return (
     <>
+       <Helmet>
+
+<title>{getTitle(post)}</title>
+
+<meta name="description" content={getExcerpt(post)} />
+
+<link rel="canonical" href={canonicalUrl} />
+
+
+
+{/* Open Graph / Facebook */}
+
+<meta property="og:type" content="article" />
+
+<meta property="og:title" content={getTitle(post)} />
+
+<meta property="og:description" content={getExcerpt(post)} />
+
+<meta property="og:image" content={ogImageUrl} />
+
+<meta property="og:url" content={canonicalUrl} />
+
+<meta property="og:site_name" content="Your Site Name" />
+
+
+
+{/* Twitter Card */}
+
+<meta name="twitter:card" content="summary_large_image" />
+
+<meta name="twitter:title" content={getTitle(post)} />
+
+<meta name="twitter:description" content={getExcerpt(post)} />
+
+<meta name="twitter:image" content={ogImageUrl} />
+
+
+
+{/* Article specific metadata */}
+
+{post.publishedAt && (
+
+  <meta property="article:published_time" content={post.publishedAt} />
+
+)}
+
+{post.categories?.map((category, index) => (
+
+  <meta key={index} property="article:tag" content={category} />
+
+))}
+
+</Helmet>
+
+
       <Header />
       <main className="bg-[#140F2D] min-h-screen text-white py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -216,11 +320,16 @@ return (
                   </div>
                 </div>
                 {post.mainImage && (
-                  <img
-                    src={urlFor(post.mainImage).width(1200).height(800).url()}
-                    alt={getTitle(post)}
-                    className="w-full rounded-lg shadow-lg mb-8"
-                  />
+  <img
+    src={urlFor(post.mainImage)
+      .auto('format')
+      .fit('max')
+      .url()}
+    alt={getTitle(post)}
+    className="w-full h-auto rounded-lg shadow-lg mb-8"
+  />
+
+
                 )}
                 <div className="text-white text-left font-jakarta blog-content">
                   <PortableText
