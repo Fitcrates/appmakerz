@@ -9,7 +9,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
+  
       gtag('config', 'G-XY59Q6HJSJ', {
         'anonymize_ip': true
       });
@@ -20,7 +20,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="robots" content="index, follow" />
     
-    <!-- Default English Title and Description -->
+    <!-- Default Title and Description (will be overridden by Helmet when needed) -->
     <title>AppCrates - Web Development & Design Solutions | Custom Web Apps</title>
     <meta name="description" content="AppCrates - Innovative web solutions for your business. Fullstack development of web apps, portfolio websites, web shops, blogs and databases. Expert technology stack selection and business strategy." />
     
@@ -35,39 +35,20 @@
     <!-- Language Metadata -->
     <meta http-equiv="Content-Language" content="en, pl" />
     
-    <!-- Default English Open Graph Tags -->
+    <!-- Placeholder for dynamic OG tags (will be replaced by Helmet) -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://appcrates.pl" />
-    <meta property="og:title" content="AppCrates - Web Development & Design Solutions" />
-    <meta property="og:description" content="Innovative web solutions for your business. Fullstack development of web apps, portfolio websites, web shops, blogs and databases. Expert technology stack selection." />
+    <meta property="og:title" content="AppCrates" />
+    <meta property="og:description" content="Web Development Solutions" />
     
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="pl_PL" />
     
-    <!-- Server-side language detection script -->
-    
-   <!--script>
-      // This detects browser language and sets meta tags
-      (function() {
-        var userLang = navigator.language || navigator.userLanguage;
-        
-        // If browser language starts with 'pl'
-        if (userLang.indexOf('pl') === 0) {
-          // Open Graph for Polish
-          document.querySelector('meta[property="og:title"]').setAttribute('content', 'AppCrates - Rozwiązania w Zakresie Tworzenia i Projektowania Stron Internetowych');
-          document.querySelector('meta[property="og:description"]').setAttribute('content', 'Innowacyjne rozwiązania internetowe dla Twojej firmy. Fullstack development aplikacji internetowych, stron portfolio, sklepów internetowych, blogów i baz danych. Profesjonalny dobór technologii.');
-          document.querySelector('meta[property="og:locale"]').setAttribute('content', 'pl_PL');
-          document.querySelector('meta[property="og:locale:alternate"]').setAttribute('content', 'en_US');
-        }
-      })();
-    </script>
-    
-    //-- Twitter -->
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://appcrates.pl" />
-    <meta name="twitter:title" content="AppCrates - Web Development & Design Solutions" />
-    <meta name="twitter:description" content="Innovative web solutions for your business. Fullstack development of web apps, portfolio websites, web shops, and more." />
-
+    <meta name="twitter:title" content="AppCrates" />
+    <meta name="twitter:description" content="Web Development Solutions" />
     
     <!-- Preload critical fonts -->
     <link
@@ -92,7 +73,7 @@
     <!-- Theme Color -->
     <meta name="theme-color" content="#140F2D" />
     
-    <!-- Structured Data with language variations -->
+    <!-- Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -102,35 +83,13 @@
       "description": [
         {
           "@language": "en",
-          "@value": "Innovative web solutions for your business. Fullstack development and design of web apps, portfolio websites, web shops, blogs and databases."
+          "@value": "Innovative web solutions for your business."
         },
         {
           "@language": "pl",
-          "@value": "Innowacyjne rozwiązania internetowe dla Twojej firmy. Fullstack development i projektowanie aplikacji internetowych, stron portfolio, sklepów internetowych, blogów i baz danych."
+          "@value": "Innowacyjne rozwiązania internetowe dla Twojej firmy."
         }
-      ],
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://appcrates.pl/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
-    
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "AppCrates",
-      "url": "https://appcrates.pl",
-      "logo": "https://appcrates.pl/media/logo.png",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "",
-        "contactType": "customer service",
-        "availableLanguage": ["English", "Polish"]
-      },
-      "sameAs": []
+      ]
     }
     </script>
   </head>
