@@ -119,6 +119,7 @@ const BlogPostPage = () => {
 
   useEffect(() => {
     if (post && !loading) {
+      console.log('OG Image URL:', ogImageUrl);
       // Create and dispatch the event immediately after post data is loaded
       const dispatchReadyEvent = () => {
         if (typeof window !== 'undefined' && window.document) {
