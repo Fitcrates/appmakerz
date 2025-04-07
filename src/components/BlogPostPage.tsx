@@ -210,21 +210,26 @@ return (
 
 return (
     <>
-        <HelmetProvider>
-
-       <Helmet>
+      
+        <Helmet prioritizeSeoTags>
   <title>{getTitle(post)}</title>
   <meta name="description" content={getExcerpt(post)} />
   <link rel="canonical" href={canonicalUrl} />
-
-  {/* Open Graph / Facebook - ensure these override the defaults */}
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content={getTitle(post)} />
-  <meta property="og:description" content={getExcerpt(post)} />
-  <meta property="og:image" content={ogImageUrl} />
-  <meta property="og:url" content={canonicalUrl} />
+  
+  {/* Force override all OG tags */}
+  <meta property="og:type" content="article" data-react-helmet="true" />
+  <meta property="og:title" content={getTitle(post)} data-react-helmet="true" />
+  <meta property="og:description" content={getExcerpt(post)} data-react-helmet="true" />
+  <meta property="og:image" content={ogImageUrl} data-react-helmet="true" />
+  <meta property="og:url" content={canonicalUrl} data-react-helmet="true" />
+  
+  {/* Twitter card tags */}
+  <meta name="twitter:card" content="summary_large_image" data-react-helmet="true" />
+  <meta name="twitter:title" content={getTitle(post)} data-react-helmet="true" />
+  <meta name="twitter:description" content={getExcerpt(post)} data-react-helmet="true" />
+  <meta name="twitter:image" content={ogImageUrl} data-react-helmet="true" />
 </Helmet>
- </HelmetProvider>
+
 
 
       <Header />
