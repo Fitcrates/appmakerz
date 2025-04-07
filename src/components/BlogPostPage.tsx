@@ -117,6 +117,20 @@ const BlogPostPage = () => {
     };
   }, [slug, language]);
 
+  useEffect(() => {
+    if (post && !loading) {
+      // Small delay to ensure Helmet has updated the tags
+      setTimeout(() => {
+        // Signal to Netlify prerendering that Helmet tags are ready
+        if (window.document) {
+          const event = new Event('reactHelmetsReady');
+          window.document.dispatchEvent(event);
+        }
+      }, 1000);
+    }
+  }, [post, loading]);
+
+
   // useEffect for preventing orphans
   useEffect(() => {
     const preventOrphans = () => {
