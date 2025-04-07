@@ -31,6 +31,9 @@
   from = "/*"
   to = "/index.html"
   status = 200
+ conditions = {Crawler = false}
+
+
 
 [[headers]]
   for = "/social-images/*"  # Add a path for social media preview images
