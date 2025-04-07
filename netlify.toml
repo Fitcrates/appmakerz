@@ -1,8 +1,8 @@
 [prerender]
   enabled = true
   crawler = true
-  renderTimeoutSeconds = 20  # Give React more time to load
-  waitForEvent = "reactHelmetsReady"  # Custom event (explained below)
+  renderTimeoutSeconds = 30  # Increased timeout
+  waitForEvent = "reactHelmetsReady"
   userAgentPatterns = [
     "Twitterbot",
     "facebookexternalhit",
@@ -10,27 +10,32 @@
     "WhatsApp",
     "slack",
     "googlebot",
-    "bingbot"
-  ]  
+    "bingbot",
+    "TelegramBot",
+    "Discord",
+    "Slackbot"
+  ]
 
 [build]
   command = "npm run build"
   publish = "dist"
   functions = "netlify/functions"
 
-
 [[redirects]]
   from = "https://appcrates.netlify.app/*"
   to = "https://appcrates.pl/:splat"
   status = 301
   force = true
-  
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  
 
+[[headers]]
+  for = "/social-images/*"  # Add a path for social media preview images
+  [headers.values]
+    Cache-Control = "public, max-age=604800, immutable"
 
 [[headers]]
   for = "/*.js"
