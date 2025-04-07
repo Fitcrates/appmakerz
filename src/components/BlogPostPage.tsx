@@ -171,7 +171,7 @@ const ogImageUrl = post?.mainImage
 
 // Base URL for canonical and OG URLs
 
-const baseUrl = window.location.origin;
+const baseUrl = 'https://appcrates.pl';
 
 const canonicalUrl = post?.slug ? `${baseUrl}/blog/${post.slug.current}` : baseUrl;
 
