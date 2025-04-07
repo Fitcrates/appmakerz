@@ -36,3 +36,15 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+    [prerender]
+  crawler = true
+  userAgentPatterns = [
+    "Twitterbot",
+    "facebookexternalhit",
+    "LinkedInBot",
+    "WhatsApp",
+    "slack",
+    "googlebot",
+    "bingbot"
+  ]
