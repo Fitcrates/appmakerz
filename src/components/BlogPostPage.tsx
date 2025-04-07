@@ -119,14 +119,17 @@ const BlogPostPage = () => {
 
   useEffect(() => {
     if (post && !loading) {
-      // Small delay to ensure Helmet has updated the tags
-      setTimeout(() => {
-        // Signal to Netlify prerendering that Helmet tags are ready
-        if (window.document) {
+      // Create and dispatch the event immediately after post data is loaded
+      const dispatchReadyEvent = () => {
+        if (typeof window !== 'undefined' && window.document) {
           const event = new Event('reactHelmetsReady');
           window.document.dispatchEvent(event);
+          console.log('Dispatched reactHelmetsReady event');
         }
-      }, 1000);
+      };
+  
+      // Small delay to ensure React Helmet has updated the DOM
+      setTimeout(dispatchReadyEvent, 500);
     }
   }, [post, loading]);
 
@@ -225,23 +228,26 @@ return (
 return (
     <>
       
-        <Helmet prioritizeSeoTags>
+      <Helmet prioritizeSeoTags>
   <title>{getTitle(post)}</title>
   <meta name="description" content={getExcerpt(post)} />
   <link rel="canonical" href={canonicalUrl} />
   
-  {/* Force override all OG tags */}
-  <meta property="og:type" content="article" data-react-helmet="true" />
-  <meta property="og:title" content={getTitle(post)} data-react-helmet="true" />
-  <meta property="og:description" content={getExcerpt(post)} data-react-helmet="true" />
-  <meta property="og:image" content={ogImageUrl} data-react-helmet="true" />
-  <meta property="og:url" content={canonicalUrl} data-react-helmet="true" />
+  {/* Open Graph */}
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content={getTitle(post)} />
+  <meta property="og:description" content={getExcerpt(post)} /> 
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="AppCrates" />
   
-  {/* Twitter card tags */}
-  <meta name="twitter:card" content="summary_large_image" data-react-helmet="true" />
-  <meta name="twitter:title" content={getTitle(post)} data-react-helmet="true" />
-  <meta name="twitter:description" content={getExcerpt(post)} data-react-helmet="true" />
-  <meta name="twitter:image" content={ogImageUrl} data-react-helmet="true" />
+  {/* Twitter card */}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={getTitle(post)} />
+  <meta name="twitter:description" content={getExcerpt(post)} />
+  <meta name="twitter:image" content={ogImageUrl} />
 </Helmet>
 
 
