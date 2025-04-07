@@ -1,6 +1,8 @@
 [prerender]
-enabled = true
+  enabled = true
   crawler = true
+  renderTimeoutSeconds = 20  # Give React more time to load
+  waitForEvent = "reactHelmetsReady"  # Custom event (explained below)
   userAgentPatterns = [
     "Twitterbot",
     "facebookexternalhit",
