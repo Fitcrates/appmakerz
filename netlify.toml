@@ -1,4 +1,5 @@
 [prerender]
+enabled = true
   crawler = true
   userAgentPatterns = [
     "Twitterbot",
