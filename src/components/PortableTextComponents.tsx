@@ -65,12 +65,15 @@ export const portableTextComponents = {
         return null;
       }
       return (
-        <div className="relative w-full h-auto my-6">
+        <div className="relative w-full my-6">
           <img
-            src={urlFor(value).url()}
+            src={urlFor(value)
+              .auto('format')
+              .fit('max')
+              .url()}
             alt={value.alt || ''}
-            loading="lazy"
-            className="rounded-lg"
+            loading="eager"
+            className="w-full h-auto rounded-lg"
           />
         </div>
       );
