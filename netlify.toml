@@ -3,6 +3,18 @@
   publish = "dist"
   functions = "netlify/functions"
 
+[prerender]
+  crawler = true
+  userAgentPatterns = [
+    "Twitterbot",
+    "facebookexternalhit",
+    "LinkedInBot",
+    "WhatsApp",
+    "slack",
+    "googlebot",
+    "bingbot"
+  ]  
+
 [[redirects]]
   from = "https://appcrates.netlify.app/*"
   to = "https://appcrates.pl/:splat"
@@ -14,19 +26,7 @@
   to = "/index.html"
   status = 200
   
-[prerender]
-  crawler = true
-  userAgentPatterns = [
-    "Twitterbot",
-    "facebookexternalhit",
-    "LinkedInBot",
-    "WhatsApp",
-    "slack",
-    "googlebot",
-    "bingbot"
-  ]
 
-  
 
 [[headers]]
   for = "/*.js"
