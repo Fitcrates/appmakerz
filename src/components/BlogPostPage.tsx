@@ -180,10 +180,8 @@ const BlogPostPage = () => {
 // Generate the OG image URL if post exists
 
 const ogImageUrl = post?.mainImage 
-
-? urlFor(post.mainImage).width(1200).height(630).url() 
-
-: '';
+  ? urlFor(post.mainImage).width(1200).height(630).url()
+  : 'https://appcrates.pl/media/default-og-image.png'; 
 
 
 
