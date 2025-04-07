@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import { LanguageProvider } from './context/LanguageContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { HelmetProvider } from 'react-helmet-async'; // Add this import
 
 // Create a client
 const queryClient = new QueryClient({
@@ -21,14 +22,16 @@ const AnimatedRoutes = React.lazy(() => import('./Animatedroutes'));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <Router>
-          <React.Suspense fallback={<div className='bg-[#140F2D] min-h-screen'>Loading...</div>}>
-            <AnimatedRoutes />
-          </React.Suspense>
-        </Router>
-      </LanguageProvider>
-    </QueryClientProvider>
+    <HelmetProvider> 
+      <QueryClientProvider client={queryClient}>
+        <LanguageProvider>
+          <Router>
+            <React.Suspense fallback={<div className='bg-[#140F2D] min-h-screen'>Loading...</div>}>
+              <AnimatedRoutes />
+            </React.Suspense>
+          </Router>
+        </LanguageProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   </StrictMode>
 );
