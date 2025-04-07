@@ -248,6 +248,7 @@ return (
   <meta name="twitter:title" content={getTitle(post)} />
   <meta name="twitter:description" content={getExcerpt(post)} />
   <meta name="twitter:image" content={ogImageUrl} />
+  {ogImageUrl && <link rel="preload" href={ogImageUrl} as="image" />}
 </Helmet>
 
 
