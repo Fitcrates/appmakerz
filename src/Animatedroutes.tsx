@@ -11,6 +11,7 @@ const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
 const ProjectDetails = lazy(() => import('./components/ProjectDetails'));
 const Unsubscribe = lazy(() => import('./pages/Unsubscribe'));
 const SubscriberList = lazy(() => import('./pages/SubscriberList'));
+const NotFound = lazy(() => import('./components/NotFound'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -78,6 +79,15 @@ const AnimatedRoutes = () => {
           element={
             <Suspense fallback={<LoadingFallback />}>
               <Unsubscribe />
+            </Suspense>
+          }
+        />
+        {/* Catch-all route for 404 Not Found */}
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <NotFound />
             </Suspense>
           }
         />
