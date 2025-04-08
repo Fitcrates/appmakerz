@@ -181,9 +181,14 @@ const BlogPostPage = () => {
 // Generate the OG image URL if post exists
 
 const cacheBuster = Date.now();
-const ogImageUrl = post?.mainImage 
-  ? `${urlFor(post.mainImage).width(1200).height(630).url()}?cb=${cacheBuster}`
-  : `https://appcrates.pl/media/default-og-image.png?cb=${cacheBuster}`;
+const baseImageUrl = post?.mainImage 
+  ? urlFor(post.mainImage).width(1200).height(630).url()
+  : `https://appcrates.pl/media/default-og-image.png`;
+
+// Properly append cache buster parameter
+const ogImageUrl = baseImageUrl.includes('?') 
+  ? `${baseImageUrl}&cb=${cacheBuster}` 
+  : `${baseImageUrl}?cb=${cacheBuster}`;
 
 
 // Base URL for canonical and OG URLs
@@ -229,8 +234,7 @@ return (
     <>
       
       <Helmet prioritizeSeoTags={true}>
-  {/* Force removal of any existing OG tags */}
-  <meta property="og:placeholder" content="true" />
+
   
   <title>{getTitle(post)}</title>
   <meta name="description" content={getExcerpt(post)} />
@@ -245,7 +249,7 @@ return (
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:site_name" content="AppCrates" />
-  <meta property="og:updated_time" content={Date.now().toString()} />
+  <meta property="og:updated_time" content={new Date().toISOString()} />
   
   {/* Twitter card */}
   <meta name="twitter:card" content="summary_large_image" />
