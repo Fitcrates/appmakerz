@@ -1,59 +1,33 @@
-[prerender]
-  enabled = true
-  crawler = true
-  renderTimeoutSeconds = 30  # Increased timeout
-  waitForEvent = "reactHelmetsReady"
-  userAgentPatterns = [
-    "Twitterbot",
-    "facebookexternalhit",
-    "LinkedInBot",
-    "WhatsApp",
-    "slack",
-    "googlebot",
-    "bingbot",
-    "TelegramBot",
-    "Discord",
-    "Slackbot"
-  ]
-
 [build]
   command = "npm run build"
   publish = "dist"
   functions = "netlify/functions"
 
-[[redirects]]
-  from = "/blog/*"
-  to = "/.netlify/functions/social-crawler"
-  status = 200
-  force = true
-  conditions = {Crawler = true}
+# Use Edge Functions instead of prerendering for social crawlers
+[[edge_functions]]
+  path = "/blog/*"
+  function = "social-crawler"
 
+# Redirect from Netlify subdomain to custom domain
 [[redirects]]
   from = "https://appcrates.netlify.app/*"
   to = "https://appcrates.pl/:splat"
   status = 301
   force = true
-  
-[[redirects]]
-  from = "/media/*"
-  to = "/media/:splat"
-  status = 404
-  force = false
-  
+
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-
-
+# Headers for blog posts - no caching to ensure fresh content
 [[headers]]
   for = "/blog/*"
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
     Pragma = "no-cache"
     Expires = "0"
-
 
 [[headers]]
   for = "/*.js"
