@@ -32,6 +32,12 @@
   to = "/index.html"
   status = 200
 
+[[redirects]]
+  from = "/blog/*"
+  to = "/.netlify/functions/social-crawler"
+  status = 200
+  force = true
+  conditions = {Crawler = true}
 
 [[headers]]
   for = "/blog/*"
@@ -40,10 +46,6 @@
     Pragma = "no-cache"
     Expires = "0"
 
-[[headers]]
-  for = "/social-images/*"  # Add a path for social media preview images
-  [headers.values]
-    Cache-Control = "public, max-age=604800, immutable"
 
 [[headers]]
   for = "/*.js"
