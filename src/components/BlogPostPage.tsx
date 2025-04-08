@@ -246,10 +246,14 @@ return (
   <meta property="og:description" content={getExcerpt(post)} /> 
   <meta property="og:url" content={canonicalUrl} />
   <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:image:url" content={ogImageUrl} />
+  <meta property="og:image:secure_url" content={ogImageUrl} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/webp" />
   <meta property="og:site_name" content="AppCrates" />
   <meta property="og:updated_time" content={new Date().toISOString()} />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   
   {/* Twitter card */}
   <meta name="twitter:card" content="summary_large_image" />
