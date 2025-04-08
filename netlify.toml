@@ -31,9 +31,14 @@
   from = "/*"
   to = "/index.html"
   status = 200
+ conditions = {Crawler = false}
 
-
-
+[[headers]]
+  for = "/blog/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
 
 [[headers]]
   for = "/social-images/*"  # Add a path for social media preview images
