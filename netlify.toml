@@ -33,7 +33,13 @@
   to = "https://appcrates.pl/:splat"
   status = 301
   force = true
-
+  
+[[redirects]]
+  from = "/media/*"
+  to = "/media/:splat"
+  status = 404
+  force = false
+  
 [[redirects]]
   from = "/*"
   to = "/index.html"
