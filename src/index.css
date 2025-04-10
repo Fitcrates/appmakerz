@@ -842,7 +842,7 @@ main {
   -moz-appearance: textfield;
 }
 
-{/* Add these keyframe animations to your global CSS */}
+
 
 @keyframes fadeIn {
   from { opacity: 0; }
