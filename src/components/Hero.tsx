@@ -5,22 +5,44 @@ import { translations } from "../translations/translations";
 import * as THREE from "three";
 
 const Hero = () => {
+  const gradientRef = useRef<HTMLDivElement>(null);
+
   const { language } = useLanguage();
   const t = translations[language].hero;
   const [isHovered, setIsHovered] = useState(false);
-  const canvasRef = useRef(null);
+  // Properly type the ref as HTMLDivElement to fix the first error
+  const canvasRef = useRef<HTMLDivElement>(null);
+  
 
+  // Set up the Three.js starry background
   useEffect(() => {
-    let scene: THREE.Scene, 
-        camera: THREE.PerspectiveCamera, 
-        renderer: THREE.WebGLRenderer, 
-        stars: THREE.Points, 
-        material: THREE.ShaderMaterial, 
-        clock: THREE.Clock, 
-        shootingStars: any[] = [];
+    // Proper typing for Three.js objects
+    let scene: THREE.Scene,
+        camera: THREE.PerspectiveCamera,
+        renderer: THREE.WebGLRenderer,
+        stars: THREE.Points,
+        material: THREE.ShaderMaterial,
+        clock: THREE.Clock;
+    
+    // Properly type the shooting stars array with an interface
+    interface ShootingStar {
+      mesh: THREE.Line;
+      material: THREE.LineBasicMaterial; // Add this to properly type the material
+      start: THREE.Vector3;
+      end: THREE.Vector3;
+      progress: number;
+      createdAt: number;
+      duration: number;
+    }
+    
+    let shootingStars: ShootingStar[] = [];
     const numStars = 2500;
+    
+    // Timer for controlling shooting star creation
+    let lastShootingStarTime = 0;
+    const shootingStarInterval = 6; // Create a new shooting star every 3 seconds
 
-    const createShootingStar = (frequency: number) => {
+    const createShootingStar = () => {
       // Possible start positions (screen corners with randomization)
       const startPositions = [
         {
@@ -75,6 +97,7 @@ const Hero = () => {
 
       return {
         mesh: shootingStar,
+        material: starMaterial, // Store material reference
         start,
         end,
         progress: 0,
@@ -90,7 +113,11 @@ const Hero = () => {
 
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      canvasRef.current?.appendChild(renderer.domElement);
+      
+      // Check that the ref and its current value exist before appending
+      if (canvasRef.current) {
+        canvasRef.current.appendChild(renderer.domElement);
+      }
 
       const geometry = new THREE.BufferGeometry();
       const vertices: number[] = [];
@@ -146,11 +173,11 @@ const Hero = () => {
       stars.rotation.y += 0.0005;
 
       const currentTime = clock.getElapsedTime();
-
-      // Control the frequency of shooting stars
-      const shootingStarFrequency = 0.003; // Adjust this value to control frequency
-      if (Math.random() < shootingStarFrequency) {
-        shootingStars.push(createShootingStar(shootingStarFrequency));
+      
+      // Control the frequency of shooting stars - create one every 3 seconds
+      if (currentTime - lastShootingStarTime > shootingStarInterval) {
+        shootingStars.push(createShootingStar());
+        lastShootingStarTime = currentTime;
       }
 
       shootingStars = shootingStars.filter(star => {
@@ -162,22 +189,18 @@ const Hero = () => {
         
         star.progress = elapsed / star.duration;
         
-        const currentPos = new THREE.Vector3(
-          star.start.x + (star.end.x - star.start.x) * star.progress,
-          star.start.y + (star.end.y - star.start.y) * star.progress,
-          star.start.z + (star.end.z - star.start.z) * star.progress
-        );
-        
-        const positions = star.mesh.geometry.attributes.position.array;
+        // TypeScript needs to ensure positions array is properly accessed
+        const positions = star.mesh.geometry.attributes.position.array as Float32Array;
         positions[0] = star.start.x;
         positions[1] = star.start.y;
         positions[2] = star.start.z;
-        positions[3] = currentPos.x;
-        positions[4] = currentPos.y;
-        positions[5] = currentPos.z;
+        positions[3] = star.start.x + (star.end.x - star.start.x) * star.progress;
+        positions[4] = star.start.y + (star.end.y - star.start.y) * star.progress;
+        positions[5] = star.start.z + (star.end.z - star.start.z) * star.progress;
         star.mesh.geometry.attributes.position.needsUpdate = true;
         
-        star.mesh.material.opacity = 1 - star.progress;
+        // Use the material property directly rather than accessing through mesh
+        star.material.opacity = 1 - star.progress;
         
         return true;
       });
@@ -198,7 +221,11 @@ const Hero = () => {
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
     };
-  }, []); 
+  }, []);
+
+ 
+    
+
   return (
     <>
       <div className="fixed-bg"></div>
