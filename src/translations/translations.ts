@@ -1,5 +1,11 @@
 export const translations = {
   en: {
+// Timeline
+timeline: {
+  heading: "How it works?",
+  subtitle: "Our process",
+},
+
  // BlogPromoModal
  modalblog: {
   heading: "Stay Updated!",
@@ -361,6 +367,12 @@ export const translations = {
   },
 
   pl: {
+    // Timeline
+timeline: {
+  heading: "Jak to działa?",
+  subtitle: "Nasz proces",
+  
+},
     // BlogPromoModal
       modalblog: {
         heading: "Bądź na bieżąco!",
