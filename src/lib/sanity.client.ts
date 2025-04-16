@@ -1,5 +1,7 @@
 import imageUrlBuilder from '@sanity/image-url';
 import { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { setCache, getCache } from '../utils/cache';
+
 
 // Only use public configuration
 const config = {
@@ -12,6 +14,8 @@ if (!config.projectId || !config.dataset) {
     'Missing required environment variables. Make sure VITE_SANITY_PROJECT_ID and VITE_SANITY_DATASET are set in your environment.'
   );
 }
+
+
 
 // Create an image builder (this doesn't require authentication)
 const builder = imageUrlBuilder({
@@ -41,7 +45,10 @@ async function executeQuery<T>(query: string, params?: Record<string, any>): Pro
 
 // Fetch posts with basic information
 export async function getPosts() {
-  return executeQuery(`
+  const cacheKey = 'blogPosts';
+  const cached = getCache<any[]>(cacheKey);
+  if (cached) return cached;
+  const posts = await executeQuery(`
     *[_type == "post"] | order(publishedAt desc) {
       _id,
       title {
@@ -58,22 +65,24 @@ export async function getPosts() {
       },
       author->{
         name,
-        image
+        
       },
       viewCount,
       tags,
-      body[] {
-        ...,
-        _type == "block" => {
-          ...,
-          children[] {
-            ...,
-            text
-          }
-        }
-      }
-    }
+  }
   `);
+  setCache(cacheKey, posts);
+  return posts;
+}
+
+// Fetch only the body for a single post
+export async function getPostBody(slug: string) {
+  return executeQuery(
+    `*[_type == "post" && slug.current == $slug][0]{
+      body { en, pl }
+    }`,
+    { slug }
+  );
 }
 
 // Fetch a single post by slug
