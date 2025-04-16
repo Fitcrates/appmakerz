@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSwipeable } from 'react-swipeable';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 
@@ -31,6 +32,15 @@ const Timeline: React.FC<TimelineProps> = ({ items = [] }) => {
   const svgContainerRef = useRef<HTMLDivElement>(null);
   const { language } = useLanguage();
   const t = translations[language].timeline;
+
+  // Swipe handlers for mobile
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => goToNext(),
+    onSwipedRight: () => goToPrev(),
+    trackMouse: false,
+    trackTouch: true,
+    preventDefaultTouchmoveEvent: true,
+  });
 
  
 
@@ -274,27 +284,27 @@ const Timeline: React.FC<TimelineProps> = ({ items = [] }) => {
             
             {/* Timeline Content - Centered with flex */}
             <div className="relative h-full w-full flex items-center justify-center  md:ml-16 lg:ml-24 xl:ml-[12rem]">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeIndex}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.6, ease: 'easeOut' }}
-                  className="relative z-20 max-w-[95%] sm:max-w-[28rem] md:max-w-[28rem] h-[23rem] md:h-[23rem] min-h-[20rem] max-h-[23rem] md:min-h-[21.25rem] md:max-h-[23rem] flex flex-col items-center justify-center px-6 py-8 md:px-8 md:py-10"
-                >
-                  {/* Card with Soft Glow */}
-                  <div className="absolute inset-0 w-full h-full flex items-center justify-center -z-10">
-                    <div className="w-full h-full rounded-lg bg-gradient-to-br from-white/10 via-[#140F2D] to-[#140F2D] ring-1 ring-white/40 shadow-lg shadow-teal-300/40"></div>
-                  </div>
-                  <div className="relative w-full h-full flex flex-col items-center justify-center bg-transparent">
-                    <span className="absolute top-0 left-0 text-lg font-light font-jakarta text-teal-300 mb-2">{timelineItems[activeIndex].lp}</span>
-                    <h4 className={`text-3xl md:text-4xl font-bold font-jakarta text-white mb-4 ${isHorizontal ? 'md:text-left' : 'text-left w-full'}`}>{timelineItems[activeIndex].title}</h4>
-                    <p className={`text-base font-jakarta leading-relaxed text-white/80 ${isHorizontal ? 'md:text-left' : 'text-left w-full'}`}>{timelineItems[activeIndex].text}</p>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+  <AnimatePresence mode="wait">
+    <motion.div
+      key={activeIndex}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
+      className="relative z-20 max-w-[95%] sm:max-w-[28rem] md:max-w-[28rem] h-[23rem] md:h-[23rem] min-h-[20rem] max-h-[23rem] md:min-h-[21.25rem] md:max-h-[23rem] flex flex-col items-center justify-center px-6 py-8 md:px-8 md:py-10"
+    >
+      {/* Card with Soft Glow */}
+      <div className="absolute inset-0 w-full h-full flex items-center justify-center -z-10">
+        <div className="w-full h-full rounded-lg bg-gradient-to-br from-white/10 via-[#140F2D] to-[#140F2D] ring-1 ring-white/40 shadow-lg shadow-teal-300/40"></div>
+      </div>
+      <div className="relative w-full h-full flex flex-col items-center justify-center bg-transparent">
+        <span className="absolute top-0 left-0 text-lg font-light font-jakarta text-teal-300 mb-2">{timelineItems[activeIndex].lp}</span>
+        <h4 className={`text-3xl md:text-4xl font-bold font-jakarta text-white mb-4 ${isHorizontal ? 'md:text-left' : 'text-left w-full'}`}>{timelineItems[activeIndex].title}</h4>
+        <p className={`text-base font-jakarta leading-relaxed text-white/80 ${isHorizontal ? 'md:text-left' : 'text-left w-full'}`}>{timelineItems[activeIndex].text}</p>
+      </div>
+    </motion.div>
+  </AnimatePresence>
+</div>
             
             {/* Navigation Buttons - Only show on desktop (horizontal) */}
             {isHorizontal && (
