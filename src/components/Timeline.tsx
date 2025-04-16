@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 
-// Import the SVG as a URL
-import websiteBuildSvgUrl from '../../src/websiteBuildSvg.svg';
+
 
 // Define global window interface extension for SVG animation function
 declare global {
@@ -33,22 +32,7 @@ const Timeline: React.FC<TimelineProps> = ({ items = [] }) => {
   const { language } = useLanguage();
   const t = translations[language].timeline;
 
-  // Load SVG content
-  useEffect(() => {
-    const loadSvg = async () => {
-      try {
-        const response = await fetch(websiteBuildSvgUrl);
-        const svgText = await response.text();
-        // Remove the script tags from the SVG to avoid execution issues
-        const cleanedSvgText = svgText.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-        setSvgContent(cleanedSvgText);
-      } catch (error) {
-        console.error('Failed to load SVG:', error);
-      }
-    };
-    
-    loadSvg();
-  }, []);
+ 
 
   // Custom function to control the SVG animation steps
   const updateSvgStep = (stepNum: number) => {
