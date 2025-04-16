@@ -4,11 +4,15 @@ import Hero from './components/Hero';
 import AutoRefreshHandler from './utils/AutoRefreshHandler';
 import BlogPromoModal from './components/BlogPromoModal';
 
+
+
 // Import critical components normally
 const LoadingFallback = () => <div className="h-screen bg-[#140F2D]" />;
 
 // Lazy load below-the-fold components
 const About = lazy(() => import('./components/About'));
+const Timeline = lazy(() => import('./components/Timeline'));
+
 const Projects = lazy(() => import('./components/Projects'));
 const PricingComponent = lazy(() => import('./components/PricingComponent'));
 const Contact = lazy(() => import('./components/Contact'));
@@ -27,6 +31,12 @@ function App() {
         <Suspense fallback={<LoadingFallback />}>
           <About />
         </Suspense>
+
+        <Suspense fallback={<LoadingFallback />}>
+          <Timeline />
+        </Suspense>
+      
+        
         <Suspense fallback={<LoadingFallback />}>
           <Projects />
         </Suspense>
