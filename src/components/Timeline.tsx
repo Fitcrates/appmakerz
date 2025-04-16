@@ -39,7 +39,7 @@ const Timeline: React.FC<TimelineProps> = ({ items = [] }) => {
     onSwipedRight: () => goToPrev(),
     trackMouse: false,
     trackTouch: true,
-    preventDefaultTouchmoveEvent: true,
+    preventScrollOnSwipe: true,
   });
 
  
@@ -283,7 +283,7 @@ const Timeline: React.FC<TimelineProps> = ({ items = [] }) => {
           >
             
             {/* Timeline Content - Centered with flex */}
-            <div className="relative h-full w-full flex items-center justify-center  md:ml-16 lg:ml-24 xl:ml-[12rem]">
+            <div {...swipeHandlers} className="relative h-full w-full flex items-center justify-center  md:ml-16 lg:ml-24 xl:ml-[12rem]">
   <AnimatePresence mode="wait">
     <motion.div
       key={activeIndex}
