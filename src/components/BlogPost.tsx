@@ -83,8 +83,8 @@ const BlogPost: React.FC<BlogPostProps> = ({ post, allPosts = [] }) => {
             />
           )}
           <div className="ml-4">
-            <p className="text-sm text-red-500 dark:text-gray-400">{post.author?.role || t.role}</p>
-            <h3 className="text-sm font-medium text-blue-300 dark:text-white">{post.author?.name}</h3>
+            <p className="text-sm text-gray-300 dark:text-gray-400">{post.author?.role || t.role}</p>
+            <h3 className="text-sm font-medium text-teal-300 dark:text-white">{post.author?.name}</h3>
           </div>
         </div>
       </div>
