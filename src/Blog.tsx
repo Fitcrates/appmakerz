@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Contact from './components/Contact';
@@ -13,7 +13,6 @@ import { translations } from './translations/translations';
 import ProposedPosts from './components/ProposedPosts';
 import Footer from './components/Footer';
 import { usePosts, usePrefetchPost } from './hooks/useBlogPosts';
-import * as THREE from "three";
 
 const POSTS_PER_PAGE = 5;
 
@@ -26,7 +25,6 @@ const Blog = () => {
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const location = useLocation();
   const [isHovered, setIsHovered] = useState(false);
-  const canvasRef = useRef(null);
 
   const { data: posts = [], isLoading, error } = usePosts();
   const prefetchPost = usePrefetchPost();
@@ -40,199 +38,6 @@ const Blog = () => {
   }, [location]);
 
   useScrollToTop();
-
-  // Three.js starfield effect
-  useEffect(() => {
-    let scene: THREE.Scene, 
-        camera: THREE.PerspectiveCamera, 
-        renderer: THREE.WebGLRenderer, 
-        stars: THREE.Points, 
-        material: THREE.ShaderMaterial, 
-        clock: THREE.Clock, 
-        shootingStars: any[] = [];
-    const numStars = 2500;
-
-    const createShootingStar = (frequency: number) => {
-      // Possible start positions (screen corners with randomization)
-      const startPositions = [
-        {
-          start: new THREE.Vector3(
-            5 + (Math.random() - 0.5) * 5,
-            5 + (Math.random() - 0.5) * 5,
-            -5
-          ),
-          end: new THREE.Vector3(-5, -5, -5)
-        },
-        {
-          start: new THREE.Vector3(
-            -5 + (Math.random() - 0.5) * 5,
-            5 + (Math.random() - 0.5) * 5,
-            -5
-          ),
-          end: new THREE.Vector3(5, -5, -5)
-        },
-        {
-          start: new THREE.Vector3(
-            5 + (Math.random() - 0.5) * 5,
-            -5 + (Math.random() - 0.5) * 5,
-            -5
-          ),
-          end: new THREE.Vector3(-5, 5, -5)
-        },
-        {
-          start: new THREE.Vector3(
-            -5 + (Math.random() - 0.5) * 5,
-            -5 + (Math.random() - 0.5) * 5,
-            -5
-          ),
-          end: new THREE.Vector3(5, 5, -5)
-        }
-      ];
-
-      const { start, end } = startPositions[Math.floor(Math.random() * startPositions.length)];
-
-      const geometry = new THREE.BufferGeometry().setFromPoints([
-        start,
-        start // Initially duplicate start point
-      ]);
-
-      const starMaterial = new THREE.LineBasicMaterial({ 
-        color: 0x29e7cd, 
-        transparent: true, 
-        opacity: 0.8 
-      });
-
-      const shootingStar = new THREE.Line(geometry, starMaterial);
-      scene.add(shootingStar);
-
-      return {
-        mesh: shootingStar,
-        start,
-        end,
-        progress: 0,
-        createdAt: clock.getElapsedTime(),
-        duration: 1 // duration of shooting star animation
-      };
-    };
-
-    const init = () => {
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.z = 5;
-
-      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      canvasRef.current?.appendChild(renderer.domElement);
-
-      const geometry = new THREE.BufferGeometry();
-      const vertices: number[] = [];
-
-      for (let i = 0; i < numStars; i++) {
-        const x = (Math.random() - 0.5) * 10;
-        const y = (Math.random() - 0.5) * 10;
-        const z = (Math.random() - 0.5) * 10;
-        vertices.push(x, y, z);
-      }
-
-      geometry.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
-
-      material = new THREE.ShaderMaterial({
-        uniforms: {
-          time: { value: 0 },
-        },
-        vertexShader: `
-          precision mediump float;
-          varying vec3 vColor;
-          void main() {
-            vColor = position;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-            gl_PointSize = 2.5; // Star size
-          }
-        `,
-        fragmentShader: `
-          precision mediump float;
-          uniform float time;
-          varying vec3 vColor;
-          
-          void main() {
-            float twinkle = mix(0.3, 1.0, abs(sin(time + vColor.x * 2.0 + vColor.y * 3.0)));
-            vec3 baseColor = vec3(41.0 / 255.0, 231.0 / 255.0, 205.0 / 255.0);
-            vec3 shiftColor = baseColor + 0.2 * abs(sin(time * 0.5));
-            gl_FragColor = vec4(shiftColor, twinkle);
-          }
-        `,
-        transparent: true,
-      });
-
-      stars = new THREE.Points(geometry, material);
-      scene.add(stars);
-
-      clock = new THREE.Clock();
-      animate();
-    };
-
-    const animate = () => {
-      requestAnimationFrame(animate);
-      
-      material.uniforms.time.value = clock.getElapsedTime();
-      stars.rotation.y += 0.0005;
-
-      const currentTime = clock.getElapsedTime();
-
-      // Control the frequency of shooting stars
-      const shootingStarFrequency = 0.003; // Adjust this value to control frequency
-      if (Math.random() < shootingStarFrequency) {
-        shootingStars.push(createShootingStar(shootingStarFrequency));
-      }
-
-      shootingStars = shootingStars.filter(star => {
-        const elapsed = currentTime - star.createdAt;
-        if (elapsed > star.duration) {
-          scene.remove(star.mesh);
-          return false;
-        }
-        
-        star.progress = elapsed / star.duration;
-        
-        const currentPos = new THREE.Vector3(
-          star.start.x + (star.end.x - star.start.x) * star.progress,
-          star.start.y + (star.end.y - star.start.y) * star.progress,
-          star.start.z + (star.end.z - star.start.z) * star.progress
-        );
-        
-        const positions = star.mesh.geometry.attributes.position.array;
-        positions[0] = star.start.x;
-        positions[1] = star.start.y;
-        positions[2] = star.start.z;
-        positions[3] = currentPos.x;
-        positions[4] = currentPos.y;
-        positions[5] = currentPos.z;
-        star.mesh.geometry.attributes.position.needsUpdate = true;
-        
-        star.mesh.material.opacity = 1 - star.progress;
-        
-        return true;
-      });
-
-      renderer.render(scene, camera);
-    };
-
-    init();
-
-    const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      if (renderer) {
-        renderer.dispose();
-      }
-    };
-  }, []);
 
   useEffect(() => {
     const filtered = posts.filter((post) => {
@@ -295,14 +100,14 @@ const Blog = () => {
       <main className="relative">
         {/* Hero Section */}
         <div className="fixed-bg"></div>
-        <div ref={canvasRef} className="absolute top-0 left-0 w-full h-full z-[-1]"></div>
 
-        <section 
-          id="blog-hero" 
-          className="min-h-screen h-screen w-full flex items-end pb-20 overflow-x-hidden"
-        >
-          <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
-            <div className="flex flex-col lg:flex-row justify-between items-center lg:items-end w-full">
+          <section 
+            id="blog-hero" 
+            className="min-h-screen h-screen w-full flex items-end pb-20 overflow-x-hidden"
+  
+>
+        <div className="max-w-7xl mx-auto w-full flex flex-col justify-end px-4 sm:px-6 lg:px-8 h-full">
+          <div className="flex flex-col lg:flex-row justify-between items-center lg:items-end w-full">
               {/* Text Container */}
               <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
                 <h1 className="text-5xl sm:text-7xl md:text-8xl font-light text-white tracking-tight font-jakarta  leading-none -mt-1">
@@ -374,10 +179,10 @@ const Blog = () => {
                 >
                   <span>{t.readMore}</span>
                   {isHovered ? (
-                    <ArrowDownRight className="w-6 h-6" />
-                  ) : (
-                    <ArrowUpRight className="w-4 h-4" />
-                  )}
+        <ArrowDownRight className="w-6 h-6" />
+      ) : (
+        <ArrowUpRight className="w-4 h-4" />
+      )}
                 </button>
               </div>
             </div>
@@ -389,15 +194,15 @@ const Blog = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {/* Newsletter Subscribe Button */}
-            <div className="text-left mb-4">
-              <button
-                onClick={() => setIsNewsletterOpen(true)}
-                className="inline-flex items-center  border border-transparent hover:text-teal-300 font-jakarta rounded-md text-white"
-              >
-                {t.newsletter}
-                <ArrowUpRight className="ml-2 -mr-1 h-5 w-5" />
-              </button>
-            </div>
+      <div className="text-left mb-4">
+        <button
+          onClick={() => setIsNewsletterOpen(true)}
+          className="inline-flex items-center  border border-transparent hover:text-teal-300 font-jakarta rounded-md text-white"
+        >
+          {t.newsletter}
+          <ArrowUpRight className="ml-2 -mr-1 h-5 w-5" />
+        </button>
+      </div>
 
             {/* Search Bar */}
             <div className="relative mb-8">
@@ -425,10 +230,11 @@ const Blog = () => {
                     <div className="space-y-8">
                       {getCurrentPagePosts().map((post) => (
                         <Link
-                          key={post._id}
+                          key={post._id} 
                           to={`/blog/${post.slug.current}`}
                           onMouseEnter={() => prefetchPost(post.slug.current)}
                           className="block group"
+                          state={{ summary: post }} // Pass summary to BlogPostPage for caching
                         >
                           <BlogPost post={post} />
                         </Link>
@@ -465,6 +271,8 @@ const Blog = () => {
                   <div className="ring-1 rounded-lg p-4 ring-white/40">
                     <PopularPosts posts={posts.slice(0, 5)} />
                   </div>
+
+                  
                 </div>
               </div>
             </div>
@@ -473,6 +281,8 @@ const Blog = () => {
       </main>
       <Contact />
       <Footer />
+      
+      
       
       {/* Newsletter Modal */}
       <NewsletterModal 
