@@ -39,39 +39,39 @@ const Blog = () => {
 
   useScrollToTop();
 
-  useEffect(() => {
-    const filtered = posts.filter((post) => {
-      const query = searchQuery.toLowerCase();
-      
-      // Handle both string and object title formats
-      const getTitle = () => {
-        if (typeof post.title === 'string') return post.title;
-        return (post.title?.[language] || post.title?.en || '');
-      };
+  // Memoize expensive text extraction functions
+  const getTitle = React.useCallback((post: Post) => {
+    if (typeof post.title === 'string') return post.title;
+    return (post.title?.[language] || post.title?.en || '');
+  }, [language]);
 
-      // Handle both string and object excerpt formats
-      const getExcerpt = () => {
-        if (typeof post.excerpt === 'string') return post.excerpt;
-        return (post.excerpt?.[language] || post.excerpt?.en || '');
-      };
+  const getExcerpt = React.useCallback((post: Post) => {
+    if (typeof post.excerpt === 'string') return post.excerpt;
+    return (post.excerpt?.[language] || post.excerpt?.en || '');
+  }, [language]);
 
-      // Extract text from post body blocks
-      const getBodyText = () => {
-        if (!post.body) return '';
-        return post.body
-          .filter(block => block._type === 'block')
-          .map(block => {
-            if (!block.children) return '';
-            return block.children
-              .map(child => child.text || '')
-              .join(' ');
-          })
+  const getBodyText = React.useCallback((post: Post) => {
+    if (!post.body) return '';
+    return post.body
+      .filter(block => block._type === 'block')
+      .map(block => {
+        if (!block.children) return '';
+        return block.children
+          .map(child => child.text || '')
           .join(' ');
-      };
+      })
+      .join(' ');
+  }, []);
 
-      const title = getTitle().toLowerCase();
-      const excerpt = getExcerpt().toLowerCase();
-      const bodyText = getBodyText().toLowerCase();
+  // Memoize filtered posts to avoid unnecessary re-filtering
+  useEffect(() => {
+    if (posts.length === 0) return;
+    
+    const query = searchQuery.toLowerCase();
+    const filtered = posts.filter((post) => {
+      const title = getTitle(post).toLowerCase();
+      const excerpt = getExcerpt(post).toLowerCase();
+      const bodyText = getBodyText(post).toLowerCase();
 
       return (
         title.includes(query) || 
@@ -81,7 +81,7 @@ const Blog = () => {
     });
 
     setFilteredPosts(filtered);
-  }, [posts, searchQuery, language]);
+  }, [posts, searchQuery, language, getTitle, getExcerpt, getBodyText]);
 
   const getCurrentPagePosts = () => {
     const indexOfLastPost = currentPage * POSTS_PER_PAGE;
@@ -233,8 +233,12 @@ const Blog = () => {
                           key={post._id} 
                           to={`/blog/${post.slug.current}`}
                           onMouseEnter={() => prefetchPost(post.slug.current)}
+                          onTouchStart={() => prefetchPost(post.slug.current)} // Add touch support for mobile
                           className="block group"
-                          state={{ summary: post }} // Pass summary to BlogPostPage for caching
+                          state={{ 
+                            summary: post, // Pass summary to BlogPostPage for caching
+                            fromBlogList: true // Flag to indicate navigation from blog list
+                          }}
                         >
                           <BlogPost post={post} />
                         </Link>
