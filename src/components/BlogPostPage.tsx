@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { useNavigate } from 'react-router-dom';
+import { usePrefetchPost } from '../hooks/useBlogPosts';
 import { useScrollToTop } from '../hooks/useScrollToTop';
 import { urlFor } from '../lib/sanity.client';
 import { PortableText } from '@portabletext/react';
@@ -62,6 +63,7 @@ const PostSkeleton = () => (
 );
 
 const BlogPostPage = () => {
+  const prefetchPost = usePrefetchPost();
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
@@ -401,6 +403,8 @@ const BlogPostPage = () => {
                     <Link
                       to={`/blog/${previousPost.slug.current}`}
                       className="flex items-center text-teal-300 hover:text-teal-400 group font-jakarta"
+                      onMouseEnter={() => prefetchPost(previousPost.slug.current)}
+                      onTouchStart={() => prefetchPost(previousPost.slug.current)}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -430,6 +434,8 @@ const BlogPostPage = () => {
                     <Link
                       to={`/blog/${nextPost.slug.current}`}
                       className="flex items-center text-teal-300 hover:text-teal-400 group ml-auto font-jakarta"
+                      onMouseEnter={() => prefetchPost(nextPost.slug.current)}
+                      onTouchStart={() => prefetchPost(nextPost.slug.current)}
                     >
                       <span className="line-clamp-1">
                         {typeof nextPost.title === 'string'
@@ -470,7 +476,7 @@ const BlogPostPage = () => {
                   {/* Related Posts */}
                   <div className="bg-[#140F2D] shadow-sm rounded-lg p-6 ring-1 ring-white/40">
                     <h2 className="text-xl font-bold mb-4 text-white">{t.relatedPosts}</h2>
-                    <ProposedPosts posts={relatedPosts} />
+                    <ProposedPosts posts={relatedPosts} prefetchPost={prefetchPost} />
                   </div>
                 </Suspense>
               </div>
