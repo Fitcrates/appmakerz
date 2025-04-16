@@ -273,17 +273,16 @@ const Timeline: React.FC<TimelineProps> = ({ items = [] }) => {
             {t.subtitle} 
           </motion.p>
         </div>
-        <div className="flex flex-col xl:flex-row">
+        <div className="flex flex-col-reverse xl:flex-row">
           {/* Timeline Content - Left Side */}
           <motion.div 
-            className="relative w-full xl:w-1/2"
-            style={{ height: '600px' }}
+            className="relative w-full xl:w-1/2 h-[28rem] md:h-[32rem] xl:h-[35rem]"
             variants={timelineVariants}
             ref={timelineRef}
           >
             
             {/* Timeline Content - Centered with flex */}
-            <div {...swipeHandlers} className="relative h-full w-full flex items-center justify-center  md:ml-16 lg:ml-24 xl:ml-[12rem]">
+            <div {...swipeHandlers} className="relative h-[23rem] md:h-full w-full flex items-center justify-center  md:ml-16 lg:ml-24 xl:ml-[12rem]">
   <AnimatePresence mode="wait">
     <motion.div
       key={activeIndex}
@@ -291,7 +290,7 @@ const Timeline: React.FC<TimelineProps> = ({ items = [] }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="relative z-20 max-w-[95%] sm:max-w-[28rem] md:max-w-[28rem] h-[23rem] md:h-[23rem] min-h-[20rem] max-h-[23rem] md:min-h-[21.25rem] md:max-h-[23rem] flex flex-col items-center justify-center px-6 py-8 md:px-8 md:py-10"
+      className="relative z-20 max-w-[95%] sm:max-w-[28rem] md:max-w-[28rem] h-[23rem] md:h-[23rem] min-h-[20rem] max-h-[21rem] md:min-h-[21.25rem] md:max-h-[23rem] flex flex-col items-center justify-center px-6 py-8 md:px-8 md:py-10"
     >
       {/* Card with Soft Glow */}
       <div className="absolute inset-0 w-full h-full flex items-center justify-center -z-10">
@@ -400,7 +399,7 @@ const Timeline: React.FC<TimelineProps> = ({ items = [] }) => {
             {/* Mobile Timeline Years (Dots) with Progress Indicator */}
             {!isHorizontal && (
               <motion.div 
-                className="absolute left-0 right-0 bottom-12 flex flex-col items-center z-20"
+                className="relative left-0 right-0 -bottom-4 flex flex-col items-center z-20 pb-10"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.7 }}
