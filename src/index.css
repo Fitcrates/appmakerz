@@ -861,3 +861,68 @@ main {
 .animate-scaleIn {
   animation: scaleIn 0.3s ease-out forwards;
 }
+
+
+
+/* timeline svg container */
+.right-side-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.website-build-svg {
+  width: 100%;
+  max-width: 40rem;
+  height: auto;
+}
+.timeline-container {
+  position: relative;
+ 
+  min-height: 600px;
+}
+
+.timeline-content {
+  width: 100%;
+  height: 600px;
+  translate: right;
+  overflow: hidden;
+}
+
+.svg-container {
+  width: 400px;
+  height: 300px;
+  margin: 40px auto;
+}
+
+.svg-content {
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive positioning */
+@media (min-width: 768px) {
+  .timeline-content {
+    width: 50%;
+  }
+  
+  .svg-container {
+    position: absolute;
+    top: 150px;
+    right: 50px;
+    margin: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .svg-container {
+    right: 100px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .svg-container {
+    right: 150px;
+  }
+}
