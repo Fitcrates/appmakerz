@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { getPost, getPosts } from '../lib/sanity.client';
+import { useParams, Link, useLocation } from 'react-router-dom';
+import { getPost, getPosts, getPostBody } from '../lib/sanity.client';
+import { getCache, setCache } from '../utils/cache';
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
@@ -62,16 +63,41 @@ const PostSkeleton = () => (
   </div>
 );
 
+// Define types for blog posts
+interface PostBody {
+  en: any;
+  pl: any;
+}
+
+interface PostTitle {
+  en: string;
+  pl: string;
+}
+
+interface Post {
+  _id: string;
+  title: PostTitle | string;
+  slug: { current: string };
+  mainImage?: any;
+  publishedAt: string;
+  body?: PostBody;
+  categories?: any[];
+  tags?: string[];
+  excerpt?: { en: string; pl: string } | string;
+  author?: { name: string; image?: any };
+  viewCount?: number;
+}
+
 const BlogPostPage = () => {
   const prefetchPost = usePrefetchPost();
-  const { slug } = useParams();
-  const [post, setPost] = useState(null);
-  const [allPosts, setAllPosts] = useState([]);
-  const [relatedPosts, setRelatedPosts] = useState([]);
+  const { slug } = useParams<{ slug: string }>();
+  const [post, setPost] = useState<Post | null>(null);
+  const [allPosts, setAllPosts] = useState<Post[]>([]);
+  const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [nextPost, setNextPost] = useState(null);
-  const [previousPost, setPreviousPost] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [nextPost, setNextPost] = useState<Post | null>(null);
+  const [previousPost, setPreviousPost] = useState<Post | null>(null);
   const { language } = useLanguage();
   const t = translations[language].blog;
   const navigate = useNavigate();
@@ -82,85 +108,88 @@ const BlogPostPage = () => {
   // Create memoized cache key that changes only when slug or language changes
   const cacheKey = `${slug}-${language}`;
 
+  // Get location to check if we have state passed from Blog.tsx
+  const location = useLocation();
+  
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
     const signal = controller.signal;
-
-    // Try to get from sessionStorage first
-    const cachedData = sessionStorage.getItem(cacheKey);
-    if (cachedData) {
-      try {
-        const { post, allPosts, relatedPosts, nextPost, previousPost } = JSON.parse(cachedData);
-        setPost(post);
-        setAllPosts(allPosts);
-        setRelatedPosts(relatedPosts);
-        setNextPost(nextPost);
-        setPreviousPost(previousPost);
-        setLoading(false);
-        
-        // Increment view count asynchronously
-        if (post?._id) {
-          fetch('/.netlify/functions/incrementViewCount', {
-            method: 'POST',
-            body: JSON.stringify({ postId: post._id }),
-            headers: { 'Content-Type': 'application/json' },
-            // Use a short timeout for non-critical operation
-            signal: AbortSignal.timeout(5000) 
-          }).catch(() => {/* Silently fail - this is non-critical */});
-        }
-        
-        // Still fetch data in background to update cache
-        fetchData(true);
-        return;
-      } catch (e) {
-        console.error('Error parsing cached data', e);
-      }
-    }
-
-    // Fetch data if no cache or cache parsing failed
-    fetchData();
-
-    function fetchData(isBackgroundRefresh = false) {
-      if (!isBackgroundRefresh) {
-        setLoading(true);
-      }
-
+    
+    // Set loading state at the beginning
+    setLoading(true);
+    setError(null);
+    
+    async function fetchData(isBackgroundRefresh = false) {
       if (!slug) {
         setError('No slug provided');
         setLoading(false);
         return;
       }
-
-      Promise.all([
-        getPost(slug),
-        getPosts()
-      ])
-      .then(([fetchedPost, posts]) => {
-        if (!isMounted || signal.aborted) return;
+      
+      try {
+        // Check three possible sources for post data in this order:
+        // 1. Router state (passed from Blog.tsx when clicking a post)
+        // 2. Cache from previous visits
+        // 3. Full fetch from Sanity
         
-        if (!fetchedPost?._id) {
+        // First check if we have summary from router state (most efficient)
+        const summaryFromState = location.state?.summary as Post | undefined;
+        
+        // If not, check if we have cached blog posts
+        const blogPosts = summaryFromState ? null : getCache<Post[]>('blogPosts');
+        const cachedSummary = blogPosts?.find(p => p.slug.current === slug);
+        
+        // Use either source of summary
+        const summary = summaryFromState || cachedSummary;
+        
+        let postData: Post | null = null;
+        let posts: Post[] = [];
+        
+        if (summary) {
+          // We have the summary, just fetch the body
+          console.log('Using cached summary, fetching only body');
+          const bodyData = await getPostBody(slug) as { body: PostBody };
+          postData = { ...summary as Post, ...bodyData };
+          
+          // Also fetch all posts for related content
+          posts = await getPosts() as Post[];
+        } else {
+          // No summary available, fetch everything
+          console.log('No cached summary, fetching full post');
+          const results = await Promise.all([
+            getPost(slug),
+            getPosts()
+          ]);
+          postData = results[0] as Post;
+          posts = results[1] as Post[];
+        }
+        
+        if (!isMounted || signal.aborted) return;
+        if (!postData?._id) {
           setError('Post not found');
           setLoading(false);
           return;
         }
         
+        const fetchedPost = postData;
+        
         // Process posts and set state
         const sortedPosts = posts
-          .filter(p => p._id !== fetchedPost._id)
-          .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+          .filter((p: Post) => p._id !== fetchedPost._id)
+          .sort((a: Post, b: Post) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
         
         // Find related posts by category
         const relatedPostsData = sortedPosts
-          .filter(p => {
+          .filter((p: Post) => {
             if (!fetchedPost.categories || !p.categories) return false;
-            return fetchedPost.categories.some(cat => p.categories.includes(cat));
+            return fetchedPost.categories.some((cat: any) => p.categories?.includes(cat));
           })
           .slice(0, 5);
         
         // Set popular posts (not related)
         const popularPostsData = sortedPosts
-          .filter(p => !relatedPostsData.find(rp => rp._id === p._id))
+          .filter((p: Post) => !relatedPostsData.find((rp: Post) => rp._id === p._id))
           .slice(0, 3);
         
         // Find next and previous posts
@@ -181,10 +210,17 @@ const BlogPostPage = () => {
           previousPost: prevPost
         };
         
-        try {
-          sessionStorage.setItem(cacheKey, JSON.stringify(dataToCache));
-        } catch (e) {
-          console.error('Error caching data', e);
+        // Use our cache utility
+        setCache(cacheKey, dataToCache);
+        
+        // Also cache this post in the blogPosts cache if it's not already there
+        // This helps when navigating back to the blog list
+        const blogPostsCache = getCache<Post[]>('blogPosts') || [];
+        if (!blogPostsCache.some(p => p.slug.current === fetchedPost.slug.current)) {
+          // Create a summary version (without body) for the cache
+          const postSummary = { ...fetchedPost } as Post;
+          delete postSummary.body; // Remove body to save space
+          setCache('blogPosts', [...blogPostsCache, postSummary]);
         }
         
         // Update state
@@ -205,21 +241,22 @@ const BlogPostPage = () => {
             signal: AbortSignal.timeout(5000) 
           }).catch(() => {/* Silently fail - this is non-critical */});
         }
-      })
-      .catch(err => {
+      } catch (err) {
         if (isMounted && !signal.aborted) {
           setError(err instanceof Error ? err.message : 'An error occurred');
           setLoading(false);
         }
-      });
+      }
     }
-
+    
+    fetchData();
+    
     // Cleanup
     return () => {
       isMounted = false;
       controller.abort();
     };
-  }, [slug, language, cacheKey]);
+  }, [slug, language, cacheKey, location.state]);
 
   // Apply orphan prevention after post content loads
   useEffect(() => {
