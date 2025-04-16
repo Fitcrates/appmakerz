@@ -33,6 +33,10 @@ const BlogPost: React.FC<BlogPostProps> = ({ post, allPosts = [] }) => {
             src={urlFor(post.mainImage).width(800).height(600).url()}
             alt={getTitle()}
             className="object-cover w-full h-72 lg:h-96"
+            loading="lazy"
+            decoding="async"
+            width="800"
+            height="600"
           />
         </div>
       )}
@@ -71,13 +75,16 @@ const BlogPost: React.FC<BlogPostProps> = ({ post, allPosts = [] }) => {
           {post.author?.image && (
             <img
               className="w-10 h-10 rounded-full object-cover object-center"
-              src={urlFor(post.author.image).width(80).height(80).url()}
+              src={urlFor(post.author.image).width(40).height(40).url()}
               alt={post.author.name || t.author}
+              loading="lazy"
+              width="40"
+              height="40"
             />
           )}
           <div className="ml-4">
-            <p className="text-sm text-white dark:text-gray-400">{post.author?.role || t.role}</p>
-            <h3 className="text-sm font-medium text-teal-300 dark:text-white">{post.author?.name}</h3>
+            <p className="text-sm text-red-500 dark:text-gray-400">{post.author?.role || t.role}</p>
+            <h3 className="text-sm font-medium text-blue-300 dark:text-white">{post.author?.name}</h3>
           </div>
         </div>
       </div>
