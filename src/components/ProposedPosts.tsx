@@ -23,9 +23,10 @@ interface Post {
 
 interface ProposedPostsProps {
   posts: Post[];
+  prefetchPost?: (slug: string) => void;
 }
 
-const ProposedPosts: React.FC<ProposedPostsProps> = ({ posts }) => {
+const ProposedPosts: React.FC<ProposedPostsProps> = ({ posts, prefetchPost }) => {
   const { language } = useLanguage();
   const t = translations[language].blog;
 
@@ -45,6 +46,8 @@ const ProposedPosts: React.FC<ProposedPostsProps> = ({ posts }) => {
           key={post._id}
           to={`/blog/${post.slug.current}`}
           className="block group"
+          onMouseEnter={prefetchPost ? () => prefetchPost(post.slug.current) : undefined}
+          onTouchStart={prefetchPost ? () => prefetchPost(post.slug.current) : undefined}
         >
           <div className="flex items-start space-x-4">
             {post.mainImage && (
