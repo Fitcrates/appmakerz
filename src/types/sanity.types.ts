@@ -25,11 +25,7 @@ export interface Project {
     en: string;
     pl: string;
   };
-  mainImage: {
-    asset: {
-      url: string;
-    };
-  };
+  mainImage: SanityImage;
   body: {
     en: any[];
     pl: any[];
@@ -37,7 +33,35 @@ export interface Project {
   technologies: string[];
   projectUrl?: string;
   githubUrl?: string;
+  blogUrl?: string;
   publishedAt: string;
+}
+
+// Portable Text component types
+export interface PortableTextBlockProps {
+  children: React.ReactNode;
+}
+
+export interface PortableTextMarkProps {
+  children: React.ReactNode;
+  value?: {
+    href?: string;
+    [key: string]: any;
+  };
+}
+
+export interface PortableTextImageProps {
+  value: SanityImage & {
+    alt?: string;
+    caption?: string;
+  };
+}
+
+export interface PortableTextCodeProps {
+  value: {
+    code: string;
+    language?: string;
+  };
 }
 
 export interface Author {
