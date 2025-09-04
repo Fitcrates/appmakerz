@@ -40,14 +40,13 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt, className = '' }) => {
 
   return (
     <>
-      <div className="relative group cursor-zoom-in">
+      <div className="relative group cursor-zoom-in" onClick={handleImageClick}>
         <img
           src={src}
           alt={alt}
           className={`${className} transition-transform duration-200 group-hover:scale-[1.02]`}
-          onClick={handleImageClick}
         />
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center pointer-events-none">
           <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover:opacity-80 transition-opacity duration-200" />
         </div>
       </div>
