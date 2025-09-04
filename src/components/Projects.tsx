@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
@@ -51,6 +51,7 @@ const Projects = () => {
   const { language } = useLanguage();
   const t = translations[language].projects;
   const [imagesLoaded, setImagesLoaded] = useState<{[key: string]: boolean}>({});
+  const [currentImageIndex, setCurrentImageIndex] = useState<{[key: string]: number}>({});
   const [preloadedImages, setPreloadedImages] = useState<{[key: string]: boolean}>({});
   const [shouldPreload, setShouldPreload] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -64,6 +65,22 @@ const Projects = () => {
   const projects = [
     {
       title: {
+        en: t.artovnia.title,
+        pl: t.artovnia.title
+      },
+      description: {
+        en: t.artovnia.description,
+        pl: t.artovnia.description
+      },
+      topImages: [
+        "media\\artovniaImage.webp",
+        "media\\artovniaImageLight2.webp"
+      ],
+      backgroundImage: "media/tlokarta1.webp",
+      slug: 'multivendor-e-commerce-platform'
+    },
+    {
+      title: {
         en: t.animeSearch.title,
         pl: t.animeSearch.title
       },
@@ -71,8 +88,8 @@ const Projects = () => {
         en: t.animeSearch.description,
         pl: t.animeSearch.description
       },
-      topImage: "media\\ansearch.webp",
-      backgroundImage: "media/tlokarta1.webp",
+      topImages: ["media\\ansearch.webp"],
+      backgroundImage: "media/tlokarta2.webp",
       slug: 'anime-platform'
     },
     {
@@ -84,8 +101,8 @@ const Projects = () => {
         en: t.mobileApp.description,
         pl: t.mobileApp.description
       },
-      topImage: "media\\packstock.webp",
-      backgroundImage: "media/tlokarta2.webp",
+      topImages: ["media\\packstock.webp"],
+      backgroundImage: "media/tlokarta3.webp",
       slug: 'flixstock-app'
     },
     {
@@ -97,8 +114,8 @@ const Projects = () => {
         en: t.portfolio.description,
         pl: t.portfolio.description
       },
-      topImage: "media\\mojaStrona2.webp",
-      backgroundImage: "media/tlokarta3.webp",
+      topImages: ["media\\mojaStrona2.webp"],
+      backgroundImage: "media/tlokarta1.webp",
       slug: 'personal-portfolio-website'
     },
     {
@@ -110,8 +127,8 @@ const Projects = () => {
         en: t.cleaningApp.description,
         pl: t.cleaningApp.description
       },
-      topImage: "media\\glide1.webp",
-      backgroundImage: "media/tlokarta1.webp",
+      topImages: ["media\\glide1.webp"],
+      backgroundImage: "media/tlokarta2.webp",
       slug: 'cleaning-managament-app'
     }
   ];
@@ -225,6 +242,35 @@ const Projects = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Initialize current image indices for all projects
+  useEffect(() => {
+    const initialIndices: {[key: string]: number} = {};
+    projects.forEach(project => {
+      initialIndices[project.slug] = 0;
+    });
+    setCurrentImageIndex(initialIndices);
+  }, []);
+
+  // Image rotation logic - switch images every 5 seconds for projects with multiple images
+  useEffect(() => {
+    const intervals: {[key: string]: NodeJS.Timeout} = {};
+    
+    projects.forEach(project => {
+      if (project.topImages.length > 1) {
+        intervals[project.slug] = setInterval(() => {
+          setCurrentImageIndex(prev => ({
+            ...prev,
+            [project.slug]: (prev[project.slug] + 1) % project.topImages.length
+          }));
+        }, 5000);
+      }
+    });
+
+    return () => {
+      Object.values(intervals).forEach(interval => clearInterval(interval));
+    };
+  }, [projects]);
+
   // Preload images when shouldPreload becomes true
   useEffect(() => {
     if (!shouldPreload) return;
@@ -233,7 +279,7 @@ const Projects = () => {
       try {
         // Preload first two projects
         const initialPreloadImages = projects.slice(0, 2).flatMap(project => [
-          project.topImage,
+          ...project.topImages,
           project.backgroundImage
         ]);
 
@@ -242,7 +288,7 @@ const Projects = () => {
         // Preload remaining images after a delay
         setTimeout(() => {
           const remainingImages = projects.slice(2).flatMap(project => [
-            project.topImage,
+            ...project.topImages,
             project.backgroundImage
           ]);
           Promise.all(remainingImages.map(src => preloadImage(src)));
@@ -281,14 +327,26 @@ const Projects = () => {
     return () => {
       images.forEach(img => observer.unobserve(img));
     };
-  }, [preloadedImages]);
+  }, [preloadedImages, currentImageIndex]);
 
-  const handleImageLoad = (slug: string) => {
+  const handleImageLoad = useCallback((slug: string, imageIndex?: number) => {
+    const key = imageIndex !== undefined ? `${slug}-${imageIndex}` : slug;
     setImagesLoaded(prev => ({
       ...prev,
-      [slug]: true
+      [key]: true
     }));
-  };
+  }, []);
+
+  const getCurrentTopImage = useCallback((project: any) => {
+    const currentIndex = currentImageIndex[project.slug] || 0;
+    return project.topImages[currentIndex] || project.topImages[0];
+  }, [currentImageIndex]);
+
+  const isCurrentImageLoaded = useCallback((project: any) => {
+    const currentIndex = currentImageIndex[project.slug] || 0;
+    const key = `${project.slug}-${currentIndex}`;
+    return imagesLoaded[key] || false;
+  }, [currentImageIndex, imagesLoaded]);
   
   const prefetchProject = async (slug: string) => {
     try {
@@ -411,18 +469,26 @@ const Projects = () => {
     >
       <div 
         className={`absolute inset-0 bg-gray-800 transition-opacity duration-500 ${
-          imagesLoaded[project.slug] ? 'opacity-0' : 'opacity-100'
+          isCurrentImageLoaded(project) ? 'opacity-0' : 'opacity-100'
         }`}
       />
-      <img
-        src={preloadedImages[project.topImage] ? project.topImage : undefined}
-        data-src={project.topImage}
-        alt={project.title[language]}
-        className={`lazy-image w-full h-full object-cover transition-opacity duration-500 ${
-          imagesLoaded[project.slug] ? 'opacity-100' : 'opacity-0'
-        }`}
-        onLoad={() => handleImageLoad(project.slug)}
-      />
+      {project.topImages.map((image: string, index: number) => {
+        const isCurrentImage = (currentImageIndex[project.slug] || 0) === index;
+        const imageKey = `${project.slug}-${index}`;
+        return (
+          <img
+            key={`${project.slug}-${index}`}
+            src={preloadedImages[image] ? image : undefined}
+            data-src={image}
+            alt={project.title[language]}
+            className={`lazy-image absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              isCurrentImage && imagesLoaded[imageKey] ? 'opacity-100' : 'opacity-0'
+            }`}
+            onLoad={() => handleImageLoad(project.slug, index)}
+            style={{ zIndex: isCurrentImage ? 2 : 1 }}
+          />
+        );
+      })}
     </div>
 
     <div className="h-1/2 p-4 flex flex-col relative">
