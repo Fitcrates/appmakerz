@@ -142,6 +142,10 @@ timeline: {
         title: "Cleaning Management App",
         description: "Private app, created to manage cleaning schedule and purchase of cleaning products at the apartment."
       },
+      artovnia: {
+        title: "Multivendor E-commerce platform",
+        description: "The most advanced multivendor e-commerce platform tailored for the art and craft market."
+      },
       buttons: {
         previous: "Previous",
         next: "Next",
@@ -503,6 +507,10 @@ timeline: {
       cleaningApp: {
         title: "Aplikacja do Zarządzania Sprzątaniem",
         description: "Prywatna aplikacja, stworzona o zarządzania grafikiem sprzątania oraz zakupami środków czystości w mieszkaniu."
+      },
+      artovnia: {
+        title: "Platforma e-commerce dla wielu sprzedawców",
+        description: "Najbardziej zaawansowana platforma e-commerce dla wielu sprzedawców, stworzona na potrzeby artystów i twórców rękodzieła."
       },
       buttons: {
         previous: "Poprzedni",
