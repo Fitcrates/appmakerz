@@ -1,51 +1,56 @@
 import React from 'react';
 import { urlFor } from '../lib/sanity.client';
 import CodeBlock from './CodeBlock';
+import ImageZoom from './ImageZoom';
+import type { PortableTextComponentProps } from '@portabletext/react';
+import type { PortableTextBlock, PortableTextMarkDefinition, ArbitraryTypedObject, PortableTextSpan } from '@portabletext/types';
+
+type BlockComponentProps = PortableTextComponentProps<PortableTextBlock<PortableTextMarkDefinition, ArbitraryTypedObject | PortableTextSpan, string, string>>;
 
 export const portableTextComponents = {
   block: {
-    h1: ({ children }: any) => (
+    h1: ({ children }: BlockComponentProps) => (
       <h1 className="text-4xl font-bold mt-8 mb-4">{children}</h1>
     ),
-    h2: ({ children }: any) => (
+    h2: ({ children }: BlockComponentProps) => (
       <h2 className="text-3xl font-bold mt-8 mb-4">{children}</h2>
     ),
-    h3: ({ children }: any) => (
+    h3: ({ children }: BlockComponentProps) => (
       <h3 className="text-2xl font-bold mt-6 mb-3">{children}</h3>
     ),
-    h4: ({ children }: any) => (
+    h4: ({ children }: BlockComponentProps) => (
       <h4 className="text-xl font-bold mt-4 mb-2">{children}</h4>
     ),
-    normal: ({ children }: any) => (
+    normal: ({ children }: BlockComponentProps) => (
       <p className="mb-4 leading-relaxed whitespace-pre-line text-white">{children}</p>
     ),
-    blockquote: ({ children }: any) => (
+    blockquote: ({ children }: BlockComponentProps) => (
       <blockquote className="border-l-4 border-teal-300 pl-4 my-4 italic">
         {children}
       </blockquote>
     ),
   },
   list: {
-    bullet: ({ children }: any) => (
+    bullet: ({ children }: BlockComponentProps) => (
       <ul className="list-disc list-inside mb-4">{children}</ul>
     ),
-    number: ({ children }: any) => (
+    number: ({ children }: BlockComponentProps) => (
       <ol className="list-decimal list-inside mb-4">{children}</ol>
     ),
   },
   listItem: {
-    bullet: ({ children }: any) => <li>{children}</li>,
-    number: ({ children }: any) => <li>{children}</li>,
+    bullet: ({ children }: BlockComponentProps) => <li>{children}</li>,
+    number: ({ children }: BlockComponentProps) => <li>{children}</li>,
   },
   marks: {
-    strong: ({ children }: any) => <strong>{children}</strong>,
-    em: ({ children }: any) => <em>{children}</em>,
-    code: ({ children }: any) => (
+    strong: ({ children }: { children: React.ReactNode }) => <strong>{children}</strong>,
+    em: ({ children }: { children: React.ReactNode }) => <em>{children}</em>,
+    code: ({ children }: { children: React.ReactNode }) => (
       <code className="bg-gray-800 text-gray-200 px-1.5 py-0.5 rounded font-mono text-sm">
         {children}
       </code>
     ),
-    link: ({ value, children }: any) => {
+    link: ({ value, children }: { value?: { href?: string }; children: React.ReactNode }) => {
       const target = (value?.href || '').startsWith('http') ? '_blank' : undefined;
       return (
         <a
@@ -60,25 +65,24 @@ export const portableTextComponents = {
     },
   },
   types: {
-    image: ({ value }: any) => {
+    image: ({ value }: { value: any }) => {
       if (!value?.asset?._ref) {
         return null;
       }
       return (
         <div className="relative w-full my-6">
-          <img
+          <ImageZoom
             src={urlFor(value)
               .auto('format')
               .fit('max')
               .url()}
             alt={value.alt || ''}
-            loading="eager"
             className="w-full h-auto rounded-lg"
           />
         </div>
       );
     },
-    code: ({ value }: any) => {
+    code: ({ value }: { value: { code: string; language?: string } }) => {
       if (!value?.code) return null;
       try {
         return (

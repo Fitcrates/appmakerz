@@ -337,10 +337,6 @@ const Projects = () => {
     }));
   }, []);
 
-  const getCurrentTopImage = useCallback((project: any) => {
-    const currentIndex = currentImageIndex[project.slug] || 0;
-    return project.topImages[currentIndex] || project.topImages[0];
-  }, [currentImageIndex]);
 
   const isCurrentImageLoaded = useCallback((project: any) => {
     const currentIndex = currentImageIndex[project.slug] || 0;

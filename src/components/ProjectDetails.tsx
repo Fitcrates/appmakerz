@@ -9,6 +9,8 @@ import { HashLink } from 'react-router-hash-link';
 import Header from './Header';
 import Footer from './Footer';
 import { portableTextComponents } from './PortableTextComponents';
+import { Project } from '../types/sanity.types';
+import ImageZoom from './ImageZoom';
 
 const ProjectDetails = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -90,11 +92,10 @@ const ProjectDetails = () => {
             
           <article className="bg-[#140F2D] min-h-screen text-white py-8">
             {project.mainImage && (
-              <img
+              <ImageZoom
                 src={urlFor(project.mainImage).width(1200).height(600).url()}
                 alt={project.title[language]}
                 className="w-full h-90 object-cover rounded-xl mb-8"
-                loading="eager"
               />
             )}
 
