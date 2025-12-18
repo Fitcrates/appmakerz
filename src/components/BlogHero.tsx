@@ -149,7 +149,7 @@ const BlogHero: React.FC = () => {
   };
 
   return (
-    <section className="relative h-[40vh] min-h-[320px] max-h-[450px] overflow-hidden bg-gradient-to-br from-indigo-950 via-[#140F2D] to-indigo-900">
+    <section className="relative h-[42vh] min-h-[320px] max-h-[450px] overflow-hidden bg-gradient-to-br from-indigo-950 via-[#140F2D] to-indigo-900">
       {/* Animated Background Gradient Orbs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-1/2 -left-1/4 h-[500px] w-[500px] animate-blob rounded-full bg-indigo-600/20 blur-3xl" />
@@ -177,7 +177,7 @@ const BlogHero: React.FC = () => {
       />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 sm:px-6 lg:px-8 mt-12">
+      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 sm:px-6 lg:px-8 mt-24 md:mt-12">
         {/* Glowing Badge */}
         <div className="mb-4 animate-pulse-slow">
           <span className="inline-flex items-center rounded-full border border-teal-400/30 bg-teal-500/10 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-teal-300 backdrop-blur-sm sm:text-sm">
