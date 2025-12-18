@@ -177,7 +177,7 @@ const BlogHero: React.FC = () => {
       />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 sm:px-6 lg:px-8 mt-24 ">
+      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 sm:px-6 lg:px-8 mt-16">
         {/* Glowing Badge */}
         <div className="mb-4 animate-pulse-slow">
           <span className="inline-flex items-center rounded-full border border-teal-400/30 bg-teal-500/10 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-teal-300 backdrop-blur-sm sm:text-sm">
