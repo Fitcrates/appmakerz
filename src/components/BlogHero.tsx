@@ -188,10 +188,10 @@ const BlogHero: React.FC = () => {
 
         {/* Main Title with Neon Effect */}
         <h1 className="relative text-center">
-          <span className="blog-title-glow block bg-gradient-to-r from-white via-teal-200 to-white bg-clip-text font-jakarta text-4xl font-light tracking-tight text-transparent sm:text-5xl md:text-6xl lg:text-7xl py-4">
+          <span className="text-white bg-clip-text font-jakarta text-4xl font-light tracking-tight text-transparent sm:text-5xl md:text-6xl lg:text-7xl py-4">
             {t.header1}
           </span>
-          <span className="mt-1 block bg-gradient-to-r from-teal-300 via-indigo-400 to-red-400 bg-clip-text font-jakarta text-4xl font-light tracking-tight text-transparent sm:text-5xl md:text-6xl lg:text-7xl">
+          <span className="mt-1 block text-white bg-clip-text font-jakarta text-4xl font-light tracking-tight text-transparent sm:text-5xl md:text-6xl lg:text-7xl">
             {t.header2}
           </span>
         </h1>
