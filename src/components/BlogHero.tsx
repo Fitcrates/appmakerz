@@ -177,7 +177,7 @@ const BlogHero: React.FC = () => {
       />
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 sm:px-6 lg:px-8 mt-12">
         {/* Glowing Badge */}
         <div className="mb-4 animate-pulse-slow">
           <span className="inline-flex items-center rounded-full border border-teal-400/30 bg-teal-500/10 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-teal-300 backdrop-blur-sm sm:text-sm">
@@ -188,7 +188,7 @@ const BlogHero: React.FC = () => {
 
         {/* Main Title with Neon Effect */}
         <h1 className="relative text-center">
-          <span className="blog-title-glow block bg-gradient-to-r from-white via-teal-200 to-white bg-clip-text font-jakarta text-4xl font-light tracking-tight text-transparent sm:text-5xl md:text-6xl lg:text-7xl">
+          <span className="blog-title-glow block bg-gradient-to-r from-white via-teal-200 to-white bg-clip-text font-jakarta text-4xl font-light tracking-tight text-transparent sm:text-5xl md:text-6xl lg:text-7xl py-4">
             {t.header1}
           </span>
           <span className="mt-1 block bg-gradient-to-r from-teal-300 via-indigo-400 to-red-400 bg-clip-text font-jakarta text-4xl font-light tracking-tight text-transparent sm:text-5xl md:text-6xl lg:text-7xl">
