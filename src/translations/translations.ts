@@ -325,7 +325,11 @@ timeline: {
         readMore: "Read more",
         author: "Author",
         role: "Author"
-      }
+      },
+       badge: "Tech Insights & Updates",
+    subtitle: "Exploring the frontiers of web development, design, and digital innovation",
+    explore: "Explore"
+      
     },
     // Navigation
     navigation: {
@@ -691,7 +695,12 @@ timeline: {
         readMore: "Czytaj więcej",
         author: "Autor",
         role: "Autor"
-      }
+      },
+      badge: "Technologia i Innowacje",
+    subtitle: "Odkrywamy granice tworzenia stron, designu i cyfrowych innowacji",
+    explore: "Odkryj"
+
+      
     },
     // Navigation
     navigation: {
