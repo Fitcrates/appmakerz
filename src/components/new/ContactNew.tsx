@@ -126,7 +126,7 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   autoComplete="name"
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg font-jakarta placeholder-white/20 focus:outline-none focus:border-teal-300 focus:ring-2 focus:ring-teal-300/20 transition-colors [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg font-jakarta placeholder-white/20 focus:outline-none  transition-colors [color-scheme:dark]"
                   placeholder={t.form.name.placeholder}
                 />
               </div>
@@ -146,7 +146,7 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   autoComplete="email"
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg font-jakarta placeholder-white/20 focus:outline-none focus:border-teal-300 focus:ring-2 focus:ring-teal-300/20 transition-colors [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg font-jakarta placeholder-white/20 focus:outline-none transition-colors [color-scheme:dark]"
                   placeholder={t.form.email.placeholder}
                 />
               </div>
@@ -165,7 +165,7 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   rows={4}
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg font-jakarta placeholder-white/20 focus:outline-none focus:border-teal-300 focus:ring-2 focus:ring-teal-300/20 transition-colors resize-none [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg font-jakarta placeholder-white/20 focus:outline-none transition-colors resize-none [color-scheme:dark]"
                   placeholder={t.form.message.placeholder}
                 />
               </div>
@@ -174,7 +174,7 @@ const ContactNew: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group inline-flex items-center gap-4 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 rounded"
+                  className="group inline-flex items-center gap-4 disabled:opacity-50 focus:outline-none rounded"
                   aria-label={isSubmitting ? 'Sending message...' : 'Send message'}
                 >
                   <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">

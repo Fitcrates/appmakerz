@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { sendEmail } from '../services/emailService';
-import type { EmailForm } from '../types/email.types';
 
 interface FormData {
   name: string;
@@ -22,9 +20,14 @@ export const useEmailForm = () => {
   const [formData, setFormData] = useState<FormData>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const location = useLocation();
   const { language } = useLanguage();
   const t = translations[language].contact.form;
+  const successToastMessage =
+    typeof t.success === 'string' ? t.success : t.success?.message || 'Message sent successfully.';
+  const errorToastMessage =
+    'error' in t && typeof t.error === 'string' ? t.error : 'Failed to send message. Please try again.';
+  const planPrefix =
+    'planMessage' in t && typeof t.planMessage === 'string' ? t.planMessage : 'I am interested in plan';
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -35,7 +38,7 @@ export const useEmailForm = () => {
       if (plan) {
         setFormData((prev) => ({
           ...prev,
-          message: `${t.planMessage} ${plan}.`,
+          message: `${planPrefix} ${plan}.`,
         }));
       }
     };
@@ -64,14 +67,14 @@ export const useEmailForm = () => {
       const response = await sendEmail(formData);
 
       if (response.status === 200) {
-        toast.success(t.success);
+        toast.success(successToastMessage);
         setFormData(initialState);
         setIsSuccess(true);
       } else {
-        toast.error(t.error);
+        toast.error(errorToastMessage);
       }
     } catch (error) {
-      toast.error(t.error);
+      toast.error(errorToastMessage);
       console.error('Error sending email:', error);
     } finally {
       setIsSubmitting(false);

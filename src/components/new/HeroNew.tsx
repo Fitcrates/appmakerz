@@ -15,12 +15,11 @@ const HeroNew: React.FC = () => {
   // Scroll transforms
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"],
-    layoutEffect: false
+    offset: ["start start", "end start"]
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   const scrollToNext = () => {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
@@ -57,7 +56,7 @@ const HeroNew: React.FC = () => {
 
       {/* Main content */}
       <motion.div
-        style={{ y, opacity }}
+        style={{ y }}
         className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
       >
         {/* Visually hidden SEO h1 */}
@@ -77,7 +76,7 @@ const HeroNew: React.FC = () => {
 
         {/* Decorative heading with burn animation (not the SEO h1) */}
         <div className="mb-8" aria-hidden="true">
-          <BurnSpotlightText as="div" className="text-5xl sm:text-7xl lg:text-[120px] font-light font-jakarta tracking-normal leading-[1.2] " glowSize={200} baseDelay={500} charDelay={40}>
+          <BurnSpotlightText as="div" className="text-5xl sm:text-7xl lg:text-[120px] font-light font-jakarta tracking-normal leading-[1.2] " glowSize={200} baseDelay={500} charDelay={40} activateOnMount>
             {t.heading}
           </BurnSpotlightText>
         </div>
@@ -128,7 +127,7 @@ const HeroNew: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 3.5 }}
-        style={{ opacity }}
+        style={{ opacity: indicatorOpacity }}
         className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-3 text-white/30 hover:text-teal-300 transition-colors cursor-pointer group focus:outline-none focus:text-teal-300"
         aria-label="Scroll down to About section"
       >

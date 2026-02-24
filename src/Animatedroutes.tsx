@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
 // Lazy load components
-const App = lazy(() => import('./AppNew'));
+const App = lazy(() => import('./App'));
 const Blog = lazy(() => import('./BlogNew'));
 const StudioPage = lazy(() => import('./StudioPage'));
 const BlogPostPage = lazy(() => import('./components/new/BlogPostPageNew'));

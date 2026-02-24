@@ -9,6 +9,7 @@ interface BurnSpotlightTextProps {
   baseDelay?: number;
   charDelay?: number;
   burnDuration?: number;
+  activateOnMount?: boolean;
 }
 
 // ============================================
@@ -80,14 +81,22 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
   glowSize = 120,
   baseDelay = 0,
   charDelay = 40,
-  burnDuration = 250
+  burnDuration = 250,
+  activateOnMount = false
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.1 });
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
   const [burnComplete, setBurnComplete] = useState(false);
+  const [hasActivated, setHasActivated] = useState(activateOnMount);
   const revealedCount = useRef(0);
   const totalChars = children.replace(/\s/g, '').length;
+
+  useEffect(() => {
+    if (isInView) {
+      setHasActivated(true);
+    }
+  }, [isInView]);
 
   const handleCharRevealed = useCallback(() => {
     revealedCount.current += 1;
@@ -145,7 +154,7 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
             burnDuration={burnDuration}
             isSpace={char === ' '}
             onRevealed={char !== ' ' ? handleCharRevealed : undefined}
-            isActive={isInView}
+            isActive={hasActivated}
           />
         ))}
       </Component>

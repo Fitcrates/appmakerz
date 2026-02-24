@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
@@ -21,17 +21,15 @@ const queryClient = new QueryClient({
 const AnimatedRoutes = React.lazy(() => import('./Animatedroutes'));
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <HelmetProvider> 
-      <QueryClientProvider client={queryClient}>
-        <LanguageProvider>
-          <Router>
-            <React.Suspense fallback={<div className='bg-[#140F2D] min-h-screen'>Loading...</div>}>
-              <AnimatedRoutes />
-            </React.Suspense>
-          </Router>
-        </LanguageProvider>
-      </QueryClientProvider>
-    </HelmetProvider>
-  </StrictMode>
+  <HelmetProvider> 
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <Router>
+          <React.Suspense fallback={<div className='bg-[#140F2D] min-h-screen'>Loading...</div>}>
+            <AnimatedRoutes />
+          </React.Suspense>
+        </Router>
+      </LanguageProvider>
+    </QueryClientProvider>
+  </HelmetProvider>
 );

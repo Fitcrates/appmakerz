@@ -87,7 +87,7 @@ export const translations = {
         backend: {
           number: "02",
           title: "Backend Systems",
-          description: "Robust server-side solutions with Node.js, Express, REST APIs, and GraphQL. Database design with PostgreSQL and MongoDB. Authentication, caching, and optimization.",
+          description: "Robust server-side solutions with Node.js, Express, REST APIs, and GraphQL. Database design with PostgreSQL. Authentication, caching, and optimization.",
         },
         ecommerce: {
           number: "03",
@@ -369,7 +369,7 @@ export const translations = {
         backend: {
           number: "02",
           title: "Systemy Backend",
-          description: "Solidne rozwiązania serwerowe z Node.js, Express, REST API i GraphQL. Projektowanie baz danych z PostgreSQL i MongoDB. Uwierzytelnianie, cache i optymalizacja.",
+          description: "Solidne rozwiązania serwerowe z Node.js, Express, REST API i GraphQL. Projektowanie baz danych z PostgreSQL. Uwierzytelnianie, cache i optymalizacja.",
         },
         ecommerce: {
           number: "03",
