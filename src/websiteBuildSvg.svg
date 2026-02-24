@@ -1,0 +1,163 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#140F2D" rx="8" ry="8" />
+  
+  <!-- Step 1: Wireframes/Outlines -->
+  <g id="step1">
+    <!-- Browser frame -->
+    <rect x="50" y="40" width="300" height="220" rx="5" ry="5" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="5,5" opacity="0.5" />
+    <!-- Browser top bar -->
+    <rect x="50" y="40" width="300" height="30" rx="5" ry="5" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="5,5" opacity="0.5" />
+    <!-- Browser buttons -->
+    <circle cx="65" cy="55" r="5" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="5,5" opacity="0.5" />
+    <circle cx="85" cy="55" r="5" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="5,5" opacity="0.5" />
+    <circle cx="105" cy="55" r="5" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="5,5" opacity="0.5" />
+    <!-- URL bar outline -->
+    <rect x="130" y="45" width="200" height="20" rx="10" ry="10" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="5,5" opacity="0.5" />
+    <!-- Wireframe hero section -->
+    <rect x="70" y="90" width="260" height="80" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="5,5" opacity="0.5" />
+    <!-- Wireframe content blocks -->
+    <rect x="70" y="180" width="260" height="20" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="5,5" opacity="0.5" />
+    <rect x="70" y="210" width="260" height="20" fill="none" stroke="#6B7280" stroke-width="2" stroke-dasharray="5,5" opacity="0.5" />
+  </g>
+
+  <!-- Step 2: Structural Elements -->
+  <g id="step2">
+    <!-- Browser frame -->
+    <rect x="50" y="40" width="300" height="220" rx="5" ry="5" fill="#2E2853" stroke="#5EEAD4" stroke-width="2" opacity="0" />
+    <!-- Browser top bar -->
+    <rect x="50" y="40" width="300" height="30" rx="5" ry="5" fill="#211D4A" stroke="#5EEAD4" stroke-width="2" opacity="0" />
+    <!-- Browser buttons -->
+    <circle cx="65" cy="55" r="5" fill="#F87171" opacity="0" />
+    <circle cx="85" cy="55" r="5" fill="#FBBF24" opacity="0" />
+    <circle cx="105" cy="55" r="5" fill="#34D399" opacity="0" />
+    <!-- URL bar -->
+    <rect x="130" y="45" width="200" height="20" rx="10" ry="10" fill="#3D3A6B" stroke="#5EEAD4" stroke-width="1" opacity="0" />
+    <!-- Header -->
+    <rect x="70" y="80" width="260" height="40" fill="#211D4A" opacity="0" />
+    <!-- Navigation -->
+    <rect x="180" y="85" width="140" height="30" rx="5" fill="none" stroke="#5EEAD4" stroke-width="1" opacity="0" />
+    <circle cx="200" cy="100" r="3" fill="#5EEAD4" opacity="0" />
+    <circle cx="230" cy="100" r="3" fill="#5EEAD4" opacity="0" />
+    <circle cx="260" cy="100" r="3" fill="#5EEAD4" opacity="0" />
+    <circle cx="290" cy="100" r="3" fill="#5EEAD4" opacity="0" />
+    <!-- Logo placeholder -->
+    <rect x="80" y="90" width="80" height="20" rx="3" ry="3" fill="none" stroke="#5EEAD4" stroke-width="1" opacity="0" />
+  </g>
+
+  <!-- Step 3: Content Blocks -->
+  <g id="step3">
+    <!-- Hero section -->
+    <rect x="70" y="130" width="260" height="80" fill="#211D4A" opacity="0" />
+    <!-- Hero title -->
+    <rect x="90" y="140" width="180" height="10" rx="2" ry="2" fill="#5EEAD4" opacity="0" />
+    <rect x="90" y="155" width="160" height="10" rx="2" ry="2" fill="#5EEAD4" opacity="0" />
+    <!-- Hero image placeholder -->
+    <rect x="270" y="140" width="40" height="40" rx="5" ry="5" fill="#5EEAD4" opacity="0" />
+    <!-- Hero button -->
+    <rect x="90" y="180" width="80" height="20" rx="10" ry="10" fill="#5EEAD4" opacity="0" />
+    <!-- Content section -->
+    <rect x="70" y="220" width="260" height="30" fill="#211D4A" opacity="0" />
+    <!-- Content blocks -->
+    <rect x="80" y="225" width="60" height="20" rx="2" ry="2" fill="#3D3A6B" opacity="0" />
+    <rect x="150" y="225" width="60" height="20" rx="2" ry="2" fill="#3D3A6B" opacity="0" />
+    <rect x="220" y="225" width="60" height="20" rx="2" ry="2" fill="#3D3A6B" opacity="0" />
+  </g>
+
+  <!-- Step 4: Styling/Colors -->
+  <g id="step4">
+    <!-- Gradient overlay for hero -->
+    <rect x="70" y="130" width="260" height="80" fill="url(#heroGradient)" opacity="0" />
+    <!-- More refined button -->
+    <rect x="90" y="180" width="80" height="20" rx="10" ry="10" fill="#5EEAD4" opacity="0" />
+    <rect x="92" y="182" width="76" height="16" rx="8" ry="8" fill="#211D4A" opacity="0" />
+    <!-- Styled text content -->
+    <rect x="80" y="225" width="60" height="20" rx="2" ry="2" fill="url(#contentGradient)" opacity="0" />
+    <rect x="150" y="225" width="60" height="20" rx="2" ry="2" fill="url(#contentGradient)" opacity="0" />
+    <rect x="220" y="225" width="60" height="20" rx="2" ry="2" fill="url(#contentGradient)" opacity="0" />
+  </g>
+
+  <!-- Step 5: Interactive Elements -->
+  <g id="step5">
+    <!-- Hover state on button -->
+    <rect x="90" y="180" width="80" height="20" rx="10" ry="10" fill="#2DD4BF" class="interactive" opacity="0">
+      <animate id="buttonPulse" attributeName="opacity" values="0;0.8;0" dur="1.5s" begin="0s;buttonPulse.end+2s" repeatCount="1" />
+    </rect>
+    <!-- Interactive navigation -->
+    <circle cx="200" cy="100" r="4" fill="#2DD4BF" class="interactive" opacity="0">
+      <animate id="navPulse1" attributeName="r" values="3;4;3" dur="1s" begin="buttonPulse.end" repeatCount="1" />
+    </circle>
+    <!-- Active form element -->
+    <rect x="270" y="180" width="40" height="20" rx="2" ry="2" fill="#211D4A" stroke="#5EEAD4" stroke-width="2" opacity="0">
+      <animate id="formFocus" attributeName="stroke-width" values="1;2;1" dur="1s" begin="navPulse1.end" repeatCount="1" />
+    </rect>
+    <!-- Cursor -->
+    <rect x="275" y="185" width="2" height="10" fill="#5EEAD4" opacity="0">
+      <animate attributeName="opacity" values="0;1;0;1;0" dur="1.5s" begin="formFocus.end" repeatCount="1" />
+    </rect>
+  </g>
+
+  <!-- Step 6: Final Polish -->
+  <g id="step6">
+    <!-- Shadow effect for depth -->
+    <rect x="50" y="40" width="300" height="220" rx="5" ry="5" fill="none" opacity="0" filter="url(#shadow)" />
+    <!-- Reflection effect on browser top -->
+    <rect x="55" y="42" width="290" height="10" rx="3" ry="3" fill="white" opacity="0" />
+    <!-- Subtle animation dots -->
+    <circle cx="150" cy="250" r="3" fill="#5EEAD4" opacity="0">
+      <animate attributeName="opacity" values="0;0.7;0" dur="2s" begin="0s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="170" cy="250" r="3" fill="#5EEAD4" opacity="0">
+      <animate attributeName="opacity" values="0;0.7;0" dur="2s" begin="0.3s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="190" cy="250" r="3" fill="#5EEAD4" opacity="0">
+      <animate attributeName="opacity" values="0;0.7;0" dur="2s" begin="0.6s" repeatCount="indefinite" />
+    </circle>
+    <!-- Status indicator -->
+    <circle cx="350" cy="250" r="5" fill="#34D399" opacity="0">
+      <animate attributeName="fill" values="#34D399;#10B981;#34D399" dur="3s" repeatCount="indefinite" />
+    </circle>
+  </g>
+
+  <!-- Definitions for gradients, filters, etc. -->
+  <defs>
+    <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5EEAD4" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#211D4A" stop-opacity="0.1" />
+    </linearGradient>
+    <linearGradient id="contentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3D3A6B" />
+      <stop offset="100%" stop-color="#211D4A" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#5EEAD4" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Animation Script to control steps visibility based on timeline progress -->
+  <script type="text/javascript"><![CDATA[
+    function setStepVisibility(stepNum) {
+      // Reset all steps
+      for (let i = 1; i <= 6; i++) {
+        const elements = document.getElementById("step" + i).children;
+        for (let j = 0; j < elements.length; j++) {
+          elements[j].setAttribute("opacity", "0");
+        }
+      }
+
+      // Show steps up to current
+      for (let i = 1; i <= stepNum; i++) {
+        const elements = document.getElementById("step" + i).children;
+        for (let j = 0; j < elements.length; j++) {
+          elements[j].setAttribute("opacity", i === stepNum ? "1" : "0.8");
+        }
+      }
+    }
+
+    // Make the function available to parent window
+    window.setWebsiteBuildStep = setStepVisibility;
+    
+    // Initialize with step 1
+    setStepVisibility(1);
+  ]]></script>
+</svg>

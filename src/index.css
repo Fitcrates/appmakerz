@@ -1,0 +1,1113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Critical CSS - Load this first */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Plus Jakarta Sans'),
+       url('/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #140F2D;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+.fixed-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('../public/media/tinypng-cropedbackground-min.webp') no-repeat center center;
+  background-size: cover;
+  z-index: -1;
+}
+/* Dark mask overlay */
+.fixed-bg::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%; height: 100%;
+  background: rgba(20, 15, 45, 0.2); /* Adjust 0.5 for desired darkness */
+  pointer-events: none; /* So it doesn't block clicks */
+}
+
+/* Ensure hero-section remains above the background */
+.hero-section {
+  position: relative;
+  z-index: 1;
+}
+/* iOS-specific fixes */
+.ios-main {
+  position: relative;
+  z-index: 1;
+}
+
+.bg-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.ios-bg-wrapper {
+  position: absolute;
+  height: 100vh;
+  /* Prevent background stretching on iOS */
+  background-size: cover;
+  background-attachment: scroll;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Force hardware acceleration */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+.ios-section {
+  /* Ensure proper rendering on iOS */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Prevent unwanted stretching */
+  height: 100vh;
+  /* Use viewport units for iOS */
+  height: -webkit-fill-available;
+}
+
+/* Force proper aspect ratio on iOS */
+@supports (-webkit-touch-callout: none) {
+  .fixed-bg {
+    background-attachment: scroll;
+    /* Maintain aspect ratio */
+    aspect-ratio: 16/9;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Mobile-first media queries */
+@media screen and (max-width: 767px) {
+  .hero-heading {
+    font-size: 2rem;
+    line-height: 1.2;
+    /* Reduce text-shadow complexity on mobile */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Desktop styles */
+@media screen and (min-width: 768px) {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in forwards;
+  }
+}
+
+/* Mobile Optimizations */
+@media screen and (max-width: 767px) {
+  section.hero-section {
+    padding-bottom: 2rem;
+  }
+}
+  
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* Add this to your CSS or style tag */
+@supports (-webkit-backdrop-filter: none) {
+  .safari-blur {
+    -webkit-backdrop-filter: blur(45px);
+  }
+}
+
+.icon-bg {
+  position: relative;
+}
+
+.icon-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 9999px;
+  filter: blur(45px);
+  -webkit-filter: blur(45px);
+  z-index: -1;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background-attachment: fixed;
+  background-image: url('../public/media/tinypng-cropedbackground-min.webp');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* iOS Safari specific styles */
+@supports (-webkit-touch-callout: none) {
+  .hero-section {
+    background-attachment: scroll;
+  }
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero-section > div {
+  position: relative;
+  z-index: 1;
+}
+
+/* Mobile-first media queries */
+@media screen and (max-width: 767px) {
+  .hero-heading {
+    font-size: 2rem;
+    line-height: 1.2;
+    /* Reduce text-shadow complexity on mobile */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Desktop styles */
+@media screen and (min-width: 768px) {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in forwards;
+  }
+}
+
+/* Mobile Optimizations */
+@media screen and (max-width: 767px) {
+  section.hero-section {
+    padding-bottom: 2rem;
+  }
+  
+  h1 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+}
+
+/* Text Shadows */
+.text-shadow-fuchsia {
+  text-shadow: 0 0 15px rgba(255, 0, 255, 0.8), 0 0 25px rgba(255, 0, 255, 0.6);
+}
+
+.text-shadow-sky {
+  text-shadow: 0 0 15px rgba(0, 191, 255, 0.8), 0 0 25px rgba(0, 191, 255, 0.6);
+}
+
+.text-shadow-green {
+  text-shadow: 0 0 15px rgba(0, 255, 0, 0.8), 0 0 25px rgba(0, 255, 0, 0.6);
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Gradient Shadows */
+.gradient-shadow {
+  box-shadow: 0 0 15px 5px rgba(128, 0, 128, 0.4),
+              0 0 25px 10px rgba(128, 0, 128, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+.gradient-shadow:hover {
+  box-shadow: 0 0 20px 10px rgba(128, 0, 128, 0.6),
+              0 0 30px 15px rgba(128, 0, 128, 0.5);
+}
+
+/* Keyframes for Spinning Animation */
+@keyframes spin-gradient {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Spinning Gradient Border */
+.spin-gradient {
+  position: absolute;
+  z-index: 0;
+  background: conic-gradient(#4f46e5, #0ea5ff, #9333ea, #4f46e5);
+  animation: spin-gradient 2s linear infinite;
+  border-radius: inherit;
+  inset: 0;
+}
+
+/* Text Alignment */
+.text-justify-tight {
+  text-align: justify;
+  text-align-last: justify;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+strong {
+  font-weight: bold;
+}
+
+.hover-text-shadow {
+  transition: text-shadow 0.3s ease, color 0.3s ease;
+}
+
+.hover-text-shadow:hover {
+  text-shadow: 0px 8px 12px rgba(13, 148, 136, 0.6);
+}
+
+/* Form Input Optimizations */
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:focus {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: inherit !important;
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+}
+
+/* Ensure Autofill Text is White for Unsubscribe Form */
+#unsubscribe-form input:-webkit-autofill,
+#unsubscribe-form input:-webkit-autofill:focus,
+#unsubscribe-form textarea:-webkit-autofill,
+#unsubscribe-form textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: white !important;
+  background-color: transparent !important;
+  box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.1) inset !important;
+}
+
+
+/* Animation Optimizations */
+.hover-bounce {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.hover-bounce:hover {
+  animation: bounce 0.5s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animated-word {
+  display: inline-block;
+  animation: bounceRotate 8s infinite;
+  will-change: transform;
+}
+
+@keyframes bounceRotate {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(0) rotate(30deg);
+  }
+  75% {
+    transform: translateY(0) rotate(-30deg);
+  }
+}
+
+/* Hero Text */
+.hero-heading {
+  color: white;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in forwards;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .hero-heading {
+    text-align: left;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Headings */
+h2, h3, h4, h5, h6 {
+  font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* Hero Section */
+section.hero-section > div {
+  position: relative;
+  z-index: 1;
+}
+
+/* Heading Container */
+.heading-container {
+  contain: layout style paint;
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  transform: translateZ(0);
+}
+
+@media screen and (max-width: 640px) {
+  .heading-container {
+    contain: strict;
+  }
+  
+  .heading-container h1 {
+    word-break: break-word;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+}
+
+/* Ensure content stays above background */
+.relative {
+  position: relative;
+  z-index: 1;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+/* Navigation buttons styling */
+.swiper-navigation-buttons {
+  display: none;
+  position: relative;
+  z-index: 20;
+  margin-top: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .swiper-navigation-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  position: static !important;
+  width: 22px !important;
+  height: 22px !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  color: white !important;
+  transform: none !important;
+  cursor: pointer !important;
+  z-index: 20 !important;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: rgb(94 234 212) !important;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 16px !important;
+  font-weight: bold !important;
+}
+
+/* Remove any previous display: none that might be affecting the buttons */
+.swiper-button-prev,
+.swiper-button-next {
+  display: block !important;
+}
+
+/* Custom Swiper container styles */
+.custom-swiper {
+  padding: 1rem !important;
+  margin: -1rem !important;
+  overflow: hidden !important;
+}
+
+/* Ensure pagination is visible */
+.swiper-pagination {
+  position: relative !important;
+  bottom: 0 !important;
+  margin-top: 1rem !important;
+  z-index: 20 !important;
+}
+
+.swiper-pagination-bullet {
+  background-color: #5eead4 !important; /* teal-300 */
+  opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #5eead4 !important; /* teal-300 */
+  opacity: 1;
+}
+
+/* Style Swiper navigation buttons */
+.swiper-button-prev,
+.swiper-button-next {
+  position: static !important;
+  color: white !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: rgb(94 234 212) !important; /* teal-400 */
+}
+
+/* Container for navigation buttons */
+.swiper-navigation-buttons {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .swiper-navigation-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Custom Swiper container styles */
+.custom-swiper {
+  padding: 1rem !important;
+  margin: -1rem !important;
+  overflow: hidden !important;
+}
+
+.swiper-slide {
+  height: auto !important;
+}
+.custom-swiper button {
+  position: relative;
+  z-index: 10; /* Ensure buttons are on top */
+}
+
+/* Ensure container doesn't get cut off on mobile */
+@media (max-width: 640px) {
+  .custom-swiper {
+    padding: 0.5rem !important;
+    margin: -0.5rem !important;
+  }
+}
+
+/* Sanity Studio Root Styling */
+.sanity-studio {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+.sanity-studio [data-ui="PortableTextInput"] p {
+  word-break: keep-all;
+  hyphens: auto;
+}
+.sanity-studio [data-ui="TextArea"], 
+.sanity-studio [data-ui="PortableTextInput"] p {
+  white-space: normal;
+  word-spacing: -0.15em; /* Adjusts spacing to pull small words closer */
+}
+
+
+
+
+/* Animated button edge */
+.buttonHero {
+  position: relative;
+  z-index: 1;
+  overflow: visible; /* Ensure the pseudo-elements don't overflow */
+  border-radius: 9999px; /* Tailwind's rounded-full equivalent */
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.buttonHero::after,
+.buttonHero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  filter: blur(2px); /* Disable for clean border */
+  transform: translate(-50%, -50%);
+  width: calc(100% + 3px); /* Account for padding */
+  height: calc(100% + 3px); /* Account for padding */
+  background-image: conic-gradient(
+    from var(--angle),
+    /* adjust to change gradient */
+    #29E7CD,
+    #29E7CD,  
+    #29E7CD,
+    #a30ee9,
+    #a30ee9
+  );
+  z-index: -1;
+  border-radius: 9999px; /* Tailwind's rounded-full equivalent */
+  animation: 4s spin linear infinite;
+}
+
+.buttonHero::before {
+  filter: blur(0.5rem);
+  opacity: 0.5;
+}
+
+@keyframes spin {
+  from {
+    --angle: 0deg;
+  }
+  to {
+    --angle: 360deg;
+  }
+}
+
+/* Neon button with Tailwind Teal-300 colors */
+.buttonNeon {
+  --glow-color: #29E7CD; /* Tailwind Teal-300, outer color */
+  --glow-spread-color: rgba(41, 231, 205, 0.6); /* Soft glow */
+  --enhanced-glow-color: rgb(18, 70, 58); /* Darker teal for depth, inner color */
+  --btn-color: rgb(13, 56, 46); /* Deep teal-green background, inner color */
+
+  border: 0.25em solid var(--glow-color);
+  padding: 1em 3em;
+  color: var(--glow-color);
+  font-size: 15px;
+  font-weight: bold;
+  background-color: var(--btn-color);
+  border-radius: 10em;
+  outline: none;
+  box-shadow:
+    0 0 1em 0.25em var(--glow-color),
+    0 0 4em 1em var(--glow-spread-color),
+    inset 0 0 0.75em 0.25em var(--glow-color);
+  text-shadow: 0 0 0.5em var(--glow-color);
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+.buttonNeon::after {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 150%;
+  width: 150%;
+  background-color: var(--glow-spread-color);
+  filter: blur(2em);
+  opacity: 0.7;
+  z-index: -1;
+  border-radius: 1em;
+}
+
+/* Hover effect: Invert colors for a cool interactive glow */
+.buttonNeon:hover {
+  color: var(--btn-color);
+  background-color: var(--glow-color);
+  box-shadow:
+    0 0 1.2em 0.3em var(--glow-color),
+    0 0 4.5em 2.5em var(--glow-spread-color),
+    inset 0 0 0.75em 0.25em var(--glow-color);
+}
+
+/* Active (Click) effect: Softer glow */
+.buttonNeon:active {
+  box-shadow:
+    0 0 0.6em 0.25em var(--glow-color),
+    0 0 3em 2em var(--glow-spread-color),
+    inset 0 0 0.5em 0.25em var(--glow-color);
+}
+
+
+/* Parallelogram Neon Button */
+.Parallelogram {
+  --glow-color: #29E7CD; /* Tailwind Teal-300 */
+  --glow-spread-color: rgba(41, 231, 205, 0.6);
+  --enhanced-glow-color: rgb(18, 70, 58);
+  --btn-color: rgb(0, 0, 0);
+
+  border: 0.15em solid var(--glow-color);
+  padding: 0.5rem 0.75rem;
+  color: var(--glow-color);
+  font-size: 16px;
+  font-weight: bold;
+  background-color: var(--btn-color);
+  outline: none;
+  text-shadow: 0 0 0.5em var(--glow-color);
+  position: relative;
+  transition: all 0.3s ease-in-out;
+
+  /* Parallelogram effect */
+  display: inline-flex;
+  transform: none;
+  border-radius: 20px 20px 20px 20px; /* Rounded on one side, sharp on the other (may adjust) */
+
+  box-shadow:
+    0 0 1em 0.25em var(--glow-color),
+    0 0 3em 0.5em var(--glow-spread-color),
+    inset 0 0 0.75em 0.25em var(--glow-color);
+}
+
+/* Reset skew on text inside */
+.Parallelogram span {
+  display: inline-block;
+  transform: none;
+}
+
+/* Glowing effect */
+.Parallelogram::after {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+  width: 100%;
+  background-color: var(--glow-spread-color);
+  filter: blur(1em);
+  opacity: 0.7;
+  z-index: -1;
+  border-radius: 100px 100px 100px 100px;
+}
+
+/* Hover effect */
+.Parallelogram:hover {
+  color: var(--btn-color);
+  background-color: var(--glow-color);
+  box-shadow:
+    0 0 1.2em 0.3em var(--glow-color),
+    0 0 2.5em 1.5em var(--glow-spread-color),
+    inset 0 0 0.75em 0.25em var(--glow-color);
+}
+
+/* Active effect */
+.Parallelogram:active {
+  box-shadow:
+    0 0 0.6em 0.25em var(--glow-color),
+    0 0 3em 2em var(--glow-spread-color),
+    inset 0 0 0.5em 0.25em var(--glow-color);
+}
+
+
+
+
+
+/* GlowButton */
+.GlowButton {
+  --glow-color: #29E7CD; /* Tailwind Teal-300 */
+  --glow-spread-color: rgba(41, 231, 205, 0.6);
+  --btn-color: rgba(0, 0, 0, 0.1); /* Black background */
+
+  border: 0.08em solid var(--glow-color); /* Border color */
+  padding: 0.5rem 0.75rem;
+  color: var(--glow-color);
+  font-size: 16px;
+  font-weight: normal;
+  background-color: var(--btn-color);
+  outline: none;
+  text-shadow: none; /* No text shadow by default */
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  display: inline-flex;
+  border-radius: 20px; /* Rounded corners */
+  box-shadow: none; /* No shadow by default */
+}
+
+/* Glowing effect (hidden by default) */
+.GlowButton::after {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+  width: 100%;
+  background-color: var(--glow-spread-color);
+  filter: blur(1em);
+  opacity: 0; /* Hidden by default */
+  z-index: -1;
+  border-radius: 20px; /* Match button border radius */
+  transition: opacity 0.3s ease-in-out; /* Smooth transition */
+}
+
+/* Hover effect */
+.GlowButton:hover {
+  color:#140F2D;/* Text color changes on hover */
+  background-color: var(--glow-color); /* Background color changes on hover */
+  
+  box-shadow:
+    0 0 1.2em 0.5em var(--glow-color), /* Outer glow */
+    0 0 1em 0.5em var(--glow-spread-color), /* Spread glow */
+    inset 0 0 0.15em 0.15em var(--glow-color); /* Inner glow */
+  text-shadow: 0 0 0.5em var(--glow-color); /* Text glow */
+}
+
+/* Show glow effect on hover */
+.GlowButton:hover::after {
+  opacity: 0.7; /* Show glow effect */
+}
+
+/* Active effect */
+.GlowButton:active {
+  box-shadow:
+    0 0 0.6em 0.25em var(--glow-color),
+    0 0 3em 2em var(--glow-spread-color),
+    inset 0 0 0.5em 0.25em var(--glow-color);
+}
+
+/* Hide number input arrows in WebKit browsers */
+.no-arrows::-webkit-inner-spin-button,
+.no-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide number input arrows in Firefox */
+.no-arrows {
+  -moz-appearance: textfield;
+}
+
+/* Add these keyframe animations to your global CSS */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+
+
+/* Animated gradient background */
+@layer base {
+  @property --color-a {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: transparent;
+  }
+  @property --color-b {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: transparent;
+  }
+  @property --color-c {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: transparent;
+  }
+}
+
+/* Chaotic nebula animations with asynchronous movements */
+@keyframes nebula-1 {
+  0%, 100% {
+    border-radius: 68% 32% 60% 40% / 38% 78% 22% 62%;
+    transform: translate3d(0,0,0) scale(1.1) rotate(0deg);
+    opacity: 0.8;
+  }
+  20% {
+    border-radius: 82% 18% 54% 46% / 60% 40% 80% 20%;
+    transform: translate3d(10%, 18%, 0) scale(1.12) rotate(8deg);
+    opacity: 0.92;
+  }
+  40% {
+    border-radius: 40% 70% 30% 80% / 80% 30% 70% 40%;
+    transform: translate3d(-12%, 5%, 0) scale(1.05) rotate(-12deg);
+    opacity: 0.7;
+  }
+  60% {
+    border-radius: 85% 15% 65% 35% / 35% 85% 25% 75%;
+    transform: translate3d(14%, -14%, 0) scale(1.13) rotate(17deg);
+    opacity: 0.95;
+  }
+  80% {
+    border-radius: 55% 45% 85% 15% / 75% 25% 60% 40%;
+    transform: translate3d(-8%, 12%, 0) scale(1.09) rotate(-9deg);
+    opacity: 0.85;
+  }
+}
+
+@keyframes nebula-2 {
+  0%, 100% {
+    border-radius: 80% 55% 35% 65% / 65% 30% 70% 45%;
+    transform: translate3d(0,0,0) scale(1.08) rotate(0deg);
+    opacity: 0.81;
+  }
+  18% {
+    border-radius: 60% 80% 40% 70% / 75% 55% 45% 80%;
+    transform: translate3d(-15%, 12%, 0) scale(1.13) rotate(-15deg);
+    opacity: 0.93;
+  }
+  37% {
+    border-radius: 70% 30% 80% 60% / 40% 80% 60% 20%;
+    transform: translate3d(-18%, -13%, 0) scale(0.96) rotate(12deg);
+    opacity: 0.67;
+  }
+  56% {
+    border-radius: 55% 75% 65% 35% / 85% 40% 75% 25%;
+    transform: translate3d(13%, 15%, 0) scale(1.15) rotate(-10deg);
+    opacity: 0.97;
+  }
+  74% {
+    border-radius: 40% 85% 55% 70% / 60% 70% 30% 80%;
+    transform: translate3d(16%, -16%, 0) scale(0.93) rotate(15deg);
+    opacity: 0.79;
+  }
+}
+
+@keyframes nebula-3 {
+  0%, 100% {
+    border-radius: 65% 80% 35% 70% / 78% 22% 62% 38%;
+    transform: translate3d(0,0,0) scale(1.12) rotate(0deg);
+    opacity: 0.83;
+  }
+  15% {
+    border-radius: 55% 45% 85% 15% / 35% 85% 25% 75%;
+    transform: translate3d(14%, -16%, 0) scale(1.14) rotate(13deg);
+    opacity: 0.95;
+  }
+  33% {
+    border-radius: 80% 65% 70% 60% / 80% 30% 70% 40%;
+    transform: translate3d(16%, 15%, 0) scale(0.95) rotate(-11deg);
+    opacity: 0.68;
+  }
+  59% {
+    border-radius: 70% 40% 90% 30% / 60% 70% 80% 20%;
+    transform: translate3d(-15%, 17%, 0) scale(1.13) rotate(-16deg);
+    opacity: 0.98;
+  }
+  81% {
+    border-radius: 55% 75% 65% 85% / 85% 65% 35% 75%;
+    transform: translate3d(-17%, -13%, 0) scale(0.91) rotate(14deg);
+    opacity: 0.77;
+  }
+}
+
+@keyframes nebula-4 {
+  0%, 100% {
+    border-radius: 75% 60% 80% 45% / 40% 80% 60% 20%;
+    transform: translate3d(0,0,0) scale(1.1) rotate(0deg);
+    opacity: 0.8;
+  }
+  21% {
+    border-radius: 60% 80% 45% 75% / 85% 40% 75% 25%;
+    transform: translate3d(-17%, -15%, 0) scale(0.94) rotate(-16deg);
+    opacity: 0.96;
+  }
+  42% {
+    border-radius: 85% 15% 65% 35% / 60% 70% 30% 80%;
+    transform: translate3d(16%, 17%, 0) scale(1.17) rotate(15deg);
+    opacity: 0.7;
+  }
+  66% {
+    border-radius: 80% 65% 55% 70% / 55% 75% 65% 85%;
+    transform: translate3d(15%, -18%, 0) scale(0.95) rotate(-13deg);
+    opacity: 0.94;
+  }
+  87% {
+    border-radius: 65% 80% 70% 60% / 40% 85% 25% 75%;
+    transform: translate3d(-16%, 15%, 0) scale(1.16) rotate(17deg);
+    opacity: 0.8;
+  }
+}
+
+@keyframes nebula-5 {
+  0%, 100% {
+    border-radius: 55% 75% 65% 85% / 85% 65% 35% 75%;
+    transform: translate3d(0,0,0) scale(1.13) rotate(0deg);
+    opacity: 0.84;
+  }
+  20% {
+    border-radius: 80% 30% 70% 60% / 60% 80% 40% 70%;
+    transform: translate3d(-18%, -15%, 0) scale(0.93) rotate(-18deg);
+    opacity: 0.98;
+  }
+  41% {
+    border-radius: 35% 85% 55% 70% / 70% 30% 80% 60%;
+    transform: translate3d(-16%, 18%, 0) scale(1.18) rotate(-15deg);
+    opacity: 0.65;
+  }
+  67% {
+    border-radius: 80% 55% 65% 85% / 55% 75% 65% 85%;
+    transform: translate3d(18%, 16%, 0) scale(1.15) rotate(16deg);
+    opacity: 0.95;
+  }
+  89% {
+    border-radius: 65% 85% 75% 35% / 35% 85% 25% 75%;
+    transform: translate3d(15%, -17%, 0) scale(0.92) rotate(15deg);
+    opacity: 0.82;
+  }
+}
+
+.right-side-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.website-build-svg {
+  width: 100%;
+  max-width: 40rem;
+  height: auto;
+}
+.timeline-container {
+  position: relative;
+ 
+  min-height: 600px;
+}
+
+.timeline-content {
+  width: 100%;
+  height: 600px;
+  translate: right;
+  overflow: hidden;
+}
+
+.svg-container {
+  width: 400px;
+  height: 300px;
+  margin: 40px auto;
+}
+
+.svg-content {
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive positioning */
+@media (min-width: 768px) {
+  .timeline-content {
+    width: 50%;
+  }
+  
+  .svg-container {
+    position: absolute;
+    top: 150px;
+    right: 50px;
+    margin: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .svg-container {
+    right: 100px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .svg-container {
+    right: 150px;
+  }
+}
