@@ -1,8 +1,8 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { getPost, getPosts, getPostBody } from '../lib/sanity.client';
 import { getCache, setCache } from '../utils/cache';
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { useNavigate } from 'react-router-dom';
@@ -316,7 +316,7 @@ const BlogPostPage = () => {
 
   return (
     <>
-      <Helmet prioritizeSeoTags={true}>
+      <Helmet>
         <title>{getTitle(post, language)}</title>
         <meta name="description" content={getExcerpt(post, language)} />
         <link rel="canonical" href={canonicalUrl} />
@@ -428,7 +428,7 @@ const BlogPostPage = () => {
                       )}
                       <div>
                         <h3 className="text-xl font-semibold text-white font-jakarta">{post.author.name}</h3>
-                        <p className="text-white/70 font-jakarta">{t.author}</p>
+                        <p className="text-white/70 font-jakarta">{t.post.author}</p>
                       </div>
                     </div>
                   </div>
@@ -512,7 +512,7 @@ const BlogPostPage = () => {
                 <Suspense fallback={<div className="bg-white/5 rounded-lg p-6 h-64 animate-pulse"></div>}>
                   {/* Related Posts */}
                   <div className="bg-[#140F2D] shadow-sm rounded-lg p-6 ring-1 ring-white/40">
-                    <h2 className="text-xl font-bold mb-4 text-white">{t.relatedPosts}</h2>
+                    <h2 className="text-xl font-bold mb-4 text-white">{t.post.relatedPosts}</h2>
                     <ProposedPosts posts={relatedPosts as any} prefetchPost={prefetchPost} />
                   </div>
                 </Suspense>

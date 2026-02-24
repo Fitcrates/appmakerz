@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense, lazy } from 'react';
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { getPost, getPosts, getPostBody } from '../../lib/sanity.client';
 import { getCache, setCache } from '../../utils/cache';
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 import { usePrefetchPost } from '../../hooks/useBlogPosts';
@@ -203,7 +203,7 @@ const BlogPostPageNew = () => {
 
   return (
     <CursorGlowProvider>
-      <Helmet prioritizeSeoTags={true}>
+      <Helmet>
         <title>{getTitle(post, language)} | AppCrates</title>
         <meta name="description" content={getExcerpt(post, language)} />
         <link rel="canonical" href={canonicalUrl} />
