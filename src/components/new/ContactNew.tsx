@@ -3,7 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
 import { useEmailForm } from '../../hooks/useEmailForm';
-import SpotlightText from './SpotlightText';
+import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 
@@ -18,7 +18,7 @@ const ContactNew: React.FC = () => {
     <section
       id="contact"
       ref={containerRef}
-      className="relative py-20 lg:py-24 bg-indigo-950 overflow-hidden"
+      className="relative py-6 lg:py-24 bg-indigo-950 overflow-hidden"
     >
       <Toaster
         position="bottom-center"
@@ -54,9 +54,9 @@ const ContactNew: React.FC = () => {
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
-                <SpotlightText as="h2" className="text-4xl sm:text-5xl lg:text-7xl font-light font-jakarta leading-[1.1] pb-2 " glowSize={150}>
+                <BurnSpotlightText as="h2" className="text-4xl sm:text-5xl lg:text-7xl font-light font-jakarta leading-[1.1] pb-2" glowSize={150} baseDelay={300} charDelay={35}>
                   {t.heading}
-                </SpotlightText>
+                </BurnSpotlightText>
               </motion.div>
             </div>
 

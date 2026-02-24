@@ -235,13 +235,12 @@ const ProjectsNew: React.FC = () => {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
-    layoutEffect: false,
   });
 
-  const lineWidth = useTransform(
+  const lineScaleX = useTransform(
     scrollYProgress,
     [0, 0.3],
-    ["0%", "100%"],
+    [0, 1],
   );
 
   return (
@@ -268,8 +267,8 @@ const ProjectsNew: React.FC = () => {
           </BurnSpotlightText>
 
           <motion.div
-            style={{ width: lineWidth }}
-            className="h-px bg-teal-300 mt-8"
+            style={{ scaleX: lineScaleX }}
+            className="h-px bg-teal-300 mt-8 origin-left"
           />
         </div>
 

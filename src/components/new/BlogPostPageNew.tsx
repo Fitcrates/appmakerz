@@ -221,10 +221,10 @@ const BlogPostPageNew = () => {
       <div className="bg-indigo-950 min-h-screen">
         <HeaderNew />
         
-        <main className="pt-32 pb-24">
+        <main className=" pt-16 lg:pt-24 pb-24">
           {/* Hero section with image */}
           {post.mainImage && (
-            <div className="relative h-[50vh] lg:h-[60vh] mb-16">
+            <div className="relative h-[50vh] lg:h-[60vh] lg:mb-16">
               <img
                 src={urlFor(post.mainImage).auto('format').fit('max').url()}
                 alt={getTitle(post, language)}

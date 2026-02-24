@@ -118,8 +118,7 @@ const AboutNew: React.FC = () => {
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"],
-    layoutEffect: false
+    offset: ["start end", "end start"]
   });
 
   // Parallax for image

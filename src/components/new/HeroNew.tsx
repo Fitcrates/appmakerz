@@ -19,7 +19,6 @@ const HeroNew: React.FC = () => {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
   const scrollToNext = () => {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
@@ -127,7 +126,6 @@ const HeroNew: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 3.5 }}
-        style={{ opacity: indicatorOpacity }}
         className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-3 text-white/30 hover:text-teal-300 transition-colors cursor-pointer group focus:outline-none focus:text-teal-300"
         aria-label="Scroll down to About section"
       >
