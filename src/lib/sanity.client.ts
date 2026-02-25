@@ -65,7 +65,7 @@ export async function getPosts() {
       },
       author->{
         name,
-        
+        image
       },
       viewCount,
       tags,
@@ -77,17 +77,28 @@ export async function getPosts() {
 
 // Fetch only the body for a single post
 export async function getPostBody(slug: string) {
-  return executeQuery(
+  const cacheKey = `postBody-${slug}`;
+  const cached = getCache<any>(cacheKey);
+  if (cached) return cached;
+
+  const postBody = await executeQuery(
     `*[_type == "post" && slug.current == $slug][0]{
       body { en, pl }
     }`,
     { slug }
   );
+
+  setCache(cacheKey, postBody);
+  return postBody;
 }
 
 // Fetch a single post by slug
 export async function getPost(slug: string) {
-  return executeQuery(
+  const cacheKey = `post-${slug}`;
+  const cached = getCache<any>(cacheKey);
+  if (cached) return cached;
+
+  const post = await executeQuery(
     `*[_type == "post" && slug.current == $slug][0]{
       _id,
       title {
@@ -111,11 +122,18 @@ export async function getPost(slug: string) {
     }`,
     { slug }
   );
+
+  setCache(cacheKey, post);
+  return post;
 }
 
 // Fetch a single project by slug
 export async function getProject(slug: string): Promise<any> {
-  return executeQuery(
+  const cacheKey = `project-${slug}`;
+  const cached = getCache<any>(cacheKey);
+  if (cached) return cached;
+
+  const project = await executeQuery(
     `*[_type == "project" && slug.current == $slug][0]{
       _id,
       title,
@@ -133,6 +151,9 @@ export async function getProject(slug: string): Promise<any> {
     }`,
     { slug }
   );
+
+  setCache(cacheKey, project);
+  return project;
 }
 
 

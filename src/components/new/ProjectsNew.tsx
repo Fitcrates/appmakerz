@@ -2,9 +2,11 @@ import { useRef, useState, useEffect, memo } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useQueryClient } from '@tanstack/react-query';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 import BurnSpotlightText from "./BurnSpotlightText";
+import { getProject } from '../../lib/sanity.client';
 
 // ─── Burn glow heading (unchanged visually) ───
 const BurnRevealHeading: React.FC<{
@@ -141,8 +143,8 @@ const previewTransition = {
 
 // ─── ProjectRow ───
 // Simplified for performance - no animated transitions on hover
-const ProjectRow = memo<{ project: Project; index: number }>(
-  ({ project, index }) => {
+const ProjectRow = memo<{ project: Project; index: number; onPrefetch: (slug: string) => void }>(
+  ({ project, index, onPrefetch }) => {
     const rowRef = useRef<HTMLDivElement>(null);
     const isInView = useInView(rowRef, {
       once: true,
@@ -156,7 +158,13 @@ const ProjectRow = memo<{ project: Project; index: number }>(
         animate={isInView ? { opacity: 1 } : {}}
         transition={{ duration: 0.8, delay: index * 0.1 }}
       >
-        <Link to={`/project/${project.slug}`} aria-label={`View project: ${project.title}`}>
+        <Link
+          to={`/project/${project.slug}`}
+          aria-label={`View project: ${project.title}`}
+          onMouseEnter={() => onPrefetch(project.slug)}
+          onFocus={() => onPrefetch(project.slug)}
+          onTouchStart={() => onPrefetch(project.slug)}
+        >
           <article className="group relative py-4 lg:py-8 border-b border-white/10 cursor-pointer hover:border-white/20 transition-colors">
             {/* Background hover effect - CSS only */}
             <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-300" />
@@ -239,6 +247,18 @@ const ProjectsNew: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language].projects;
   const projects = getProjects(t);
+  const queryClient = useQueryClient();
+
+  const prefetchProject = (slug: string) => {
+    if (!slug) return;
+
+    void import('./ProjectDetailsNew');
+    queryClient.prefetchQuery({
+      queryKey: ['project', slug],
+      queryFn: () => getProject(slug),
+      staleTime: 5 * 60 * 1000,
+    });
+  };
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -286,6 +306,7 @@ const ProjectsNew: React.FC = () => {
               key={project.id}
               project={project}
               index={index}
+              onPrefetch={prefetchProject}
             />
           ))}
         </div>

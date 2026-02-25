@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
-import { getPost, getPosts, getPostBody } from '../../lib/sanity.client';
+import { getPost, getPosts } from '../../lib/sanity.client';
 import { getCache, setCache } from '../../utils/cache';
 import { Helmet } from 'react-helmet';
 import { useLanguage } from '../../context/LanguageContext';
@@ -65,6 +65,8 @@ const BlogPostPageNew = () => {
   const [error, setError] = useState<string | null>(null);
   const [nextPost, setNextPost] = useState<any>(null);
   const [previousPost, setPreviousPost] = useState<any>(null);
+  const [isHeroImageLoaded, setIsHeroImageLoaded] = useState(false);
+  const [isAuthorImageError, setIsAuthorImageError] = useState(false);
   const { language } = useLanguage();
   const t = translations[language].blog;
   const navigate = useNavigate();
@@ -98,8 +100,10 @@ const BlogPostPageNew = () => {
         let posts: any[] = [];
         
         if (summary) {
-          const bodyData = await getPostBody(slug);
-          postData = { ...summary, ...(bodyData as Record<string, unknown>) };
+          // Avoid split summary+body requests; full post query is cache-backed and
+          // guarantees all nested fields (e.g. author.image + body) are present.
+          const fullPostData = await getPost(slug);
+          postData = { ...summary, ...(fullPostData as Record<string, unknown>) };
           posts = await getPosts() as any[];
         } else {
           const results = await Promise.all([getPost(slug), getPosts()]);
@@ -164,6 +168,16 @@ const BlogPostPageNew = () => {
   const ogImageUrl = baseImageUrl + (baseImageUrl.includes('?') ? '&' : '?') + 'cb=' + Date.now();
   const baseUrl = 'https://appcrates.pl';
   const canonicalUrl = post?.slug ? `${baseUrl}/blog/${post.slug.current}` : baseUrl;
+  const heroImageUrl = post?.mainImage ? urlFor(post.mainImage).auto('format').fit('max').url() : '';
+  const authorImageUrl = post?.author?.image ? urlFor(post.author.image).width(80).height(80).url() : '';
+
+  useEffect(() => {
+    setIsHeroImageLoaded(false);
+  }, [heroImageUrl]);
+
+  useEffect(() => {
+    setIsAuthorImageError(false);
+  }, [authorImageUrl]);
 
   if (loading) {
     return (
@@ -224,13 +238,22 @@ const BlogPostPageNew = () => {
         <main className=" pt-16 lg:pt-24 pb-24">
           {/* Hero section with image */}
           {post.mainImage && (
-            <div className="relative h-[50vh] lg:h-[60vh] lg:mb-16">
-              <img
-                src={urlFor(post.mainImage).auto('format').fit('max').url()}
-                alt={getTitle(post, language)}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/50 to-transparent" />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 lg:mb-16 ">
+              <div className="relative h-[38vh] sm:h-[44vh] lg:h-[50vh] overflow-hidden">
+                {!isHeroImageLoaded && (
+                  <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-white/10 via-white/5 to-transparent" />
+                )}
+                <img
+                  src={heroImageUrl}
+                  alt={getTitle(post, language)}
+                  className={`w-full h-full object-cover transition-opacity duration-500 ${isHeroImageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  onLoad={() => setIsHeroImageLoaded(true)}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/70 to-indigo-950/20 pointer-events-none" />
+              </div>
             </div>
           )}
 
@@ -312,12 +335,17 @@ const BlogPostPageNew = () => {
                 className="mt-16 p-8 border border-white/10"
               >
                 <div className="flex items-center gap-6">
-                  {post.author.image && (
+                  {authorImageUrl && !isAuthorImageError ? (
                     <img
-                      src={urlFor(post.author.image).width(80).height(80).url()}
+                      src={authorImageUrl}
                       alt={post.author.name}
-                      className="w-20 h-20 rounded-full object-cover"
+                      className="w-20 h-20 rounded-full object-cover shrink-0"
+                      onError={() => setIsAuthorImageError(true)}
                     />
+                  ) : (
+                    <div className="w-20 h-20 rounded-full bg-white/10 text-white/70 flex items-center justify-center font-jakarta text-2xl shrink-0">
+                      {(post.author?.name || '?').charAt(0).toUpperCase()}
+                    </div>
                   )}
                   <div>
                     <p className="text-xs text-white/30 font-jakarta tracking-widest uppercase mb-1">

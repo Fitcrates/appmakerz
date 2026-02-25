@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import LanguageToggle from '../LanguageToggle';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
+import { getPosts } from '../../lib/sanity.client';
 
 const getNavItems = (t: typeof translations.en.nav) => [
   { label: t.home, href: '/#hero' },
@@ -20,9 +22,19 @@ const HeaderNew: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const queryClient = useQueryClient();
   const { language } = useLanguage();
   const t = translations[language].nav;
   const navItems = getNavItems(t);
+
+  const prefetchBlogPage = () => {
+    void import('../../BlogNew');
+    queryClient.prefetchQuery({
+      queryKey: ['posts'],
+      queryFn: getPosts,
+      staleTime: 5 * 60 * 1000,
+    });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,6 +94,8 @@ const HeaderNew: React.FC = () => {
                   key={item.label}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
+                  onMouseEnter={item.href === '/blog' ? prefetchBlogPage : undefined}
+                  onFocus={item.href === '/blog' ? prefetchBlogPage : undefined}
                   className="relative text-white/70 font-jakarta font-light text-sm hover:text-white transition-colors group focus:outline-none focus:text-teal-300"
                 >
                   {item.label}
@@ -150,6 +164,8 @@ const HeaderNew: React.FC = () => {
                     <a
                       href={item.href}
                       onClick={(e) => handleNavClick(e, item.href)}
+                      onTouchStart={item.href === '/blog' ? prefetchBlogPage : undefined}
+                      onFocus={item.href === '/blog' ? prefetchBlogPage : undefined}
                       className="block text-3xl font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
                     >
                       {item.label}

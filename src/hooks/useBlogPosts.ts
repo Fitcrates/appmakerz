@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getPost, getPosts, getPopularPosts } from '../lib/sanity.client';
+import { getPost, getPostBody, getPosts, getPopularPosts } from '../lib/sanity.client';
 
 export const queryKeys = {
   posts: ['posts'] as const,
@@ -53,5 +53,8 @@ export const usePrefetchPost = () => {
       queryFn: () => getPost(slug),
       staleTime: 5 * 60 * 1000,
     });
+
+    // Body is fetched separately by details page, so warm it too.
+    void getPostBody(slug);
   };
 };

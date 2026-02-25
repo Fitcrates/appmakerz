@@ -7,6 +7,8 @@ import { useLanguage } from './context/LanguageContext';
 import { translations } from './translations/translations';
 import { usePosts, usePrefetchPost } from './hooks/useBlogPosts';
 import { urlFor } from './lib/sanity.client';
+import BurnSpotlightText from './components/new/BurnSpotlightText';
+import SpotlightText from './components/new/SpotlightText';
 import HeaderNew from './components/new/HeaderNew';
 import FooterNew from './components/new/FooterNew';
 import { CursorGlowProvider } from './context/CursorGlowContext';
@@ -40,6 +42,8 @@ const BlogPostCard: React.FC<{ post: any; index: number; language: 'en' | 'pl' }
         to={`/blog/${post.slug.current}`} 
         className="group block"
         onMouseEnter={() => prefetchPost(post.slug.current)}
+        onFocus={() => prefetchPost(post.slug.current)}
+        onTouchStart={() => prefetchPost(post.slug.current)}
       >
         <div 
           className="relative overflow-hidden border border-white/10 hover:border-teal-300/30 transition-all duration-500"
@@ -161,24 +165,33 @@ const BlogNew = () => {
 
               {/* Title */}
               <div className=" mb-8">
-                <motion.h1
-                  initial={{ y: '100%' }}
-                  animate={isInView ? { y: 0 } : {}}
-                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-5xl sm:text-6xl lg:text-8xl font-light text-white font-jakarta"
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={isInView ? { opacity: 1 } : {}}
+                  transition={{ duration: 0.8 }}
                 >
-                  {t.title}
-                </motion.h1>
+                  <BurnSpotlightText
+                    as="h1"
+                    className="text-5xl sm:text-6xl lg:text-8xl font-light text-white font-jakarta"
+                    glowSize={180}
+                    baseDelay={200}
+                    charDelay={35}
+                  >
+                    {t.title}
+                  </BurnSpotlightText>
+                </motion.div>
               </div>
 
-              <motion.p
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="text-white/40 font-jakarta font-light text-lg max-w-xl"
               >
-                {t.subtitle}
-              </motion.p>
+                <SpotlightText as="p" className="text-lg font-jakarta font-light" glowSize={100}>
+                  {t.subtitle}
+                </SpotlightText>
+              </motion.div>
             </div>
 
             {/* Search */}

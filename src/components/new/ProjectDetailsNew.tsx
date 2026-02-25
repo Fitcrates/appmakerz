@@ -19,6 +19,7 @@ const ProjectDetailsNew = () => {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isHeroImageLoaded, setIsHeroImageLoaded] = useState(false);
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -42,6 +43,12 @@ const ProjectDetailsNew = () => {
 
     fetchProject();
   }, [slug]);
+
+  const heroImageUrl = project?.mainImage ? urlFor(project.mainImage).auto('format').fit('max').url() : '';
+
+  useEffect(() => {
+    setIsHeroImageLoaded(false);
+  }, [heroImageUrl]);
 
   if (loading) {
     return (
@@ -82,13 +89,22 @@ const ProjectDetailsNew = () => {
       <main className="min-h-screen bg-indigo-950 pt-16 lg:pt-24 pb-24">
         {/* Hero section with image */}
         {project.mainImage && (
-          <div className="relative h-[50vh] lg:h-[60vh]  lg:mb-16">
-            <img
-              src={urlFor(project.mainImage).auto('format').fit('max').url()}
-              alt={project.title[language]}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/50 to-transparent" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 lg:mb-16">
+            <div className="relative h-[38vh] sm:h-[44vh] lg:h-[50vh] overflow-hidden border border-white/10">
+              {!isHeroImageLoaded && (
+                <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-white/10 via-white/5 to-transparent" />
+              )}
+              <img
+                src={heroImageUrl}
+                alt={project.title[language]}
+                className={`w-full h-full object-cover transition-opacity duration-500 ${isHeroImageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                onLoad={() => setIsHeroImageLoaded(true)}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/70 via-indigo-950/20 to-transparent pointer-events-none" />
+            </div>
           </div>
         )}
 
