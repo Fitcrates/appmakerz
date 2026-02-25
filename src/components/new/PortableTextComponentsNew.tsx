@@ -89,6 +89,9 @@ export const portableTextComponentsNew = {
               .url()}
             alt={value.alt || ''}
             className="w-full h-auto"
+            loading="lazy"
+            fetchPriority="low"
+            decoding="async"
           />
           {value.caption && (
             <p className="text-center text-sm text-white/40 font-jakarta mt-4">{value.caption}</p>

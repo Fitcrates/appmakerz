@@ -5,9 +5,19 @@ interface ImageZoomProps {
   src: string;
   alt: string;
   className?: string;
+  loading?: 'eager' | 'lazy';
+  fetchPriority?: 'high' | 'low' | 'auto';
+  decoding?: 'async' | 'sync' | 'auto';
 }
 
-const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt, className = '' }) => {
+const ImageZoom: React.FC<ImageZoomProps> = ({
+  src,
+  alt,
+  className = '',
+  loading = 'lazy',
+  fetchPriority = 'auto',
+  decoding = 'async',
+}) => {
   const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
@@ -45,6 +55,9 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ src, alt, className = '' }) => {
           src={src}
           alt={alt}
           className={`${className} transition-transform duration-200 group-hover:scale-[1.02]`}
+          loading={loading}
+          fetchPriority={fetchPriority}
+          decoding={decoding}
         />
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 flex items-center justify-center pointer-events-none">
           <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover:opacity-80 transition-opacity duration-200" />

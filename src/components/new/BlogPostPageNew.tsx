@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { useState, useEffect, Suspense, lazy, useRef } from 'react';
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { getPost, getPosts } from '../../lib/sanity.client';
 import { getCache, setCache } from '../../utils/cache';
@@ -67,6 +67,7 @@ const BlogPostPageNew = () => {
   const [previousPost, setPreviousPost] = useState<any>(null);
   const [isHeroImageLoaded, setIsHeroImageLoaded] = useState(false);
   const [isAuthorImageError, setIsAuthorImageError] = useState(false);
+  const heroImageRef = useRef<HTMLImageElement | null>(null);
   const { language } = useLanguage();
   const t = translations[language].blog;
   const navigate = useNavigate();
@@ -176,6 +177,15 @@ const BlogPostPageNew = () => {
   }, [heroImageUrl]);
 
   useEffect(() => {
+    const imageEl = heroImageRef.current;
+    if (!imageEl || !heroImageUrl) return;
+
+    if (imageEl.complete && imageEl.naturalWidth > 0) {
+      setIsHeroImageLoaded(true);
+    }
+  }, [heroImageUrl, post?._id]);
+
+  useEffect(() => {
     setIsAuthorImageError(false);
   }, [authorImageUrl]);
 
@@ -244,13 +254,15 @@ const BlogPostPageNew = () => {
                   <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-white/10 via-white/5 to-transparent" />
                 )}
                 <img
+                  ref={heroImageRef}
                   src={heroImageUrl}
                   alt={getTitle(post, language)}
                   className={`w-full h-full object-cover transition-opacity duration-500 ${isHeroImageLoaded ? 'opacity-100' : 'opacity-0'}`}
                   loading="eager"
                   fetchPriority="high"
-                  decoding="async"
+                  decoding="sync"
                   onLoad={() => setIsHeroImageLoaded(true)}
+                  onError={() => setIsHeroImageLoaded(true)}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/70 to-indigo-950/20 pointer-events-none" />
               </div>

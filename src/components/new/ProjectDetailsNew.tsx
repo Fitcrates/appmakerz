@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { PortableText } from '@portabletext/react';
 import { motion } from 'framer-motion';
@@ -20,6 +20,7 @@ const ProjectDetailsNew = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isHeroImageLoaded, setIsHeroImageLoaded] = useState(false);
+  const heroImageRef = useRef<HTMLImageElement | null>(null);
   
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -49,6 +50,15 @@ const ProjectDetailsNew = () => {
   useEffect(() => {
     setIsHeroImageLoaded(false);
   }, [heroImageUrl]);
+
+  useEffect(() => {
+    const imageEl = heroImageRef.current;
+    if (!imageEl || !heroImageUrl) return;
+
+    if (imageEl.complete && imageEl.naturalWidth > 0) {
+      setIsHeroImageLoaded(true);
+    }
+  }, [heroImageUrl, project?._id]);
 
   if (loading) {
     return (
@@ -95,13 +105,15 @@ const ProjectDetailsNew = () => {
                 <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-white/10 via-white/5 to-transparent" />
               )}
               <img
+                ref={heroImageRef}
                 src={heroImageUrl}
                 alt={project.title[language]}
                 className={`w-full h-full object-cover transition-opacity duration-500 ${isHeroImageLoaded ? 'opacity-100' : 'opacity-0'}`}
                 loading="eager"
                 fetchPriority="high"
-                decoding="async"
+                decoding="sync"
                 onLoad={() => setIsHeroImageLoaded(true)}
+                onError={() => setIsHeroImageLoaded(true)}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/70 via-indigo-950/20 to-transparent pointer-events-none" />
             </div>
