@@ -58,7 +58,7 @@ const HeroNew: React.FC = () => {
       {/* Main content */}
       <motion.div
         style={{ y }}
-        className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+        className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20 [@media(max-height:800px)]:py-12"
       >
         {/* Visually hidden SEO h1 */}
         <h1 className="sr-only">{t.seoHeading}</h1>
@@ -68,7 +68,7 @@ const HeroNew: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-8"
+          className="mb-8 [@media(max-height:800px)]:mb-4"
         >
           <span className="text-xs tracking-[0.3em] uppercase font-jakarta text-white/90">
             {t.label}
@@ -76,10 +76,13 @@ const HeroNew: React.FC = () => {
         </motion.div>
 
         {/* Decorative heading with burn animation (not the SEO h1) */}
-        <div className="mb-8" aria-hidden="true">
+        <div
+          className="mb-8 [@media(max-height:800px)]:mb-4"
+          aria-hidden="true"
+        >
           <BurnSpotlightText
             as="div"
-            className="text-3xl sm:text-7xl lg:text-[120px] font-light font-jakarta tracking-normal leading-[1.2]"
+            className="text-3xl sm:text-7xl lg:text-[120px] [@media(max-height:800px)]:lg:text-[80px] [@media(max-height:700px)]:lg:text-[64px] font-light font-jakarta tracking-normal leading-[1.2]"
             glowSize={200}
             baseDelay={500}
             charDelay={40}
@@ -94,11 +97,11 @@ const HeroNew: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 2.5 }}
-          className="max-w-xl mx-auto mb-16"
+          className="max-w-xl mx-auto mb-16 [@media(max-height:800px)]:mb-8 [@media(max-height:700px)]:mb-6"
         >
           <SpotlightText
             as="p"
-            className="text-lg sm:text-xl font-jakarta font-light"
+            className="text-lg sm:text-xl [@media(max-height:700px)]:text-base font-jakarta font-light"
             glowSize={100}
           >
             {t.subtitle}
@@ -110,12 +113,12 @@ const HeroNew: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 3 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-6"
+          className="flex flex-col sm:flex-row items-center justify-center gap-6 [@media(max-height:700px)]:gap-4"
         >
           <a
-            href="#projects"
-            className="group relative px-10 py-5 bg-teal-300 text-indigo-950 font-jakarta font-medium overflow-hidden transition-all duration-500 min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
-            aria-label="View my portfolio projects"
+            href="#about"
+            className="group relative px-10 py-5 [@media(max-height:700px)]:py-4 bg-teal-300 text-indigo-950 font-jakarta font-medium overflow-hidden transition-all duration-500 min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+            aria-label="Find out more about me"
           >
             <span className="relative z-10">{t.cta.viewWork}</span>
             {/* Hover wipe effect */}
@@ -124,7 +127,7 @@ const HeroNew: React.FC = () => {
 
           <a
             href="#contact"
-            className="group px-10 py-5 border border-white/20 text-white font-jakarta font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+            className="group px-10 py-5 [@media(max-height:700px)]:py-4 border border-white/20 text-white font-jakarta font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
             aria-label="Contact me to discuss your project"
           >
             <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
@@ -135,13 +138,13 @@ const HeroNew: React.FC = () => {
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator - hidden on mobile, fades out on scroll */}
+      {/* Scroll indicator - hidden on mobile AND short screens */}
       <motion.button
         onClick={scrollToNext}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 3.5 }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-3 text-white/30 hover:text-teal-300 transition-colors cursor-pointer group focus:outline-none focus:text-teal-300"
+        className="absolute bottom-12 [@media(max-height:800px)]:bottom-6 left-1/2 -translate-x-1/2 z-20 hidden sm:flex [@media(max-height:700px)]:!hidden flex-col items-center gap-3 text-white/30 hover:text-teal-300 transition-colors cursor-pointer group focus:outline-none focus:text-teal-300"
         aria-label="Scroll down to About section"
       >
         <span className="text-[10px] font-jakarta tracking-[0.3em] uppercase">

@@ -23,7 +23,7 @@ export const translations = {
       seoHeading: "Fullstack Web Developer — React & Next.js Applications | AppCrates",
       subtitle: "Building modern, performant web applications with React & Next.js. From concept to deployment.",
       cta: {
-        viewWork: "VIEW MY WORK",
+        viewWork: "VIEW MORE",
         getInTouch: "GET IN TOUCH",
       },
       scroll: "Scroll",
@@ -306,7 +306,7 @@ export const translations = {
       seoHeading: "Fullstack Web Developer — Aplikacje React & Next.js | AppCrates",
       subtitle: "Buduję nowoczesne, wydajne aplikacje webowe z React & Next.js. Od koncepcji do wdrożenia.",
       cta: {
-        viewWork: "ZOBACZ PROJEKTY",
+        viewWork: "ZOBACZ WIĘCEJ",
         getInTouch: "SKONTAKTUJ SIĘ",
       },
       scroll: "Przewiń",
