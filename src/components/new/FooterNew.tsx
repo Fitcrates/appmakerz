@@ -157,7 +157,7 @@ const FooterNew: React.FC = () => {
               {t.newsletter.title}
             </h3>
             <p className="text-white/40 font-jakarta mb-8">
-              Get updates on new projects, articles, and insights.
+              {t.newsletter.description}
             </p>
 
             {isSubscribed ? (

@@ -157,7 +157,7 @@ const ProjectRow = memo<{ project: Project; index: number }>(
         transition={{ duration: 0.8, delay: index * 0.1 }}
       >
         <Link to={`/project/${project.slug}`} aria-label={`View project: ${project.title}`}>
-          <article className="group relative py-8 border-b border-white/10 cursor-pointer hover:border-white/20 transition-colors">
+          <article className="group relative py-4 lg:py-8 border-b border-white/10 cursor-pointer hover:border-white/20 transition-colors">
             {/* Background hover effect - CSS only */}
             <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-300" />
 
@@ -188,6 +188,14 @@ const ProjectRow = memo<{ project: Project; index: number }>(
               <div className="hidden lg:flex items-center flex-shrink-0">
                 <ArrowUpRight className="w-6 h-6 text-teal-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true" />
               </div>
+            </div>
+
+            
+             {/* Mobile arrow - always visible */}
+            <div className="flex lg:hidden items-center justify-end flex-shrink-0" aria-hidden="true">
+               <div className="w-10 h-10 border border-white/20 flex items-center justify-center">
+                 <ArrowUpRight className="w-4 h-4 text-teal-300" />
+             </div>
             </div>
 
             {/* Hover image preview - CSS only for performance */}
@@ -286,7 +294,7 @@ const ProjectsNew: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-16"
+          className="flex flex-row items-center justify-center lg:justify-start mt-16 "
         >
           <a
             href="#contact"

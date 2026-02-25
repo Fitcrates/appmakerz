@@ -171,6 +171,7 @@ export const translations = {
     footer: {
       newsletter: {
         title: "Subscribe to newsletter",
+        description: "Get updates on new projects, articles, and insights.",
         placeholder: "Enter your email",
         button: "Subscribe",
         subscribing: "Subscribing...",
@@ -453,6 +454,7 @@ export const translations = {
     footer: {
       newsletter: {
         title: "Subskrybuj newsletter",
+        description: "Otrzymuj aktualizacje o nowych projektach, artykułach i spostrzeżeniach.",
         placeholder: "Wpisz swój email",
         button: "Subskrybuj",
         subscribing: "Subskrybowanie...",

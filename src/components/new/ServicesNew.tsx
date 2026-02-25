@@ -174,7 +174,7 @@ const ServicesNew: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="mt-16"
+              className="flex flex-row items-center justify-center lg:justify-start mt-16 "
             >
               <a
                 href="#contact"

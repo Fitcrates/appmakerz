@@ -30,7 +30,7 @@ const TechBadge: React.FC<{ tech: TechItem; isHighlighted: boolean }> = ({ tech,
   return (
     <div 
       className={`relative px-4 py-2 transition-all duration-300 flex-shrink-0 ${
-        isHighlighted ? 'scale-110' : ''
+        isHighlighted ? ' ' : 'text-white/50'
       }`}
     >
       {/* Corner decorations */}
@@ -48,7 +48,7 @@ const TechBadge: React.FC<{ tech: TechItem; isHighlighted: boolean }> = ({ tech,
       }`} />
       
       <span className={`font-jakarta text-sm whitespace-nowrap transition-colors duration-300 ${
-        isHighlighted ? 'text-teal-300' : 'text-white/50'
+        isHighlighted ? 'text-teal-300 ' : 'text-white/50    '
       }`}>
         {tech.name}
       </span>
@@ -96,11 +96,11 @@ const TechStackNew: React.FC = () => {
       className="relative py-2 sm:py-6 bg-indigo-950 overflow-hidden"
     >
       {/* Subtle top border */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent " />
 
       {/* Center spotlight glow */}
       <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-24 pointer-events-none z-10"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-24 pointer-events-none z-10 "
         style={{
           background: 'radial-gradient(ellipse at center, rgba(94, 234, 212, 0.2) 0%, rgba(94, 234, 212, 0.08) 40%, transparent 70%)',
           filter: 'blur(15px)',
