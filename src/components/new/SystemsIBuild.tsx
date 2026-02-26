@@ -76,6 +76,7 @@ const getStages = (t: typeof translations.en.solutions): StageData[] => [
 // ============================================
 const SystemsIBuild: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const lastStageChangeRef = useRef(0);
   const { language } = useLanguage();
   const t = translations[language].solutions;
   const stages = useMemo(() => getStages(t), [t]);
@@ -88,11 +89,55 @@ const SystemsIBuild: React.FC = () => {
   const [activeStageIndex, setActiveStageIndex] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const [fixedPosition, setFixedPosition] = useState<'before' | 'during' | 'after'>('before');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 1023px)');
+    const updateMobileState = () => setIsMobile(mediaQuery.matches);
+    updateMobileState();
+    mediaQuery.addEventListener('change', updateMobileState);
+    return () => mediaQuery.removeEventListener('change', updateMobileState);
+  }, []);
+
+  const goToStage = (index: number) => {
+    const boundedIndex = Math.max(0, Math.min(stages.length - 1, index));
+    setActiveStageIndex(boundedIndex);
+
+    const targetProgress = boundedIndex / stages.length;
+    const sectionTop = sectionRef.current?.offsetTop || 0;
+    const sectionHeight = sectionRef.current?.offsetHeight || 0;
+    const scrollTarget = sectionTop + (sectionHeight * targetProgress) + 100;
+    window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.on('change', (v) => {
-      const newStage = Math.min(4, Math.floor(v * 5));
-      setActiveStageIndex(newStage);
+      const stageCount = stages.length;
+      const progressInStages = v * (stageCount - 1);
+      const now = Date.now();
+      const stageChangeCooldown = isMobile ? 450 : 200;
+
+      setActiveStageIndex((currentStage) => {
+        if (now - lastStageChangeRef.current < stageChangeCooldown) {
+          return currentStage;
+        }
+
+        let nextStage = currentStage;
+        const forwardThreshold = currentStage + 0.65;
+        const backwardThreshold = currentStage - 0.65;
+
+        if (progressInStages >= forwardThreshold && currentStage < stageCount - 1) {
+          nextStage = currentStage + 1;
+        } else if (progressInStages <= backwardThreshold && currentStage > 0) {
+          nextStage = currentStage - 1;
+        }
+
+        if (nextStage !== currentStage) {
+          lastStageChangeRef.current = now;
+        }
+
+        return nextStage;
+      });
       
       if (v <= 0) {
         setFixedPosition('before');
@@ -106,7 +151,7 @@ const SystemsIBuild: React.FC = () => {
       }
     });
     return () => unsubscribe();
-  }, [scrollYProgress]);
+  }, [isMobile, scrollYProgress, stages.length]);
 
   const activeStage = stages[activeStageIndex];
 
@@ -115,7 +160,7 @@ const SystemsIBuild: React.FC = () => {
       ref={sectionRef}
       id="solutions"
       className="relative bg-indigo-950"
-      style={{ height: '300vh' }}
+      style={{ height: isMobile ? '520vh' : '300vh' }}
       itemScope
       itemType="https://schema.org/ItemList"
     >
@@ -291,13 +336,7 @@ const SystemsIBuild: React.FC = () => {
                   {stages.map((stage, index) => (
                     <button
                       key={index}
-                      onClick={() => {
-                        const targetProgress = index / stages.length;
-                        const sectionTop = sectionRef.current?.offsetTop || 0;
-                        const sectionHeight = sectionRef.current?.offsetHeight || 0;
-                        const scrollTarget = sectionTop + (sectionHeight * targetProgress) + 100;
-                        window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-                      }}
+                      onClick={() => goToStage(index)}
                       className="h-2 flex-1 rounded-full bg-white/10 overflow-hidden cursor-pointer hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
                       aria-label={`Go to step ${index + 1}: ${stage.title}`}
                     >
@@ -350,13 +389,7 @@ const SystemsIBuild: React.FC = () => {
             {stages.map((stage, index) => (
               <button
                 key={index}
-                onClick={() => {
-                  const targetProgress = index / stages.length;
-                  const sectionTop = sectionRef.current?.offsetTop || 0;
-                  const sectionHeight = sectionRef.current?.offsetHeight || 0;
-                  const scrollTarget = sectionTop + (sectionHeight * targetProgress) + 100;
-                  window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-                }}
+                onClick={() => goToStage(index)}
                 className="h-2 flex-1 rounded-full bg-white/10 overflow-hidden cursor-pointer hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-300"
                 aria-label={`Go to step ${index + 1}: ${stage.title}`}
               >
