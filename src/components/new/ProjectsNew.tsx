@@ -143,8 +143,8 @@ const previewTransition = {
 
 // ─── ProjectRow ───
 // Simplified for performance - no animated transitions on hover
-const ProjectRow = memo<{ project: Project; index: number; onPrefetch: (slug: string) => void }>(
-  ({ project, index, onPrefetch }) => {
+const ProjectRow = memo<{ project: Project; index: number; onPrefetch: (slug: string) => void; mobileActionLabel: string }>(
+  ({ project, index, onPrefetch, mobileActionLabel }) => {
     const rowRef = useRef<HTMLDivElement>(null);
     const isInView = useInView(rowRef, {
       once: true,
@@ -165,7 +165,7 @@ const ProjectRow = memo<{ project: Project; index: number; onPrefetch: (slug: st
           onFocus={() => onPrefetch(project.slug)}
           onTouchStart={() => onPrefetch(project.slug)}
         >
-          <article className="group relative py-4 lg:py-8 border-b border-white/10 cursor-pointer hover:border-white/20 transition-colors">
+          <article className="group relative py-6 lg:h-[140px] border-b border-white/10 cursor-pointer hover:border-white/20 hover:z-50 transition-colors">
             {/* Background hover effect - CSS only */}
             <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-300" />
 
@@ -198,17 +198,17 @@ const ProjectRow = memo<{ project: Project; index: number; onPrefetch: (slug: st
               </div>
             </div>
 
-            
-             {/* Mobile arrow - always visible */}
-            <div className="flex lg:hidden items-center justify-end flex-shrink-0" aria-hidden="true">
-               <div className="w-10 h-10 border border-white/20 flex items-center justify-center">
-                 <ArrowUpRight className="w-4 h-4 text-teal-300" />
-             </div>
+            {/* Mobile action - subtle */}
+            <div className="flex lg:hidden items-center justify-end gap-2 flex-shrink-0 mt-4">
+              <span className="text-[11px] uppercase tracking-[0.16em] text-white/55 font-jakarta">
+                {mobileActionLabel}
+              </span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-teal-300/80" aria-hidden="true" />
             </div>
 
             {/* Hover image preview - CSS only for performance */}
-            <div className="absolute right-24 top-1/3 -translate-y-1/3 w-80 h-56 pointer-events-none hidden lg:block z-50 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-300">
-              <div className="w-full h-full bg-indigo-900 border border-teal-300/30 overflow-hidden">
+            <div className="absolute right-24 top-1/2 -translate-y-1/2 w-[480px] h-[336px] pointer-events-none hidden lg:block z-[100] opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-300">
+              <div className="w-full h-full bg-indigo-900 border border-teal-300/30 overflow-hidden shadow-2xl">
                 {project.image ? (
                   <img
                     src={project.image}
@@ -307,6 +307,7 @@ const ProjectsNew: React.FC = () => {
               project={project}
               index={index}
               onPrefetch={prefetchProject}
+              mobileActionLabel={t.viewAction}
             />
           ))}
         </div>

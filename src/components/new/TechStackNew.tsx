@@ -26,30 +26,43 @@ const technologies: TechItem[] = [
 ];
 
 // Badge with corner decorations
-const TechBadge: React.FC<{ tech: TechItem; isHighlighted: boolean }> = ({ tech, isHighlighted }) => {
+const TechBadge: React.FC<{
+  tech: TechItem;
+  isHighlighted: boolean;
+}> = ({ tech, isHighlighted }) => {
   return (
-    <div 
-      className={`relative px-4 py-2 transition-all duration-300 flex-shrink-0 ${
-        isHighlighted ? ' ' : 'text-white/50'
+    <div
+      className={`relative w-[130px] px-4 py-2 transition-all duration-300 flex-shrink-0 flex items-center justify-center ${
+        isHighlighted ? " " : "text-white/50"
       }`}
     >
       {/* Corner decorations */}
-      <div className={`absolute top-0 left-0 w-2.5 h-2.5 border-t border-l transition-colors duration-300 ${
-        isHighlighted ? 'border-teal-300' : 'border-white/20'
-      }`} />
-      <div className={`absolute top-0 right-0 w-2.5 h-2.5 border-t border-r transition-colors duration-300 ${
-        isHighlighted ? 'border-teal-300' : 'border-white/20'
-      }`} />
-      <div className={`absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l transition-colors duration-300 ${
-        isHighlighted ? 'border-teal-300' : 'border-white/20'
-      }`} />
-      <div className={`absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r transition-colors duration-300 ${
-        isHighlighted ? 'border-teal-300' : 'border-white/20'
-      }`} />
-      
-      <span className={`font-jakarta text-sm whitespace-nowrap transition-colors duration-300 ${
-        isHighlighted ? 'text-teal-300 ' : 'text-white/50    '
-      }`}>
+      <div
+        className={`absolute top-0 left-0 w-2.5 h-2.5 border-t border-l transition-colors duration-300 ${
+          isHighlighted ? "border-teal-300" : "border-white/20"
+        }`}
+      />
+      <div
+        className={`absolute top-0 right-0 w-2.5 h-2.5 border-t border-r transition-colors duration-300 ${
+          isHighlighted ? "border-teal-300" : "border-white/20"
+        }`}
+      />
+      <div
+        className={`absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l transition-colors duration-300 ${
+          isHighlighted ? "border-teal-300" : "border-white/20"
+        }`}
+      />
+      <div
+        className={`absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r transition-colors duration-300 ${
+          isHighlighted ? "border-teal-300" : "border-white/20"
+        }`}
+      />
+
+      <span
+        className={`font-jakarta text-sm whitespace-nowrap transition-colors duration-300 ${
+          isHighlighted ? "text-teal-300" : "text-white/50"
+        }`}
+      >
         {tech.name}
       </span>
     </div>

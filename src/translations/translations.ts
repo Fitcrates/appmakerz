@@ -48,6 +48,7 @@ export const translations = {
     projects: {
       label: "[ 02 — Work ]",
       heading: "Selected Projects",
+      viewAction: "View",
       cta: "Want to work together?",
       items: {
         artovnia: {
@@ -331,6 +332,7 @@ export const translations = {
     projects: {
       label: "[ 02 — Projekty ]",
       heading: "Wybrane Projekty",
+      viewAction: "Zobacz",
       cta: "Chcesz współpracować?",
       items: {
         artovnia: {

@@ -12,10 +12,11 @@ const TechStackNew = lazy(() => import('./components/new/TechStackNew'));
 const AboutNew = lazy(() => import('./components/new/AboutNew'));
 const ProjectsNew = lazy(() => import('./components/new/ProjectsNew'));
 const ServicesNew = lazy(() => import('./components/new/ServicesNew'));
-const SolutionsNew = lazy(() => import('./components/new/SolutionsNew'));
+
 const ContactNew = lazy(() => import('./components/new/ContactNew'));
 const FooterNew = lazy(() => import('./components/new/FooterNew'));
 const CookieConsent = lazy(() => import('./components/CookieConsent'));
+const SystemsIBuild = lazy(() => import('./components/new/SystemsIBuild'));
 
 function App() {
   return (
@@ -42,8 +43,10 @@ function App() {
             <ServicesNew />
           </Suspense>
 
+      
+          
           <Suspense fallback={<LoadingFallback />}>
-            <SolutionsNew />
+            <SystemsIBuild />
           </Suspense>
 
           <Suspense fallback={<LoadingFallback />}>
