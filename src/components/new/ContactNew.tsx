@@ -18,7 +18,7 @@ const ContactNew: React.FC = () => {
     <section
       id="contact"
       ref={containerRef}
-      className="relative py-6 lg:py-24 bg-indigo-950 overflow-hidden"
+      className="relative py-20 lg:py-24 bg-indigo-950 overflow-hidden"
     >
       <Toaster
         position="bottom-center"

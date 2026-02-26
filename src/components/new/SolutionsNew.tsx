@@ -186,7 +186,7 @@ const SolutionsNew: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      id="solutions"
+      id="systems"
       className="relative py-20 lg:py-24 bg-indigo-950 overflow-visible"
       itemScope
       itemType="https://schema.org/ItemList"

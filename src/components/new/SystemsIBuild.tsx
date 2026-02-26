@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useMemo, useState, useEffect } from 'react';
+import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
 import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
@@ -77,6 +77,11 @@ const getStages = (t: typeof translations.en.solutions): StageData[] => [
 const SystemsIBuild: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const lastStageChangeRef = useRef(0);
+  const lastScrollYRef = useRef(0);
+  const accumulatedScrollDeltaRef = useRef(0);
+  const activeStageIndexRef = useRef(0);
+  const hasStageChangedInGestureRef = useRef(false);
+  const wasInPinnedRangeRef = useRef(false);
   const { language } = useLanguage();
   const t = translations[language].solutions;
   const stages = useMemo(() => getStages(t), [t]);
@@ -99,19 +104,113 @@ const SystemsIBuild: React.FC = () => {
     return () => mediaQuery.removeEventListener('change', updateMobileState);
   }, []);
 
-  const goToStage = (index: number) => {
+  const goToStage = useCallback((index: number) => {
     const boundedIndex = Math.max(0, Math.min(stages.length - 1, index));
     setActiveStageIndex(boundedIndex);
+    lastStageChangeRef.current = Date.now();
 
     const targetProgress = boundedIndex / stages.length;
     const sectionTop = sectionRef.current?.offsetTop || 0;
     const sectionHeight = sectionRef.current?.offsetHeight || 0;
     const scrollTarget = sectionTop + (sectionHeight * targetProgress) + 100;
     window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-  };
+  }, [stages.length]);
+
+  useEffect(() => {
+    activeStageIndexRef.current = activeStageIndex;
+  }, [activeStageIndex]);
+
+  const beginGesture = useCallback(() => {
+    if (!isMobile) return;
+    hasStageChangedInGestureRef.current = false;
+    accumulatedScrollDeltaRef.current = 0;
+    lastScrollYRef.current = window.scrollY;
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+
+    lastScrollYRef.current = window.scrollY;
+    accumulatedScrollDeltaRef.current = 0;
+
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
+      const delta = currentScrollY - lastScrollYRef.current;
+      lastScrollYRef.current = currentScrollY;
+
+      if (fixedPosition !== 'during') {
+        accumulatedScrollDeltaRef.current = 0;
+        return;
+      }
+
+      if (hasStageChangedInGestureRef.current) {
+        return;
+      }
+
+      const now = Date.now();
+      const stageChangeCooldown = 420;
+      if (now - lastStageChangeRef.current < stageChangeCooldown) {
+        return;
+      }
+
+      accumulatedScrollDeltaRef.current += delta;
+      const scrollThreshold = 40;
+
+      if (Math.abs(accumulatedScrollDeltaRef.current) < scrollThreshold) {
+        return;
+      }
+
+      const direction = accumulatedScrollDeltaRef.current > 0 ? 1 : -1;
+      const currentStage = activeStageIndexRef.current;
+      const targetStage = Math.max(0, Math.min(stages.length - 1, currentStage + direction));
+
+      accumulatedScrollDeltaRef.current = 0;
+
+      if (targetStage !== currentStage) {
+        hasStageChangedInGestureRef.current = true;
+        goToStage(targetStage);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [fixedPosition, goToStage, isMobile, stages.length]);
 
   useEffect(() => {
     const unsubscribe = scrollYProgress.on('change', (v) => {
+      if (isMobile) {
+        if (v <= 0) {
+          setFixedPosition('before');
+          setIsInView(false);
+          setActiveStageIndex(0);
+          activeStageIndexRef.current = 0;
+          wasInPinnedRangeRef.current = false;
+        } else if (v >= 1) {
+          setFixedPosition('after');
+          setIsInView(false);
+          setActiveStageIndex(stages.length - 1);
+          activeStageIndexRef.current = stages.length - 1;
+          wasInPinnedRangeRef.current = false;
+        } else {
+          setFixedPosition('during');
+          setIsInView(true);
+
+          if (!wasInPinnedRangeRef.current) {
+            const entryStage = v < 0.5 ? 0 : stages.length - 1;
+            setActiveStageIndex(entryStage);
+            activeStageIndexRef.current = entryStage;
+
+            // Lock the current drag/gesture so entering the section does not
+            // instantly advance to slide 2 on strong momentum.
+            hasStageChangedInGestureRef.current = true;
+            accumulatedScrollDeltaRef.current = 0;
+            lastScrollYRef.current = window.scrollY;
+            wasInPinnedRangeRef.current = true;
+          }
+        }
+        return;
+      }
+
       const stageCount = stages.length;
       const progressInStages = v * (stageCount - 1);
       const now = Date.now();
@@ -167,6 +266,8 @@ const SystemsIBuild: React.FC = () => {
       {/* Fixed viewport container */}
       <div 
         className="left-0 right-0 h-screen overflow-hidden"
+        onTouchStart={beginGesture}
+        onPointerDown={beginGesture}
         style={{
           position: isInView ? 'fixed' : 'absolute',
           top: fixedPosition === 'after' ? 'auto' : 0,
