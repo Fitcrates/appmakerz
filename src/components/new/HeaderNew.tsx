@@ -50,6 +50,7 @@ const HeaderNew: React.FC = () => {
   }, [location]);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    setIsMobileMenuOpen(false);
     if (href.startsWith('/#')) {
       e.preventDefault();
       const targetId = href.replace('/#', '');

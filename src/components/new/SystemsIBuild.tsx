@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
-import { motion, useScroll, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
@@ -86,14 +86,11 @@ const SystemsIBuild: React.FC = () => {
   const t = translations[language].solutions;
   const stages = useMemo(() => getStages(t), [t]);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-  });
-
   const [activeStageIndex, setActiveStageIndex] = useState(0);
   const [isInView, setIsInView] = useState(false);
-  const [fixedPosition, setFixedPosition] = useState<'before' | 'during' | 'after'>('before');
+  const [fixedPosition, setFixedPosition] = useState<
+    'before' | 'during' | 'after'
+  >('before');
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -101,20 +98,29 @@ const SystemsIBuild: React.FC = () => {
     const updateMobileState = () => setIsMobile(mediaQuery.matches);
     updateMobileState();
     mediaQuery.addEventListener('change', updateMobileState);
-    return () => mediaQuery.removeEventListener('change', updateMobileState);
+    return () =>
+      mediaQuery.removeEventListener('change', updateMobileState);
   }, []);
 
-  const goToStage = useCallback((index: number) => {
-    const boundedIndex = Math.max(0, Math.min(stages.length - 1, index));
-    setActiveStageIndex(boundedIndex);
-    lastStageChangeRef.current = Date.now();
+  const goToStage = useCallback(
+    (index: number) => {
+      const boundedIndex = Math.max(
+        0,
+        Math.min(stages.length - 1, index)
+      );
+      setActiveStageIndex(boundedIndex);
+      lastStageChangeRef.current = Date.now();
 
-    const targetProgress = boundedIndex / stages.length;
-    const sectionTop = sectionRef.current?.offsetTop || 0;
-    const sectionHeight = sectionRef.current?.offsetHeight || 0;
-    const scrollTarget = sectionTop + (sectionHeight * targetProgress) + 100;
-    window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-  }, [stages.length]);
+      const targetProgress = boundedIndex / stages.length;
+      const sectionTop = sectionRef.current?.offsetTop || 0;
+      const sectionHeight =
+        sectionRef.current?.offsetHeight || 0;
+      const scrollTarget =
+        sectionTop + sectionHeight * targetProgress + 100;
+      window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+    },
+    [stages.length]
+  );
 
   useEffect(() => {
     activeStageIndexRef.current = activeStageIndex;
@@ -149,20 +155,30 @@ const SystemsIBuild: React.FC = () => {
 
       const now = Date.now();
       const stageChangeCooldown = 420;
-      if (now - lastStageChangeRef.current < stageChangeCooldown) {
+      if (
+        now - lastStageChangeRef.current <
+        stageChangeCooldown
+      ) {
         return;
       }
 
       accumulatedScrollDeltaRef.current += delta;
       const scrollThreshold = 40;
 
-      if (Math.abs(accumulatedScrollDeltaRef.current) < scrollThreshold) {
+      if (
+        Math.abs(accumulatedScrollDeltaRef.current) <
+        scrollThreshold
+      ) {
         return;
       }
 
-      const direction = accumulatedScrollDeltaRef.current > 0 ? 1 : -1;
+      const direction =
+        accumulatedScrollDeltaRef.current > 0 ? 1 : -1;
       const currentStage = activeStageIndexRef.current;
-      const targetStage = Math.max(0, Math.min(stages.length - 1, currentStage + direction));
+      const targetStage = Math.max(
+        0,
+        Math.min(stages.length - 1, currentStage + direction)
+      );
 
       accumulatedScrollDeltaRef.current = 0;
 
@@ -176,8 +192,24 @@ const SystemsIBuild: React.FC = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, [fixedPosition, goToStage, isMobile, stages.length]);
 
+  // =============================================
+  // SCROLL PROGRESS — manual getBoundingClientRect
+  // replaces Framer Motion useScroll (Safari fix)
+  // =============================================
   useEffect(() => {
-    const unsubscribe = scrollYProgress.on('change', (v) => {
+    let rafId = 0;
+
+    const getProgress = (): number => {
+      if (!sectionRef.current) return 0;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      if (total <= 0) return 0;
+      return Math.max(0, Math.min(1, -rect.top / total));
+    };
+
+    const update = () => {
+      const v = getProgress();
+
       if (isMobile) {
         if (v <= 0) {
           setFixedPosition('before');
@@ -196,12 +228,11 @@ const SystemsIBuild: React.FC = () => {
           setIsInView(true);
 
           if (!wasInPinnedRangeRef.current) {
-            const entryStage = v < 0.5 ? 0 : stages.length - 1;
+            const entryStage =
+              v < 0.5 ? 0 : stages.length - 1;
             setActiveStageIndex(entryStage);
             activeStageIndexRef.current = entryStage;
 
-            // Lock the current drag/gesture so entering the section does not
-            // instantly advance to slide 2 on strong momentum.
             hasStageChangedInGestureRef.current = true;
             accumulatedScrollDeltaRef.current = 0;
             lastScrollYRef.current = window.scrollY;
@@ -211,13 +242,17 @@ const SystemsIBuild: React.FC = () => {
         return;
       }
 
+      // Desktop logic — identical to original
       const stageCount = stages.length;
       const progressInStages = v * (stageCount - 1);
       const now = Date.now();
-      const stageChangeCooldown = isMobile ? 450 : 200;
+      const stageChangeCooldown = 200;
 
       setActiveStageIndex((currentStage) => {
-        if (now - lastStageChangeRef.current < stageChangeCooldown) {
+        if (
+          now - lastStageChangeRef.current <
+          stageChangeCooldown
+        ) {
           return currentStage;
         }
 
@@ -225,9 +260,15 @@ const SystemsIBuild: React.FC = () => {
         const forwardThreshold = currentStage + 0.65;
         const backwardThreshold = currentStage - 0.65;
 
-        if (progressInStages >= forwardThreshold && currentStage < stageCount - 1) {
+        if (
+          progressInStages >= forwardThreshold &&
+          currentStage < stageCount - 1
+        ) {
           nextStage = currentStage + 1;
-        } else if (progressInStages <= backwardThreshold && currentStage > 0) {
+        } else if (
+          progressInStages <= backwardThreshold &&
+          currentStage > 0
+        ) {
           nextStage = currentStage - 1;
         }
 
@@ -237,7 +278,7 @@ const SystemsIBuild: React.FC = () => {
 
         return nextStage;
       });
-      
+
       if (v <= 0) {
         setFixedPosition('before');
         setIsInView(false);
@@ -248,9 +289,23 @@ const SystemsIBuild: React.FC = () => {
         setFixedPosition('during');
         setIsInView(true);
       }
-    });
-    return () => unsubscribe();
-  }, [isMobile, scrollYProgress, stages.length]);
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    onScroll(); // initial calculation
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      cancelAnimationFrame(rafId);
+    };
+  }, [isMobile, stages.length]);
 
   const activeStage = stages[activeStageIndex];
 
@@ -263,8 +318,8 @@ const SystemsIBuild: React.FC = () => {
       itemScope
       itemType="https://schema.org/ItemList"
     >
-      {/* Fixed viewport container */}
-      <div 
+      {/* Fixed viewport container — original positioning kept */}
+      <div
         className="left-0 right-0 h-screen overflow-hidden"
         onTouchStart={beginGesture}
         onPointerDown={beginGesture}
@@ -278,7 +333,7 @@ const SystemsIBuild: React.FC = () => {
         {stages.map((stage, index) => {
           const shouldShow = index <= activeStageIndex;
           const isActive = index === activeStageIndex;
-          
+
           return (
             <motion.div
               key={stage.id}
@@ -295,8 +350,8 @@ const SystemsIBuild: React.FC = () => {
               }}
             >
               <picture className="w-full h-full ">
-                <source 
-                  media="(max-width: 1023px)" 
+                <source
+                  media="(max-width: 1023px)"
                   srcSet={stage.mobileImage}
                 />
                 <motion.img
@@ -307,7 +362,9 @@ const SystemsIBuild: React.FC = () => {
                   initial={{ scale: 1.1, filter: 'blur(8px)' }}
                   animate={{
                     scale: isActive ? 1 : 1.05,
-                    filter: isActive ? 'blur(0px)' : 'blur(4px)',
+                    filter: isActive
+                      ? 'blur(0px)'
+                      : 'blur(4px)',
                   }}
                   transition={{
                     duration: 1.2,
@@ -320,10 +377,11 @@ const SystemsIBuild: React.FC = () => {
         })}
 
         {/* Dark overlay for text readability */}
-        <div 
+        <div
           className="absolute inset-0 z-10 "
           style={{
-            background: 'linear-gradient(to right, rgba(15, 11, 31, 0.95) 0%, rgba(15, 11, 31, 0.85) 40%, rgba(15, 11, 31, 0.6) 70%, rgba(15, 11, 31, 0.4) 100%)',
+            background:
+              'linear-gradient(to right, rgba(15, 11, 31, 0.95) 0%, rgba(15, 11, 31, 0.85) 40%, rgba(15, 11, 31, 0.6) 70%, rgba(15, 11, 31, 0.4) 100%)',
           }}
         />
 
@@ -352,8 +410,8 @@ const SystemsIBuild: React.FC = () => {
                   transition={{ duration: 0.8, delay: 0.2 }}
                   className="mb-8"
                 >
-                  <SpotlightText 
-                    as="h2" 
+                  <SpotlightText
+                    as="h2"
                     className="text-3xl sm:text-4xl lg:text-5xl font-light font-jakarta"
                     glowSize={150}
                   >
@@ -376,18 +434,28 @@ const SystemsIBuild: React.FC = () => {
                         className="flex items-center gap-4 mb-4"
                         initial={{ opacity: 0, x: -40 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 0.1,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
                       >
                         <motion.span
                           className="text-teal-300 font-mono text-base tracking-wider shrink-0"
-                          initial={{ scale: 0.8, opacity: 0 }}
+                          initial={{
+                            scale: 0.8,
+                            opacity: 0,
+                          }}
                           animate={{ scale: 1, opacity: 1 }}
-                          transition={{ duration: 0.4, delay: 0.2 }}
+                          transition={{
+                            duration: 0.4,
+                            delay: 0.2,
+                          }}
                         >
                           {activeStage.number}
                         </motion.span>
-                        <SpotlightText 
-                          as="h3" 
+                        <SpotlightText
+                          as="h3"
                           className="text-2xl sm:text-3xl lg:text-4xl font-light font-jakarta"
                           glowSize={120}
                         >
@@ -399,11 +467,15 @@ const SystemsIBuild: React.FC = () => {
                       <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{
+                          duration: 0.5,
+                          delay: 0.2,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
                         className="mb-4"
                       >
-                        <SpotlightText 
-                          as="p" 
+                        <SpotlightText
+                          as="p"
                           className="text-teal-300/80 font-jakarta text-base"
                           glowSize={100}
                         >
@@ -415,10 +487,14 @@ const SystemsIBuild: React.FC = () => {
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 0.3,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
                       >
-                        <SpotlightText 
-                          as="p" 
+                        <SpotlightText
+                          as="p"
                           className="font-jakarta text-base leading-relaxed max-w-xl"
                           glowSize={100}
                         >
@@ -444,14 +520,25 @@ const SystemsIBuild: React.FC = () => {
                       <motion.div
                         className="h-full bg-teal-300 rounded-full"
                         initial={{ scaleX: 0 }}
-                        animate={{ 
-                          scaleX: index <= activeStageIndex ? 1 : 0,
-                          opacity: index === activeStageIndex ? 1 : index < activeStageIndex ? 0.6 : 0,
+                        animate={{
+                          scaleX:
+                            index <= activeStageIndex
+                              ? 1
+                              : 0,
+                          opacity:
+                            index === activeStageIndex
+                              ? 1
+                              : index < activeStageIndex
+                                ? 0.6
+                                : 0,
                         }}
-                        transition={{ 
-                          duration: 0.5, 
+                        transition={{
+                          duration: 0.5,
                           ease: [0.22, 1, 0.36, 1],
-                          delay: index === activeStageIndex ? 0.1 : 0,
+                          delay:
+                            index === activeStageIndex
+                              ? 0.1
+                              : 0,
                         }}
                         style={{ originX: 0 }}
                       />
@@ -496,12 +583,18 @@ const SystemsIBuild: React.FC = () => {
               >
                 <motion.div
                   className="h-full bg-teal-300 rounded-full"
-                  animate={{ 
-                    scaleX: index <= activeStageIndex ? 1 : 0,
-                    opacity: index === activeStageIndex ? 1 : index < activeStageIndex ? 0.6 : 0,
+                  animate={{
+                    scaleX:
+                      index <= activeStageIndex ? 1 : 0,
+                    opacity:
+                      index === activeStageIndex
+                        ? 1
+                        : index < activeStageIndex
+                          ? 0.6
+                          : 0,
                   }}
-                  transition={{ 
-                    duration: 0.5, 
+                  transition={{
+                    duration: 0.5,
                     ease: [0.22, 1, 0.36, 1],
                   }}
                   style={{ originX: 0 }}
@@ -516,16 +609,17 @@ const SystemsIBuild: React.FC = () => {
             className="group flex items-center justify-center gap-3 w-full py-3  transition-colors rounded"
             aria-label="Contact me to discuss your project"
           >
-             <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">
+            <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">
               {t.cta}
             </span>
-             <div className="w-12 h-12 border border-white/20 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300" aria-hidden="true">
-             
+            <div
+              className="w-12 h-12 border border-white/20 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300"
+              aria-hidden="true"
+            >
               <ArrowUpRight className="w-5 h-5 text-white group-hover:text-indigo-950 transition-colors" />
             </div>
           </a>
         </div>
-
       </div>
 
       {/* SEO content */}
