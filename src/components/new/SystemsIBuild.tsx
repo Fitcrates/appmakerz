@@ -193,23 +193,43 @@ const SystemsIBuild: React.FC = () => {
   }, [fixedPosition, goToStage, isMobile, stages.length]);
 
   // =============================================
-  // SCROLL PROGRESS — manual getBoundingClientRect
-  // replaces Framer Motion useScroll (Safari fix)
+  // SCROLL PROGRESS — Safari-safe multi-layer tracking
+  // Replaces getBoundingClientRect per-frame which returns
+  // stale values on Safari with fixed-position children.
+  // Also adds polling + touchend layers for iOS momentum scroll
+  // where scroll events and rAF are paused.
   // =============================================
   useEffect(() => {
     let rafId = 0;
+    let lastV = -1;
+    let sectionTop = 0;
+    let sectionHeight = 0;
 
-    const getProgress = (): number => {
-      if (!sectionRef.current) return 0;
+    // Cache section position — avoids getBoundingClientRect per frame
+    const measureSection = () => {
+      if (!sectionRef.current) return;
       const rect = sectionRef.current.getBoundingClientRect();
-      const total = rect.height - window.innerHeight;
-      if (total <= 0) return 0;
-      return Math.max(0, Math.min(1, -rect.top / total));
+      sectionTop = rect.top + window.scrollY;
+      sectionHeight = rect.height;
     };
 
-    const update = () => {
-      const v = getProgress();
+    const getProgress = (): number => {
+      const total = sectionHeight - window.innerHeight;
+      if (total <= 0) return 0;
+      return Math.max(
+        0,
+        Math.min(1, (window.scrollY - sectionTop) / total)
+      );
+    };
 
+    const process = () => {
+      const v = getProgress();
+      // Skip if nothing meaningfully changed
+      const rounded = Math.round(v * 500) / 500;
+      if (rounded === lastV) return;
+      lastV = rounded;
+
+      // === Mobile logic ===
       if (isMobile) {
         if (v <= 0) {
           setFixedPosition('before');
@@ -232,7 +252,6 @@ const SystemsIBuild: React.FC = () => {
               v < 0.5 ? 0 : stages.length - 1;
             setActiveStageIndex(entryStage);
             activeStageIndexRef.current = entryStage;
-
             hasStageChangedInGestureRef.current = true;
             accumulatedScrollDeltaRef.current = 0;
             lastScrollYRef.current = window.scrollY;
@@ -242,7 +261,7 @@ const SystemsIBuild: React.FC = () => {
         return;
       }
 
-      // Desktop logic — identical to original
+      // === Desktop logic ===
       const stageCount = stages.length;
       const progressInStages = v * (stageCount - 1);
       const now = Date.now();
@@ -291,19 +310,51 @@ const SystemsIBuild: React.FC = () => {
       }
     };
 
+    measureSection();
+
+    // Layer 1: Scroll event — primary driver
     const onScroll = () => {
       cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(update);
+      rafId = requestAnimationFrame(process);
+    };
+
+    // Layer 2: Resize — recalculate cached section position
+    const onResize = () => {
+      measureSection();
+      process();
+    };
+
+    // Layer 3: Polling — catches iOS Safari momentum scroll
+    // where scroll events and rAF are paused
+    const pollId = setInterval(() => {
+      process();
+    }, 100);
+
+    // Layer 4: touchend — schedule catch-up recalculations
+    // during the full momentum scroll tail (~3 seconds)
+    const onTouchEnd = () => {
+      const delays = [100, 300, 600, 1000, 1500, 2000, 3000];
+      delays.forEach((delay) => {
+        setTimeout(() => {
+          measureSection();
+          process();
+        }, delay);
+      });
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-    onScroll(); // initial calculation
+    window.addEventListener('resize', onResize, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, {
+      passive: true,
+    });
+    process(); // initial calculation
 
     return () => {
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('touchend', onTouchEnd);
       cancelAnimationFrame(rafId);
+      clearInterval(pollId);
     };
   }, [isMobile, stages.length]);
 
@@ -318,7 +369,7 @@ const SystemsIBuild: React.FC = () => {
       itemScope
       itemType="https://schema.org/ItemList"
     >
-      {/* Fixed viewport container — original positioning kept */}
+      {/* Fixed viewport container */}
       <div
         className="left-0 right-0 h-screen overflow-hidden"
         onTouchStart={beginGesture}
@@ -337,7 +388,7 @@ const SystemsIBuild: React.FC = () => {
           return (
             <motion.div
               key={stage.id}
-              className="absolute inset-0 overflow-hidden "
+              className="absolute inset-0 overflow-hidden"
               style={{ zIndex: index }}
               initial={{ y: '100%', opacity: 0 }}
               animate={{
@@ -349,7 +400,7 @@ const SystemsIBuild: React.FC = () => {
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              <picture className="w-full h-full ">
+              <picture className="w-full h-full">
                 <source
                   media="(max-width: 1023px)"
                   srcSet={stage.mobileImage}
@@ -357,7 +408,7 @@ const SystemsIBuild: React.FC = () => {
                 <motion.img
                   src={stage.image}
                   alt={stage.title}
-                  className="w-full h-full object-fit "
+                  className="w-full h-full object-fit"
                   loading={index === 0 ? 'eager' : 'lazy'}
                   initial={{ scale: 1.1, filter: 'blur(8px)' }}
                   animate={{
@@ -378,7 +429,7 @@ const SystemsIBuild: React.FC = () => {
 
         {/* Dark overlay for text readability */}
         <div
-          className="absolute inset-0 z-10 "
+          className="absolute inset-0 z-10"
           style={{
             background:
               'linear-gradient(to right, rgba(15, 11, 31, 0.95) 0%, rgba(15, 11, 31, 0.85) 40%, rgba(15, 11, 31, 0.6) 70%, rgba(15, 11, 31, 0.4) 100%)',
@@ -506,7 +557,7 @@ const SystemsIBuild: React.FC = () => {
                 </div>
               </div>
 
-              {/* Bottom area - Progress + CTA (hidden on mobile, shown on desktop) */}
+              {/* Bottom area - Progress + CTA (desktop only) */}
               <div className="hidden lg:block mt-auto pt-8">
                 {/* Progress indicator - clickable */}
                 <div className="flex gap-2 mb-8 max-w-md">
@@ -571,7 +622,7 @@ const SystemsIBuild: React.FC = () => {
         </div>
 
         {/* Mobile fixed bottom bar - Progress + CTA */}
-        <div className="lg:hidden absolute bottom-0 left-0 right-0 z-30  px-4 py-4 safe-area-inset-bottom">
+        <div className="lg:hidden absolute bottom-0 left-0 right-0 z-30 px-4 py-4 safe-area-inset-bottom">
           {/* Progress indicator - clickable */}
           <div className="flex gap-2 mb-4 max-w-md mx-auto">
             {stages.map((stage, index) => (
@@ -606,7 +657,7 @@ const SystemsIBuild: React.FC = () => {
           {/* CTA */}
           <a
             href="#contact"
-            className="group flex items-center justify-center gap-3 w-full py-3  transition-colors rounded"
+            className="group flex items-center justify-center gap-3 w-full py-3 transition-colors rounded"
             aria-label="Contact me to discuss your project"
           >
             <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">
