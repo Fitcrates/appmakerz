@@ -192,11 +192,11 @@ const ServicesNew: React.FC = () => {
           </div>
 
           {/* Right column - Image with crack effect */}
-          <div className="lg:pt-64">
+          <div className="lg:flex lg:items-center">
             <motion.div
               ref={imageRef}
               style={{ y: imageY }}
-              className="relative aspect-[4/5]"
+              className="relative w-full aspect-[4/5]"
             >
             <CrackImage
               src="/media/services.webp"

@@ -1,11 +1,22 @@
 'use client';
 
-import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
+import {
+  Suspense,
+  lazy,
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { useIsWebKit } from '../../hooks/useIsWebKit';
 import { translations } from '../../translations/translations';
 import SpotlightText from './SpotlightText';
+
+const SystemsIBuildCarousel = lazy(() => import('./SystemsIBuildCarousel'));
 
 // ============================================
 // TYPES
@@ -74,7 +85,7 @@ const getStages = (t: typeof translations.en.solutions): StageData[] => [
 // ============================================
 // MAIN COMPONENT
 // ============================================
-const SystemsIBuild: React.FC = () => {
+const SystemsIBuildScroll: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const lastStageChangeRef = useRef(0);
   const lastScrollYRef = useRef(0);
@@ -694,6 +705,36 @@ const SystemsIBuild: React.FC = () => {
         </ul>
       </div>
     </section>
+  );
+};
+
+const SystemsIBuild: React.FC = () => {
+  const isWebKit = useIsWebKit();
+
+  if (isWebKit === null) {
+    return (
+      <section
+        id="solutions"
+        className="relative bg-indigo-950 h-screen"
+      />
+    );
+  }
+
+  if (!isWebKit) {
+    return <SystemsIBuildScroll />;
+  }
+
+  return (
+    <Suspense
+      fallback={
+        <section
+          id="solutions"
+          className="relative bg-indigo-950 h-screen"
+        />
+      }
+    >
+      <SystemsIBuildCarousel />
+    </Suspense>
   );
 };
 

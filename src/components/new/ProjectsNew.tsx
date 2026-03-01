@@ -165,7 +165,7 @@ const ProjectRow = memo<{ project: Project; index: number; onPrefetch: (slug: st
           onFocus={() => onPrefetch(project.slug)}
           onTouchStart={() => onPrefetch(project.slug)}
         >
-          <article className="group relative py-6 lg:h-[140px] border-b border-white/10 cursor-pointer hover:border-white/20 hover:z-50 transition-colors">
+          <article className="group relative py-6 lg:min-h-[180px] border-b border-white/10 cursor-pointer hover:border-white/20 hover:z-50 transition-colors">
             {/* Background hover effect - CSS only */}
             <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-300" />
 
