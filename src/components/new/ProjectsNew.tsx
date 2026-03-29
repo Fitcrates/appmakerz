@@ -97,10 +97,19 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
     title: t.items.portfolio.title,
     category: t.items.portfolio.category,
     description: t.items.portfolio.description,
-    image: "/media/mojaStrona2.webp",
-    slug: "personal-portfolio-website",
-    year: "2024",
+    image: "/media/alfaMain.webp",
+    slug: "alfaromeo-portfolio-website",
+    year: "2026",
   },
+  {
+    id: "5",
+  title: t.items.homebudget.title,
+    category: t.items.homebudget.category,
+    description: t.items.homebudget.description, 
+    image: "/media/HomeBudget.webp",
+    slug: "home-budget-ai-app",
+   year: "2026"
+}
 ];
 
 // ─── Variants (defined once outside component, no re-creation) ───
@@ -268,7 +277,7 @@ const ProjectsNew: React.FC = () => {
   const lineScaleX = useTransform(
     scrollYProgress,
     [0, 0.3],
-    [0, 1],
+    [0, 1]
   );
 
   return (

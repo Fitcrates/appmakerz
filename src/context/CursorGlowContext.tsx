@@ -15,9 +15,20 @@ export const useCursorGlow = () => useContext(CursorGlowContext);
 
 export const CursorGlowProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cursorPos, setCursorPos] = useState<CursorPosition>({ x: 0, y: 0 });
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | undefined>(undefined);
+  const lastUpdateRef = useRef<number>(0);
+  const THROTTLE_MS = 16; // ~60fps
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
+    const now = Date.now();
+    
+    // Throttle updates to reduce jitter
+    if (now - lastUpdateRef.current < THROTTLE_MS) {
+      return;
+    }
+    
+    lastUpdateRef.current = now;
+    
     // Use RAF for smoother updates and less jitter
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     rafRef.current = requestAnimationFrame(() => {

@@ -41,7 +41,8 @@ const HeaderNew: React.FC = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // Use passive listener for better scroll performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -66,14 +67,11 @@ const HeaderNew: React.FC = () => {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      <header
+        className={`fixed w-full backdrop-blur-sm z-50 shadow-sm transition-all duration-300 ${
           isScrolled
-            ? 'bg-indigo-950/80 backdrop-blur-lg border-b border-white/5'
-            : 'bg-transparent'
+            ? 'bg-indigo-950/80 border-b border-white/5'
+            : ''
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -126,7 +124,7 @@ const HeaderNew: React.FC = () => {
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* Mobile Menu */}
       <AnimatePresence>

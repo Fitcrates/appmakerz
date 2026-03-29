@@ -12,7 +12,7 @@ const HeroNew: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language].hero;
 
-  // Scroll transforms
+  // Scroll transforms - optimized
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -57,7 +57,7 @@ const HeroNew: React.FC = () => {
 
       {/* Main content */}
       <motion.div
-        style={{ y }}
+        style={{ y, willChange: "transform" }}
         className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20 [@media(max-height:800px)]:py-12"
       >
         {/* Visually hidden SEO h1 */}

@@ -21,9 +21,9 @@ const SystemsIBuild = lazy(() => import('./components/new/SystemsIBuild'));
 function App() {
   return (
     <CursorGlowProvider>
+      <HeaderNew />
+      
       <div className="bg-indigo-950 min-h-screen">
-        <HeaderNew />
-        
         <main>
           <HeroNew />
           

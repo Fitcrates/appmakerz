@@ -118,10 +118,10 @@ const AboutNew: React.FC = () => {
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
-  // Parallax for image
+  // Parallax for image - optimized
   const imageY = useTransform(scrollYProgress, [0, 1], ["10%", "-10%"]);
   const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1, 1.05]);
 
@@ -148,7 +148,7 @@ const AboutNew: React.FC = () => {
           {/* Left column - Image with burn effect */}
           <motion.div
             ref={imageRef}
-            style={{ y: imageY, scale: imageScale }}
+            style={{ y: imageY, scale: imageScale, willChange: "transform" }}
             className="relative aspect-[4/5] lg:sticky lg:top-32"
           >
             {/* Image with burn reveal effect */}

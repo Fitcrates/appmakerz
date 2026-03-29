@@ -20,9 +20,9 @@ const CookieConsent = lazy(() => import('./components/CookieConsent'));
 function AppNew() {
   return (
     <CursorGlowProvider>
+      <HeaderNew />
+      
       <div className="bg-indigo-950 min-h-screen">
-        <HeaderNew />
-        
         <main>
           <HeroNew />
           

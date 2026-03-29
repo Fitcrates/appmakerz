@@ -13,7 +13,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Remove smooth scroll - let Framer Motion handle it */
+  scroll-behavior: auto;
 }
 
 html, body {
@@ -27,6 +28,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  /* GPU acceleration removed - it breaks position: fixed */
 }
 
 *, *::before, *::after {
@@ -182,6 +184,10 @@ html, body {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  /* Performance optimizations */
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* iOS Safari specific styles */
@@ -347,6 +353,8 @@ textarea:-webkit-autofill:focus {
   display: inline-block;
   transition: transform 0.3s ease;
   will-change: transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .hover-bounce:hover {
@@ -460,6 +468,10 @@ main {
   position: relative;
   z-index: 1;
   background: transparent;
+  /* Optimize scroll performance */
+  will-change: scroll-position;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 /* Navigation buttons styling */
@@ -1110,4 +1122,57 @@ main {
   .svg-container {
     right: 150px;
   }
+}
+
+
+/* ===== SCROLL PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Optimize all sections for smooth scrolling */
+section {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+/* Optimize fixed/sticky elements */
+.fixed, [class*="fixed"], 
+.sticky, [class*="sticky"] {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize backdrop-blur for better performance */
+[class*="backdrop-blur"] {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimize images for scroll performance */
+img {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Optimize Framer Motion elements */
+[data-framer-component-type] {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }

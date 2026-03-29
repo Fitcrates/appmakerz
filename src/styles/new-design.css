@@ -1,8 +1,8 @@
 /* New Design System Styles - Premium Edition */
 
-/* Smooth scrolling */
+/* Smooth scrolling - disabled for better performance */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 /* Custom scrollbar - minimal */
@@ -33,7 +33,7 @@ html {
 .cursor-light {
   pointer-events: none;
   position: fixed;
-  z-index: 9999;
+  z-index: 9998;
   mix-blend-mode: screen;
 }
 

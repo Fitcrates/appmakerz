@@ -54,7 +54,7 @@ export const translations = {
         artovnia: {
           title: "Artovnia E-Commerce",
           category: "Web Development",
-          description: "Full-stack multi-vendor e-commerce marketplace built with Next.js and Node.js. Features advanced product filtering, secure Stripe payment processing, and a seamless checkout experience optimized for conversions.",
+          description: "Full-stack multi-vendor e-commerce marketplace built with Next.js and Node.js. Features advanced product management, rich features, secure Stripe payment processing, and a seamless checkout experience optimized for conversions.",
         },
         animeSearch: {
           title: "Anime Search Platform",
@@ -67,10 +67,16 @@ export const translations = {
           description: "Cross-platform React Native mobile app for real-time inventory management. Features barcode scanning, cloud synchronization, and offline-first architecture.",
         },
         portfolio: {
-          title: "Portfolio Website",
-          category: "Web Design",
-          description: "Modern developer portfolio built with React, Vite, TypeScript, Framer Motion, and Three.js. Smooth page transitions, 3D interactive elements, and optimized Core Web Vitals.",
+          title: "Alfa Romeo Demo",
+          category: "3d Web Design",
+          description: "Interactive Three.js car experience with custom-built physics, sound system, dynamic lighting, and cinematic presentation.",
         },
+          homebudget: {
+          title: "AI Home Budget",
+          category: "AI app",
+          description: "Aplikacja do śledzenia budżetu wykorzystująca AI. Automatyczne czytanie rachunków i dodawanie do kategorii i wydatków. Analizy, prognozy i porady AI"
+
+        }
       },
     },
 
@@ -338,7 +344,7 @@ export const translations = {
         artovnia: {
           title: "Artovnia E-Commerce",
           category: "Web Development",
-          description: "Full-stack wielosprzedawcowy marketplace e-commerce zbudowany z Next.js i Node.js. Zaawansowane filtrowanie produktów, bezpieczne płatności Stripe i płynna realizacja zamówień zoptymalizowana pod konwersje.",
+          description: "Full-stack marketplace e-commerce zbudowany z Next.js i Node.js. Zaawansowane zarządzanie produktami, rozbudowane funkcje, bezpieczne płatności Stripe i płynna realizacja zamówień zoptymalizowana pod konwersje.",
         },
         animeSearch: {
           title: "Platforma Wyszukiwania Anime",
@@ -351,10 +357,16 @@ export const translations = {
           description: "Wieloplatformowa aplikacja mobilna React Native do zarządzania magazynem w czasie rzeczywistym. Skanowanie kodów kreskowych, synchronizacja w chmurze i architektura offline-first.",
         },
         portfolio: {
-          title: "Strona Portfolio",
-          category: "Web Design",
-          description: "Nowoczesne portfolio developera zbudowane z React, Vite, TypeScript, Framer Motion i Three.js. Płynne przejścia stron, interaktywne elementy 3D i zoptymalizowane Core Web Vitals.",
+          title: "Alfa Romeo Demo",
+          category: "3d Web Design",
+          description: "Interaktywne doświadczenie samochodu w Three.js z autorską fizyką, dźwiękiem, dynamicznym oświetleniem i filmową prezentacją.",
         },
+        homebudget: {
+          title: "AI Budżet Domowy",
+          category: "AI app",
+          description: "Aplikacja do śledzenia budżetu wykorzystująca AI. Automatyczne czytanie rachunków i dodawanie do kategorii i wydatków. Analizy, prognozy i porady AI"
+
+        }
       },
     },
 

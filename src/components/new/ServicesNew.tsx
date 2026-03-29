@@ -127,10 +127,9 @@ const ServicesNew: React.FC = () => {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
-    layoutEffect: false
   });
 
-  // Parallax for image
+  // Parallax for image - optimized
   const imageY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
   return (
@@ -195,7 +194,7 @@ const ServicesNew: React.FC = () => {
           <div className="lg:flex lg:items-center">
             <motion.div
               ref={imageRef}
-              style={{ y: imageY }}
+              style={{ y: imageY, willChange: "transform" }}
               className="relative w-full aspect-[4/5]"
             >
             <CrackImage
