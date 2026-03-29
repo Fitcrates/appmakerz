@@ -34,14 +34,16 @@ function AppNew() {
             <AboutNew />
           </Suspense>
 
-          <Suspense fallback={<LoadingFallback />}>
-            <ProjectsNew />
-          </Suspense>
+          
 
           <Suspense fallback={<LoadingFallback />}>
             <ServicesNew />
           </Suspense>
 
+          <Suspense fallback={<LoadingFallback />}>
+            <ProjectsNew />
+          </Suspense>
+          
           <Suspense fallback={<LoadingFallback />}>
             <SolutionsNew />
           </Suspense>

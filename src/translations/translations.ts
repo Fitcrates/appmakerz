@@ -336,7 +336,7 @@ export const translations = {
 
     // Projects Section (ProjectsNew)
     projects: {
-      label: "[ 02 — Projekty ]",
+      label: "[ 03 — Projekty ]",
       heading: "Wybrane Projekty",
       viewAction: "Zobacz",
       cta: "Chcesz współpracować?",
@@ -372,7 +372,7 @@ export const translations = {
 
     // Services Section (ServicesNew)
     services: {
-      label: "[ 03 — Usługi ]",
+      label: "[ 02 — Usługi ]",
       heading: "Co robię",
       cta: "Porozmawiajmy o Twoim projekcie",
       items: {

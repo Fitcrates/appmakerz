@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useInView, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import BurnSpotlightText from './BurnSpotlightText';
 import SpotlightText from './SpotlightText';
@@ -137,6 +137,34 @@ const SolutionsNew: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language].solutions;
   const solutions = getSolutions(t);
+
+  // Scroll-based card switching
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Map scroll progress to solution index
+  const solutionIndex = useTransform(
+    scrollYProgress,
+    [0.2, 0.4, 0.5, 0.6, 0.7, 0.8],
+    [0, 1, 2, 3, 4, 4]
+  );
+
+  // Update active solution based on scroll
+  useEffect(() => {
+    if (isMobile) return; // Only on desktop
+    
+    const unsubscribe = solutionIndex.on('change', (latest) => {
+      const index = Math.round(latest);
+      if (index >= 0 && index < solutions.length) {
+        setActiveIndex(index);
+        setActiveImage(solutions[index].image);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [solutionIndex, solutions, isMobile]);
 
   // Detect mobile/touch device
   useEffect(() => {

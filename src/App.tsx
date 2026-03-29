@@ -35,14 +35,14 @@ function App() {
             <AboutNew />
           </Suspense>
 
-          <Suspense fallback={<LoadingFallback />}>
-            <ProjectsNew />
-          </Suspense>
+         
 
           <Suspense fallback={<LoadingFallback />}>
             <ServicesNew />
           </Suspense>
-
+          <Suspense fallback={<LoadingFallback />}>
+            <ProjectsNew />
+          </Suspense>
       
           
           <Suspense fallback={<LoadingFallback />}>
