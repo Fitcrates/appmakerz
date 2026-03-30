@@ -19,9 +19,9 @@ export const translations = {
     // Hero Section (HeroNew)
     hero: {
       label: "Fullstack Developer",
-      heading: "CRAFTING\nDIGITAL\nEXPERIENCES",
-      seoHeading: "Fullstack Web Developer — React & Next.js Applications | AppCrates",
-      subtitle: "Building modern, performant web applications with React & Next.js. From concept to deployment.",
+      heading: "ELECTRIFY\nYOUR BUSINESS\nONLINE",
+      seoHeading: "Fullstack Web Developer — React & Next.js Applications, Websites and e-commerce shops and marketplaces | AppCrates",
+      subtitle: "I build online shops, landing pages, and AI-powered apps that grow your business. Complete solutions from start to finish.",
       cta: {
         viewWork: "VIEW MORE",
         getInTouch: "GET IN TOUCH",
@@ -32,10 +32,10 @@ export const translations = {
     // About Section (AboutNew)
     about: {
       label: "[ 01 — About ]",
-      heading: "Building digital\nproducts that\nmatter",
+      heading: "Solutions that\ngrow your\nbusiness",
       description: {
-        p1: "I'm the developer behind AppCrates — a fullstack developer with a passion for creating exceptional digital experiences. From concept to deployment, I build solutions that are both beautiful and functional.",
-        p2: "My approach combines clean code principles with modern design patterns, ensuring every project is scalable, maintainable, and built to last.",
+        p1: "I help businesses succeed online. Whether you need an e-commerce shop to sell products, a landing page that converts visitors into customers, or AI-powered apps to automate your workflows — I deliver complete solutions from start to finish.",
+        p2: "You get a partner who understands your business goals. I handle everything: design, development, content management systems you can update yourself, and ongoing support. No technical knowledge needed on your end.",
       },
       stats: {
         years: { value: "2+", label: "Years" },
@@ -88,23 +88,23 @@ export const translations = {
       items: {
         webDev: {
           number: "01",
-          title: "Web Development",
-          description: "Custom web applications built with React, Next.js, TypeScript, and modern frameworks. Performance-optimized, SEO-friendly, and scalable.",
+          title: "E-Commerce Shops & Marketplaces",
+          description: "Complete online stores where you can sell your products. Secure payment processing, inventory tracking, and everything you need to run your business online. Multi-vendor marketplaces supported.",
         },
         backend: {
           number: "02",
-          title: "Backend Systems",
-          description: "Robust server-side solutions with Node.js, Express, REST APIs, and GraphQL. Database design with PostgreSQL. Authentication, caching, and optimization.",
+          title: "Landing Pages You Control",
+          description: "High-converting landing pages with easy content management. Update text, images, and offers yourself without calling a developer. Perfect for marketing campaigns and product launches.",
         },
         ecommerce: {
           number: "03",
-          title: "E-Commerce & Marketplaces",
-          description: "Online shops and marketplace platforms with secure payments, inventory management, and seamless user experience.",
+          title: "AI-Powered Applications",
+          description: "Smart apps that automate your business workflows. From AI chatbots to automated data processing — solutions that save you time and money.",
         },
         responsive: {
           number: "04",
-          title: "Responsive Design",
-          description: "Fully responsive applications that work flawlessly on desktop, tablet, and mobile. One codebase, all devices.",
+          title: "Complete A-Z Solutions",
+          description: "Full-service support from initial concept to launch and beyond. Works perfectly on phones, tablets, and computers. I handle everything so you can focus on your business.",
         },
       },
     },
@@ -309,9 +309,9 @@ export const translations = {
     // Hero Section (HeroNew)
     hero: {
       label: "Fullstack Developer",
-      heading: "TWORZĘ\nCYFROWE\nDOŚWIADCZENIA",
-      seoHeading: "Fullstack Web Developer — Aplikacje React & Next.js | AppCrates",
-      subtitle: "Buduję nowoczesne, wydajne aplikacje webowe z React & Next.js. Od koncepcji do wdrożenia.",
+      heading: "ELEKTRYZUJ\nSWÓJ BIZNES\nW SIECI",
+      seoHeading: "Fullstack Web Developer — Strony, aplikacje, sklepy i marketplace w React & Next.js | AppCrates",
+      subtitle: "Tworzę sklepy internetowe, landing page i aplikacje AI, które rozwijają Twój biznes. Kompleksowe rozwiązania od początku do końca.",
       cta: {
         viewWork: "ZOBACZ WIĘCEJ",
         getInTouch: "SKONTAKTUJ SIĘ",
@@ -322,10 +322,10 @@ export const translations = {
     // About Section (AboutNew)
     about: {
       label: "[ 01 — O mnie ]",
-      heading: "Tworzę cyfrowe\nprodukty, które\nmają znaczenie",
+      heading: "Rozwiązania, które\nrozwijają Twój\nbiznes",
       description: {
-        p1: "Jestem developerem stojącym za AppCrates — fullstack developerem z pasją do tworzenia wyjątkowych cyfrowych doświadczeń. Od koncepcji do wdrożenia, buduję rozwiązania, które są zarówno piękne, jak i funkcjonalne.",
-        p2: "Moje podejście łączy zasady czystego kodu z nowoczesnymi wzorcami projektowymi, zapewniając, że każdy projekt jest skalowalny, łatwy w utrzymaniu i trwały.",
+        p1: "Pomagam firmom odnosić sukcesy w internecie. Czy potrzebujesz sklepu internetowego do sprzedaży produktów, landing page który zamienia odwiedzających w klientów, czy aplikacji AI automatyzujących procesy — dostarczam kompletne rozwiązania od początku do końca.",
+        p2: "Zyskujesz partnera, który rozumie cele Twojego biznesu. Zajmuję się wszystkim: projektem, programowaniem, systemami zarządzania treścią które możesz sam aktualizować, oraz stałym wsparciem. Nie potrzebujesz wiedzy technicznej.",
       },
       stats: {
         years: { value: "2+", label: "Lata" },
@@ -378,23 +378,23 @@ export const translations = {
       items: {
         webDev: {
           number: "01",
-          title: "Web Development",
-          description: "Niestandardowe aplikacje webowe zbudowane z React, Next.js, TypeScript i nowoczesnymi frameworkami. Zoptymalizowane pod wydajność, przyjazne SEO i skalowalne.",
+          title: "Sklepy Internetowe i Marketplace",
+          description: "Kompletne sklepy online, gdzie możesz sprzedawać swoje produkty. Bezpieczne płatności, śledzenie stanów magazynowych i wszystko czego potrzebujesz do prowadzenia biznesu online. Obsługa platform multi-vendor.",
         },
         backend: {
           number: "02",
-          title: "Systemy Backend",
-          description: "Solidne rozwiązania serwerowe z Node.js, Express, REST API i GraphQL. Projektowanie baz danych z PostgreSQL. Uwierzytelnianie, cache i optymalizacja.",
+          title: "Landing Page Które Kontrolujesz",
+          description: "Strony konwertujące z łatwym zarządzaniem treścią. Aktualizuj teksty, zdjęcia i oferty sam, bez dzwonienia do programisty. Idealne na kampanie marketingowe i premiery produktów.",
         },
         ecommerce: {
           number: "03",
-          title: "E-Commerce i Marketplace",
-          description: "Sklepy internetowe i platformy marketplace z bezpiecznymi płatnościami, zarządzaniem magazynem i płynnym doświadczeniem użytkownika.",
+          title: "Aplikacje Wykorzystujące AI",
+          description: "Inteligentne aplikacje automatyzujące procesy w Twojej firmie. Od chatbotów AI po automatyczne przetwarzanie danych — rozwiązania oszczędzające Twój czas i pieniądze.",
         },
         responsive: {
           number: "04",
-          title: "Responsywny Design",
-          description: "W pełni responsywne aplikacje działające bezbłędnie na komputerach, tabletach i urządzeniach mobilnych. Jeden kod, wszystkie urządzenia.",
+          title: "Kompleksowe Rozwiązania A-Z",
+          description: "Pełne wsparcie od początkowej koncepcji przez uruchomienie aż po dalszą obsługę. Działa perfekcyjnie na telefonach, tabletach i komputerach. Zajmuję się wszystkim, abyś mógł skupić się na biznesie.",
         },
       },
     },
