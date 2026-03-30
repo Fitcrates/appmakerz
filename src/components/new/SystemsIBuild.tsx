@@ -123,9 +123,9 @@ const SystemsIBuildScroll: React.FC = () => {
       lastStageChangeRef.current = Date.now();
 
       const targetProgress = boundedIndex / stages.length;
-      const sectionTop = sectionRef.current?.offsetTop || 0;
-      const sectionHeight =
-        sectionRef.current?.offsetHeight || 0;
+      const rect = sectionRef.current?.getBoundingClientRect();
+      const sectionTop = (rect?.top || 0) + window.scrollY;
+      const sectionHeight = rect?.height || 0;
       const scrollTarget =
         sectionTop + sectionHeight * targetProgress + 100;
       window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
@@ -215,6 +215,7 @@ const SystemsIBuildScroll: React.FC = () => {
     let lastV = -1;
     let sectionTop = 0;
     let sectionHeight = 0;
+    let lastDocHeight = 0;
 
     // Cache section position — avoids getBoundingClientRect per frame
     const measureSection = () => {
@@ -225,6 +226,12 @@ const SystemsIBuildScroll: React.FC = () => {
     };
 
     const getProgress = (): number => {
+      // Refresh measurements if document height changes (e.g. from lazy loaded images)
+      const currentDocHeight = document.documentElement.scrollHeight;
+      if (currentDocHeight !== lastDocHeight) {
+        measureSection();
+        lastDocHeight = currentDocHeight;
+      }
       const total = sectionHeight - window.innerHeight;
       if (total <= 0) return 0;
       return Math.max(
