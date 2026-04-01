@@ -64,7 +64,7 @@ export const translations = {
         flixstock: {
           title: "FlixStock Mobile",
           category: "Mobile App",
-          description: "Cross-platform React Native mobile app for real-time inventory management. Features barcode scanning, cloud synchronization, and offline-first architecture.",
+          description: "Cross-platform mobile app for real-time inventory management. Features barcode scanning, cloud synchronization, and offline-first architecture.",
         },
         portfolio: {
           title: "Alfa Romeo Demo",
@@ -359,7 +359,7 @@ export const translations = {
         flixstock: {
           title: "FlixStock Mobile",
           category: "Aplikacja Mobilna",
-          description: "Wieloplatformowa aplikacja mobilna React Native do zarządzania magazynem w czasie rzeczywistym. Skanowanie kodów kreskowych, synchronizacja w chmurze i architektura offline-first.",
+          description: "Wieloplatformowa aplikacja mobilna do zarządzania magazynem w czasie rzeczywistym. Skanowanie kodów kreskowych, synchronizacja w chmurze i architektura offline-first.",
         },
         portfolio: {
           title: "Alfa Romeo Demo",
