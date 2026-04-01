@@ -75,7 +75,16 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
     year: "2026",
   },
   {
-    id: "2",
+id: "2", 
+title: t.items.spaWebsite.title,
+category: t.items.spaWebsite.category,
+description: t.items.spaWebsite.description,
+image: "media/LandingDemo.webp",
+slug: "glow-and-serenity-spa-website-with-headless-cms",
+year: "2026",
+  },
+  {
+    id: "3",
     title: t.items.animeSearch.title,
     category: t.items.animeSearch.category,
     description: t.items.animeSearch.description,
@@ -84,7 +93,7 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
     year: "2025",
   },
   {
-    id: "3",
+    id: "4",
     title: t.items.flixstock.title,
     category: t.items.flixstock.category,
     description: t.items.flixstock.description,
@@ -93,7 +102,7 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
     year: "2024",
   },
   {
-    id: "4",
+    id: "5",
     title: t.items.portfolio.title,
     category: t.items.portfolio.category,
     description: t.items.portfolio.description,
@@ -102,7 +111,7 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
     year: "2026",
   },
   {
-    id: "5",
+    id: "6",
   title: t.items.homebudget.title,
     category: t.items.homebudget.category,
     description: t.items.homebudget.description, 

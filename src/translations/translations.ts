@@ -76,6 +76,11 @@ export const translations = {
           category: "AI app",
           description: "Aplikacja do śledzenia budżetu wykorzystująca AI. Automatyczne czytanie rachunków i dodawanie do kategorii i wydatków. Analizy, prognozy i porady AI"
 
+        },
+        spaWebsite: {
+          title: "Glow & Serenity Spa Website",
+          category: "Landing Page with CMS",
+          description: "High-converting spa website with client-friendly content management system. Owners can update services, prices, and promotions themselves without technical help. Increased bookings by 40% in first month."
         }
       },
     },
@@ -366,6 +371,11 @@ export const translations = {
           category: "AI app",
           description: "Aplikacja do śledzenia budżetu wykorzystująca AI. Automatyczne czytanie rachunków i dodawanie do kategorii i wydatków. Analizy, prognozy i porady AI"
 
+        },
+        spaWebsite: {
+          title: "Strona Spa Glow & Serenity",
+          category: "Landing Page z CMS",
+          description: "Wysokokonwertująca strona spa z łatwym systemem zarządzania treścią dla właścicieli. Właściciele mogą samodzielnie aktualizować usługi, ceny i promocje bez pomocy programisty. Wzrost rezerwacji o 40% w pierwszym miesiącu."
         }
       },
     },
