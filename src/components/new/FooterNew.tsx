@@ -245,7 +245,7 @@ const FooterNew: React.FC = () => {
                 <ul className="space-y-4" role="list">
                   <li>
                     <a
-                      href="mailto:aeonofshreds@gmail.com"
+                      href="mailto:appcratesdev@gmail.com"
                       className="text-white/60 font-jakarta hover:text-teal-300 transition-colors"
                     >
                       {t.links.email}

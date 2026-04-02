@@ -72,7 +72,7 @@ const ContactNew: React.FC = () => {
                   {t.info.email.label}
                 </span>
                 <a
-                  href="mailto:aeonofshreds@gmail.com"
+                  href="mailto:appcratesdev@gmail.com"
                   className="text-xl text-white font-jakarta hover:text-teal-300 transition-colors"
                 >
                   {t.info.email.value}
