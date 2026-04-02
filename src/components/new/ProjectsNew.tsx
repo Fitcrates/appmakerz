@@ -92,15 +92,17 @@ year: "2026",
     slug: "anime-platform",
     year: "2025",
   },
-  {
+ {
     id: "4",
-    title: t.items.flixstock.title,
-    category: t.items.flixstock.category,
-    description: t.items.flixstock.description,
-    image: "/media/packstock.webp",
-    slug: "flixstock-app",
-    year: "2024",
-  },
+  title: t.items.homebudget.title,
+    category: t.items.homebudget.category,
+    description: t.items.homebudget.description, 
+    image: "/media/HomeBudget.webp",
+    slug: "home-budget-ai-app",
+   year: "2026"
+},
+
+ 
   {
     id: "5",
     title: t.items.portfolio.title,
@@ -110,15 +112,16 @@ year: "2026",
     slug: "alfaromeo-portfolio-website",
     year: "2026",
   },
-  {
+   {
     id: "6",
-  title: t.items.homebudget.title,
-    category: t.items.homebudget.category,
-    description: t.items.homebudget.description, 
-    image: "/media/HomeBudget.webp",
-    slug: "home-budget-ai-app",
-   year: "2026"
-}
+    title: t.items.flixstock.title,
+    category: t.items.flixstock.category,
+    description: t.items.flixstock.description,
+    image: "/media/packstock.webp",
+    slug: "flixstock-app",
+    year: "2024",
+  },
+ 
 ];
 
 // ─── Variants (defined once outside component, no re-creation) ───
