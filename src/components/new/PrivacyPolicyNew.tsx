@@ -61,7 +61,7 @@ Additionally, we use Google Analytics to collect anonymous data about your inter
         },
         {
           title: '7. Contact Us',
-          content: `If you have any questions about this Privacy Policy, please contact us through the contact form or directly at: aeonofshreds@gmail.com`
+          content: `If you have any questions about this Privacy Policy, please contact us through the contact form or directly at: appcratesdev@gmail.com`
         }
       ]
     },
@@ -115,7 +115,7 @@ Dodatkowo, używamy Google Analytics do zbierania anonimowych danych o Twoich in
         },
         {
           title: '7. Kontakt',
-          content: `Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktuj się z nami przez formularz kontaktowy lub bezpośrednio na email: aeonofshreds@gmail.com`
+          content: `Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktuj się z nami przez formularz kontaktowy lub bezpośrednio na email: appcratesdev@gmail.com`
         }
       ]
     }

@@ -158,7 +158,7 @@ export const translations = {
       label: "[ 05 — Contact ]",
       heading: "Let's work together",
       info: {
-        email: { label: "Email", value: "aeonofshreds@gmail.com" },
+        email: { label: "Email", value: "appcratesdev@gmail.com" },
         phone: { label: "Phone", value: "+48 733 433 230" },
         location: { label: "Location", value: "Wrocław, Poland" },
       },
@@ -453,7 +453,7 @@ export const translations = {
       label: "[ 05 — Kontakt ]",
       heading: "Pracujmy razem",
       info: {
-        email: { label: "Email", value: "aeonofshreds@gmail.com" },
+        email: { label: "Email", value: "appcratesdev@gmail.com" },
         phone: { label: "Telefon", value: "+48 733 433 230" },
         location: { label: "Lokalizacja", value: "Wrocław, Polska" },
       },
