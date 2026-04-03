@@ -4,6 +4,7 @@ import { ArrowUp, Mail, ArrowRight, Check } from 'lucide-react';
 import { HashLink } from 'react-router-hash-link';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
+import { trackContactClick } from '../../utils/gtm';
 
 const getFooterNavItems = (t: typeof translations.en.nav) => [
   { name: t.home, hash: 'hero' },
@@ -246,6 +247,7 @@ const FooterNew: React.FC = () => {
                   <li>
                     <a
                       href="mailto:appcratesdev@gmail.com"
+                      onClick={() => trackContactClick('email', 'appcratesdev@gmail.com')}
                       className="text-white/60 font-jakarta hover:text-teal-300 transition-colors"
                     >
                       {t.links.email}

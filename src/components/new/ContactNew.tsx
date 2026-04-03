@@ -6,6 +6,7 @@ import { useEmailForm } from '../../hooks/useEmailForm';
 import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
+import { trackContactClick } from '../../utils/gtm';
 
 const ContactNew: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -73,6 +74,7 @@ const ContactNew: React.FC = () => {
                 </span>
                 <a
                   href="mailto:appcratesdev@gmail.com"
+                  onClick={() => trackContactClick('email', 'appcratesdev@gmail.com')}
                   className="text-xl text-white font-jakarta hover:text-teal-300 transition-colors"
                 >
                   {t.info.email.value}
@@ -85,6 +87,7 @@ const ContactNew: React.FC = () => {
                 </span>
                 <a
                   href="tel:+48733433230"
+                  onClick={() => trackContactClick('phone', '+48733433230')}
                   className="text-xl text-white font-jakarta hover:text-teal-300 transition-colors"
                 >
                   {t.info.phone.value}

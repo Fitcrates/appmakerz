@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { sendEmail } from '../services/emailService';
+import { trackFormSubmit } from '../utils/gtm';
 
 interface FormData {
   name: string;
@@ -68,6 +69,10 @@ export const useEmailForm = () => {
 
       if (response.status === 200) {
         toast.success(successToastMessage);
+        
+        // Track the successful form submission in GTM
+        trackFormSubmit('contact_form');
+        
         setFormData(initialState);
         setIsSuccess(true);
       } else {
