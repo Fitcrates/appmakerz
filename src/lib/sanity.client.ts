@@ -69,7 +69,15 @@ export async function getPosts() {
       },
       viewCount,
       tags,
-  }
+      seo {
+        metaTitle { en, pl },
+        metaDescription { en, pl },
+        keywords,
+        canonicalUrl,
+        ogImage,
+        noIndex
+      }
+    }
   `);
   setCache(cacheKey, posts);
   return posts;
@@ -118,7 +126,15 @@ export async function getPost(slug: string) {
       },
       viewCount,
       categories,
-      tags
+      tags,
+      seo {
+        metaTitle { en, pl },
+        metaDescription { en, pl },
+        keywords,
+        canonicalUrl,
+        ogImage,
+        noIndex
+      }
     }`,
     { slug }
   );
@@ -147,7 +163,15 @@ export async function getProject(slug: string): Promise<any> {
       projectUrl,
       githubUrl,
       blogUrl,
-      publishedAt
+      publishedAt,
+      seo {
+        metaTitle { en, pl },
+        metaDescription { en, pl },
+        keywords,
+        canonicalUrl,
+        ogImage,
+        noIndex
+      }
     }`,
     { slug }
   );

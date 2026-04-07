@@ -76,5 +76,6 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1",
     "vite": "^6.4.1"
-  }
+  },
+  "packageManager": "pnpm@10.30.0+sha1.5ab32d16948d9df591751fe7c9c442233fb0d600"
 }

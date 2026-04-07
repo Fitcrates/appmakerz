@@ -86,6 +86,14 @@ interface Post {
   excerpt?: { en: string; pl: string } | string;
   author?: { name: string; image?: any };
   viewCount?: number;
+  seo?: {
+    metaTitle?: { en: string; pl: string };
+    metaDescription?: { en: string; pl: string };
+    keywords?: string[];
+    canonicalUrl?: string;
+    ogImage?: any;
+    noIndex?: boolean;
+  };
 }
 
 const BlogPostPage = () => {
@@ -314,21 +322,30 @@ const BlogPostPage = () => {
     );
   }
 
+  const metaTitle = post?.seo?.metaTitle?.[language] || getTitle(post, language);
+  const metaDescription = post?.seo?.metaDescription?.[language] || getExcerpt(post, language);
+  const canonicalOverride = post?.seo?.canonicalUrl;
+  const noIndex = post?.seo?.noIndex;
+  const keywords = post?.seo?.keywords?.join(', ');
+  const customOgImage = post?.seo?.ogImage ? urlFor(post.seo.ogImage).width(1200).height(630).url() : null;
+
   return (
     <>
       <Helmet>
-        <title>{getTitle(post, language)}</title>
-        <meta name="description" content={getExcerpt(post, language)} />
-        <link rel="canonical" href={canonicalUrl} />
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDescription} />
+        {keywords && <meta name="keywords" content={keywords} />}
+        {noIndex && <meta name="robots" content="noindex,nofollow" />}
+        <link rel="canonical" href={canonicalOverride || canonicalUrl} />
         
         {/* Open Graph */}
         <meta property="og:type" content="article" />
-        <meta property="og:title" content={getTitle(post, language)} />
-        <meta property="og:description" content={getExcerpt(post, language)} /> 
-        <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:image" content={ogImageUrl} />
-        <meta property="og:image:url" content={ogImageUrl} />
-        <meta property="og:image:secure_url" content={ogImageUrl} />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDescription} /> 
+        <meta property="og:url" content={canonicalOverride || canonicalUrl} />
+        <meta property="og:image" content={customOgImage || ogImageUrl} />
+        <meta property="og:image:url" content={customOgImage || ogImageUrl} />
+        <meta property="og:image:secure_url" content={customOgImage || ogImageUrl} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/webp" />
@@ -338,9 +355,9 @@ const BlogPostPage = () => {
         
         {/* Twitter card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={getTitle(post, language)} />
-        <meta name="twitter:description" content={getExcerpt(post, language)} />
-        <meta name="twitter:image" content={ogImageUrl} />
+        <meta name="twitter:title" content={metaTitle} />
+        <meta name="twitter:description" content={metaDescription} />
+        <meta name="twitter:image" content={customOgImage || ogImageUrl} />
       </Helmet>
 
       <Header />
