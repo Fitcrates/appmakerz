@@ -118,7 +118,7 @@ Document Schema JSON example to guide your tool call:
       const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       const apiUrl = isLocalhost 
         ? 'http://localhost:8888/.netlify/functions/generateContent' 
-        : '/.netlify/functions/generateContent';
+        : 'https://appcrates.pl/.netlify/functions/generateContent';
 
       const res = await fetch(apiUrl, {
         method: 'POST',

@@ -29,7 +29,7 @@ export const AIGeneratorInput = (props: any) => {
       const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       const apiUrl = isLocalhost 
         ? 'http://localhost:8888/.netlify/functions/generateContent' // Dev url where Netlify CLI serves functions
-        : '/.netlify/functions/generateContent';
+        : 'https://appcrates.pl/.netlify/functions/generateContent';
 
       const res = await fetch(apiUrl, {
         method: 'POST',
