@@ -15,12 +15,32 @@ export const handler = async (event: any) => {
 
   try {
     const body = JSON.parse(event.body || "{}");
-    const { prompt, maxTokens = 500 } = body;
+    const { prompt, maxTokens = 500, systemPrompt, isJson, messages, tools, tool_choice } = body;
     const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable. Add it to .env or Netlify." }) };
     }
+
+    const defaultSystemPrompt = "You are an expert SEO copywriter. Only return the final text without quotes, formatting, or extra conversation.";
+
+    let payloadMessages = messages;
+    if (!payloadMessages) {
+       payloadMessages = [
+          { role: "system", content: systemPrompt || defaultSystemPrompt },
+          { role: "user", content: prompt }
+       ];
+    }
+
+    const payload: any = {
+      model: "gpt-4o",
+      messages: payloadMessages,
+      max_tokens: maxTokens,
+    };
+
+    if (isJson) payload.response_format = { type: "json_object" };
+    if (tools) payload.tools = tools;
+    if (tool_choice) payload.tool_choice = tool_choice;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -28,14 +48,7 @@ export const handler = async (event: any) => {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: "You are an expert SEO copywriter. Only return the final text without quotes, formatting, or extra conversation." },
-          { role: "user", content: prompt }
-        ],
-        max_tokens: maxTokens,
-      }),
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
@@ -44,7 +57,10 @@ export const handler = async (event: any) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ text: data.choices[0].message.content }),
+      body: JSON.stringify({ 
+        text: data.choices[0].message.content,
+        message: data.choices[0].message
+      }),
     };
   } catch (error: any) {
     return {

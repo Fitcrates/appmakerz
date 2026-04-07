@@ -300,10 +300,10 @@ const handler: Handler = async (event) => {
       `);
 
       // Filter subscribers based on post categories
-      const relevantSubscribers = subscribers.filter(subscriber => {
+      const relevantSubscribers = subscribers.filter((subscriber: any) => {
         if (!post.categories || post.categories.length === 0) return true;
         if (!subscriber.subscribedCategories || subscriber.subscribedCategories.length === 0) return true;
-        return post.categories.some(category => 
+        return post.categories.some((category: any) => 
           subscriber.subscribedCategories.includes(category)
         );
       });
@@ -327,7 +327,7 @@ const handler: Handler = async (event) => {
 
       const failures = [];
       for (const batch of batches) {
-        const emailPromises = batch.map(subscriber => 
+        const emailPromises = batch.map((subscriber: any) => 
           sendEmail(subscriber, post, isTestMode)
             .catch(error => {
               console.error(`Failed to send email to ${subscriber.email}:`, error);

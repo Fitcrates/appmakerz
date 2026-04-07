@@ -1,4 +1,5 @@
 import { AIGeneratorInput } from '../../components/AIGeneratorInput';
+import { AIWholePostGenerator } from '../../components/AIWholePostGenerator';
 
 export default {
   name: 'post',
@@ -10,6 +11,13 @@ export default {
     { name: 'meta', title: 'Metadata' },
   ],
   fields: [
+    {
+      name: 'aiGenerate',
+      title: 'AI Generator',
+      type: 'text',
+      group: 'content',
+      components: { input: AIWholePostGenerator },
+    },
     {
       name: 'title',
       title: 'Title',
