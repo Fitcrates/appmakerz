@@ -130,8 +130,15 @@ Document Schema JSON example to guide your tool call:
         headers: { 'Content-Type': 'application/json' }
       });
 
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
+      const textResponse = await res.text();
+      let data;
+      try {
+        data = JSON.parse(textResponse);
+      } catch (e) {
+        throw new Error(`Server error or timeout. The backend returned HTML:\n${textResponse.slice(0, 100)}...`);
+      }
+
+      if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
 
       const aiMessage = data.message;
       let nextMsgs = [...newMsgs, aiMessage];
