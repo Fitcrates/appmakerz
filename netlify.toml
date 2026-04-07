@@ -1,11 +1,22 @@
 [build]
-  command = "npm run build"
+  command = "tsc && vite build"
   publish = "dist"
   functions = "netlify/functions"
 
-# Use Edge Functions instead of prerendering for social crawlers
+# Dynamic sitemap served via Netlify function
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/.netlify/functions/sitemap"
+  status = 200
+  force = true
+
+# Use Edge Functions for social crawlers (blog posts + projects)
 [[edge_functions]]
   path = "/blog/*"
+  function = "social-crawler"
+
+[[edge_functions]]
+  path = "/project/*"
   function = "social-crawler"
 
 # Redirect from Netlify subdomain to custom domain

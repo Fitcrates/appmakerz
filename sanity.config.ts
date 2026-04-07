@@ -1,7 +1,8 @@
 import { defineConfig } from 'sanity';
-import { deskTool } from 'sanity/desk';
+import { structureTool } from 'sanity/structure';
 import { visionTool } from '@sanity/vision';
 import { codeInput } from '@sanity/code-input';
+import { assist } from '@sanity/assist';
 import { schemaTypes } from './sanity.studio/schemas';
 
 export const config = defineConfig({
@@ -13,7 +14,7 @@ export const config = defineConfig({
   
   basePath: '/studio',
 
-  plugins: [deskTool(), visionTool(), codeInput()],
+  plugins: [structureTool(), visionTool(), codeInput(), assist()],
 
   schema: {
     types: schemaTypes,

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, type RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { ArrowUpRight, Search } from 'lucide-react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { useLanguage } from './context/LanguageContext';
 import { translations } from './translations/translations';
 import { usePosts, usePrefetchPost } from './hooks/useBlogPosts';

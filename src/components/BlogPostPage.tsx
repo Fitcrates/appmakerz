@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense, lazy } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { getPost, getPosts, getPostBody } from '../lib/sanity.client';
 import { getCache, setCache } from '../utils/cache';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { useNavigate } from 'react-router-dom';

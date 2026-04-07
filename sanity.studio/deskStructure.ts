@@ -1,4 +1,4 @@
-import { StructureBuilder } from 'sanity/desk';
+import { StructureBuilder } from 'sanity/structure';
 
 export default (S: StructureBuilder) =>
   S.list()
