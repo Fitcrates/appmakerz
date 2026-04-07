@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions';
-import sanityClient from '@sanity/client';
+import { createClient } from '@sanity/client';
 import * as emailjs from '@emailjs/nodejs';
 
 // Helper function to validate email configuration
@@ -41,7 +41,7 @@ const validateSanityConfig = () => {
   const requiredEnvVars = [
     'VITE_SANITY_PROJECT_ID',
     'VITE_SANITY_DATASET',
-    'VITE_SANITY_AUTH_TOKEN'
+    'BACKEND_SANITY_TOKEN'
   ];
 
   const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
@@ -172,7 +172,8 @@ const sendEmail = async (subscriber: any, post: any, isTest = false) => {
 };
 
 const handler: Handler = async (event) => {
-  const lockId = event.body ? JSON.parse(event.body)._id : 'default';
+  const parsedBody = event.body ? JSON.parse(event.body) : {};
+  const lockId = parsedBody._id || 'default';
   
   // Try to acquire lock
   if (!await acquireLock(lockId)) {
@@ -186,7 +187,7 @@ const handler: Handler = async (event) => {
   try {
     console.log('Function triggered with event:', {
       method: event.httpMethod,
-      body: event.body ? JSON.parse(event.body) : null
+      body: parsedBody
     });
 
     if (event.httpMethod !== 'POST') {
@@ -200,10 +201,10 @@ const handler: Handler = async (event) => {
       validateEmailConfig();
       validateSanityConfig();
 
-      const client = sanityClient({
-        projectId: process.env.VITE_SANITY_PROJECT_ID,
-        dataset: process.env.VITE_SANITY_DATASET,
-        token: process.env.VITE_SANITY_AUTH_TOKEN,
+      const client = createClient({
+        projectId: process.env.VITE_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID,
+        dataset: process.env.VITE_SANITY_DATASET || process.env.SANITY_DATASET,
+        token: process.env.BACKEND_SANITY_TOKEN || process.env.SANITY_TOKEN,
         useCdn: false,
         apiVersion: '2023-05-03'
       });

@@ -1,3 +1,5 @@
+import { AIGeneratorInput } from '../../components/AIGeneratorInput';
+
 export default {
   name: 'post',
   title: 'Post',
@@ -117,6 +119,8 @@ export default {
           name: 'en',
           title: 'English Excerpt',
           type: 'text',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Write an engaging 2-3 sentence blog post summary describing the article titled "{{title}}" in {{language}}.' },
           rows: 4,
           validation: (Rule: any) => Rule.max(300).warning('Keep excerpts under 300 chars for SEO'),
         },
@@ -124,6 +128,8 @@ export default {
           name: 'pl',
           title: 'Polish Excerpt',
           type: 'text',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Write an engaging 2-3 sentence blog post summary describing the article titled "{{title}}" in {{language}}.' },
           rows: 4,
           validation: (Rule: any) => Rule.max(300).warning('Keep excerpts under 300 chars for SEO'),
         },
@@ -310,6 +316,8 @@ export default {
               name: 'en',
               title: 'English',
               type: 'string',
+              components: { input: AIGeneratorInput },
+              options: { aiPrompt: 'Write an optimized SEO meta title for an article titled "{{title}}" in {{language}}. Keep it dramatic but descriptive. Return ONLY the title text, max 60 chars.' },
               validation: (Rule: any) =>
                 Rule.max(60).warning('Keep meta titles under 60 characters for best display in search results'),
             },
@@ -317,6 +325,8 @@ export default {
               name: 'pl',
               title: 'Polish',
               type: 'string',
+              components: { input: AIGeneratorInput },
+              options: { aiPrompt: 'Write an optimized SEO meta title for an article titled "{{title}}" in {{language}}. Keep it dramatic but descriptive. Return ONLY the title text, max 60 chars.' },
               validation: (Rule: any) =>
                 Rule.max(60).warning('Keep meta titles under 60 characters'),
             },
@@ -332,6 +342,8 @@ export default {
               name: 'en',
               title: 'English',
               type: 'text',
+              components: { input: AIGeneratorInput },
+              options: { aiPrompt: 'Write a strong SEO meta description for an article titled "{{title}}" in {{language}}. Max 150 characters, include a call to action. Return ONLY text.' },
               rows: 3,
               validation: (Rule: any) =>
                 Rule.max(160).warning('Optimal meta descriptions are 120-160 characters'),
@@ -340,6 +352,8 @@ export default {
               name: 'pl',
               title: 'Polish',
               type: 'text',
+              components: { input: AIGeneratorInput },
+              options: { aiPrompt: 'Write a strong SEO meta description for an article titled "{{title}}" in {{language}}. Max 150 characters, include a call to action. Return ONLY text.' },
               rows: 3,
               validation: (Rule: any) =>
                 Rule.max(160).warning('Optimal meta descriptions are 120-160 characters'),

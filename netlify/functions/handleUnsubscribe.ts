@@ -3,9 +3,9 @@ import { createClient } from '@sanity/client';
 
 // Initialize Sanity client with write access
 const client = createClient({
-  projectId: process.env.SANITY_PROJECT_ID!,
-  dataset: process.env.SANITY_DATASET!,
-  token: process.env.SANITY_TOKEN!,
+  projectId: process.env.VITE_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID,
+  dataset: process.env.VITE_SANITY_DATASET || process.env.SANITY_DATASET,
+  token: process.env.BACKEND_SANITY_TOKEN || process.env.SANITY_TOKEN,
   apiVersion: '2023-03-25',
   useCdn: false,
 });

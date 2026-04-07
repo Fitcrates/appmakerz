@@ -3,9 +3,9 @@ import { createClient } from '@sanity/client';
 import { v4 as uuidv4 } from 'uuid';
 
 const client = createClient({
-  projectId: process.env.SANITY_PROJECT_ID,
-  dataset: process.env.SANITY_DATASET,
-  token: process.env.SANITY_TOKEN,
+  projectId: process.env.VITE_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID,
+  dataset: process.env.VITE_SANITY_DATASET || process.env.SANITY_DATASET,
+  token: process.env.BACKEND_SANITY_TOKEN || process.env.SANITY_TOKEN,
   useCdn: false,
   apiVersion: '2024-02-20'
 });
