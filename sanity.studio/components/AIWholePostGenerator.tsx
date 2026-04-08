@@ -2,6 +2,45 @@ import { useCallback, useState, useEffect, useRef } from 'react'
 import { Stack, Button, Inline, Spinner, TextArea, Text, Box, Card, Flex, Select } from '@sanity/ui'
 import { set, useFormValue, useClient } from 'sanity'
 
+function ensureBlocks(input: any) {
+  if (!input) return [];
+  // Fallback: If the AI was lazy and just returned a string instead of a block array
+  if (typeof input === 'string') {
+    return [{
+      _type: 'block',
+      _key: Math.random().toString(36).substring(2, 9),
+      style: 'normal',
+      children: [{ _type: 'span', _key: Math.random().toString(36).substring(2, 9), text: input }]
+    }];
+  }
+
+  if (!Array.isArray(input)) return [];
+
+  return input.map(block => {
+    // If a nested item is mysteriously a string
+    if (typeof block === 'string') {
+      return {
+        _type: 'block',
+        _key: Math.random().toString(36).substring(2, 9),
+        style: 'normal',
+        children: [{ _type: 'span', _key: Math.random().toString(36).substring(2, 9), text: block }]
+      };
+    }
+    return {
+      ...block,
+      _key: block._key || Math.random().toString(36).substring(2, 9),
+      _type: 'block',
+      style: block.style || 'normal',
+      children: Array.isArray(block.children) ? block.children.map((child: any) => ({
+        ...child,
+        _key: child._key || Math.random().toString(36).substring(2, 9),
+        _type: 'span',
+        text: child.text || (typeof child === 'string' ? child : '')
+      })) : [{ _type: 'span', _key: Math.random().toString(36).substring(2, 9), text: '' }]
+    };
+  });
+}
+
 export const AIWholePostGenerator = (props: any) => {
   const { onChange, value } = props
   const [loading, setLoading] = useState(false)
@@ -30,29 +69,44 @@ export const AIWholePostGenerator = (props: any) => {
     }
   }, [value])
   
-  // Fetch context for AI to know what other posts/schemas exist
+  // Fetch context and references for AI
   useEffect(() => {
     const fetchContext = async () => {
       try {
-        const docs = await client.fetch(`*[_type in ["pages", "post", "project"]]{ 
-          _type, 
-          "titleEn": title.en, 
-          "titlePl": title.pl, 
-          "slug": slug.current,
-          "descEn": description.en,
-          "excerptEn": excerpt.en,
+        // 1. Fetch small contexts of everything
+        const allDocs = await client.fetch(`*[_type in ["pages", "post", "project"]]{ 
+          _type, "titleEn": title.en, "titlePl": title.pl, "slug": slug.current,
           "techs": technologies
         }`);
-        const contextStr = docs.map((d: any) => 
-          `- [${d._type}] ${d.titleEn || d.titlePl || 'Untitled'} (slug: /${d.slug || 'none'})\n  Summary: ${d.descEn || d.excerptEn || 'No details provided'}${d.techs ? `\n  Tech Stack: ${d.techs.join(', ')}` : ''}`
-        ).join('\n\n');
-        setContextData(contextStr);
+        const contextStr = allDocs.map((d: any) => 
+          `- [${d._type}] ${d.titleEn || d.titlePl || 'Untitled'} (slug: /${d.slug || 'none'})${d.techs ? ` Techs: ${d.techs.join(', ')}` : ''}`
+        ).join('\n');
+
+        // 2. Fetch full examples of the CURRENT document type (Reference Content)
+        let referencesStr = '';
+        if (documentType) {
+          const refs = await client.fetch(`*[_type == $docType && defined(body.en) && !(_id in path("drafts.**"))][0...2]{
+            "titleEn": title.en,
+            "titlePl": title.pl,
+            "descEn": description.en,
+            "excerptEn": excerpt.en,
+            "bodyEn": pt::text(body.en)
+          }`, { docType: documentType });
+          
+          if (refs && refs.length > 0) {
+            referencesStr = '\n\n--- EXISTING REFERENCE EXAMPLES (Match this style, structure, and length) ---\n' + 
+              refs.map((r:any) => `Title: ${r.titleEn || r.titlePl}\nSummary: ${r.descEn || r.excerptEn}\nBody Sample (Excerpt): ${r.bodyEn ? r.bodyEn.substring(0, 1500) + '...' : 'No text'}`).join('\n\n') +
+              '\n-----------------------------------------';
+          }
+        }
+
+        setContextData(contextStr + referencesStr);
       } catch (e) {
         console.error("Failed to fetch context", e);
       }
     };
-    fetchContext();
-  }, [client]);
+    if (documentType) fetchContext();
+  }, [client, documentType]);
 
   // Auto-scroll chat
   useEffect(() => {
@@ -94,26 +148,39 @@ export const AIWholePostGenerator = (props: any) => {
 
       const sysMsg = { 
         role: "system", 
-        content: `You are an expert AI Editor inside Sanity Studio helping to write a ${typeLabel}.
+        content: `You are an expert SEO copywriter and AI Editor inside Sanity Studio helping to write a ${typeLabel}.
 The current document title is: ${currentTitleEn || 'none'}
 
-Available context of other documents in the CMS (use this to suggest links, avoid duplicating titles, etc):
+AVAILABLE CONTEXT OF OTHER DOCUMENTS (use this to suggest links, avoid duplicating titles, and learn from existing content):
 ${contextData}
 
-You can chat, plan, and discuss with the user.
-CRITICAL INSTRUCTION: If the user asks you to write the post, fill out sections, or update any content, YOU MUST USE THE 'update_document' TOOL to physically update the CMS fields! 
-Do NOT just output the written text directly in the chat. The chat is for planning, but the actual content MUST be submitted via the 'update_document' tool!
-When using the 'update_document' tool, always generate fully formatted Portable Text for the 'body' array (with blocks containing _type='block' and style='normal').
-You can update partial fields or all fields at once depending on the user's request. Give detailed, long-form content when writing bodies!
-Document Schema JSON example to guide your tool call:
+CONTENT REQUIREMENTS:
+- Content MUST be detailed, comprehensive, and in-depth (400-800 words, at least 4-5 substantial paragraphs).
+- Use appropriate SEO keywords naturally — NEVER keyword-stuff.
+- Include practical advice, expert insights, and storytelling elements.
+- Sound authoritative, engaging, and highly professional.
+- Unless otherwise told, provide content for ALL required fields (title, slug, body, seo, etc).
+- SEO Meta Title should be max 60 chars. SEO Meta Description should be compelling and max 160 chars. Give 5-8 relevant keywords.
+
+PORTABLE TEXT REQUIREMENTS:
+- The "body" field MUST be valid Sanity Portable Text (blockContent): an array of block objects.
+- Use "style" values like: "normal", "h2", "h3".
+- For bullet lists, use blocks with "listItem": "bullet" and matching "level".
+- Example valid block: { "_type": "block", "style": "normal", "children": [{ "_type": "span", "marks": [], "text": "Content here." }] }
+
+CRITICAL INSTRUCTION FOR TOOL USAGE:
+If the user asks you to write the post, fill out sections, or update any content, YOU MUST USE THE 'update_document' TOOL to physically update the CMS fields! 
+Do NOT just output the written text directly in the chat. The chat is for planning, but the actual content MUST be submitted via the 'update_document' tool! You must provide an object that satisfies the entire schema if it is empty!
+
+Document Schema JSON structure to guide your tool call:
 {
-  "title": { "en": "Title", "pl": "Title" },
-  "slug": { "_type": "slug", "current": "title" },${extraFieldsPrompt}
+  "title": { "en": "Title", "pl": "Polish Title" },
+  "slug": { "_type": "slug", "current": "title-slug" },${extraFieldsPrompt}
   "body": {
-    "en": [{ "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }],
-    "pl": [{ "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }]
+    "en": [{ "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Comprehensive English body..." }] }],
+    "pl": [{ "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Comprehensive Polish body..." }] }]
   },
-  "seo": { "metaTitle": {"en": "...", "pl": "..."}, "metaDescription": {"en": "...", "pl": "..."}, "keywords": ["..."] }
+  "seo": { "metaTitle": {"en": "...", "pl": "..."}, "metaDescription": {"en": "...", "pl": "..."}, "keywords": ["keyword1", "keyword2"] }
 }`
       }
 
@@ -158,10 +225,19 @@ Document Schema JSON example to guide your tool call:
         ? 'http://localhost:8888/.netlify/functions/generateContent' 
         : 'https://appcrates.pl/.netlify/functions/generateContent';
 
+      // Clean messages to avoid Groq unsupported properties (like 'annotations' from Gemini/OpenAI history)
+      const cleanMessages = [sysMsg, ...newMsgs].map(m => {
+        const cleanM: any = { role: m.role, content: m.content || "" };
+        if (m.tool_calls) cleanM.tool_calls = m.tool_calls;
+        if (m.tool_call_id) cleanM.tool_call_id = m.tool_call_id;
+        if (m.name) cleanM.name = m.name;
+        return cleanM;
+      });
+
       const res = await fetch(apiUrl, {
         method: 'POST',
         body: JSON.stringify({ 
-          messages: [sysMsg, ...newMsgs],
+          messages: cleanMessages,
           tools,
           max_completion_tokens: 3000,
           provider,
@@ -192,21 +268,11 @@ Document Schema JSON example to guide your tool call:
           console.log("TOOL ARGUMENTS JSON:", call.function.arguments);
           alert("Tool Generated Keys: " + Object.keys(generatedData).join(', '));
           
-          // Add keys to any portable text array recursively
-          const addKeysToBlocks = (blocks: any[]) => {
-            if (!blocks || !Array.isArray(blocks)) return [];
-            return blocks.map(block => ({
-              ...block,
-              _key: Math.random().toString(36).substring(2, 9),
-              children: block.children ? block.children.map((child: any) => ({
-                ...child,
-                _key: Math.random().toString(36).substring(2, 9)
-              })) : []
-            }));
-          };
-
-          if (generatedData.body?.en) generatedData.body.en = addKeysToBlocks(generatedData.body.en);
-          if (generatedData.body?.pl) generatedData.body.pl = addKeysToBlocks(generatedData.body.pl);
+          // Safely add keys and sanitize the portable text blocks purely through UI code
+          if (generatedData.body) {
+            if (generatedData.body.en) generatedData.body.en = ensureBlocks(generatedData.body.en);
+            if (generatedData.body.pl) generatedData.body.pl = ensureBlocks(generatedData.body.pl);
+          }
 
           const docIdToPatch = documentId.startsWith('drafts.') ? documentId : `drafts.${documentId}`;
           await client.patch(docIdToPatch).set(generatedData).commit();
