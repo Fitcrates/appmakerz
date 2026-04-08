@@ -141,7 +141,13 @@ Document Schema JSON example to guide your tool call:
                   tags: { type: "array", items: { type: "string" } }
                 }),
                 seo: { type: "object", description: "Contains metaTitle, metaDescription, and keywords keys." }
-              }
+              },
+              required: [
+                "title", "slug", "body", "seo",
+                ...(isProject 
+                  ? ["description", "technologies", "projectUrl", "blogUrl", "githubUrl"] 
+                  : ["excerpt", "categories", "tags"])
+              ]
             }
           }
         }
@@ -182,6 +188,9 @@ Document Schema JSON example to guide your tool call:
         const call = aiMessage.tool_calls[0];
         if (call.function.name === 'update_document') {
           const generatedData = JSON.parse(call.function.arguments);
+          
+          console.log("TOOL ARGUMENTS JSON:", call.function.arguments);
+          alert("Tool Generated Keys: " + Object.keys(generatedData).join(', '));
           
           // Add keys to any portable text array recursively
           const addKeysToBlocks = (blocks: any[]) => {
