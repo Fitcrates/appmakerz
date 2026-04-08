@@ -34,8 +34,18 @@ export const AIWholePostGenerator = (props: any) => {
   useEffect(() => {
     const fetchContext = async () => {
       try {
-        const docs = await client.fetch(`*[_type in ["pages", "post", "project"]]{ _type, "titleEn": title.en, "titlePl": title.pl, "slug": slug.current }`);
-        const contextStr = docs.map((d: any) => `- [${d._type}] ${d.titleEn || d.titlePl || 'Untitled'} (slug: /${d.slug || 'none'})`).join('\n');
+        const docs = await client.fetch(`*[_type in ["pages", "post", "project"]]{ 
+          _type, 
+          "titleEn": title.en, 
+          "titlePl": title.pl, 
+          "slug": slug.current,
+          "descEn": description.en,
+          "excerptEn": excerpt.en,
+          "techs": technologies
+        }`);
+        const contextStr = docs.map((d: any) => 
+          `- [${d._type}] ${d.titleEn || d.titlePl || 'Untitled'} (slug: /${d.slug || 'none'})\n  Summary: ${d.descEn || d.excerptEn || 'No details provided'}${d.techs ? `\n  Tech Stack: ${d.techs.join(', ')}` : ''}`
+        ).join('\n\n');
         setContextData(contextStr);
       } catch (e) {
         console.error("Failed to fetch context", e);
@@ -91,9 +101,10 @@ Available context of other documents in the CMS (use this to suggest links, avoi
 ${contextData}
 
 You can chat, plan, and discuss with the user.
-If the user asks you to write the post, fill out sections, or update any content, you MUST use the 'update_document' tool.
+CRITICAL INSTRUCTION: If the user asks you to write the post, fill out sections, or update any content, YOU MUST USE THE 'update_document' TOOL to physically update the CMS fields! 
+Do NOT just output the written text directly in the chat. The chat is for planning, but the actual content MUST be submitted via the 'update_document' tool!
 When using the 'update_document' tool, always generate fully formatted Portable Text for the 'body' array (with blocks containing _type='block' and style='normal').
-You can update partial fields or all fields at once depending on the user's request.
+You can update partial fields or all fields at once depending on the user's request. Give detailed, long-form content when writing bodies!
 Document Schema JSON example to guide your tool call:
 {
   "title": { "en": "Title", "pl": "Title" },
