@@ -203,23 +203,109 @@ export const AIWholePostGenerator = (props: any) => {
     onChange(set(JSON.stringify(msgs)))
   }
 
+  // ── Fetch linked content by slug ────────────────────────────────────────
+  // Detects slug mentions in user input (e.g. "glow-and-serenity" or "/glow-and-serenity")
+  // and fetches the full document body text from Sanity
+  const fetchLinkedContent = async (userInput: string): Promise<string> => {
+    try {
+      // Extract potential slugs: words with hyphens that look like slugs
+      const slugMatches = userInput.match(/\/?([a-z0-9](?:[a-z0-9-]*[a-z0-9]))/gi)
+      if (!slugMatches || slugMatches.length === 0) return ''
+
+      const cleanSlugs = slugMatches
+        .map(s => s.replace(/^\//, '').toLowerCase())
+        .filter(s => s.includes('-') && s.length > 3) // only slug-like strings
+
+      if (cleanSlugs.length === 0) return ''
+
+      // Query Sanity for documents matching these slugs
+      const docs = await client.fetch(
+        `*[slug.current in $slugs]{
+          _type, "en": title.en, "pl": title.pl, "slug": slug.current,
+          "desc": coalesce(description.en, excerpt.en),
+          "bodyText": pt::text(body.en),
+          "techs": technologies, "tags": tags,
+          "seoTitle": seo.metaTitle.en, "seoDesc": seo.metaDescription.en
+        }`,
+        { slugs: cleanSlugs }
+      )
+
+      if (!docs || docs.length === 0) return ''
+
+      return '\n\n=== LINKED DOCUMENT CONTENT (user referenced these — use as source material) ===\n' +
+        docs.map((d: any) =>
+          `TYPE: ${d._type}\nTITLE: ${d.en || d.pl}\nSLUG: /${d.slug}\nDESCRIPTION: ${d.desc || 'n/a'}\nTECHNOLOGIES: ${d.techs?.join(', ') || d.tags?.join(', ') || 'n/a'}\nSEO: ${d.seoTitle || ''} — ${d.seoDesc || ''}\n\nFULL BODY CONTENT:\n${d.bodyText || 'No body content'}`
+        ).join('\n\n---\n') +
+        '\n======================================================'
+    } catch (e) {
+      console.error('Linked content fetch failed', e)
+      return ''
+    }
+  }
+
   // ── Call AI backend ─────────────────────────────────────────────────────
   const callAI = async (prompt: string, opts?: { isJson?: boolean; maxTokens?: number }) => {
-    const res = await fetch(getApiUrl(), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt,
-        max_completion_tokens: opts?.maxTokens || 4000,
-        provider,
-        model: PROVIDERS[provider].model,
-        isJson: opts?.isJson && provider !== 'gemini', // Gemini doesn't support response_format
-      }),
-    })
+    const apiUrl = getApiUrl()
+    const payload = {
+      prompt,
+      max_completion_tokens: opts?.maxTokens || 4000,
+      provider,
+      model: PROVIDERS[provider].model,
+      isJson: opts?.isJson && provider !== 'gemini',
+    }
+
+    console.log(`[AI DEBUG] ──────────────────────────────────────`)
+    console.log(`[AI DEBUG] Provider: ${provider}, Model: ${payload.model}`)
+    console.log(`[AI DEBUG] URL: ${apiUrl}`)
+    console.log(`[AI DEBUG] Tokens: ${payload.max_completion_tokens}, JSON mode: ${payload.isJson}`)
+    console.log(`[AI DEBUG] Prompt length: ${prompt.length} chars`)
+
+    const startTime = Date.now()
+
+    let res: Response
+    try {
+      res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+    } catch (fetchErr: any) {
+      const elapsed = Date.now() - startTime
+      console.error(`[AI DEBUG] ❌ FETCH FAILED after ${elapsed}ms:`, fetchErr.message)
+      console.error(`[AI DEBUG] This is likely a Netlify timeout (10s free tier limit) or network error.`)
+      throw new Error(`Network error after ${elapsed}ms: ${fetchErr.message}. If using OpenAI, try Groq or Gemini (they're faster and avoid Netlify's 10s timeout).`)
+    }
+
+    const elapsed = Date.now() - startTime
+    console.log(`[AI DEBUG] Response received in ${elapsed}ms`)
+    console.log(`[AI DEBUG] Status: ${res.status} ${res.statusText}`)
+    console.log(`[AI DEBUG] Content-Type: ${res.headers.get('content-type')}`)
+
     const raw = await res.text()
+    console.log(`[AI DEBUG] Response body length: ${raw.length} chars`)
+    console.log(`[AI DEBUG] Response preview: ${raw.substring(0, 300)}...`)
+
+    if (!res.ok) {
+      console.error(`[AI DEBUG] ❌ HTTP ${res.status}:`, raw.substring(0, 500))
+      throw new Error(`HTTP ${res.status} from ${provider} after ${elapsed}ms: ${raw.substring(0, 200)}`)
+    }
+
     let data: any
-    try { data = JSON.parse(raw) } catch { throw new Error('Server returned invalid response:\n' + raw.substring(0, 200)) }
-    if (data.error) throw new Error(typeof data.error === 'string' ? data.error : data.error.message || JSON.stringify(data.error))
+    try {
+      data = JSON.parse(raw)
+    } catch {
+      console.error(`[AI DEBUG] ❌ Failed to parse JSON response`)
+      throw new Error(`Server returned non-JSON after ${elapsed}ms:\n${raw.substring(0, 300)}`)
+    }
+
+    if (data.error) {
+      const errMsg = typeof data.error === 'string' ? data.error : data.error.message || JSON.stringify(data.error)
+      console.error(`[AI DEBUG] ❌ API error:`, errMsg)
+      throw new Error(errMsg)
+    }
+
+    console.log(`[AI DEBUG] ✅ Success! Response text length: ${(data.text || '').length} chars`)
+    console.log(`[AI DEBUG] ──────────────────────────────────────`)
     return data.text || ''
   }
 
@@ -276,6 +362,11 @@ export const AIWholePostGenerator = (props: any) => {
     setLoading(true)
 
     try {
+      // ── Fetch linked content if user mentioned slugs ───────────────────
+      setStatus('Checking for linked content...')
+      const linkedContent = await fetchLinkedContent(input)
+      const fullContext = referenceContent + linkedContent
+
       // ── Is this a question / chat, or a generation request? ────────────
       const isQuestion = /^\s*(what|how|why|when|who|where|can you|could you|tell me|do you|should|is it|are there|which|jakie|jak|dlaczego|czy|co|kiedy)/i.test(input) || input.trim().endsWith('?')
 
@@ -285,67 +376,78 @@ export const AIWholePostGenerator = (props: any) => {
         // ── CHAT MODE (lightweight, no patching) ─────────────────────────
         setStatus('Thinking...')
         reply = await callAI(
-          `You are an expert AI content editor helping with a ${typeLabel} titled "${docTitle}" inside a Sanity CMS.\n\nCMS Context:\n${referenceContent}\n\nConversation so far:\n${newMsgs.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n')}\n\nRespond helpfully and concisely. When the user is ready to generate content, tell them to type their request (e.g. "Write a full post about X").`,
+          `You are an expert AI content editor helping with a ${typeLabel} titled "${docTitle}" inside a Sanity CMS.\n\nCMS Context:\n${fullContext}\n\nConversation so far:\n${newMsgs.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n')}\n\nRespond helpfully and concisely.`,
           { maxTokens: 800 }
         )
       } else {
         // ── GENERATION MODE — produce JSON, parse in code, patch ─────────
-        // OpenAI is slow on Netlify free tier (10s timeout), so we split into 2 calls.
-        // Groq and Gemini are fast enough for single-shot.
+        // OpenAI is slow on Netlify free tier (10s timeout), so we split into 2 calls
+        // and patch incrementally. Groq and Gemini use single-shot.
         const useMultiPass = provider === 'openai'
-
-        let generated: any
+        const filledKeys: string[] = []
 
         if (useMultiPass) {
-          // ── PASS 1: Metadata (title, slug, excerpt/desc, tags, seo) ──────
-          setStatus('Pass 1/2: Generating metadata...')
+          // ── PASS 1: Metadata ─────────────────────────────────────────────
+          setStatus('Step 1/2: Generating metadata...')
           const metaPrompt = `You are an expert bilingual (English + Polish) SEO copywriter.
-TASK: Generate METADATA ONLY for a ${typeLabel} titled "${docTitle}".
-USER INSTRUCTIONS: ${input}
-Return ONLY valid JSON. No markdown, no explanation.
+TASK: Generate METADATA for a ${typeLabel}: "${docTitle}"
+USER REQUEST: ${input}
+${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 2000)}` : ''}
+Return ONLY valid JSON — no markdown, no explanation.
 ${isProject ? `{
   "title": { "en": "...", "pl": "..." },
   "slug": { "_type": "slug", "current": "..." },
-  "description": { "en": "Short desc (max 300 chars)", "pl": "Krótki opis (max 300 znaków)" },
-  "technologies": ["React", "TypeScript"],
+  "description": { "en": "2-3 sentences, max 300 chars", "pl": "2-3 zdania, max 300 znaków" },
+  "technologies": ["React", "TypeScript", "Node.js"],
   "projectUrl": "https://example.com",
   "blogUrl": "https://example.com",
   "githubUrl": "https://github.com/example",
-  "seo": { "metaTitle": { "en": "...", "pl": "..." }, "metaDescription": { "en": "...", "pl": "..." }, "keywords": ["kw1","kw2"] }
+  "seo": { "metaTitle": { "en": "max 60", "pl": "max 60" }, "metaDescription": { "en": "max 160", "pl": "max 160" }, "keywords": ["kw1","kw2","kw3","kw4","kw5"] }
 }` : `{
   "title": { "en": "...", "pl": "..." },
   "slug": { "_type": "slug", "current": "..." },
-  "excerpt": { "en": "2-3 sentences (max 300 chars)", "pl": "2-3 zdania (max 300 znaków)" },
+  "excerpt": { "en": "2-3 sentences, max 300 chars", "pl": "2-3 zdania, max 300 znaków" },
   "categories": ["Dev"],
-  "tags": ["tag1", "tag2"],
-  "seo": { "metaTitle": { "en": "max 60 chars", "pl": "max 60 znaków" }, "metaDescription": { "en": "max 160 chars", "pl": "max 160 znaków" }, "keywords": ["kw1","kw2","kw3"] }
+  "tags": ["tag1", "tag2", "tag3", "tag4"],
+  "seo": { "metaTitle": { "en": "max 60", "pl": "max 60" }, "metaDescription": { "en": "max 160", "pl": "max 160" }, "keywords": ["kw1","kw2","kw3","kw4","kw5"] }
 }`}`
-          const metaText = await callAI(metaPrompt, { isJson: true, maxTokens: 1000 })
-          generated = extractJson(metaText)
 
-          // ── PASS 2: Body content (EN + PL as Portable Text) ──────────────
-          setStatus('Pass 2/2: Generating body content...')
-          const bodyPrompt = `You are an expert bilingual (English + Polish) SEO copywriter.
-Write the BODY CONTENT for a ${typeLabel} titled "${generated.title?.en || docTitle}".
-USER INSTRUCTIONS: ${input}
-${referenceContent ? `\nEXISTING CONTENT FOR STYLE REFERENCE:\n${referenceContent.substring(0, 1500)}` : ''}
-Return ONLY valid JSON with this structure:
-{
-  "body": {
-    "en": [
-      { "_type": "block", "style": "h2", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Section" }] },
-      { "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Detailed paragraph..." }] }
-    ],
-    "pl": [
-      { "_type": "block", "style": "h2", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Sekcja" }] },
-      { "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Szczegółowy akapit..." }] }
-    ]
-  }
-}
-Each language MUST have 6-10 blocks, 700-1000 words, mixing h2, h3, normal styles. No markdown, no explanation.`
-          const bodyText = await callAI(bodyPrompt, { isJson: true, maxTokens: 3000 })
-          const bodyData = extractJson(bodyText)
-          generated.body = bodyData.body
+          const metaText = await callAI(metaPrompt, { isJson: true, maxTokens: 800 })
+          const metaData = extractJson(metaText)
+
+          // Patch metadata IMMEDIATELY so it's saved even if body fails
+          setStatus('Saving metadata...')
+          const metaKeys = await patchDocument(metaData)
+          filledKeys.push(...metaKeys)
+
+          // ── PASS 2: Body content ────────────────────────────────────────
+          try {
+            setStatus('Step 2/2: Generating body...')
+            const bodyPrompt = `You are an expert bilingual (English + Polish) SEO copywriter.
+Write the BODY for a ${typeLabel}: "${metaData.title?.en || docTitle}"
+USER REQUEST: ${input}
+${linkedContent ? `\nSOURCE MATERIAL (base the article on this):\n${linkedContent.substring(0, 3000)}` : ''}
+Return ONLY valid JSON:
+{"body":{"en":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}],"pl":[...same structure...]}}
+Requirements: 6-10 blocks per language, 500-800 words each, mix h2/h3/normal. No markdown.`
+
+            const bodyText = await callAI(bodyPrompt, { isJson: true, maxTokens: 2500 })
+            const bodyData = extractJson(bodyText)
+            if (bodyData.body) {
+              // Normalize and patch body separately
+              if (bodyData.body.en) bodyData.body.en = ensureBlocks(bodyData.body.en)
+              if (bodyData.body.pl) bodyData.body.pl = ensureBlocks(bodyData.body.pl)
+              const docId = documentId!.startsWith('drafts.') ? documentId! : `drafts.${documentId}`
+              await client.patch(docId).set({ body: bodyData.body }).commit()
+              filledKeys.push('body')
+            }
+          } catch (bodyErr: any) {
+            reply = `⚠️ Metadata was saved (${metaKeys.join(', ')}), but body generation failed: ${bodyErr.message}\n\nTry generating body separately with Groq or Gemini (they're faster).`
+            saveMessages([...newMsgs, { role: 'assistant', content: reply }])
+            return
+          }
+
+          reply = `✅ Document updated in 2 passes!\n\nFilled fields: ${filledKeys.join(', ')}\n\nRefresh the page if fields don't update immediately.`
 
         } else {
           // ── SINGLE-SHOT (Groq / Gemini — fast enough) ────────────────────
@@ -356,45 +458,38 @@ TASK: Generate a COMPLETE ${typeLabel} for: "${docTitle}"
 
 USER INSTRUCTIONS: ${input}
 
-EXISTING CMS CONTENT (for context — avoid duplicating, suggest internal links):
-${referenceContent}
+EXISTING CMS CONTENT (avoid duplicating, suggest internal links):
+${fullContext}
 
 CRITICAL RULES:
-1. Return ONLY a valid JSON object — no markdown fences, no explanation, no text outside the JSON.
-2. You MUST fill EVERY field in the schema below. No field may be empty or null.
-3. body.en AND body.pl MUST each contain 6-10 blocks minimum. Mix h2, h3, and normal styles. Each language should have 700-1000 words of real, detailed, professional content.
-4. excerpt/description: 2-3 compelling sentences (max 300 chars per language).
-5. slug: lowercase-with-hyphens, derived from the English title.
-6. seo.metaTitle: max 60 chars per language. seo.metaDescription: max 160 chars per language.
-7. seo.keywords: 5-8 relevant SEO terms.
-8. tags/technologies: 4-8 relevant items.
-${isProject ? '9. URLs (projectUrl, blogUrl, githubUrl): use placeholder "https://example.com" if unknown.' : '9. categories: pick from ONLY these values: "Dev", "No-code", "Wellness".'}
-10. Write body content in the EXACT Portable Text block format shown in the schema. Each block must have _type, style, markDefs, and children with _type and text.
+1. Return ONLY valid JSON — no markdown fences, no explanation.
+2. Fill EVERY field. No field may be empty or null.
+3. body.en AND body.pl: 6-10 blocks each, 700-1000 words, mix h2/h3/normal styles.
+4. excerpt/description: 2-3 sentences (max 300 chars per language).
+5. slug: lowercase-with-hyphens from English title.
+6. seo.metaTitle: max 60 chars. seo.metaDescription: max 160 chars.
+7. seo.keywords: 5-8 terms. tags/technologies: 4-8 items.
+${isProject ? '8. URLs: use "https://example.com" if unknown.' : '8. categories: ONLY "Dev", "No-code", or "Wellness".'}
+9. Body blocks: { "_type": "block", "style": "...", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }
 
-EXACT JSON SCHEMA TO OUTPUT:
+JSON SCHEMA:
 ${schemaJson}`
           const aiText = await callAI(prompt, { isJson: true, maxTokens: 4000 })
-          generated = extractJson(aiText)
+          const generated = extractJson(aiText)
+
+          // Validate
+          const requiredKeys = isProject
+            ? ['title', 'slug', 'description', 'technologies', 'body', 'seo']
+            : ['title', 'slug', 'excerpt', 'categories', 'tags', 'body', 'seo']
+          const missing = requiredKeys.filter(k => !generated[k])
+          if (missing.length > 0) {
+            throw new Error(`AI missed fields: ${missing.join(', ')}. Try again.`)
+          }
+
+          setStatus('Saving to Sanity...')
+          const keys = await patchDocument(generated)
+          reply = `✅ Document updated!\n\nFilled fields: ${keys.join(', ')}\n\nRefresh if fields don't update immediately.`
         }
-
-        // ── Parse + Validate (code-side) ─────────────────────────────────
-        setStatus('Validating...')
-
-        // ── Validate minimum fields ────────────────────────────────────
-        const requiredKeys = isProject
-          ? ['title', 'slug', 'description', 'technologies', 'body', 'seo']
-          : ['title', 'slug', 'excerpt', 'categories', 'tags', 'body', 'seo']
-
-        const missing = requiredKeys.filter(k => !generated[k])
-        if (missing.length > 0) {
-          throw new Error(`AI did not generate these required fields: ${missing.join(', ')}. Try again.`)
-        }
-
-        // ── Patch to Sanity (code-side) ────────────────────────────────
-        setStatus('Saving to Sanity...')
-        const filledKeys = await patchDocument(generated)
-
-        reply = `✅ Document updated successfully!\n\nFilled fields: ${filledKeys.join(', ')}\n\nRefresh the page if fields don't update immediately. Need any adjustments?`
       }
 
       saveMessages([...newMsgs, { role: 'assistant', content: reply }])
