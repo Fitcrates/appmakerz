@@ -5,7 +5,7 @@ import { set, useFormValue, useClient } from 'sanity'
 // ─── Provider config ──────────────────────────────────────────────────────────
 const PROVIDERS: Record<string, { label: string; model: string }> = {
   gemini: { label: 'Gemini 2.0 Flash', model: 'gemini-2.0-flash' },
-  groq:   { label: 'Groq (Llama 3.3)',  model: 'llama-3.3-70b-versatile' },
+  groq: { label: 'Groq (Llama 3.3)', model: 'llama-3.3-70b-versatile' },
   openai: { label: 'OpenAI (GPT-4o mini)', model: 'gpt-4o-mini' },
 }
 
@@ -26,8 +26,8 @@ function ensureBlocks(input: any): any[] {
     return input.split(/\n\n+/).filter(Boolean).map(p => {
       const trimmed = p.trim()
       if (trimmed.startsWith('### ')) return mkBlock(trimmed.replace(/^### /, ''), 'h3')
-      if (trimmed.startsWith('## '))  return mkBlock(trimmed.replace(/^## /, ''), 'h2')
-      if (trimmed.startsWith('# '))   return mkBlock(trimmed.replace(/^# /, ''), 'h1')
+      if (trimmed.startsWith('## ')) return mkBlock(trimmed.replace(/^## /, ''), 'h2')
+      if (trimmed.startsWith('# ')) return mkBlock(trimmed.replace(/^# /, ''), 'h1')
       return mkBlock(trimmed)
     })
   }
@@ -37,10 +37,10 @@ function ensureBlocks(input: any): any[] {
     if (typeof block === 'string') return mkBlock(block)
     const children = Array.isArray(block.children)
       ? block.children.map((c: any) => ({
-          _type: 'span', marks: [], ...c,
-          _key: c._key || rk(),
-          text: c.text ?? '',
-        }))
+        _type: 'span', marks: [], ...c,
+        _key: c._key || rk(),
+        text: c.text ?? '',
+      }))
       : [{ _type: 'span', _key: rk(), marks: [], text: '' }]
 
     return {
@@ -137,10 +137,10 @@ export const AIWholePostGenerator = (props: any) => {
   const client = useClient({ apiVersion: '2023-05-03' })
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  const documentId   = useFormValue(['_id'])    as string | undefined
-  const documentType = useFormValue(['_type'])   as string | undefined
-  const titleEn      = useFormValue(['title', 'en']) as string | undefined
-  const titlePl      = useFormValue(['title', 'pl']) as string | undefined
+  const documentId = useFormValue(['_id']) as string | undefined
+  const documentType = useFormValue(['_type']) as string | undefined
+  const titleEn = useFormValue(['title', 'en']) as string | undefined
+  const titlePl = useFormValue(['title', 'pl']) as string | undefined
 
   // ── State: reference content (fetched once) ─────────────────────────────
   const [referenceContent, setReferenceContent] = useState('')
@@ -184,7 +184,7 @@ export const AIWholePostGenerator = (props: any) => {
         if (refs?.length) {
           refBlock = '\n\n=== PUBLISHED REFERENCE EXAMPLES (match this quality, length, and structure) ===\n' +
             refs.map((r: any, i: number) =>
-              `--- Example ${i+1} ---\nTitle: ${r.en || r.pl}\nSummary: ${r.exc || 'n/a'}\nTags: ${r.tags?.join(', ') || r.techs?.join(', ') || 'n/a'}\nSEO Title: ${r.seoTitle || 'n/a'}\nSEO Desc: ${r.seoDesc || 'n/a'}\nSEO Keywords: ${r.seoKw?.join(', ') || 'n/a'}\nBody (first 1200 chars):\n${r.body?.substring(0, 1200) || 'n/a'}...`
+              `--- Example ${i + 1} ---\nTitle: ${r.en || r.pl}\nSummary: ${r.exc || 'n/a'}\nTags: ${r.tags?.join(', ') || r.techs?.join(', ') || 'n/a'}\nSEO Title: ${r.seoTitle || 'n/a'}\nSEO Desc: ${r.seoDesc || 'n/a'}\nSEO Keywords: ${r.seoKw?.join(', ') || 'n/a'}\nBody (first 1200 chars):\n${r.body?.substring(0, 1200) || 'n/a'}...`
             ).join('\n\n') +
             '\n==============================================='
         }
@@ -233,22 +233,22 @@ export const AIWholePostGenerator = (props: any) => {
 
     // Build patch object — only include fields that the AI actually returned
     const patch: any = {}
-    if (generated.title)        patch.title       = generated.title
-    if (generated.slug)         patch.slug        = generated.slug
-    if (generated.body)         patch.body        = generated.body
-    if (generated.seo)          patch.seo         = generated.seo
-    if (generated.tags)         patch.tags        = generated.tags
-    if (generated.publishedAt)  patch.publishedAt = generated.publishedAt
+    if (generated.title) patch.title = generated.title
+    if (generated.slug) patch.slug = generated.slug
+    if (generated.body) patch.body = generated.body
+    if (generated.seo) patch.seo = generated.seo
+    if (generated.tags) patch.tags = generated.tags
+    if (generated.publishedAt) patch.publishedAt = generated.publishedAt
 
     if (isProject) {
-      if (generated.description)  patch.description  = generated.description
+      if (generated.description) patch.description = generated.description
       if (generated.technologies) patch.technologies = generated.technologies
-      if (generated.projectUrl)   patch.projectUrl   = generated.projectUrl
-      if (generated.blogUrl)      patch.blogUrl      = generated.blogUrl
-      if (generated.githubUrl)    patch.githubUrl    = generated.githubUrl
+      if (generated.projectUrl) patch.projectUrl = generated.projectUrl
+      if (generated.blogUrl) patch.blogUrl = generated.blogUrl
+      if (generated.githubUrl) patch.githubUrl = generated.githubUrl
     } else {
-      if (generated.excerpt)     patch.excerpt     = generated.excerpt
-      if (generated.categories)  patch.categories  = generated.categories
+      if (generated.excerpt) patch.excerpt = generated.excerpt
+      if (generated.categories) patch.categories = generated.categories
     }
 
     const docId = documentId!.startsWith('drafts.') ? documentId! : `drafts.${documentId}`
@@ -264,10 +264,10 @@ export const AIWholePostGenerator = (props: any) => {
     if (!documentId) { alert('Save the document first.'); return }
     if (!input.trim()) return
 
-    const isProject  = documentType === 'project'
-    const docTitle   = titleEn || titlePl || 'Untitled'
+    const isProject = documentType === 'project'
+    const docTitle = titleEn || titlePl || 'Untitled'
     const schemaJson = isProject ? SCHEMA_PROJECT : SCHEMA_POST
-    const typeLabel  = isProject ? 'project portfolio entry' : 'blog post'
+    const typeLabel = isProject ? 'project portfolio entry' : 'blog post'
 
     const userMsg = { role: 'user', content: input.trim() }
     const newMsgs = [...messages, userMsg]
@@ -290,9 +290,67 @@ export const AIWholePostGenerator = (props: any) => {
         )
       } else {
         // ── GENERATION MODE — produce JSON, parse in code, patch ─────────
-        setStatus('Generating all fields...')
+        // OpenAI is slow on Netlify free tier (10s timeout), so we split into 2 calls.
+        // Groq and Gemini are fast enough for single-shot.
+        const useMultiPass = provider === 'openai'
 
-        const prompt = `You are an expert bilingual (English + Polish) SEO copywriter.
+        let generated: any
+
+        if (useMultiPass) {
+          // ── PASS 1: Metadata (title, slug, excerpt/desc, tags, seo) ──────
+          setStatus('Pass 1/2: Generating metadata...')
+          const metaPrompt = `You are an expert bilingual (English + Polish) SEO copywriter.
+TASK: Generate METADATA ONLY for a ${typeLabel} titled "${docTitle}".
+USER INSTRUCTIONS: ${input}
+Return ONLY valid JSON. No markdown, no explanation.
+${isProject ? `{
+  "title": { "en": "...", "pl": "..." },
+  "slug": { "_type": "slug", "current": "..." },
+  "description": { "en": "Short desc (max 300 chars)", "pl": "Krótki opis (max 300 znaków)" },
+  "technologies": ["React", "TypeScript"],
+  "projectUrl": "https://example.com",
+  "blogUrl": "https://example.com",
+  "githubUrl": "https://github.com/example",
+  "seo": { "metaTitle": { "en": "...", "pl": "..." }, "metaDescription": { "en": "...", "pl": "..." }, "keywords": ["kw1","kw2"] }
+}` : `{
+  "title": { "en": "...", "pl": "..." },
+  "slug": { "_type": "slug", "current": "..." },
+  "excerpt": { "en": "2-3 sentences (max 300 chars)", "pl": "2-3 zdania (max 300 znaków)" },
+  "categories": ["Dev"],
+  "tags": ["tag1", "tag2"],
+  "seo": { "metaTitle": { "en": "max 60 chars", "pl": "max 60 znaków" }, "metaDescription": { "en": "max 160 chars", "pl": "max 160 znaków" }, "keywords": ["kw1","kw2","kw3"] }
+}`}`
+          const metaText = await callAI(metaPrompt, { isJson: true, maxTokens: 1000 })
+          generated = extractJson(metaText)
+
+          // ── PASS 2: Body content (EN + PL as Portable Text) ──────────────
+          setStatus('Pass 2/2: Generating body content...')
+          const bodyPrompt = `You are an expert bilingual (English + Polish) SEO copywriter.
+Write the BODY CONTENT for a ${typeLabel} titled "${generated.title?.en || docTitle}".
+USER INSTRUCTIONS: ${input}
+${referenceContent ? `\nEXISTING CONTENT FOR STYLE REFERENCE:\n${referenceContent.substring(0, 1500)}` : ''}
+Return ONLY valid JSON with this structure:
+{
+  "body": {
+    "en": [
+      { "_type": "block", "style": "h2", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Section" }] },
+      { "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Detailed paragraph..." }] }
+    ],
+    "pl": [
+      { "_type": "block", "style": "h2", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Sekcja" }] },
+      { "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Szczegółowy akapit..." }] }
+    ]
+  }
+}
+Each language MUST have 6-10 blocks, 700-1000 words, mixing h2, h3, normal styles. No markdown, no explanation.`
+          const bodyText = await callAI(bodyPrompt, { isJson: true, maxTokens: 3000 })
+          const bodyData = extractJson(bodyText)
+          generated.body = bodyData.body
+
+        } else {
+          // ── SINGLE-SHOT (Groq / Gemini — fast enough) ────────────────────
+          setStatus('Generating all fields...')
+          const prompt = `You are an expert bilingual (English + Polish) SEO copywriter.
 
 TASK: Generate a COMPLETE ${typeLabel} for: "${docTitle}"
 
@@ -304,7 +362,7 @@ ${referenceContent}
 CRITICAL RULES:
 1. Return ONLY a valid JSON object — no markdown fences, no explanation, no text outside the JSON.
 2. You MUST fill EVERY field in the schema below. No field may be empty or null.
-3. body.en AND body.pl MUST each contain 6-10 blocks minimum. Mix h2, h3, and normal styles. Each language should have 400-800 words of real, detailed, professional content.
+3. body.en AND body.pl MUST each contain 6-10 blocks minimum. Mix h2, h3, and normal styles. Each language should have 700-1000 words of real, detailed, professional content.
 4. excerpt/description: 2-3 compelling sentences (max 300 chars per language).
 5. slug: lowercase-with-hyphens, derived from the English title.
 6. seo.metaTitle: max 60 chars per language. seo.metaDescription: max 160 chars per language.
@@ -315,12 +373,12 @@ ${isProject ? '9. URLs (projectUrl, blogUrl, githubUrl): use placeholder "https:
 
 EXACT JSON SCHEMA TO OUTPUT:
 ${schemaJson}`
+          const aiText = await callAI(prompt, { isJson: true, maxTokens: 4000 })
+          generated = extractJson(aiText)
+        }
 
-        const aiText = await callAI(prompt, { isJson: true, maxTokens: 4000 })
-
-        // ── Parse JSON (code-side, not AI) ─────────────────────────────
-        setStatus('Parsing response...')
-        const generated = extractJson(aiText)
+        // ── Parse + Validate (code-side) ─────────────────────────────────
+        setStatus('Validating...')
 
         // ── Validate minimum fields ────────────────────────────────────
         const requiredKeys = isProject
