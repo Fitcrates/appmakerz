@@ -118,9 +118,11 @@ const SCHEMA_PROJECT = `{
 // ─── API URL helper ───────────────────────────────────────────────────────────
 function getApiUrl() {
   const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+  // In production: use Edge Function (/api/ai-generate) which has 50s timeout
+  // Locally: use regular function via netlify dev
   return isLocal
     ? 'http://localhost:8888/.netlify/functions/generateContent'
-    : 'https://appcrates.pl/.netlify/functions/generateContent'
+    : 'https://appcrates.pl/api/ai-generate'
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -381,78 +383,9 @@ export const AIWholePostGenerator = (props: any) => {
         )
       } else {
         // ── GENERATION MODE — produce JSON, parse in code, patch ─────────
-        // OpenAI is slow on Netlify free tier (10s timeout), so we split into 2 calls
-        // and patch incrementally. Groq and Gemini use single-shot.
-        const useMultiPass = provider === 'openai'
-        const filledKeys: string[] = []
-
-        if (useMultiPass) {
-          // ── PASS 1: Metadata ─────────────────────────────────────────────
-          setStatus('Step 1/2: Generating metadata...')
-          const metaPrompt = `You are an expert bilingual (English + Polish) SEO copywriter.
-TASK: Generate METADATA for a ${typeLabel}: "${docTitle}"
-USER REQUEST: ${input}
-${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 2000)}` : ''}
-Return ONLY valid JSON — no markdown, no explanation.
-${isProject ? `{
-  "title": { "en": "...", "pl": "..." },
-  "slug": { "_type": "slug", "current": "..." },
-  "description": { "en": "2-3 sentences, max 300 chars", "pl": "2-3 zdania, max 300 znaków" },
-  "technologies": ["React", "TypeScript", "Node.js"],
-  "projectUrl": "https://example.com",
-  "blogUrl": "https://example.com",
-  "githubUrl": "https://github.com/example",
-  "seo": { "metaTitle": { "en": "max 60", "pl": "max 60" }, "metaDescription": { "en": "max 160", "pl": "max 160" }, "keywords": ["kw1","kw2","kw3","kw4","kw5"] }
-}` : `{
-  "title": { "en": "...", "pl": "..." },
-  "slug": { "_type": "slug", "current": "..." },
-  "excerpt": { "en": "2-3 sentences, max 300 chars", "pl": "2-3 zdania, max 300 znaków" },
-  "categories": ["Dev"],
-  "tags": ["tag1", "tag2", "tag3", "tag4"],
-  "seo": { "metaTitle": { "en": "max 60", "pl": "max 60" }, "metaDescription": { "en": "max 160", "pl": "max 160" }, "keywords": ["kw1","kw2","kw3","kw4","kw5"] }
-}`}`
-
-          const metaText = await callAI(metaPrompt, { isJson: true, maxTokens: 800 })
-          const metaData = extractJson(metaText)
-
-          // Patch metadata IMMEDIATELY so it's saved even if body fails
-          setStatus('Saving metadata...')
-          const metaKeys = await patchDocument(metaData)
-          filledKeys.push(...metaKeys)
-
-          // ── PASS 2: Body content ────────────────────────────────────────
-          try {
-            setStatus('Step 2/2: Generating body...')
-            const bodyPrompt = `You are an expert bilingual (English + Polish) SEO copywriter.
-Write the BODY for a ${typeLabel}: "${metaData.title?.en || docTitle}"
-USER REQUEST: ${input}
-${linkedContent ? `\nSOURCE MATERIAL (base the article on this):\n${linkedContent.substring(0, 3000)}` : ''}
-Return ONLY valid JSON:
-{"body":{"en":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}],"pl":[...same structure...]}}
-Requirements: 6-10 blocks per language, 500-800 words each, mix h2/h3/normal. No markdown.`
-
-            const bodyText = await callAI(bodyPrompt, { isJson: true, maxTokens: 2500 })
-            const bodyData = extractJson(bodyText)
-            if (bodyData.body) {
-              // Normalize and patch body separately
-              if (bodyData.body.en) bodyData.body.en = ensureBlocks(bodyData.body.en)
-              if (bodyData.body.pl) bodyData.body.pl = ensureBlocks(bodyData.body.pl)
-              const docId = documentId!.startsWith('drafts.') ? documentId! : `drafts.${documentId}`
-              await client.patch(docId).set({ body: bodyData.body }).commit()
-              filledKeys.push('body')
-            }
-          } catch (bodyErr: any) {
-            reply = `⚠️ Metadata was saved (${metaKeys.join(', ')}), but body generation failed: ${bodyErr.message}\n\nTry generating body separately with Groq or Gemini (they're faster).`
-            saveMessages([...newMsgs, { role: 'assistant', content: reply }])
-            return
-          }
-
-          reply = `✅ Document updated in 2 passes!\n\nFilled fields: ${filledKeys.join(', ')}\n\nRefresh the page if fields don't update immediately.`
-
-        } else {
-          // ── SINGLE-SHOT (Groq / Gemini — fast enough) ────────────────────
-          setStatus('Generating all fields...')
-          const prompt = `You are an expert bilingual (English + Polish) SEO copywriter.
+        // Uses Edge Function with 50s timeout, so single-shot works for all providers.
+        setStatus('Generating all fields...')
+        const prompt = `You are an expert bilingual (English + Polish) SEO copywriter.
 
 TASK: Generate a COMPLETE ${typeLabel} for: "${docTitle}"
 
@@ -474,22 +407,27 @@ ${isProject ? '8. URLs: use "https://example.com" if unknown.' : '8. categories:
 
 JSON SCHEMA:
 ${schemaJson}`
-          const aiText = await callAI(prompt, { isJson: true, maxTokens: 4000 })
-          const generated = extractJson(aiText)
 
-          // Validate
-          const requiredKeys = isProject
-            ? ['title', 'slug', 'description', 'technologies', 'body', 'seo']
-            : ['title', 'slug', 'excerpt', 'categories', 'tags', 'body', 'seo']
-          const missing = requiredKeys.filter(k => !generated[k])
-          if (missing.length > 0) {
-            throw new Error(`AI missed fields: ${missing.join(', ')}. Try again.`)
-          }
+        const aiText = await callAI(prompt, { isJson: true, maxTokens: 4000 })
+        const generated = extractJson(aiText)
 
-          setStatus('Saving to Sanity...')
-          const keys = await patchDocument(generated)
-          reply = `✅ Document updated!\n\nFilled fields: ${keys.join(', ')}\n\nRefresh if fields don't update immediately.`
+        // ── Parse + Validate (code-side) ─────────────────────────────────
+        setStatus('Validating...')
+
+        // ── Validate minimum fields ────────────────────────────────────
+        const requiredKeys = isProject
+          ? ['title', 'slug', 'description', 'technologies', 'body', 'seo']
+          : ['title', 'slug', 'excerpt', 'categories', 'tags', 'body', 'seo']
+
+        const missing = requiredKeys.filter(k => !generated[k])
+        if (missing.length > 0) {
+          throw new Error(`AI missed fields: ${missing.join(', ')}. Try again.`)
         }
+
+        // ── Patch to Sanity (code-side) ────────────────────────────────
+        setStatus('Saving to Sanity...')
+        const keys = await patchDocument(generated)
+        reply = `✅ Document updated!\n\nFilled fields: ${keys.join(', ')}\n\nRefresh if fields don't update immediately.`
       }
 
       saveMessages([...newMsgs, { role: 'assistant', content: reply }])
