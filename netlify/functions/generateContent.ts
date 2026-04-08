@@ -15,59 +15,84 @@ export const handler = async (event: any) => {
 
   try {
     const body = JSON.parse(event.body || "{}");
-    const { prompt, max_completion_tokens = 500, maxTokens, systemPrompt, isJson, messages, tools, tool_choice, provider = 'openai', model: clientModel } = body;
-    const finalTokens = max_completion_tokens || maxTokens || 500;
-    
-    let endpoint = "https://api.openai.com/v1/chat/completions";
-    let apiKey = process.env.OPENAI_API_KEY;
-    let model = clientModel || "gpt-5.4";
+    const {
+      prompt,
+      systemPrompt,
+      messages,
+      max_completion_tokens = 4000,
+      isJson,
+      provider = "gemini",
+      model: clientModel,
+    } = body;
 
-    if (provider === 'groq') {
-      endpoint = "https://api.groq.com/openai/v1/chat/completions";
-      apiKey = process.env.GROQ_API_KEY;
-      model = clientModel || "llama3-70b-8192";
-    } else if (provider === 'gemini') {
-      // Gemini's OpenAI compatible API endpoint
-      endpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-      apiKey = process.env.GEMINI_API_KEY;
-      model = clientModel || "gemini-3.1-pro";
+    // ── Provider routing ──────────────────────────────────────────────────
+    let endpoint: string;
+    let apiKey: string | undefined;
+    let model: string;
+
+    switch (provider) {
+      case "groq":
+        endpoint = "https://api.groq.com/openai/v1/chat/completions";
+        apiKey = process.env.GROQ_API_KEY;
+        model = clientModel || "llama-3.3-70b-versatile";
+        break;
+      case "openai":
+        endpoint = "https://api.openai.com/v1/chat/completions";
+        apiKey = process.env.OPENAI_API_KEY;
+        model = clientModel || "gpt-4o-mini";
+        break;
+      case "gemini":
+      default:
+        endpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+        apiKey = process.env.GEMINI_API_KEY;
+        model = clientModel || "gemini-2.0-flash";
+        break;
     }
 
     if (!apiKey) {
-      return { statusCode: 500, headers, body: JSON.stringify({ error: `Missing API key for provider ${provider}.` }) };
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: `Missing API key for provider "${provider}".` }),
+      };
     }
 
-    const defaultSystemPrompt = "You are an expert SEO copywriter. Only return the final text without quotes, formatting, or extra conversation.";
+    // ── Build messages ────────────────────────────────────────────────────
+    const defaultSystemPrompt =
+      "You are an expert SEO copywriter. Only return the final text without quotes or extra conversation.";
 
     let payloadMessages = messages;
     if (!payloadMessages) {
-       payloadMessages = [
-          { role: "system", content: systemPrompt || defaultSystemPrompt },
-          { role: "user", content: prompt }
-       ];
+      payloadMessages = [
+        { role: "system", content: systemPrompt || defaultSystemPrompt },
+        { role: "user", content: prompt },
+      ];
     }
 
+    // ── Build payload ─────────────────────────────────────────────────────
     const payload: any = {
-      model: model,
+      model,
       messages: payloadMessages,
     };
 
-    // OpenAI models now require max_completion_tokens
-    if (provider === 'openai') {
-      payload.max_completion_tokens = finalTokens;
+    // Token limit parameter differs by provider
+    if (provider === "openai") {
+      payload.max_completion_tokens = max_completion_tokens;
     } else {
-      payload.max_tokens = finalTokens;
+      payload.max_tokens = max_completion_tokens;
     }
 
-    if (isJson) payload.response_format = { type: "json_object" };
-    if (tools) payload.tools = tools;
-    if (tool_choice) payload.tool_choice = tool_choice;
+    // JSON mode — only for providers that support response_format
+    if (isJson && provider !== "gemini") {
+      payload.response_format = { type: "json_object" };
+    }
 
+    // ── Call provider API ─────────────────────────────────────────────────
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify(payload),
     });
@@ -78,9 +103,8 @@ export const handler = async (event: any) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         text: data.choices[0].message.content,
-        message: data.choices[0].message
       }),
     };
   } catch (error: any) {

@@ -2,54 +2,68 @@ import { useCallback, useState } from 'react'
 import { Stack, Button, Inline, Spinner, Select, Box } from '@sanity/ui'
 import { set, unset, useFormValue } from 'sanity'
 
+// ─── Provider defaults ────────────────────────────────────────────────────────
+const PROVIDER_DEFAULTS: Record<string, string> = {
+  gemini: 'gemini-2.0-flash',
+  groq: 'llama-3.3-70b-versatile',
+  openai: 'gpt-4o-mini',
+}
+
 export const AIGeneratorInput = (props: any) => {
   const { onChange, schemaType } = props
   const [loading, setLoading] = useState(false)
   const [provider, setProvider] = useState<'openai' | 'groq' | 'gemini'>('gemini')
-  const [model, setModel] = useState<string>('gpt-4o')
+  const [model, setModel] = useState<string>(PROVIDER_DEFAULTS.gemini)
 
-  // Get current document title using Sanity's useFormValue hook
   const titleEn = useFormValue(['title', 'en']) as string | undefined
   const titlePl = useFormValue(['title', 'pl']) as string | undefined
+
+  const handleProviderChange = (p: 'openai' | 'groq' | 'gemini') => {
+    setProvider(p)
+    setModel(PROVIDER_DEFAULTS[p])
+  }
 
   const generate = useCallback(async () => {
     setLoading(true)
     try {
-      // Determine what language we are currently editing based on Sanity's field path
-      const isPolish = props.path.includes('pl');
-      const languageMatch = isPolish ? 'Polish' : 'English';
-      const titleToUse = isPolish ? (titlePl || titleEn || 'the topic') : (titleEn || titlePl || 'the topic');
-      
-      const defaultPrompt = `Write a short and compelling text in ${languageMatch} for a blog post titled "${titleToUse}".`;
-      let promptTemplate = schemaType.options?.aiPrompt || defaultPrompt;
+      const isPolish = props.path.includes('pl')
+      const languageMatch = isPolish ? 'Polish' : 'English'
+      const titleToUse = isPolish
+        ? (titlePl || titleEn || 'the topic')
+        : (titleEn || titlePl || 'the topic')
+
+      const defaultPrompt = `Write a short and compelling text in ${languageMatch} for a blog post titled "${titleToUse}".`
+      let promptTemplate = schemaType.options?.aiPrompt || defaultPrompt
 
       const prompt = promptTemplate
         .replace(/{{title}}/g, titleToUse)
-        .replace(/{{language}}/g, languageMatch);
+        .replace(/{{language}}/g, languageMatch)
 
-      // Local development vs Production domain handling
-      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const apiUrl = isLocalhost 
-        ? 'http://localhost:8888/.netlify/functions/generateContent' // Dev url where Netlify CLI serves functions
-        : 'https://appcrates.pl/.netlify/functions/generateContent';
+      const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+      const apiUrl = isLocalhost
+        ? 'http://localhost:8888/.netlify/functions/generateContent'
+        : 'https://appcrates.pl/.netlify/functions/generateContent'
 
       const res = await fetch(apiUrl, {
         method: 'POST',
-        body: JSON.stringify({ prompt, max_completion_tokens: 300, provider, model }),
-        headers: { 'Content-Type': 'application/json' }
-      });
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt,
+          max_completion_tokens: 300,
+          provider,
+          model,
+        }),
+      })
 
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-
-      // Mutate the field with the generated result
-      onChange(data.text ? set(data.text.trim()) : unset());
+      const data = await res.json()
+      if (data.error) throw new Error(data.error)
+      onChange(data.text ? set(data.text.trim()) : unset())
     } catch (err: any) {
-      alert("Failed to generate content: " + err.message);
+      alert('Failed to generate content: ' + err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [onChange, titleEn, titlePl, schemaType.options, props.path]);
+  }, [onChange, titleEn, titlePl, schemaType.options, props.path, provider, model])
 
   return (
     <Stack space={3}>
@@ -64,22 +78,18 @@ export const AIGeneratorInput = (props: any) => {
           icon={loading ? Spinner : undefined}
           style={{ cursor: loading ? 'wait' : 'pointer' }}
         />
-        <Box style={{ width: '150px' }}>
-          <Select value={provider} onChange={(e: any) => setProvider(e.currentTarget.value as any)} fontSize={1} padding={2}>
-            <option value="gemini">Gemini (3.1 Pro)</option>
-            <option value="groq">Groq (Llama 3)</option>
-            <option value="openai">OpenAI</option>
+        <Box style={{ width: '165px' }}>
+          <Select
+            value={provider}
+            onChange={(e: any) => handleProviderChange(e.currentTarget.value)}
+            fontSize={1}
+            padding={2}
+          >
+            <option value="gemini">Gemini 2.0 Flash</option>
+            <option value="groq">Groq (Llama 3.3)</option>
+            <option value="openai">OpenAI (GPT-4o mini)</option>
           </Select>
         </Box>
-        {provider === 'openai' && (
-          <Box style={{ width: '150px' }}>
-            <Select value={model} onChange={(e: any) => setModel(e.currentTarget.value)} fontSize={1} padding={2}>
-              <option value="gpt-4o-mini">GPT-4o Mini</option>
-              <option value="gpt-4o">GPT-4o</option>
-              <option value="gpt-5.4">GPT-5.4</option>
-            </Select>
-          </Box>
-        )}
       </Inline>
     </Stack>
   )
