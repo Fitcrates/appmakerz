@@ -1,7 +1,4 @@
-// Netlify Edge Function — 50s timeout on ALL plans (vs 10s for regular functions)
-// This solves the OpenAI timeout issue entirely.
-
-export default async (request: Request) => {
+export default async function(request, context) {
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
@@ -34,28 +31,24 @@ export default async (request: Request) => {
     } = body;
 
     // ── Provider routing ──────────────────────────────────────────────────
-    let endpoint: string;
-    let apiKey: string | undefined;
-    let model: string;
+    let endpoint;
+    let apiKey;
+    let model;
 
     switch (provider) {
       case "groq":
         endpoint = "https://api.groq.com/openai/v1/chat/completions";
-        // @ts-ignore - Deno is available at runtime in Netlify Edge Functions
         apiKey = Deno.env.get("GROQ_API_KEY");
         model = clientModel || "llama-3.3-70b-versatile";
         break;
       case "openai":
         endpoint = "https://api.openai.com/v1/chat/completions";
-        // @ts-ignore - Deno is available at runtime in Netlify Edge Functions
         apiKey = Deno.env.get("OPENAI_API_KEY");
         model = clientModel || "gpt-4o-mini";
         break;
       case "gemini":
       default:
-        endpoint =
-          "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-        // @ts-ignore - Deno is available at runtime in Netlify Edge Functions
+        endpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
         apiKey = Deno.env.get("GEMINI_API_KEY");
         model = clientModel || "gemini-2.0-flash";
         break;
@@ -71,8 +64,7 @@ export default async (request: Request) => {
     }
 
     // ── Build messages ────────────────────────────────────────────────────
-    const defaultSystemPrompt =
-      "You are an expert SEO copywriter. Return only the requested content.";
+    const defaultSystemPrompt = "You are an expert SEO copywriter. Return only the requested content.";
 
     let payloadMessages = messages;
     if (!payloadMessages) {
@@ -83,7 +75,7 @@ export default async (request: Request) => {
     }
 
     // ── Build payload ─────────────────────────────────────────────────────
-    const payload: Record<string, unknown> = {
+    const payload = {
       model,
       messages: payloadMessages,
     };
@@ -99,29 +91,24 @@ export default async (request: Request) => {
     }
 
     // ── Call provider API ─────────────────────────────────────────────────
-    console.log(
-      `[ai-generate] ${provider} model=${model} tokens=${max_completion_tokens}`
-    );
+    console.log(`[ai-generate] ${provider} model=${model} tokens=${max_completion_tokens}`);
 
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        "Authorization": `Bearer ${apiKey}`,
       },
       body: JSON.stringify(payload),
     });
 
     const responseText = await response.text();
 
-    let data: Record<string, unknown>;
+    let data;
     try {
       data = JSON.parse(responseText);
-    } catch {
-      console.error(
-        `[ai-generate] Non-JSON from ${provider}:`,
-        responseText.substring(0, 300)
-      );
+    } catch (e) {
+      console.error(`[ai-generate] Non-JSON from ${provider}:`, responseText.substring(0, 300));
       return new Response(
         JSON.stringify({
           error: `Provider ${provider} returned non-JSON: ${responseText.substring(0, 200)}`,
@@ -131,7 +118,7 @@ export default async (request: Request) => {
     }
 
     if (data.error) {
-      const err = data.error as Record<string, string>;
+      const err = data.error;
       console.error(`[ai-generate] API error:`, JSON.stringify(data.error));
       return new Response(
         JSON.stringify({ error: err.message || JSON.stringify(data.error) }),
@@ -139,14 +126,9 @@ export default async (request: Request) => {
       );
     }
 
-    const choices = data.choices as Array<{
-      message: { content: string };
-    }>;
-    if (!choices?.[0]?.message) {
-      console.error(
-        `[ai-generate] No choices:`,
-        JSON.stringify(data).substring(0, 300)
-      );
+    const choices = data.choices;
+    if (!choices || !choices[0] || !choices[0].message) {
+      console.error(`[ai-generate] No choices:`, JSON.stringify(data).substring(0, 300));
       return new Response(
         JSON.stringify({
           error: `No choices in response from ${provider}.`,
@@ -159,13 +141,12 @@ export default async (request: Request) => {
       JSON.stringify({ text: choices[0].message.content || "" }),
       { status: 200, headers }
     );
-  } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : "Unknown server error";
+  } catch (error) {
+    const message = error.message ? error.message : "Unknown server error";
     console.error("[ai-generate] Unhandled:", message);
     return new Response(JSON.stringify({ error: message }), {
       status: 500,
       headers,
     });
   }
-};
+}
