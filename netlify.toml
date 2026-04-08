@@ -3,9 +3,6 @@
   publish = "dist"
   functions = "netlify/functions"
 
-[functions]
-  # AI generation (OpenAI/Gemini) can take 15-30s for full bilingual posts
-  timeout = 60
 
 # Dynamic sitemap served via Netlify function
 [[redirects]]
