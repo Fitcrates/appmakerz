@@ -146,7 +146,7 @@ Document Schema JSON example to guide your tool call:
         body: JSON.stringify({ 
           messages: [sysMsg, ...newMsgs],
           tools,
-          maxTokens: 3000,
+          max_completion_tokens: 3000,
           provider,
           model
         }),

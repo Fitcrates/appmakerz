@@ -35,7 +35,7 @@ export const AIGeneratorInput = (props: any) => {
 
       const res = await fetch(apiUrl, {
         method: 'POST',
-        body: JSON.stringify({ prompt, maxTokens: 300, provider, model }),
+        body: JSON.stringify({ prompt, max_completion_tokens: 300, provider, model }),
         headers: { 'Content-Type': 'application/json' }
       });
 

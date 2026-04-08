@@ -15,20 +15,26 @@ export const handler = async (event: any) => {
 
   try {
     const body = JSON.parse(event.body || "{}");
-    const { prompt, maxTokens = 500, systemPrompt, isJson, messages, tools, tool_choice, provider = 'openai' } = body;
+    const { prompt, max_completion_tokens = 500, maxTokens, systemPrompt, isJson, messages, tools, tool_choice, provider = 'openai', model: clientModel } = body;
+    const finalTokens = max_completion_tokens || maxTokens || 500;
     
     let endpoint = "https://api.openai.com/v1/chat/completions";
     let apiKey = process.env.OPENAI_API_KEY;
-    let model = "gpt-5.4";
+    let model = clientModel || "gpt-5.4";
 
     if (provider === 'groq') {
       endpoint = "https://api.groq.com/openai/v1/chat/completions";
       apiKey = process.env.GROQ_API_KEY;
-      model = "llama3-70b-8192";
+      model = clientModel || "llama3-70b-8192";
+    } else if (provider === 'gemini') {
+      // Gemini's OpenAI compatible API endpoint
+      endpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+      apiKey = process.env.GEMINI_API_KEY;
+      model = clientModel || "gemini-3.1-pro";
     }
 
     if (!apiKey) {
-      return { statusCode: 500, headers, body: JSON.stringify({ error: `Missing ${provider === 'groq' ? 'GROQ_API_KEY' : 'OPENAI_API_KEY'} environment variable.` }) };
+      return { statusCode: 500, headers, body: JSON.stringify({ error: `Missing API key for provider ${provider}.` }) };
     }
 
     const defaultSystemPrompt = "You are an expert SEO copywriter. Only return the final text without quotes, formatting, or extra conversation.";
@@ -44,8 +50,14 @@ export const handler = async (event: any) => {
     const payload: any = {
       model: model,
       messages: payloadMessages,
-      max_tokens: maxTokens,
     };
+
+    // OpenAI models now require max_completion_tokens
+    if (provider === 'openai') {
+      payload.max_completion_tokens = finalTokens;
+    } else {
+      payload.max_tokens = finalTokens;
+    }
 
     if (isJson) payload.response_format = { type: "json_object" };
     if (tools) payload.tools = tools;
