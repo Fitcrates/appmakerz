@@ -15,11 +15,20 @@ export const handler = async (event: any) => {
 
   try {
     const body = JSON.parse(event.body || "{}");
-    const { prompt, maxTokens = 500, systemPrompt, isJson, messages, tools, tool_choice } = body;
-    const apiKey = process.env.OPENAI_API_KEY;
+    const { prompt, maxTokens = 500, systemPrompt, isJson, messages, tools, tool_choice, provider = 'openai' } = body;
+    
+    let endpoint = "https://api.openai.com/v1/chat/completions";
+    let apiKey = process.env.OPENAI_API_KEY;
+    let model = "gpt-5.4";
+
+    if (provider === 'groq') {
+      endpoint = "https://api.groq.com/openai/v1/chat/completions";
+      apiKey = process.env.GROQ_API_KEY;
+      model = "llama3-70b-8192";
+    }
 
     if (!apiKey) {
-      return { statusCode: 500, headers, body: JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable. Add it to .env or Netlify." }) };
+      return { statusCode: 500, headers, body: JSON.stringify({ error: `Missing ${provider === 'groq' ? 'GROQ_API_KEY' : 'OPENAI_API_KEY'} environment variable.` }) };
     }
 
     const defaultSystemPrompt = "You are an expert SEO copywriter. Only return the final text without quotes, formatting, or extra conversation.";
@@ -33,7 +42,7 @@ export const handler = async (event: any) => {
     }
 
     const payload: any = {
-      model: "gpt-4o",
+      model: model,
       messages: payloadMessages,
       max_tokens: maxTokens,
     };
@@ -42,7 +51,7 @@ export const handler = async (event: any) => {
     if (tools) payload.tools = tools;
     if (tool_choice) payload.tool_choice = tool_choice;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch(endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

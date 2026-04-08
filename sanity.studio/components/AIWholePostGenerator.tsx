@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect, useRef } from 'react'
-import { Stack, Button, Inline, Spinner, TextInput, Text, Box, Card, Flex } from '@sanity/ui'
+import { Stack, Button, Inline, Spinner, TextArea, Text, Box, Card, Flex, Select } from '@sanity/ui'
 import { set, useFormValue, useClient } from 'sanity'
 
 export const AIWholePostGenerator = (props: any) => {
@@ -7,6 +7,9 @@ export const AIWholePostGenerator = (props: any) => {
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<any[]>([])
+  const [provider, setProvider] = useState<'openai' | 'groq' | 'gemini'>('gemini')
+  const [model, setModel] = useState<string>('gpt-4o')
+  const [contextData, setContextData] = useState<string>('')
   
   const client = useClient({ apiVersion: '2023-05-03' })
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -27,6 +30,20 @@ export const AIWholePostGenerator = (props: any) => {
     }
   }, [value])
   
+  // Fetch context for AI to know what other posts/schemas exist
+  useEffect(() => {
+    const fetchContext = async () => {
+      try {
+        const docs = await client.fetch(`*[_type in ["pages", "post", "project"]]{ _type, "titleEn": title.en, "titlePl": title.pl, "slug": slug.current }`);
+        const contextStr = docs.map((d: any) => `- [${d._type}] ${d.titleEn || d.titlePl || 'Untitled'} (slug: /${d.slug || 'none'})`).join('\n');
+        setContextData(contextStr);
+      } catch (e) {
+        console.error("Failed to fetch context", e);
+      }
+    };
+    fetchContext();
+  }, [client]);
+
   // Auto-scroll chat
   useEffect(() => {
     if (scrollRef.current) {
@@ -69,6 +86,10 @@ export const AIWholePostGenerator = (props: any) => {
         role: "system", 
         content: `You are an expert AI Editor inside Sanity Studio helping to write a ${typeLabel}.
 The current document title is: ${currentTitleEn || 'none'}
+
+Available context of other documents in the CMS (use this to suggest links, avoid duplicating titles, etc):
+${contextData}
+
 You can chat, plan, and discuss with the user.
 If the user asks you to write the post, fill out sections, or update any content, you MUST use the 'update_document' tool.
 When using the 'update_document' tool, always generate fully formatted Portable Text for the 'body' array (with blocks containing _type='block' and style='normal').
@@ -125,7 +146,9 @@ Document Schema JSON example to guide your tool call:
         body: JSON.stringify({ 
           messages: [sysMsg, ...newMsgs],
           tools,
-          maxTokens: 3000
+          maxTokens: 3000,
+          provider,
+          model
         }),
         headers: { 'Content-Type': 'application/json' }
       });
@@ -191,15 +214,33 @@ Document Schema JSON example to guide your tool call:
     } finally {
       setLoading(false);
     }
-  }, [messages, input, documentId, documentType, currentTitleEn, client, onChange])
+  }, [messages, input, documentId, documentType, currentTitleEn, contextData, provider, model, client, onChange])
 
   return (
     <Stack space={3}>
       <Card border padding={3} radius={2} tone="transparent">
         <Stack space={3}>
-          <Box paddingBottom={2} style={{ borderBottom: '1px solid var(--card-border-color)' }}>
+          <Flex align="center" justify="space-between" paddingBottom={2} style={{ borderBottom: '1px solid var(--card-border-color)' }}>
             <Text weight="semibold" size={2}>🤖 AI Agent Copilot</Text>
-          </Box>
+            <Flex gap={2}>
+              {provider === 'openai' && (
+                <Box style={{ width: '130px' }}>
+                  <Select value={model} onChange={(e: any) => setModel(e.currentTarget.value as any)} fontSize={1} padding={2}>
+                    <option value="gpt-4o-mini">GPT-4o Mini</option>
+                    <option value="gpt-4o">GPT-4o</option>
+                    <option value="gpt-5.4">GPT-5.4</option>
+                  </Select>
+                </Box>
+              )}
+              <Box style={{ width: '160px' }}>
+                <Select value={provider} onChange={(e: any) => setProvider(e.currentTarget.value as any)} fontSize={1} padding={2}>
+                  <option value="gemini">Gemini (3.1 Pro)</option>
+                  <option value="groq">Groq (Llama 3)</option>
+                  <option value="openai">OpenAI</option>
+                </Select>
+              </Box>
+            </Flex>
+          </Flex>
           
           <Box 
             ref={scrollRef}
@@ -244,14 +285,18 @@ Document Schema JSON example to guide your tool call:
 
           <Flex gap={2}>
             <Box flex={1}>
-              <TextInput
+              <TextArea
                 value={input}
                 onChange={(e: any) => setInput(e.currentTarget.value)}
                 placeholder="Talk to the agent, e.g., 'Write the body section'"
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') sendMessage()
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                  }
                 }}
                 disabled={loading}
+                rows={2}
               />
             </Box>
             <Button 

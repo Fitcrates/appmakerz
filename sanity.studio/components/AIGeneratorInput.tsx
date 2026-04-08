@@ -1,10 +1,12 @@
 import { useCallback, useState } from 'react'
-import { Stack, Button, Inline, Spinner } from '@sanity/ui'
+import { Stack, Button, Inline, Spinner, Select, Box } from '@sanity/ui'
 import { set, unset, useFormValue } from 'sanity'
 
 export const AIGeneratorInput = (props: any) => {
   const { onChange, schemaType } = props
   const [loading, setLoading] = useState(false)
+  const [provider, setProvider] = useState<'openai' | 'groq' | 'gemini'>('gemini')
+  const [model, setModel] = useState<string>('gpt-4o')
 
   // Get current document title using Sanity's useFormValue hook
   const titleEn = useFormValue(['title', 'en']) as string | undefined
@@ -33,7 +35,7 @@ export const AIGeneratorInput = (props: any) => {
 
       const res = await fetch(apiUrl, {
         method: 'POST',
-        body: JSON.stringify({ prompt, maxTokens: 300 }),
+        body: JSON.stringify({ prompt, maxTokens: 300, provider, model }),
         headers: { 'Content-Type': 'application/json' }
       });
 
@@ -58,10 +60,26 @@ export const AIGeneratorInput = (props: any) => {
           disabled={loading || (!titleEn && !titlePl)}
           tone="primary"
           mode="ghost"
-          text={loading ? 'Generating...' : '✨ Generate with OpenAI'}
+          text={loading ? 'Generating...' : '✨ Generate'}
           icon={loading ? Spinner : undefined}
           style={{ cursor: loading ? 'wait' : 'pointer' }}
         />
+        <Box style={{ width: '150px' }}>
+          <Select value={provider} onChange={(e: any) => setProvider(e.currentTarget.value as any)} fontSize={1} padding={2}>
+            <option value="gemini">Gemini (3.1 Pro)</option>
+            <option value="groq">Groq (Llama 3)</option>
+            <option value="openai">OpenAI</option>
+          </Select>
+        </Box>
+        {provider === 'openai' && (
+          <Box style={{ width: '150px' }}>
+            <Select value={model} onChange={(e: any) => setModel(e.currentTarget.value)} fontSize={1} padding={2}>
+              <option value="gpt-4o-mini">GPT-4o Mini</option>
+              <option value="gpt-4o">GPT-4o</option>
+              <option value="gpt-5.4">GPT-5.4</option>
+            </Select>
+          </Box>
+        )}
       </Inline>
     </Stack>
   )
