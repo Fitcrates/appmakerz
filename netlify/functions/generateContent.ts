@@ -1,3 +1,4 @@
+// Wrap the entire handler so CORS headers are ALWAYS returned, even on catastrophic crashes
 export const handler = async (event: any) => {
   const headers = {
     "Access-Control-Allow-Origin": "*",
@@ -5,12 +6,13 @@ export const handler = async (event: any) => {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
   };
 
+  // Always handle OPTIONS preflight
   if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 200, headers, body: "OK" };
+    return { statusCode: 204, headers, body: "" };
   }
 
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, headers, body: "Method Not Allowed" };
+    return { statusCode: 405, headers, body: JSON.stringify({ error: "Method Not Allowed" }) };
   }
 
   try {
@@ -53,19 +55,19 @@ export const handler = async (event: any) => {
       return {
         statusCode: 500,
         headers,
-        body: JSON.stringify({ error: `Missing API key for provider "${provider}".` }),
+        body: JSON.stringify({ error: `Missing API key for provider "${provider}". Check environment variables.` }),
       };
     }
 
     // ── Build messages ────────────────────────────────────────────────────
     const defaultSystemPrompt =
-      "You are an expert SEO copywriter. Only return the final text without quotes or extra conversation.";
+      "You are an expert SEO copywriter. Return only the requested content.";
 
     let payloadMessages = messages;
     if (!payloadMessages) {
       payloadMessages = [
         { role: "system", content: systemPrompt || defaultSystemPrompt },
-        { role: "user", content: prompt },
+        { role: "user", content: prompt || "Hello" },
       ];
     }
 
@@ -88,6 +90,8 @@ export const handler = async (event: any) => {
     }
 
     // ── Call provider API ─────────────────────────────────────────────────
+    console.log(`[generateContent] Calling ${provider} model=${model} tokens=${max_completion_tokens}`);
+    
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -97,21 +101,55 @@ export const handler = async (event: any) => {
       body: JSON.stringify(payload),
     });
 
-    const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
+    const responseText = await response.text();
+    
+    let data: any;
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      console.error(`[generateContent] Non-JSON response from ${provider}:`, responseText.substring(0, 500));
+      return {
+        statusCode: 502,
+        headers,
+        body: JSON.stringify({ error: `Provider ${provider} returned non-JSON response: ${responseText.substring(0, 200)}` }),
+      };
+    }
+
+    // Check for API-level errors
+    if (data.error) {
+      console.error(`[generateContent] API error from ${provider}:`, JSON.stringify(data.error));
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: data.error.message || JSON.stringify(data.error) }),
+      };
+    }
+
+    // Validate response structure
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      console.error(`[generateContent] Unexpected response structure from ${provider}:`, JSON.stringify(data).substring(0, 500));
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: `Unexpected response from ${provider}. No choices returned.` }),
+      };
+    }
 
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        text: data.choices[0].message.content,
+        text: data.choices[0].message.content || "",
       }),
     };
+
   } catch (error: any) {
+    // This catch block ensures CORS headers are returned even on unexpected crashes
+    console.error("[generateContent] Unhandled error:", error.message, error.stack);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: error.message }),
+      body: JSON.stringify({ error: error.message || "Unknown server error" }),
     };
   }
 };
