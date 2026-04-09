@@ -59,7 +59,7 @@ export default async function(request, context) {
         JSON.stringify({
           error: `Missing API key for provider "${provider}". Check Netlify environment variables.`,
         }),
-        { status: 500, headers }
+        { status: 400, headers }
       );
     }
 
@@ -80,11 +80,7 @@ export default async function(request, context) {
       messages: payloadMessages,
     };
 
-    if (provider === "openai") {
-      payload.max_completion_tokens = max_completion_tokens;
-    } else {
-      payload.max_tokens = max_completion_tokens;
-    }
+    payload.max_tokens = max_completion_tokens;
 
     if (isJson && provider !== "gemini") {
       payload.response_format = { type: "json_object" };
@@ -113,7 +109,7 @@ export default async function(request, context) {
         JSON.stringify({
           error: `Provider ${provider} returned non-JSON: ${responseText.substring(0, 200)}`,
         }),
-        { status: 502, headers }
+        { status: 400, headers }
       );
     }
 
@@ -122,7 +118,7 @@ export default async function(request, context) {
       console.error(`[ai-generate] API error:`, JSON.stringify(data.error));
       return new Response(
         JSON.stringify({ error: err.message || JSON.stringify(data.error) }),
-        { status: 500, headers }
+        { status: 400, headers }
       );
     }
 
@@ -133,7 +129,7 @@ export default async function(request, context) {
         JSON.stringify({
           error: `No choices in response from ${provider}.`,
         }),
-        { status: 500, headers }
+        { status: 400, headers }
       );
     }
 
@@ -145,7 +141,7 @@ export default async function(request, context) {
     const message = error.message ? error.message : "Unknown server error";
     console.error("[ai-generate] Unhandled:", message);
     return new Response(JSON.stringify({ error: message }), {
-      status: 500,
+      status: 400,
       headers,
     });
   }

@@ -41,8 +41,8 @@ export const AIGeneratorInput = (props: any) => {
 
       const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname)
       const apiUrl = isLocalhost
-        ? 'http://localhost:8888/.netlify/functions/generateContent'
-        : 'https://appcrates.pl/.netlify/functions/generateContent'
+        ? 'http://localhost:8888/api/ai-generate'
+        : 'https://appcrates.pl/api/ai-generate'
 
       const res = await fetch(apiUrl, {
         method: 'POST',

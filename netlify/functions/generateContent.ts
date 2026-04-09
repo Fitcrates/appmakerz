@@ -53,7 +53,7 @@ export const handler = async (event: any) => {
 
     if (!apiKey) {
       return {
-        statusCode: 500,
+        statusCode: 400,
         headers,
         body: JSON.stringify({ error: `Missing API key for provider "${provider}". Check environment variables.` }),
       };
@@ -77,12 +77,7 @@ export const handler = async (event: any) => {
       messages: payloadMessages,
     };
 
-    // Token limit parameter differs by provider
-    if (provider === "openai") {
-      payload.max_completion_tokens = max_completion_tokens;
-    } else {
-      payload.max_tokens = max_completion_tokens;
-    }
+    payload.max_tokens = max_completion_tokens;
 
     // JSON mode — only for providers that support response_format
     if (isJson && provider !== "gemini") {
@@ -109,7 +104,7 @@ export const handler = async (event: any) => {
     } catch {
       console.error(`[generateContent] Non-JSON response from ${provider}:`, responseText.substring(0, 500));
       return {
-        statusCode: 502,
+        statusCode: 400,
         headers,
         body: JSON.stringify({ error: `Provider ${provider} returned non-JSON response: ${responseText.substring(0, 200)}` }),
       };
@@ -119,7 +114,7 @@ export const handler = async (event: any) => {
     if (data.error) {
       console.error(`[generateContent] API error from ${provider}:`, JSON.stringify(data.error));
       return {
-        statusCode: 500,
+        statusCode: 400,
         headers,
         body: JSON.stringify({ error: data.error.message || JSON.stringify(data.error) }),
       };
@@ -129,7 +124,7 @@ export const handler = async (event: any) => {
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
       console.error(`[generateContent] Unexpected response structure from ${provider}:`, JSON.stringify(data).substring(0, 500));
       return {
-        statusCode: 500,
+        statusCode: 400,
         headers,
         body: JSON.stringify({ error: `Unexpected response from ${provider}. No choices returned.` }),
       };
@@ -147,7 +142,7 @@ export const handler = async (event: any) => {
     // This catch block ensures CORS headers are returned even on unexpected crashes
     console.error("[generateContent] Unhandled error:", error.message, error.stack);
     return {
-      statusCode: 500,
+      statusCode: 400,
       headers,
       body: JSON.stringify({ error: error.message || "Unknown server error" }),
     };

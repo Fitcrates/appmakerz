@@ -118,10 +118,8 @@ const SCHEMA_PROJECT = `{
 // ─── API URL helper ───────────────────────────────────────────────────────────
 function getApiUrl() {
   const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-  // In production: use Edge Function (/api/ai-generate) which has 50s timeout
-  // Locally: use regular function via netlify dev
   return isLocal
-    ? 'http://localhost:8888/.netlify/functions/generateContent'
+    ? 'http://localhost:8888/api/ai-generate'
     : 'https://appcrates.pl/api/ai-generate'
 }
 
@@ -383,9 +381,101 @@ export const AIWholePostGenerator = (props: any) => {
         )
       } else {
         // ── GENERATION MODE — produce JSON, parse in code, patch ─────────
-        // Uses Edge Function with 50s timeout, so single-shot works for all providers.
-        setStatus('Generating all fields...')
-        const prompt = `You are an expert bilingual (English + Polish) SEO copywriter.
+        // Netlify Free Tier has a hard 10s timeout. Generating two languages of text 
+        // at once takes ~30s on OpenAI, crashing the function.
+        // Groq and Gemini are fast enough for single-shot, but OpenAI needs 3 passes.
+        const useMultiPass = provider === 'openai'
+        const filledKeys: string[] = []
+
+        if (useMultiPass) {
+          try {
+            // ── PASS 1: Metadata ─────────────────────────────────────────────
+            setStatus('Step 1/3: Generating metadata...')
+            const metaPrompt = `You are an expert bilingual (English + Polish) SEO copywriter.
+TASK: Generate METADATA for a ${typeLabel}: "${docTitle}"
+USER REQUEST: ${input}
+${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 2000)}` : ''}
+Return ONLY valid JSON — no markdown, no explanation.
+${isProject ? `{
+  "title": { "en": "...", "pl": "..." },
+  "slug": { "_type": "slug", "current": "..." },
+  "description": { "en": "2-3 sentences, max 300 chars", "pl": "2-3 zdania, max 300 znaków" },
+  "technologies": ["React", "TypeScript", "Node.js"],
+  "projectUrl": "https://example.com",
+  "blogUrl": "https://example.com",
+  "githubUrl": "https://github.com/example",
+  "seo": { "metaTitle": { "en": "max 60", "pl": "max 60" }, "metaDescription": { "en": "max 160", "pl": "max 160" }, "keywords": ["kw1","kw2","kw3","kw4","kw5"] }
+}` : `{
+  "title": { "en": "...", "pl": "..." },
+  "slug": { "_type": "slug", "current": "..." },
+  "excerpt": { "en": "2-3 sentences, max 300 chars", "pl": "2-3 zdania, max 300 znaków" },
+  "categories": ["Dev"],
+  "tags": ["tag1", "tag2", "tag3", "tag4"],
+  "seo": { "metaTitle": { "en": "max 60", "pl": "max 60" }, "metaDescription": { "en": "max 160", "pl": "max 160" }, "keywords": ["kw1","kw2","kw3","kw4","kw5"] }
+}`}`
+
+            const metaText = await callAI(metaPrompt, { isJson: true, maxTokens: 800 })
+            const metaData = extractJson(metaText)
+            
+            setStatus('Saving metadata...')
+            const metaKeys = await patchDocument(metaData)
+            filledKeys.push(...metaKeys)
+
+            // Let UI catch up
+            await new Promise(r => setTimeout(r, 500))
+
+            // ── PASS 2: English Body ────────────────────────────────────────
+            setStatus('Step 2/3: Generating English Body...')
+            const enPrompt = `You are an expert SEO copywriter.
+Write the ENGLISH BODY CONTENT for a ${typeLabel}: "${metaData.title?.en || docTitle}"
+USER REQUEST: ${input}
+${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 3000)}` : ''}
+Return ONLY valid JSON:
+{"body":{"en":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}]}}
+Requirements: 6-10 blocks, 500-800 words, mix h2/h3/normal. No markdown.`
+
+            const enText = await callAI(enPrompt, { isJson: true, maxTokens: 2000 })
+            const enData = extractJson(enText)
+            if (enData.body?.en) {
+              const cleanedEn = ensureBlocks(enData.body.en)
+              await client.patch(documentId!.startsWith('drafts.') ? documentId! : `drafts.${documentId}`).set({ 'body.en': cleanedEn }).commit()
+              filledKeys.push('body.en')
+            }
+
+            // Let UI catch up
+            await new Promise(r => setTimeout(r, 500))
+
+            // ── PASS 3: Polish Body ────────────────────────────────────────
+            setStatus('Step 3/3: Generating Polish Body...')
+            const plPrompt = `You are an expert Polish SEO copywriter.
+Write the POLISH BODY CONTENT for a ${typeLabel}: "${metaData.title?.pl || docTitle}"
+Translate and adapt the scope based on the English version implicitly requested.
+USER REQUEST: ${input}
+${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 3000)}` : ''}
+Return ONLY valid JSON:
+{"body":{"pl":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}]}}
+Requirements: 6-10 blocks, 500-800 words, mix h2/h3/normal. No markdown.`
+
+            const plText = await callAI(plPrompt, { isJson: true, maxTokens: 2000 })
+            const plData = extractJson(plText)
+            if (plData.body?.pl) {
+              const cleanedPl = ensureBlocks(plData.body.pl)
+              await client.patch(documentId!.startsWith('drafts.') ? documentId! : `drafts.${documentId}`).set({ 'body.pl': cleanedPl }).commit()
+              filledKeys.push('body.pl')
+            }
+
+            reply = `✅ Document updated in 3 fast passes!\n\nFilled fields: ${filledKeys.join(', ')}\n\nRefresh the page if fields don't update immediately.`
+
+          } catch (err: any) {
+            reply = `⚠️ Generation stopped. Saved so far: ${filledKeys.join(', ')}. Error: ${err.message}`
+            saveMessages([...newMsgs, { role: 'assistant', content: reply }])
+            return
+          }
+
+        } else {
+          // ── SINGLE-SHOT (Groq / Gemini — fast enough) ────────────────────
+          setStatus('Generating all fields...')
+          const prompt = `You are an expert bilingual (English + Polish) SEO copywriter.
 
 TASK: Generate a COMPLETE ${typeLabel} for: "${docTitle}"
 
@@ -428,6 +518,7 @@ ${schemaJson}`
         setStatus('Saving to Sanity...')
         const keys = await patchDocument(generated)
         reply = `✅ Document updated!\n\nFilled fields: ${keys.join(', ')}\n\nRefresh if fields don't update immediately.`
+        }
       }
 
       saveMessages([...newMsgs, { role: 'assistant', content: reply }])
