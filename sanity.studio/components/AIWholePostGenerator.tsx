@@ -384,7 +384,7 @@ export const AIWholePostGenerator = (props: any) => {
         // Netlify Free Tier has a hard 10s timeout. Generating two languages of text 
         // at once takes ~30s on OpenAI, crashing the function.
         // Groq and Gemini are fast enough for single-shot, but OpenAI needs 3 passes.
-        const useMultiPass = provider === 'openai'
+        const useMultiPass = true // Enforce multi-pass for all models to prevent JSON cutoff and ensure translation consistency
         const filledKeys: string[] = []
 
         if (useMultiPass) {
@@ -395,6 +395,10 @@ export const AIWholePostGenerator = (props: any) => {
 TASK: Generate METADATA for a ${typeLabel}: "${docTitle}"
 USER REQUEST: ${input}
 ${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 2000)}` : ''}
+
+CRITICAL TRANSLATION RULE:
+Ensure the Polish fields use natural, native Polish phrasing without English loan-words.
+
 Return ONLY valid JSON — no markdown, no explanation.
 ${isProject ? `{
   "title": { "en": "...", "pl": "..." },
@@ -432,7 +436,7 @@ USER REQUEST: ${input}
 ${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 3000)}` : ''}
 Return ONLY valid JSON:
 {"body":{"en":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}]}}
-Requirements: 6-10 blocks, 500-800 words, mix h2/h3/normal. No markdown.`
+Requirements: 6-10 blocks, 600-1000 words, mix h2/h3/normal. DO NOT USE MARKDOWN FENCES IN THE TEXT.`
 
             const enText = await callAI(enPrompt, { isJson: true, maxTokens: 2000 })
             const enData = extractJson(enText)
@@ -447,14 +451,22 @@ Requirements: 6-10 blocks, 500-800 words, mix h2/h3/normal. No markdown.`
 
             // ── PASS 3: Polish Body ────────────────────────────────────────
             setStatus('Step 3/3: Generating Polish Body...')
+            const englishContentText = enData.body?.en ? JSON.stringify(enData.body.en) : '';
+
             const plPrompt = `You are an expert Polish SEO copywriter.
-Write the POLISH BODY CONTENT for a ${typeLabel}: "${metaData.title?.pl || docTitle}"
-Translate and adapt the scope based on the English version implicitly requested.
-USER REQUEST: ${input}
-${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 3000)}` : ''}
+Write the POLISH translation formatting for a ${typeLabel}: "${metaData.title?.pl || docTitle}"
+
+SOURCE ENGLISH TEXT (Translate and adapt this structurally):
+${englishContentText}
+
+CRITICAL RULES FOR POLISH:
+1. Exact same formatting structure (same number of h2/h3/normal blocks).
+2. Do not do a naive 1:1 translation; use native, natural Polish phrasing.
+3. Use proper Polish grammar and vocabulary. Do NOT use borrowed English words (loanwords). Adjust for a natural Polish reading experience.
+4. DO NOT USE MARKDOWN. 
+
 Return ONLY valid JSON:
-{"body":{"pl":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}]}}
-Requirements: 6-10 blocks, 500-800 words, mix h2/h3/normal. No markdown.`
+{"body":{"pl":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}]}}`
 
             const plText = await callAI(plPrompt, { isJson: true, maxTokens: 2000 })
             const plData = extractJson(plText)
