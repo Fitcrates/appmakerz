@@ -141,6 +141,10 @@ export const AIWholePostGenerator = (props: any) => {
   const documentType = useFormValue(['_type']) as string | undefined
   const titleEn = useFormValue(['title', 'en']) as string | undefined
   const titlePl = useFormValue(['title', 'pl']) as string | undefined
+  
+  const bodyEnBlocks = useFormValue(['body', 'en']) as any[] | undefined
+  const bodyPlBlocks = useFormValue(['body', 'pl']) as any[] | undefined
+  const extractText = (blocks: any[]) => Array.isArray(blocks) ? blocks.map((b: any) => b.children?.map((c: any) => c.text).join('')).join('\n') : '';
 
   // ── State: reference content (fetched once) ─────────────────────────────
   const [referenceContent, setReferenceContent] = useState('')
@@ -365,7 +369,19 @@ export const AIWholePostGenerator = (props: any) => {
       // ── Fetch linked content if user mentioned slugs ───────────────────
       setStatus('Checking for linked content...')
       const linkedContent = await fetchLinkedContent(input)
-      const fullContext = referenceContent + linkedContent
+      
+      const currentBodyEnText = extractText(bodyEnBlocks || []);
+      const currentBodyPlText = extractText(bodyPlBlocks || []);
+      
+      let currentDraftText = ''
+      if (currentBodyEnText || currentBodyPlText) {
+        currentDraftText = `\n\n=== CURRENT TEXT IN EDITOR (The user pasted this into the fields. You MUST base your generation, translation, and metadata strongly around this content) ===\n`
+        if (currentBodyEnText) currentDraftText += `[ENGLISH EDITOR FIELD]:\n${currentBodyEnText}\n`
+        if (currentBodyPlText) currentDraftText += `[POLISH EDITOR FIELD]:\n${currentBodyPlText}\n`
+        currentDraftText += `========================================================================\n`
+      }
+
+      const fullContext = referenceContent + linkedContent + currentDraftText
 
       // ── Is this a question / chat, or a generation request? ────────────
       const isQuestion = /^\s*(what|how|why|when|who|where|can you|could you|tell me|do you|should|is it|are there|which|jakie|jak|dlaczego|czy|co|kiedy)/i.test(input) || input.trim().endsWith('?')
@@ -395,6 +411,7 @@ export const AIWholePostGenerator = (props: any) => {
 TASK: Generate METADATA for a ${typeLabel}: "${docTitle}"
 USER REQUEST: ${input}
 ${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 2000)}` : ''}
+${currentDraftText ? `\nCURRENT DRAFT IN EDITOR:\n${currentDraftText.substring(0, 3000)}\n(Use the above draft to extract metadata accurately)` : ''}
 
 CRITICAL TRANSLATION RULE:
 Ensure the Polish fields use natural, native Polish phrasing without English loan-words.
@@ -434,6 +451,7 @@ ${isProject ? `{
 Write the ENGLISH BODY CONTENT for a ${typeLabel}: "${metaData.title?.en || docTitle}"
 USER REQUEST: ${input}
 ${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 3000)}` : ''}
+${currentDraftText ? `\nCURRENT DRAFT IN EDITOR:\n${currentDraftText.substring(0, 4000)}\n(Use the above draft strongly to structure the content)` : ''}
 Return ONLY valid JSON:
 {"body":{"en":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}]}}
 Requirements: 6-10 blocks, 600-1000 words, mix h2/h3/normal. DO NOT USE MARKDOWN FENCES IN THE TEXT.`
@@ -470,7 +488,7 @@ CRITICAL TRANSLATION RULES:
 Return ONLY valid JSON representing the translated blocks:
 {"body":{"pl":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"<translated_heading>"}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"<translated_paragraph>"}]}]}}`
 
-            const plText = await callAI(plPrompt, { isJson: true, maxTokens: 2000 })
+            const plText = await callAI(plPrompt, { isJson: true, maxTokens: 4000 })
             const plData = extractJson(plText)
             if (plData.body?.pl) {
               const cleanedPl = ensureBlocks(plData.body.pl)
