@@ -453,20 +453,22 @@ Requirements: 6-10 blocks, 600-1000 words, mix h2/h3/normal. DO NOT USE MARKDOWN
             setStatus('Step 3/3: Generating Polish Body...')
             const englishContentText = enData.body?.en ? JSON.stringify(enData.body.en) : '';
 
-            const plPrompt = `You are an expert Polish SEO copywriter.
-Write the POLISH translation formatting for a ${typeLabel}: "${metaData.title?.pl || docTitle}"
+            const plPrompt = `You are an expert Polish SEO copywriter and localized translator.
 
-SOURCE ENGLISH TEXT (Translate and adapt this structurally):
+Your task is to translate the following English JSON content into Polish. You MUST maintain the EXACT SAME JSON structure, semantic sequence, and formatting blocks.
+
+SOURCE ENGLISH JSON:
 ${englishContentText}
 
-CRITICAL RULES FOR POLISH:
-1. Exact same formatting structure (same number of h2/h3/normal blocks).
-2. Do not do a naive 1:1 translation; use native, natural Polish phrasing.
-3. Use proper Polish grammar and vocabulary. Do NOT use borrowed English words (loanwords). Adjust for a natural Polish reading experience.
-4. DO NOT USE MARKDOWN. 
+CRITICAL TRANSLATION RULES:
+1. Translate block by block. The Polish output MUST have the EXACT SAME number of blocks and the EXACT SAME \`style\` attributes as the Source English JSON. 
+2. Do not summarize, skip, or invent new sections. If the English JSON has 8 blocks, your JSON must have exactly 8 blocks.
+3. Do not do a naive 1:1 literal translation. Use native, natural Polish phrasing.
+4. Use proper Polish grammar and vocabulary. Do NOT use borrowed English words (loanwords). Adjust the text for a natural, native Polish reading experience.
+5. DO NOT USE MARKDOWN. 
 
-Return ONLY valid JSON:
-{"body":{"pl":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}]}}`
+Return ONLY valid JSON representing the translated blocks:
+{"body":{"pl":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"<translated_heading>"}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"<translated_paragraph>"}]}]}}`
 
             const plText = await callAI(plPrompt, { isJson: true, maxTokens: 2000 })
             const plData = extractJson(plText)
