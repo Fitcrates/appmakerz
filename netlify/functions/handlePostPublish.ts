@@ -252,7 +252,8 @@ const handler: Handler = async (event) => {
       });
 
       // Check if this is a new publication
-      const isNewPublication = post.publishedAt && !post.emailsSent;
+      const isDraft = body._id.startsWith('drafts.') || post._id.startsWith('drafts.');
+      const isNewPublication = !isDraft && !post.emailsSent;
 
       if (!isTestMode) {
         if (post.emailsSent) {
@@ -263,19 +264,20 @@ const handler: Handler = async (event) => {
           };
         }
 
-        if (!post.publishedAt) {
-          console.log('Post is not published yet');
+        if (isDraft) {
+          console.log('Post is still a draft, waiting for actual publish');
           return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Post is not published yet' })
+            body: JSON.stringify({ message: 'Post is a draft, not publishing yet' })
           };
         }
 
-        if (!isNewPublication) {
-          console.log('Post is being updated, not sending emails');
+        // Add optional check: if user explicitly set publishedAt in the future, don't send until then
+        if (post.publishedAt && new Date(post.publishedAt).getTime() > Date.now()) {
+          console.log('Post is scheduled for the future. Emails will not be sent yet.');
           return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Post is not newly published, skipping emails' })
+            body: JSON.stringify({ message: 'Post is scheduled for future publication' })
           };
         }
 

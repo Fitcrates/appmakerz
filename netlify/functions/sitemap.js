@@ -6,7 +6,7 @@ import { createClient } from '@sanity/client';
 const client = createClient({
   projectId: process.env.SANITY_PROJECT_ID || '867nk643',
   dataset: process.env.SANITY_DATASET || 'production',
-  useCdn: true, // CDN is fine for sitemap reads
+  useCdn: false, // Set to false to ensure we get instantly published documents without CDN delay
   apiVersion: '2024-01-01',
 });
 
@@ -39,13 +39,14 @@ function buildUrlEntry({ loc, lastmod, changefreq, priority }) {
 export async function handler(event) {
   try {
     // Fetch all published posts and projects from Sanity
+    // Ordered by _updatedAt because publishedAt is an optional field the user might forget
     const [posts, projects] = await Promise.all([
-      client.fetch(`*[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
+      client.fetch(`*[_type == "post" && defined(slug.current)] | order(_updatedAt desc) {
         "slug": slug.current,
         publishedAt,
         _updatedAt
       }`),
-      client.fetch(`*[_type == "project" && defined(slug.current)] | order(publishedAt desc) {
+      client.fetch(`*[_type == "project" && defined(slug.current)] | order(_updatedAt desc) {
         "slug": slug.current,
         publishedAt,
         _updatedAt
@@ -97,7 +98,7 @@ ${urls.join('\n')}
       statusCode: 200,
       headers: {
         'Content-Type': 'application/xml; charset=utf-8',
-        'Cache-Control': 'public, max-age=3600, s-maxage=3600', // Cache 1h
+        'Cache-Control': 'public, max-age=60, s-maxage=60', // Cache for only 60 seconds (down from 1 hour)
         'X-Robots-Tag': 'noindex', // Sitemap itself shouldn't be indexed
       },
       body: xml,
