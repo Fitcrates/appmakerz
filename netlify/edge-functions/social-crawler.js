@@ -354,13 +354,35 @@ export default async function(request, context) {
     return context.next();
   }
 
+  const url = new URL(request.url);
+  const path = url.pathname;
   const userAgent = request.headers.get('user-agent') || '';
+
+  if (path === '/ua-debug') {
+    const payload = {
+      userAgent,
+      acceptLanguage: request.headers.get('accept-language') || '',
+      accept: request.headers.get('accept') || '',
+      secChUa: request.headers.get('sec-ch-ua') || '',
+      secChUaMobile: request.headers.get('sec-ch-ua-mobile') || '',
+      secChUaPlatform: request.headers.get('sec-ch-ua-platform') || '',
+      xForwardedFor: request.headers.get('x-forwarded-for') || ''
+    };
+
+    return new Response(JSON.stringify(payload, null, 2), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-store',
+        'Vary': 'User-Agent, Accept-Language'
+      }
+    });
+  }
+
   if (!isBotUserAgent(userAgent)) {
     return context.next();
   }
 
-  const url = new URL(request.url);
-  const path = url.pathname;
   if (shouldSkipPath(path)) {
     return context.next();
   }

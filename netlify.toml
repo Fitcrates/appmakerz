@@ -35,6 +35,10 @@
   path = "/project/*"
   function = "social-crawler"
 
+[[edge_functions]]
+  path = "/ua-debug"
+  function = "social-crawler"
+
 # AI generation edge function (50s timeout vs 10s for regular functions)
 [[edge_functions]]
   path = "/api/ai-generate"
