@@ -19,6 +19,7 @@ const BOT_USER_AGENT_PATTERNS = [
   'applebot',
   'gptbot',
   'chatgpt-user',
+  'claude-user',
   'claudebot',
   'claude-web',
   'anthropic',
@@ -38,6 +39,26 @@ function isBotUserAgent(userAgent) {
   return BOT_USER_AGENT_PATTERNS.some((pattern) => ua.includes(pattern));
 }
 
+function hasKnownAssistantUtm(url) {
+  const utmSource = (url.searchParams.get('utm_source') || '').toLowerCase();
+  return /(chatgpt|openai|claude|anthropic|perplexity)/i.test(utmSource);
+}
+
+function isLikelyAssistantFetcher(request, userAgent) {
+  const ua = (userAgent || '').toLowerCase();
+  const accept = (request.headers.get('accept') || '').toLowerCase();
+  const secFetchMode = (request.headers.get('sec-fetch-mode') || '').toLowerCase();
+  const secFetchDest = (request.headers.get('sec-fetch-dest') || '').toLowerCase();
+  const secChUa = request.headers.get('sec-ch-ua') || '';
+
+  const looksLikeCompatibilityUa = ua.includes('mozilla/5.0') && ua.includes('compatible;');
+  const looksLikeDocumentFetch = accept.includes('text/html') || accept === '*/*';
+  const hasBrowserNavigationHints = secFetchMode === 'navigate' || secFetchDest === 'document';
+  const hasClientHints = secChUa.length > 0;
+
+  return looksLikeCompatibilityUa && looksLikeDocumentFetch && !hasBrowserNavigationHints && !hasClientHints;
+}
+
 const STATIC_PAGE_META = {
   '/': {
     en: {
@@ -47,7 +68,7 @@ const STATIC_PAGE_META = {
     },
     pl: {
       title: 'AppCrates - Programista Fullstack | React, Next.js, TypeScript',
-      description: 'Tworze nowoczesne aplikacje webowe, sklepy internetowe i rozwiazania dla firm w Polsce i globalnie.',
+      description: 'Tworze nowoczesne aplikacje webowe, strony internetowe, sklepy internetowe i rozwiazania dla firm w Polsce i globalnie.',
       h1: 'AppCrates - Tworzenie aplikacji webowych'
     }
   },
@@ -363,10 +384,16 @@ export default async function(request, context) {
       userAgent,
       acceptLanguage: request.headers.get('accept-language') || '',
       accept: request.headers.get('accept') || '',
+      secFetchSite: request.headers.get('sec-fetch-site') || '',
+      secFetchMode: request.headers.get('sec-fetch-mode') || '',
+      secFetchDest: request.headers.get('sec-fetch-dest') || '',
+      secFetchUser: request.headers.get('sec-fetch-user') || '',
       secChUa: request.headers.get('sec-ch-ua') || '',
       secChUaMobile: request.headers.get('sec-ch-ua-mobile') || '',
       secChUaPlatform: request.headers.get('sec-ch-ua-platform') || '',
-      xForwardedFor: request.headers.get('x-forwarded-for') || ''
+      xForwardedFor: request.headers.get('x-forwarded-for') || '',
+      xForwardedProto: request.headers.get('x-forwarded-proto') || '',
+      via: request.headers.get('via') || ''
     };
 
     return new Response(JSON.stringify(payload, null, 2), {
@@ -379,7 +406,13 @@ export default async function(request, context) {
     });
   }
 
-  if (!isBotUserAgent(userAgent)) {
+  const likelyAssistantFetcher = isLikelyAssistantFetcher(request, userAgent);
+  const shouldPrerender =
+    isBotUserAgent(userAgent) ||
+    (hasKnownAssistantUtm(url) && likelyAssistantFetcher) ||
+    likelyAssistantFetcher;
+
+  if (!shouldPrerender) {
     return context.next();
   }
 
