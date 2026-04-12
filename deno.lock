@@ -48,7 +48,7 @@
         "npm:gsap@^3.14.2",
         "npm:lucide-react@0.575",
         "npm:netlify-cli@24",
-        "npm:nodemailer@^8.0.1",
+        "npm:nodemailer@^8.0.5",
         "npm:postcss@^8.4.35",
         "npm:prismjs@^1.30.0",
         "npm:react-admin@^5.4.1",

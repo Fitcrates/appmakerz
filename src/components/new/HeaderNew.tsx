@@ -9,13 +9,13 @@ import { translations } from '../../translations/translations';
 import { getPosts } from '../../lib/sanity.client';
 
 const getNavItems = (t: typeof translations.en.nav) => [
-  { label: t.home, href: '/#hero' },
   { label: t.about, href: '/#about' },
   { label: t.projects, href: '/#projects' },
   { label: t.services, href: '/#services' },
   { label: t.solutions, href: '/#solutions' },
   { label: t.blog, href: '/blog' },
   { label: t.contact, href: '/#contact' },
+  { label: 'FAQ', href: '/faq' },
 ];
 
 const HeaderNew: React.FC = () => {

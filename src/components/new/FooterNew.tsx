@@ -295,6 +295,12 @@ const FooterNew: React.FC = () => {
 
           <div className="flex items-center gap-8">
             <a
+              href="/faq"
+              className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors"
+            >
+              FAQ
+            </a>
+            <a
               href="/privacy-policy"
               className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors"
             >

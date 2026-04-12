@@ -81,6 +81,11 @@ export const translations = {
           title: "Glow & Serenity Spa Website",
           category: "Landing Page with CMS",
           description: "High-converting spa website with client-friendly content management system. Owners can update services, prices, and promotions themselves without technical help. Increased bookings by 40% in first month."
+        },
+        koreanBbq: {
+          title: "HWA / 火 — Korean BBQ",
+          category: "Premium Frontend Experience",
+          description: "A conceptual frontend project simulating a luxury Korean BBQ restaurant. Built with Next.js featuring cinematic GSAP ScrollTrigger animations, a custom CSS architecture, and full i18n support."
         }
       },
     },
@@ -376,6 +381,11 @@ export const translations = {
           title: "Strona Spa Glow & Serenity",
           category: "Landing Page z CMS",
           description: "Wysokokonwertująca strona spa z łatwym systemem zarządzania treścią dla właścicieli. Właściciele mogą samodzielnie aktualizować usługi, ceny i promocje bez pomocy programisty. Wzrost rezerwacji o 40% w pierwszym miesiącu."
+        },
+        koreanBbq: {
+          title: "HWA / 火 — Premium Korean BBQ",
+          category: "Koncepcyjny Projekt Frontendowy",
+          description: "W pełni immersyjna platforma symulująca stronę luksusowej restauracji. Stworzona w Next.js z kinowymi animacjami GSAP ScrollTrigger, dedykowanym systemem CSS i pełnym wsparciem dla wielojęzyczności."
         }
       },
     },

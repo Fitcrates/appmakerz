@@ -1,6 +1,5 @@
 # Static files
 /robots.txt /robots.txt 200
-/sitemap.xml /sitemap.xml 200
 /favicon.ico /media/favicon.ico 200
 
 # Sanity Studio routes

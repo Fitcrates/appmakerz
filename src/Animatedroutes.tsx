@@ -11,6 +11,7 @@ const PrivacyPolicy = lazy(() => import('./components/new/PrivacyPolicyNew'));
 const ProjectDetails = lazy(() => import('./components/new/ProjectDetailsNew'));
 const Unsubscribe = lazy(() => import('./pages/UnsubscribeNew'));
 const NotFound = lazy(() => import('./components/NotFound'));
+const FAQPage = lazy(() => import('./components/new/FAQNew'));
 
 
 // Loading fallback component
@@ -63,6 +64,14 @@ const AnimatedRoutes = () => {
           element={
             <Suspense fallback={<LoadingFallback />}>
               <PrivacyPolicy />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/faq"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <FAQPage />
             </Suspense>
           }
         />

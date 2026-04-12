@@ -75,16 +75,25 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
     year: "2026",
   },
   {
-id: "2", 
-title: t.items.spaWebsite.title,
-category: t.items.spaWebsite.category,
-description: t.items.spaWebsite.description,
-image: "media/DemoLanding1.webp",
-slug: "glow-and-serenity-spa-website-with-headless-cms",
-year: "2026",
+    id: "2", 
+    title: t.items.spaWebsite.title,
+    category: t.items.spaWebsite.category,
+    description: t.items.spaWebsite.description,
+    image: "/media/DemoLanding1.webp",
+    slug: "glow-and-serenity-spa-website-with-headless-cms",
+    year: "2026",
   },
   {
     id: "3",
+    title: t.items.koreanBbq.title,
+    category: t.items.koreanBbq.category,
+    description: t.items.koreanBbq.description,
+    image: "/media/KoreanRestaurant.webp",
+    slug: "premium-korean-bbq-demo",
+    year: "2026",
+  },
+  {
+    id: "4",
     title: t.items.animeSearch.title,
     category: t.items.animeSearch.category,
     description: t.items.animeSearch.description,
@@ -92,19 +101,17 @@ year: "2026",
     slug: "anime-platform",
     year: "2025",
   },
- {
-    id: "4",
-  title: t.items.homebudget.title,
+  {
+    id: "5",
+    title: t.items.homebudget.title,
     category: t.items.homebudget.category,
     description: t.items.homebudget.description, 
     image: "/media/HomeBudget.webp",
     slug: "home-budget-ai-app",
-   year: "2026"
-},
-
- 
+    year: "2026"
+  },
   {
-    id: "5",
+    id: "6",
     title: t.items.portfolio.title,
     category: t.items.portfolio.category,
     description: t.items.portfolio.description,
@@ -112,8 +119,8 @@ year: "2026",
     slug: "alfaromeo-portfolio-website",
     year: "2026",
   },
-   {
-    id: "6",
+  {
+    id: "7",
     title: t.items.flixstock.title,
     category: t.items.flixstock.category,
     description: t.items.flixstock.description,
@@ -121,7 +128,6 @@ year: "2026",
     slug: "flixstock-app",
     year: "2024",
   },
- 
 ];
 
 // ─── Variants (defined once outside component, no re-creation) ───
