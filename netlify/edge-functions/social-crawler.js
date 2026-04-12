@@ -3,7 +3,40 @@
 
 const BASE_URL = 'https://appcrates.pl';
 
-const BOT_USER_AGENT_PATTERN = /(googlebot|bingbot|duckduckbot|yandex|baiduspider|facebookexternalhit|twitterbot|linkedinbot|slackbot|discordbot|whatsapp|telegrambot|applebot|gptbot|chatgpt-user|claudebot|anthropic-ai|perplexitybot|bytespider|petalbot)/i;
+const BOT_USER_AGENT_PATTERNS = [
+  'googlebot',
+  'bingbot',
+  'duckduckbot',
+  'yandex',
+  'baiduspider',
+  'facebookexternalhit',
+  'twitterbot',
+  'linkedinbot',
+  'slackbot',
+  'discordbot',
+  'whatsapp',
+  'telegrambot',
+  'applebot',
+  'gptbot',
+  'chatgpt-user',
+  'claudebot',
+  'claude-web',
+  'anthropic',
+  'perplexitybot',
+  'bytespider',
+  'petalbot',
+  'python-requests',
+  'curl/',
+  'wget/',
+  'go-http-client',
+  'node-fetch',
+  'axios/'
+];
+
+function isBotUserAgent(userAgent) {
+  const ua = (userAgent || '').toLowerCase();
+  return BOT_USER_AGENT_PATTERNS.some((pattern) => ua.includes(pattern));
+}
 
 const STATIC_PAGE_META = {
   '/': {
@@ -322,7 +355,7 @@ export default async function(request, context) {
   }
 
   const userAgent = request.headers.get('user-agent') || '';
-  if (!BOT_USER_AGENT_PATTERN.test(userAgent)) {
+  if (!isBotUserAgent(userAgent)) {
     return context.next();
   }
 
@@ -341,7 +374,8 @@ export default async function(request, context) {
         status: 200,
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Vary': 'User-Agent, Accept-Language'
         }
       });
     }
@@ -352,7 +386,8 @@ export default async function(request, context) {
         status: 200,
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
-          'Cache-Control': 'no-cache, no-store, must-revalidate'
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Vary': 'User-Agent, Accept-Language'
         }
       });
     }
