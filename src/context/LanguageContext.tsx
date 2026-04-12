@@ -10,6 +10,12 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const getInitialLanguage = (): Language => {
+  const url = new URL(window.location.href);
+  const langFromQuery = url.searchParams.get('lang');
+  if (langFromQuery === 'en' || langFromQuery === 'pl') {
+    return langFromQuery;
+  }
+
   // Check localStorage first
   const stored = localStorage.getItem('language');
   if (stored === 'en' || stored === 'pl') {

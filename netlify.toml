@@ -6,14 +6,27 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# Dynamic sitemap served via Netlify function
-[[redirects]]
-  from = "/sitemap.xml"
-  to = "/.netlify/functions/sitemap"
-  status = 200
-  force = true
+# Bot prerendering
+[[edge_functions]]
+  path = "/"
+  function = "social-crawler"
 
-# Use Edge Functions for social crawlers (blog posts + projects)
+[[edge_functions]]
+  path = "/blog"
+  function = "social-crawler"
+
+[[edge_functions]]
+  path = "/faq"
+  function = "social-crawler"
+
+[[edge_functions]]
+  path = "/privacy-policy"
+  function = "social-crawler"
+
+[[edge_functions]]
+  path = "/unsubscribe"
+  function = "social-crawler"
+
 [[edge_functions]]
   path = "/blog/*"
   function = "social-crawler"
@@ -26,46 +39,3 @@
 [[edge_functions]]
   path = "/api/ai-generate"
   function = "ai-generate"
-
-# Redirect from Netlify subdomain to custom domain
-[[redirects]]
-  from = "https://appcrates.netlify.app/*"
-  to = "https://appcrates.pl/:splat"
-  status = 301
-  force = true
-
-# SPA fallback
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
-# Headers for blog posts - no caching to ensure fresh content
-[[headers]]
-  for = "/blog/*"
-  [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
-    Pragma = "no-cache"
-    Expires = "0"
-
-[[headers]]
-  for = "/*.js"
-  [headers.values]
-    Content-Type = "application/javascript"
-    Cache-Control = "no-cache, no-store, must-revalidate"
-    Pragma = "no-cache"
-    Expires = "0"
-
-[[headers]]
-  for = "/*.css"
-  [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
-    Pragma = "no-cache"
-    Expires = "0"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
