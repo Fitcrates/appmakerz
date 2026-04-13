@@ -34,12 +34,18 @@ const HeroNew: React.FC = () => {
     >
       {/* Hero background image */}
       <div className="absolute inset-0 z-0" aria-hidden="true">
-        <img
-          src="/media/hero2new.webp"
-          alt=""
-          role="presentation"
-          className="w-full h-full object-cover opacity-30"
-        />
+        <picture>
+          <source media="(max-width: 768px)" srcSet="/media/placeholderHero.webp" />
+          <img
+            src="/media/hero2new.webp"
+            alt=""
+            role="presentation"
+            className="w-full h-full object-cover opacity-30"
+            fetchPriority="high"
+            decoding="async"
+            sizes="100vw"
+          />
+        </picture>
         <div className="absolute inset-0 bg-indigo-950/70" />
       </div>
 

@@ -5,9 +5,39 @@ import { motion, AnimatePresence } from 'framer-motion';
 declare global {
   interface Window {
     gtag?: (command: string, action: string, params: Record<string, string>) => void;
+    __gtmLoaded?: boolean;
     dataLayer: any[];
   }
 }
+
+const GTM_ID = 'GTM-NWFNDK77';
+
+const ensureGtmLoaded = (): Promise<void> => {
+  if (typeof window === 'undefined') return Promise.resolve();
+  if (window.__gtmLoaded) return Promise.resolve();
+
+  const existing = document.querySelector<HTMLScriptElement>(`script[data-gtm-id="${GTM_ID}"]`);
+  if (existing) {
+    window.__gtmLoaded = true;
+    return Promise.resolve();
+  }
+
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
+    script.dataset.gtmId = GTM_ID;
+    script.onload = () => {
+      window.__gtmLoaded = true;
+      resolve();
+    };
+    script.onerror = () => reject(new Error('Failed to load GTM'));
+    document.head.appendChild(script);
+  });
+};
 
 const CookieConsent: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -41,6 +71,8 @@ const CookieConsent: React.FC = () => {
   }, []);
 
   const loadAnalytics = async () => {
+    await ensureGtmLoaded();
+
     if (typeof window.gtag === 'function') {
       window.gtag('consent', 'update', {
         'analytics_storage': 'granted',
@@ -62,6 +94,8 @@ const CookieConsent: React.FC = () => {
 
   const handleDecline = () => {
     localStorage.setItem('cookieConsent', 'declined');
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(['consent', 'update', { analytics_storage: 'denied' }]);
     if (typeof window.gtag === 'function') {
       window.gtag('consent', 'update', {
         'analytics_storage': 'denied',

@@ -13,14 +13,17 @@ const BurnRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string }
     <div className="relative w-full h-full overflow-hidden" role="img" aria-label={ariaLabel || alt}>
       <div className="absolute inset-0 burn-reveal-cycle">
         <div className="absolute inset-0 burn-reveal-image" aria-hidden="true">
-          <img
-            src={src}
-            alt={alt}
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="lazy"
-            decoding="async"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
+          <picture>
+            <source media="(max-width: 768px)" srcSet="/media/ArekNew.webp" />
+            <img
+              src={src}
+              alt={alt}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+              sizes="(max-width: 768px) 92vw, (max-width: 1024px) 80vw, 50vw"
+            />
+          </picture>
         </div>
 
         {/* Burn line effect */}
