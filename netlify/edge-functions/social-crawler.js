@@ -184,58 +184,174 @@ function pickLocalizedValue(field, language) {
   return '';
 }
 
-function slugifyForComparison(value) {
-  return String(value || '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+function pickLocalizedArray(field, language) {
+  if (!field) return [];
+  if (Array.isArray(field)) return field;
+  if (Array.isArray(field[language])) return field[language];
+  if (Array.isArray(field.en)) return field.en;
+  if (Array.isArray(field.pl)) return field.pl;
+  return [];
 }
 
-function resolveContentLanguage({ requestedLanguage, path, slug, doc }) {
-  if (requestedLanguage === 'pl' || requestedLanguage === 'en') {
-    return requestedLanguage;
-  }
+function hasLanguageVariant(field, language) {
+  if (!field || typeof field === 'string') return false;
+  return Boolean(field[language]);
+}
 
+function resolveContentLanguage({ requestedLanguage, path, doc }) {
   if (path.startsWith('/uslugi/')) {
     return 'pl';
   }
 
-  const titleEn = pickLocalizedValue(doc?.title, 'en');
-  const titlePl = pickLocalizedValue(doc?.title, 'pl');
-  const slugifiedEn = slugifyForComparison(titleEn);
-  const slugifiedPl = slugifyForComparison(titlePl);
+  if (requestedLanguage === 'pl' || requestedLanguage === 'en') {
+    return requestedLanguage;
+  }
 
-  if (slug && slugifiedPl && slug === slugifiedPl) return 'pl';
-  if (slug && slugifiedEn && slug === slugifiedEn) return 'en';
+  if (hasLanguageVariant(doc?.title, 'pl') || hasLanguageVariant(doc?.intro, 'pl') || hasLanguageVariant(doc?.excerpt, 'pl')) {
+    return 'pl';
+  }
 
   return requestedLanguage || 'en';
 }
 
-function renderPortableTextToHtml(blocks) {
+function renderPortableTextToHtml(blocks, { projectId, dataset } = {}) {
   if (!Array.isArray(blocks) || blocks.length === 0) return '';
 
   const parts = [];
+  let currentListType = null;
+
+  const closeOpenList = () => {
+    if (currentListType) {
+      parts.push(`</${currentListType}>`);
+      currentListType = null;
+    }
+  };
+
   for (const block of blocks) {
+    if (!block) continue;
+
+    if (block._type === 'image') {
+      closeOpenList();
+      const imageUrl = imageUrlFromSanityAsset(block, projectId, dataset);
+      if (imageUrl) {
+        const alt = escapeHtml(block?.alt || '');
+        parts.push(`<img src="${escapeHtml(imageUrl)}" alt="${alt}" loading="lazy" />`);
+      }
+      continue;
+    }
+
     if (!block || block._type !== 'block') continue;
 
+    const markDefs = Array.isArray(block.markDefs) ? block.markDefs : [];
+    const markDefByKey = new Map(markDefs.map((def) => [def?._key, def]));
+
     const text = (Array.isArray(block.children) ? block.children : [])
-      .map((child) => (child?._type === 'span' ? child.text || '' : ''))
+      .map((child) => {
+        if (child?._type !== 'span') return '';
+
+        let rendered = escapeHtml(child.text || '');
+        const marks = Array.isArray(child.marks) ? child.marks : [];
+
+        for (const mark of marks) {
+          if (mark === 'strong') {
+            rendered = `<strong>${rendered}</strong>`;
+            continue;
+          }
+          if (mark === 'em') {
+            rendered = `<em>${rendered}</em>`;
+            continue;
+          }
+
+          const def = markDefByKey.get(mark);
+          if (def?._type === 'link' && def.href) {
+            const href = escapeHtml(def.href);
+            rendered = `<a href="${href}" rel="noopener noreferrer">${rendered}</a>`;
+          }
+        }
+
+        return rendered;
+      })
       .join('')
       .trim();
 
     if (!text) continue;
 
-    const safeText = escapeHtml(text);
+    if (block.listItem) {
+      const listTag = block.listItem === 'number' ? 'ol' : 'ul';
+      if (currentListType !== listTag) {
+        closeOpenList();
+        parts.push(`<${listTag}>`);
+        currentListType = listTag;
+      }
+      parts.push(`<li>${text}</li>`);
+      continue;
+    }
+
+    closeOpenList();
+
     const style = block.style || 'normal';
     if (style === 'h2') {
-      parts.push(`<h2>${safeText}</h2>`);
+      parts.push(`<h2>${text}</h2>`);
     } else if (style === 'h3') {
-      parts.push(`<h3>${safeText}</h3>`);
+      parts.push(`<h3>${text}</h3>`);
     } else {
-      parts.push(`<p>${safeText}</p>`);
+      parts.push(`<p>${text}</p>`);
     }
+  }
+
+  closeOpenList();
+
+  return parts.join('\n');
+}
+
+function renderServiceLandingBodyHtml({ doc, language, projectId, dataset }) {
+  const intro = pickLocalizedValue(doc?.intro, language);
+  const problems = pickLocalizedArray(doc?.problems, language);
+  const deliverables = pickLocalizedArray(doc?.deliverables, language);
+  const processSteps = pickLocalizedArray(doc?.processSteps, language);
+  const faqItems = pickLocalizedArray(doc?.faq, language);
+  const richContentBlocks = pickLocalizedArray(doc?.content, language);
+
+  const t = language === 'pl'
+    ? {
+        problems: 'Problemy, które rozwiązuję',
+        deliverables: 'Co otrzymasz',
+        process: 'Proces współpracy',
+        faq: 'FAQ'
+      }
+    : {
+        problems: 'Problems I Solve',
+        deliverables: 'What You Get',
+        process: 'Delivery Process',
+        faq: 'FAQ'
+      };
+
+  const parts = [];
+  if (intro) {
+    parts.push(`<p>${escapeHtml(intro)}</p>`);
+  }
+
+  if (problems.length) {
+    parts.push(`<section><h2>${escapeHtml(t.problems)}</h2><ul>${problems.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`);
+  }
+
+  if (deliverables.length) {
+    parts.push(`<section><h2>${escapeHtml(t.deliverables)}</h2><ul>${deliverables.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`);
+  }
+
+  if (processSteps.length) {
+    parts.push(`<section><h2>${escapeHtml(t.process)}</h2><ol>${processSteps.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ol></section>`);
+  }
+
+  if (faqItems.length) {
+    parts.push(`<section><h2>${escapeHtml(t.faq)}</h2>${faqItems
+      .map((item) => `<h3>${escapeHtml(item?.question || '')}</h3><p>${escapeHtml(item?.answer || '')}</p>`)
+      .join('')}</section>`);
+  }
+
+  const richContentHtml = renderPortableTextToHtml(richContentBlocks, { projectId, dataset });
+  if (richContentHtml) {
+    parts.push(richContentHtml);
   }
 
   return parts.join('\n');
@@ -352,6 +468,11 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
         slug,
         heroImage,
         intro { en, pl },
+        problems { en, pl },
+        deliverables { en, pl },
+        processSteps { en, pl },
+        faq { en, pl },
+        content { en, pl },
         seo {
           metaTitle { en, pl },
           metaDescription { en, pl },
@@ -383,7 +504,6 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
   const resolvedLanguage = resolveContentLanguage({
     requestedLanguage: language,
     path,
-    slug,
     doc
   });
 
@@ -402,7 +522,11 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
   const bodyBlocks = isBlogPost
     ? (Array.isArray(doc?.body) ? doc.body : (doc?.body?.[resolvedLanguage] || doc?.body?.en || doc?.body?.pl || []))
     : [];
-  const bodyHtml = isBlogPost ? renderPortableTextToHtml(bodyBlocks) : '';
+  const bodyHtml = isBlogPost
+    ? renderPortableTextToHtml(bodyBlocks, { projectId, dataset })
+    : isServiceLanding
+      ? renderServiceLandingBodyHtml({ doc, language: resolvedLanguage, projectId, dataset })
+      : '';
 
   const canonicalUrl = isBlogPost
     ? `${BASE_URL}/blog/${slug}`
@@ -556,7 +680,7 @@ export default async function(request, context) {
         status: 200,
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
           'Vary': 'User-Agent, Accept-Language'
         }
       });
@@ -568,7 +692,7 @@ export default async function(request, context) {
         status: 200,
         headers: {
           'Content-Type': 'text/html; charset=utf-8',
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
           'Vary': 'User-Agent, Accept-Language'
         }
       });
