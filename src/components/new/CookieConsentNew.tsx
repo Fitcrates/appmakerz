@@ -11,7 +11,12 @@ const callGtag = (command: string, action: string, params: Record<string, string
   const gtag = (window as unknown as { gtag?: GtagFunction }).gtag;
   if (typeof gtag === 'function') {
     gtag(command, action, params);
+    return;
   }
+
+  const win = window as unknown as { dataLayer?: unknown[] };
+  win.dataLayer = win.dataLayer || [];
+  win.dataLayer.push(['consent', action, params]);
 };
 
 const CookieConsentNew: React.FC = () => {
@@ -45,30 +50,7 @@ const CookieConsentNew: React.FC = () => {
   }, []);
 
   const loadAnalytics = async () => {
-    // Check if gtag already exists
-    const existingGtag = (window as unknown as { gtag?: GtagFunction }).gtag;
-    if (typeof existingGtag === 'function') {
-      callGtag('consent', 'update', { 'analytics_storage': 'granted' });
-      return;
-    }
-
-    try {
-      const script = document.createElement('script');
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-XY59Q6HJSJ';
-      script.async = true;
-      
-      const loadPromise = new Promise((resolve, reject) => {
-        script.onload = resolve;
-        script.onerror = reject;
-      });
-
-      document.head.appendChild(script);
-      await loadPromise;
-
-      callGtag('consent', 'update', { 'analytics_storage': 'granted' });
-    } catch (error) {
-      console.error('Failed to load analytics:', error);
-    }
+    callGtag('consent', 'update', { 'analytics_storage': 'granted' });
   };
 
   const handleAccept = async () => {

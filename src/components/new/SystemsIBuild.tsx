@@ -427,7 +427,9 @@ const SystemsIBuildScroll: React.FC = () => {
                   src={stage.image}
                   alt={stage.title}
                   className="w-full h-full object-fit"
-                  loading={index === 0 ? 'eager' : 'lazy'}
+                  loading="lazy"
+                  decoding="async"
+                  sizes="100vw"
                   initial={{ scale: 1.1, filter: 'blur(8px)' }}
                   animate={{
                     scale: isActive ? 1 : 1.05,

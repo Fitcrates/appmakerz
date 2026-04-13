@@ -267,6 +267,9 @@ const SolutionsNew: React.FC = () => {
                     src={activeImage}
                     alt=""
                     className="absolute inset-0 w-full h-full object-contain object-center"
+                    loading="lazy"
+                    decoding="async"
+                    sizes="100vw"
                   />
                 </picture>
                 <div className="absolute inset-0 bg-indigo-950/70" />

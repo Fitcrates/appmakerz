@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -7,44 +7,20 @@ import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 
-// Text reveal animation component with burn glow
-const RevealText: React.FC<{ children: React.ReactNode; delay?: number }> = ({ children, delay = 0 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const [isRevealing, setIsRevealing] = useState(false);
-
-  useEffect(() => {
-    if (isInView) {
-      const timer = setTimeout(() => setIsRevealing(true), delay * 1000);
-      const endTimer = setTimeout(() => setIsRevealing(false), (delay + 0.5) * 1000);
-      return () => {
-        clearTimeout(timer);
-        clearTimeout(endTimer);
-      };
-    }
-  }, [isInView, delay]);
-
-  return (
-    <div ref={ref} className="overflow-hidden">
-      <motion.div
-        initial={{ y: '100%' }}
-        animate={isInView ? { y: 0 } : {}}
-        transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
-        className={isRevealing ? 'burn-glow-text' : ''}
-      >
-        {children}
-      </motion.div>
-    </div>
-  );
-};
-
 // Burn reveal effect for image - loops continuously
 const BurnRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string }> = ({ src, alt, ariaLabel }) => {
   return (
     <div className="relative w-full h-full overflow-hidden" role="img" aria-label={ariaLabel || alt}>
       <div className="absolute inset-0 burn-reveal-cycle">
         <div className="absolute inset-0 burn-reveal-image" aria-hidden="true">
-          <img src={src} alt={alt} className="absolute inset-0 w-full h-full object-cover" />
+          <img
+            src={src}
+            alt={alt}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
         </div>
 
         {/* Burn line effect */}

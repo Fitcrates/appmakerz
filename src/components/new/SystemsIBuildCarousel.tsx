@@ -254,7 +254,9 @@ const SystemsIBuildCarousel: React.FC = () => {
                 src={activeStage.image}
                 alt={activeStage.title}
                 className="w-full h-full object-cover"
-                loading={activeIndex === 0 ? 'eager' : 'lazy'}
+                loading="lazy"
+                decoding="async"
+                sizes="100vw"
                 initial={{ scale: 1.1, filter: 'blur(8px)' }}
                 animate={{ scale: 1, filter: 'blur(0px)' }}
                 transition={{

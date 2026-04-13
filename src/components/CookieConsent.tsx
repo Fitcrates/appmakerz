@@ -1,6 +1,13 @@
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
+
+declare global {
+  interface Window {
+    gtag?: (command: string, action: string, params: Record<string, string>) => void;
+    dataLayer: any[];
+  }
+}
 
 const CookieConsent: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -41,25 +48,8 @@ const CookieConsent: React.FC = () => {
       return;
     }
 
-    try {
-      const script = document.createElement('script');
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=G-XY59Q6HJSJ';
-      script.async = true;
-      
-      const loadPromise = new Promise((resolve, reject) => {
-        script.onload = resolve;
-        script.onerror = reject;
-      });
-
-      document.head.appendChild(script);
-      await loadPromise;
-
-      window.gtag('consent', 'update', {
-        'analytics_storage': 'granted',
-      });
-    } catch (error) {
-      console.error('Failed to load analytics:', error);
-    }
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(['consent', 'update', { analytics_storage: 'granted' }]);
   };
 
   const handleAccept = async () => {

@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import * as simpleIcons from 'simple-icons';
 
 interface TechItem {
   name: string;
@@ -7,23 +6,19 @@ interface TechItem {
   logoUrl?: string;
 }
 
-const iconMap = simpleIcons as unknown as Record<string, { path: string }>;
-const iconPath = (key: string, fallback: string) => iconMap[key]?.path ?? fallback;
-const awsPath = iconPath(
-  'siAmazonwebservices',
-  iconPath('siAmazonaws', iconPath('siAwslambda', iconPath('siAmazon', '')))
-);
+const iconPath = (_key: string, fallback: string) => fallback;
+const awsPath = '';
 
 const technologies: TechItem[] = [
   {
     name: 'React',
     path: iconPath('siReact', iconPath('siReactjs', '')),
-    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original-wordmark.svg',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/react.svg',
   },
   {
     name: 'Next.js',
     path: iconPath('siNextdotjs', ''),
-    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original-wordmark.svg',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextdotjs.svg',
   },
   {
     name: 'TypeScript',
@@ -43,17 +38,17 @@ const technologies: TechItem[] = [
   {
     name: 'Node.js',
     path: iconPath('siNodedotjs', ''),
-    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original-wordmark.svg',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nodedotjs.svg',
   },
   {
     name: 'PostgreSQL',
     path: iconPath('siPostgresql', ''),
-    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/postgresql.svg',
   },
   {
     name: 'Tailwind CSS',
     path: iconPath('siTailwindcss', ''),
-    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original-wordmark.svg',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/tailwindcss.svg',
   },
   {
     name: 'Framer Motion',
@@ -68,12 +63,12 @@ const technologies: TechItem[] = [
   {
     name: 'Docker',
     path: iconPath('siDocker', ''),
-    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original-wordmark.svg',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/docker.svg',
   },
   {
     name: 'AWS',
     path: awsPath,
-    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/amazonwebservices.svg',
   },
   {
     name: 'Railway',
@@ -93,7 +88,7 @@ const technologies: TechItem[] = [
   {
     name: 'Netlify',
     path: iconPath('siNetlify', ''),
-    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/netlify/netlify-original-wordmark.svg',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/netlify.svg',
   },
   {
     name: 'Vercel',
@@ -108,7 +103,7 @@ const technologies: TechItem[] = [
   {
     name: 'GraphQL',
     path: iconPath('siGraphql', ''),
-    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain-wordmark.svg',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/graphql.svg',
   },
   {
     name: 'Prisma',
@@ -118,7 +113,7 @@ const technologies: TechItem[] = [
   {
     name: 'Git',
     path: iconPath('siGit', ''),
-    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original-wordmark.svg',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/git.svg',
   },
   {
     name: 'Figma',
