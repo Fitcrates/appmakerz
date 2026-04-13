@@ -28,6 +28,7 @@ const AnimatedRoutes = () => {
 
   useEffect(() => {
     const warmUpRoutes = () => {
+      void import('./components/new/FAQNew');
       void import('./components/new/AboutMePageNew');
       void import('./components/new/ServiceLandingPageNew');
     };

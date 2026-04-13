@@ -2,10 +2,12 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import SpotlightText from './SpotlightText';
 import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
+import { getAboutMe } from '../../lib/sanity.client';
 
 // Burn reveal effect for image - loops continuously
 const BurnRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string }> = ({ src, alt, ariaLabel }) => {
@@ -50,6 +52,7 @@ const BurnRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string }
 };
 
 const AboutNew: React.FC = () => {
+  const queryClient = useQueryClient();
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
@@ -67,6 +70,11 @@ const AboutNew: React.FC = () => {
 
   const prefetchAboutMePage = () => {
     void import('./AboutMePageNew');
+    queryClient.prefetchQuery({
+      queryKey: ['about-me', 'about-me'],
+      queryFn: () => getAboutMe('about-me'),
+      staleTime: 5 * 60 * 1000,
+    });
   };
 
   return (

@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import LanguageToggle from '../LanguageToggle';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
-import { getPosts } from '../../lib/sanity.client';
+import { getAboutMe, getPosts, getServiceLanding } from '../../lib/sanity.client';
 
 const getNavItems = (t: typeof translations.en.nav) => [
   { label: t.about, href: '/#about' },
@@ -75,6 +75,30 @@ const HeaderNew: React.FC = () => {
     void import('./ServiceLandingPageNew');
   };
 
+  const prefetchFaqPage = () => {
+    void import('./FAQNew');
+  };
+
+  const prefetchAboutMePage = () => {
+    void import('./AboutMePageNew');
+    queryClient.prefetchQuery({
+      queryKey: ['about-me', 'about-me'],
+      queryFn: () => getAboutMe('about-me'),
+      staleTime: 5 * 60 * 1000,
+    });
+  };
+
+  const prefetchServiceLandingData = (href: string) => {
+    const slug = href.replace('/uslugi/', '');
+    if (!slug || slug === href) return;
+
+    queryClient.prefetchQuery({
+      queryKey: ['service-landing', slug],
+      queryFn: () => getServiceLanding(slug),
+      staleTime: 5 * 60 * 1000,
+    });
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -118,7 +142,12 @@ const HeaderNew: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link to="/" className="relative z-10">
+            <Link
+              to="/"
+              className="relative z-10"
+              onMouseEnter={prefetchAboutMePage}
+              onFocus={prefetchAboutMePage}
+            >
               <motion.span
                 whileHover={{ scale: 1.05 }}
                 className="text-xl font-jakarta font-light text-white"
@@ -136,6 +165,7 @@ const HeaderNew: React.FC = () => {
                   onClick={(e) => handleNavClick(e, item.href)}
                   onMouseEnter={item.href === '/blog' ? prefetchBlogPage : undefined}
                   onFocus={item.href === '/blog' ? prefetchBlogPage : undefined}
+                  onPointerEnter={item.href === '/faq' ? prefetchFaqPage : undefined}
                   className="relative text-white/70 font-jakarta font-light text-sm hover:text-white transition-colors group focus:outline-none focus:text-teal-300"
                 >
                   {item.label}
@@ -165,9 +195,18 @@ const HeaderNew: React.FC = () => {
                         <Link
                           key={item.href}
                           to={item.href}
-                          onMouseEnter={prefetchServiceLandingPage}
-                          onFocus={prefetchServiceLandingPage}
-                          onTouchStart={prefetchServiceLandingPage}
+                          onMouseEnter={() => {
+                            prefetchServiceLandingPage();
+                            prefetchServiceLandingData(item.href);
+                          }}
+                          onFocus={() => {
+                            prefetchServiceLandingPage();
+                            prefetchServiceLandingData(item.href);
+                          }}
+                          onTouchStart={() => {
+                            prefetchServiceLandingPage();
+                            prefetchServiceLandingData(item.href);
+                          }}
                           className="flex items-start gap-4 p-4 rounded-lg hover:bg-white/[0.05] transition-all duration-200 group"
                         >
                           <div className="w-10 h-10 rounded-lg bg-teal-300/10 border border-teal-300/20 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-300/20 group-hover:border-teal-300/30 transition-colors">
@@ -247,6 +286,7 @@ const HeaderNew: React.FC = () => {
                       onClick={(e) => handleNavClick(e, item.href)}
                       onTouchStart={item.href === '/blog' ? prefetchBlogPage : undefined}
                       onFocus={item.href === '/blog' ? prefetchBlogPage : undefined}
+                      onPointerEnter={item.href === '/faq' ? prefetchFaqPage : undefined}
                       className="block text-3xl font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
                     >
                       {item.label}
@@ -268,9 +308,18 @@ const HeaderNew: React.FC = () => {
                         <Link
                           key={item.href}
                           to={item.href}
-                          onMouseEnter={prefetchServiceLandingPage}
-                          onFocus={prefetchServiceLandingPage}
-                          onTouchStart={prefetchServiceLandingPage}
+                          onMouseEnter={() => {
+                            prefetchServiceLandingPage();
+                            prefetchServiceLandingData(item.href);
+                          }}
+                          onFocus={() => {
+                            prefetchServiceLandingPage();
+                            prefetchServiceLandingData(item.href);
+                          }}
+                          onTouchStart={() => {
+                            prefetchServiceLandingPage();
+                            prefetchServiceLandingData(item.href);
+                          }}
                           onClick={() => setIsMobileMenuOpen(false)}
                           className="flex items-center gap-3 py-1 text-base font-jakarta font-light text-white hover:text-teal-300 transition-colors"
                         >
