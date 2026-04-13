@@ -76,6 +76,119 @@ html {
   animation: spark 0.3s ease-out forwards;
 }
 
+/* Burn reveal loop for About image */
+@keyframes burn-reveal-image {
+  0% {
+    clip-path: inset(0 0 100% 0);
+  }
+  55% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes burn-reveal-line {
+  0% {
+    top: 0%;
+    opacity: 1;
+  }
+  55% {
+    top: 100%;
+    opacity: 1;
+  }
+  78% {
+    top: 100%;
+    opacity: 0;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes burn-reveal-overlay {
+  0% {
+    clip-path: inset(0 0 0 0);
+  }
+  55% {
+    clip-path: inset(100% 0 0 0);
+  }
+  100% {
+    clip-path: inset(100% 0 0 0);
+  }
+}
+
+@keyframes burn-reveal-spark {
+  0% {
+    top: 0%;
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  8% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  55% {
+    top: 100%;
+    opacity: 1;
+    transform: scale(0.9);
+  }
+  78% {
+    top: 100%;
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes burn-reveal-fade {
+  0%,
+  78% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.burn-reveal-cycle {
+  animation: burn-reveal-fade 6s linear infinite;
+}
+
+.burn-reveal-image {
+  animation: burn-reveal-image 6s linear infinite;
+  will-change: clip-path;
+}
+
+.burn-reveal-line {
+  animation: burn-reveal-line 6s linear infinite;
+  background: linear-gradient(to bottom, transparent, rgba(94, 234, 212, 0.8) 40%, rgba(94, 234, 212, 1) 50%, rgba(94, 234, 212, 0.8) 60%, transparent);
+  box-shadow: 0 0 30px rgba(94, 234, 212, 0.8), 0 0 60px rgba(94, 234, 212, 0.5);
+  filter: blur(2px);
+  will-change: top, opacity;
+}
+
+.burn-reveal-overlay {
+  animation: burn-reveal-overlay 6s linear infinite;
+  will-change: clip-path;
+}
+
+.burn-reveal-spark {
+  animation: burn-reveal-spark 6s linear infinite;
+  animation-delay: var(--spark-delay, 0s);
+  box-shadow: 0 0 10px rgba(94, 234, 212, 1);
+  will-change: top, opacity, transform;
+}
+
 /* Line reveal animation */
 @keyframes line-reveal {
   from {

@@ -15,6 +15,7 @@ export const AIGeneratorInput = (props: any) => {
   const [provider, setProvider] = useState<'openai' | 'groq' | 'gemini'>('gemini')
   const [model, setModel] = useState<string>(PROVIDER_DEFAULTS.gemini)
 
+  const documentType = useFormValue(['_type']) as string | undefined
   const titleEn = useFormValue(['title', 'en']) as string | undefined
   const titlePl = useFormValue(['title', 'pl']) as string | undefined
 
@@ -32,7 +33,12 @@ export const AIGeneratorInput = (props: any) => {
         ? (titlePl || titleEn || 'the topic')
         : (titleEn || titlePl || 'the topic')
 
-      const defaultPrompt = `Write a short and compelling text in ${languageMatch} for a blog post titled "${titleToUse}".`
+      const contentTypeLabel = documentType === 'project'
+        ? 'project case study'
+        : documentType === 'serviceLanding'
+          ? 'service landing page'
+          : 'blog post'
+      const defaultPrompt = `Write a short and compelling text in ${languageMatch} for a ${contentTypeLabel} titled "${titleToUse}".`
       let promptTemplate = schemaType.options?.aiPrompt || defaultPrompt
 
       const prompt = promptTemplate
@@ -63,7 +69,7 @@ export const AIGeneratorInput = (props: any) => {
     } finally {
       setLoading(false)
     }
-  }, [onChange, titleEn, titlePl, schemaType.options, props.path, provider, model])
+  }, [onChange, titleEn, titlePl, schemaType.options, props.path, provider, model, documentType])
 
   return (
     <Stack space={3}>

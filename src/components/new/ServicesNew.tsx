@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import CrackImage from './CrackImage';
 import SpotlightText from './SpotlightText';
 import BurnSpotlightText from './BurnSpotlightText';
@@ -42,6 +43,7 @@ interface Service {
   number: string;
   title: string;
   description: string;
+  slug: string;
   titleBreak?: boolean;
 }
 
@@ -50,22 +52,26 @@ const getServices = (t: typeof translations.en.services): Service[] => [
     number: t.items.webDev.number,
     title: t.items.webDev.title,
     description: t.items.webDev.description,
+    slug: 'tworzenie-stron-internetowych',
   },
   {
     number: t.items.backend.number,
     title: t.items.backend.title,
     description: t.items.backend.description,
+    slug: 'automatyzacje-backend',
     titleBreak: false,
   },
   {
     number: t.items.ecommerce.number,
     title: t.items.ecommerce.title,
     description: t.items.ecommerce.description,
+    slug: 'sklepy-ecommerce',
   },
   {
     number: t.items.responsive.number,
     title: t.items.responsive.title,
     description: t.items.responsive.description,
+    slug: 'wcag-dostepnosc',
   },
 ];
 
@@ -81,30 +87,32 @@ const ServiceItem: React.FC<{ service: Service; index: number }> = ({ service, i
       transition={{ duration: 0.6, delay: index * 0.15 }}
       className="group relative py-12 border-b border-white/10 hover:border-white/20 transition-colors"
     >
-      <div className="flex flex-col lg:flex-row lg:items-start gap-4 ">
-        {/* Number */}
-        <span className="text-xs text-teal-300 font-jakarta tracking-widest lg:w-12 flex-shrink-0">
-          {service.number}
-        </span>
+      <Link to={`/uslugi/${service.slug}`} className="block focus:outline-none focus:ring-2 focus:ring-teal-300/40 rounded">
+        <div className="flex flex-col lg:flex-row lg:items-start gap-4 ">
+          {/* Number */}
+          <span className="text-xs text-teal-300 font-jakarta tracking-widest lg:w-12 flex-shrink-0">
+            {service.number}
+          </span>
 
-        {/* Title */}
-        <div className="lg:w-72 flex-shrink-0">
-          <SpotlightText
-            as="h3"
-            className="text-2xl sm:text-3xl font-light font-jakarta"
-            glowSize={100}
-          >
-            {service.title}
-          </SpotlightText>
-        </div>
+          {/* Title */}
+          <div className="lg:w-72 flex-shrink-0">
+            <SpotlightText
+              as="h3"
+              className="text-2xl sm:text-3xl font-light font-jakarta"
+              glowSize={100}
+            >
+              {service.title}
+            </SpotlightText>
+          </div>
 
-        {/* Description */}
-        <div className="lg:flex-1">
-          <SpotlightText as="p" className="font-jakarta font-light leading-relaxed" glowSize={100}>
-            {service.description}
-          </SpotlightText>
+          {/* Description */}
+          <div className="lg:flex-1">
+            <SpotlightText as="p" className="font-jakarta font-light leading-relaxed" glowSize={100}>
+              {service.description}
+            </SpotlightText>
+          </div>
         </div>
-      </div>
+      </Link>
 
       {/* Hover line */}
       <motion.div

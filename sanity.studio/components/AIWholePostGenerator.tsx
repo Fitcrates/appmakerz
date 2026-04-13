@@ -88,6 +88,54 @@ const SCHEMA_POST = `{
   }
 }`
 
+const SCHEMA_SERVICE_LANDING = `{
+  "title": { "en": "English service title", "pl": "Polski tytuł usługi" },
+  "slug": { "_type": "slug", "current": "url-slug-from-english-title" },
+  "serviceType": "website-development",
+  "city": "Warszawa",
+  "isLocalLanding": true,
+  "eyebrow": { "en": "Service", "pl": "Usługa" },
+  "intro": { "en": "2-3 sentence service intro", "pl": "2-3 zdaniowy intro usługi" },
+  "problems": {
+    "en": ["Problem 1", "Problem 2", "Problem 3"],
+    "pl": ["Problem 1", "Problem 2", "Problem 3"]
+  },
+  "deliverables": {
+    "en": ["Deliverable 1", "Deliverable 2", "Deliverable 3"],
+    "pl": ["Element 1", "Element 2", "Element 3"]
+  },
+  "processSteps": {
+    "en": ["Step 1", "Step 2", "Step 3", "Step 4"],
+    "pl": ["Krok 1", "Krok 2", "Krok 3", "Krok 4"]
+  },
+  "faq": {
+    "en": [
+      { "question": "Question 1", "answer": "Answer 1" },
+      { "question": "Question 2", "answer": "Answer 2" }
+    ],
+    "pl": [
+      { "question": "Pytanie 1", "answer": "Odpowiedź 1" },
+      { "question": "Pytanie 2", "answer": "Odpowiedź 2" }
+    ]
+  },
+  "content": {
+    "en": [
+      { "_type": "block", "style": "h2", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Section Heading" }] },
+      { "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Detailed section copy..." }] }
+    ],
+    "pl": [
+      { "_type": "block", "style": "h2", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Nagłówek sekcji" }] },
+      { "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "Szczegółowa treść sekcji..." }] }
+    ]
+  },
+  "ctaLabel": { "en": "Book a free call", "pl": "Umów bezpłatną konsultację" },
+  "seo": {
+    "metaTitle": { "en": "SEO Title (max 60 chars)", "pl": "Tytuł SEO (max 60 znaków)" },
+    "metaDescription": { "en": "Compelling meta description (max 160 chars)", "pl": "Przekonujący opis meta (max 160 znaków)" },
+    "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"]
+  }
+}`
+
 const SCHEMA_PROJECT = `{
   "title": { "en": "English title", "pl": "Polish title" },
   "slug": { "_type": "slug", "current": "url-slug-from-english-title" },
@@ -144,6 +192,8 @@ export const AIWholePostGenerator = (props: any) => {
   
   const bodyEnBlocks = useFormValue(['body', 'en']) as any[] | undefined
   const bodyPlBlocks = useFormValue(['body', 'pl']) as any[] | undefined
+  const contentEnBlocks = useFormValue(['content', 'en']) as any[] | undefined
+  const contentPlBlocks = useFormValue(['content', 'pl']) as any[] | undefined
   const extractText = (blocks: any[]) => Array.isArray(blocks) ? blocks.map((b: any) => b.children?.map((c: any) => c.text).join('')).join('\n') : '';
 
   // ── State: reference content (fetched once) ─────────────────────────────
@@ -167,7 +217,7 @@ export const AIWholePostGenerator = (props: any) => {
       try {
         // All doc titles for linking context
         const allDocs = await client.fetch(
-          `*[_type in ["pages","post","project"]]{ _type, "en": title.en, "pl": title.pl, "slug": slug.current, "techs": technologies }`
+          `*[_type in ["pages","post","project","serviceLanding"]]{ _type, "en": title.en, "pl": title.pl, "slug": slug.current, "techs": technologies }`
         )
         const titles = allDocs.map((d: any) =>
           `- [${d._type}] ${d.en || d.pl || '?'} (/${d.slug || '?'})${d.techs?.length ? ` [${d.techs.join(',')}]` : ''}`
@@ -175,10 +225,10 @@ export const AIWholePostGenerator = (props: any) => {
 
         // 2 published reference docs of same type
         const refs = await client.fetch(
-          `*[_type == $t && defined(body.en) && !(_id in path("drafts.**"))][0...2]{
+          `*[_type == $t && defined(coalesce(body.en, content.en)) && !(_id in path("drafts.**"))][0...2]{
             "en": title.en, "pl": title.pl,
-            "exc": coalesce(excerpt.en, description.en),
-            "body": pt::text(body.en),
+            "exc": coalesce(excerpt.en, description.en, intro.en),
+            "body": pt::text(coalesce(body.en, content.en)),
             "tags": tags, "techs": technologies,
             "seoTitle": seo.metaTitle.en, "seoDesc": seo.metaDescription.en, "seoKw": seo.keywords
           }`, { t: documentType }
@@ -226,8 +276,8 @@ export const AIWholePostGenerator = (props: any) => {
       const docs = await client.fetch(
         `*[slug.current in $slugs]{
           _type, "en": title.en, "pl": title.pl, "slug": slug.current,
-          "desc": coalesce(description.en, excerpt.en),
-          "bodyText": pt::text(body.en),
+          "desc": coalesce(description.en, excerpt.en, intro.en),
+          "bodyText": pt::text(coalesce(body.en, content.en)),
           "techs": technologies, "tags": tags,
           "seoTitle": seo.metaTitle.en, "seoDesc": seo.metaDescription.en
         }`,
@@ -316,10 +366,13 @@ export const AIWholePostGenerator = (props: any) => {
   // ── Patch document in Sanity ────────────────────────────────────────────
   const patchDocument = async (generated: any) => {
     const isProject = documentType === 'project'
+    const isServiceLanding = documentType === 'serviceLanding'
 
     // Normalize portable text blocks (pure code — no AI involved)
     if (generated.body?.en) generated.body.en = ensureBlocks(generated.body.en)
     if (generated.body?.pl) generated.body.pl = ensureBlocks(generated.body.pl)
+    if (generated.content?.en) generated.content.en = ensureBlocks(generated.content.en)
+    if (generated.content?.pl) generated.content.pl = ensureBlocks(generated.content.pl)
 
     // Build patch object — only include fields that the AI actually returned
     const patch: any = {}
@@ -330,7 +383,19 @@ export const AIWholePostGenerator = (props: any) => {
     if (generated.tags) patch.tags = generated.tags
     if (generated.publishedAt) patch.publishedAt = generated.publishedAt
 
-    if (isProject) {
+    if (isServiceLanding) {
+      if (generated.serviceType) patch.serviceType = generated.serviceType
+      if (generated.city !== undefined) patch.city = generated.city
+      if (generated.isLocalLanding !== undefined) patch.isLocalLanding = generated.isLocalLanding
+      if (generated.eyebrow) patch.eyebrow = generated.eyebrow
+      if (generated.intro) patch.intro = generated.intro
+      if (generated.problems) patch.problems = generated.problems
+      if (generated.deliverables) patch.deliverables = generated.deliverables
+      if (generated.processSteps) patch.processSteps = generated.processSteps
+      if (generated.faq) patch.faq = generated.faq
+      if (generated.content) patch.content = generated.content
+      if (generated.ctaLabel) patch.ctaLabel = generated.ctaLabel
+    } else if (isProject) {
       if (generated.description) patch.description = generated.description
       if (generated.technologies) patch.technologies = generated.technologies
       if (generated.projectUrl) patch.projectUrl = generated.projectUrl
@@ -355,9 +420,10 @@ export const AIWholePostGenerator = (props: any) => {
     if (!input.trim()) return
 
     const isProject = documentType === 'project'
+    const isServiceLanding = documentType === 'serviceLanding'
     const docTitle = titleEn || titlePl || 'Untitled'
-    const schemaJson = isProject ? SCHEMA_PROJECT : SCHEMA_POST
-    const typeLabel = isProject ? 'project portfolio entry' : 'blog post'
+    const schemaJson = isServiceLanding ? SCHEMA_SERVICE_LANDING : (isProject ? SCHEMA_PROJECT : SCHEMA_POST)
+    const typeLabel = isServiceLanding ? 'service landing page' : (isProject ? 'project portfolio entry' : 'blog post')
 
     const userMsg = { role: 'user', content: input.trim() }
     const newMsgs = [...messages, userMsg]
@@ -370,8 +436,10 @@ export const AIWholePostGenerator = (props: any) => {
       setStatus('Checking for linked content...')
       const linkedContent = await fetchLinkedContent(input)
       
-      const currentBodyEnText = extractText(bodyEnBlocks || []);
-      const currentBodyPlText = extractText(bodyPlBlocks || []);
+      const sourceEnBlocks = isServiceLanding ? (contentEnBlocks || []) : (bodyEnBlocks || [])
+      const sourcePlBlocks = isServiceLanding ? (contentPlBlocks || []) : (bodyPlBlocks || [])
+      const currentBodyEnText = extractText(sourceEnBlocks);
+      const currentBodyPlText = extractText(sourcePlBlocks);
       
       let currentDraftText = ''
       if (currentBodyEnText || currentBodyPlText) {
@@ -417,7 +485,17 @@ CRITICAL TRANSLATION RULE:
 Ensure the Polish fields use natural, native Polish phrasing without English loan-words.
 
 Return ONLY valid JSON — no markdown, no explanation.
-${isProject ? `{
+${isServiceLanding ? `{
+  "title": { "en": "...", "pl": "..." },
+  "slug": { "_type": "slug", "current": "..." },
+  "serviceType": "website-development",
+  "city": "Optional city",
+  "isLocalLanding": true,
+  "eyebrow": { "en": "Service", "pl": "Usługa" },
+  "intro": { "en": "2-3 sentences", "pl": "2-3 zdania" },
+  "ctaLabel": { "en": "...", "pl": "..." },
+  "seo": { "metaTitle": { "en": "max 60", "pl": "max 60" }, "metaDescription": { "en": "max 160", "pl": "max 160" }, "keywords": ["kw1","kw2","kw3","kw4","kw5"] }
+}` : isProject ? `{
   "title": { "en": "...", "pl": "..." },
   "slug": { "_type": "slug", "current": "..." },
   "description": { "en": "2-3 sentences, max 300 chars", "pl": "2-3 zdania, max 300 znaków" },
@@ -445,9 +523,26 @@ ${isProject ? `{
             // Let UI catch up
             await new Promise(r => setTimeout(r, 500))
 
-            // ── PASS 2: English Body ────────────────────────────────────────
-            setStatus('Step 2/3: Generating English Body...')
-            const enPrompt = `You are an expert SEO copywriter.
+            // ── PASS 2: English Content ─────────────────────────────────────
+            setStatus('Step 2/3: Generating English content...')
+            const enPrompt = isServiceLanding
+              ? `You are an expert conversion copywriter for service landing pages.
+Write ENGLISH content fields for a service landing page: "${metaData.title?.en || docTitle}"
+USER REQUEST: ${input}
+${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 3000)}` : ''}
+${currentDraftText ? `\nCURRENT DRAFT IN EDITOR:\n${currentDraftText.substring(0, 4000)}\n(Use the above draft strongly to structure the content)` : ''}
+Return ONLY valid JSON:
+{
+  "intro": { "en": "..." },
+  "problems": { "en": ["...", "...", "..."] },
+  "deliverables": { "en": ["...", "...", "..."] },
+  "processSteps": { "en": ["...", "...", "...", "..."] },
+  "faq": { "en": [{ "question": "...", "answer": "..." }, { "question": "...", "answer": "..." }] },
+  "content": { "en": [{ "_type": "block", "style": "h2", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }, { "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }] },
+  "ctaLabel": { "en": "..." }
+}
+Requirements: content.en should have 6-10 blocks, 500-900 words, mix h2/h3/normal. Do not use markdown fences.`
+              : `You are an expert SEO copywriter.
 Write the ENGLISH BODY CONTENT for a ${typeLabel}: "${metaData.title?.en || docTitle}"
 USER REQUEST: ${input}
 ${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 3000)}` : ''}
@@ -456,22 +551,53 @@ Return ONLY valid JSON:
 {"body":{"en":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}]}}
 Requirements: 6-10 blocks, 600-1000 words, mix h2/h3/normal. DO NOT USE MARKDOWN FENCES IN THE TEXT.`
 
-            const enText = await callAI(enPrompt, { isJson: true, maxTokens: 2000 })
+            const enText = await callAI(enPrompt, { isJson: true, maxTokens: isServiceLanding ? 2600 : 2000 })
             const enData = extractJson(enText)
-            if (enData.body?.en) {
-              const cleanedEn = ensureBlocks(enData.body.en)
-              await client.patch(documentId!.startsWith('drafts.') ? documentId! : `drafts.${documentId}`).set({ 'body.en': cleanedEn }).commit()
-              filledKeys.push('body.en')
-            }
+            const enKeys = await patchDocument(enData)
+            filledKeys.push(...enKeys)
 
             // Let UI catch up
             await new Promise(r => setTimeout(r, 500))
 
-            // ── PASS 3: Polish Body ────────────────────────────────────────
-            setStatus('Step 3/3: Generating Polish Body...')
-            const englishContentText = enData.body?.en ? JSON.stringify(enData.body.en) : '';
+            // ── PASS 3: Polish Content ──────────────────────────────────────
+            setStatus('Step 3/3: Generating Polish content...')
+            const englishContentText = isServiceLanding
+              ? JSON.stringify({
+                  intro: enData.intro?.en,
+                  problems: enData.problems?.en,
+                  deliverables: enData.deliverables?.en,
+                  processSteps: enData.processSteps?.en,
+                  faq: enData.faq?.en,
+                  content: enData.content?.en,
+                  ctaLabel: enData.ctaLabel?.en,
+                })
+              : (enData.body?.en ? JSON.stringify(enData.body.en) : '');
 
-            const plPrompt = `You are an expert Polish SEO copywriter and localized translator.
+            const plPrompt = isServiceLanding
+              ? `You are an expert Polish SEO copywriter and localizer.
+
+Translate the following English JSON fields into Polish while preserving EXACT structure and order.
+
+SOURCE ENGLISH JSON:
+${englishContentText}
+
+CRITICAL RULES:
+1. Keep the same keys and same data shapes.
+2. Produce natural, native Polish wording.
+3. Do not summarize or drop content.
+4. Do not use markdown.
+
+Return ONLY valid JSON:
+{
+  "intro": { "pl": "..." },
+  "problems": { "pl": ["...", "...", "..."] },
+  "deliverables": { "pl": ["...", "...", "..."] },
+  "processSteps": { "pl": ["...", "...", "...", "..."] },
+  "faq": { "pl": [{ "question": "...", "answer": "..." }, { "question": "...", "answer": "..." }] },
+  "content": { "pl": [{ "_type": "block", "style": "h2", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }] },
+  "ctaLabel": { "pl": "..." }
+}`
+              : `You are an expert Polish SEO copywriter and localized translator.
 
 Your task is to translate the following English JSON content into Polish. You MUST maintain the EXACT SAME JSON structure, semantic sequence, and formatting blocks.
 
@@ -490,11 +616,8 @@ Return ONLY valid JSON representing the translated blocks:
 
             const plText = await callAI(plPrompt, { isJson: true, maxTokens: 4000 })
             const plData = extractJson(plText)
-            if (plData.body?.pl) {
-              const cleanedPl = ensureBlocks(plData.body.pl)
-              await client.patch(documentId!.startsWith('drafts.') ? documentId! : `drafts.${documentId}`).set({ 'body.pl': cleanedPl }).commit()
-              filledKeys.push('body.pl')
-            }
+            const plKeys = await patchDocument(plData)
+            filledKeys.push(...plKeys)
 
             reply = `✅ Document updated in 3 fast passes!\n\nFilled fields: ${filledKeys.join(', ')}\n\nRefresh the page if fields don't update immediately.`
 
@@ -519,13 +642,13 @@ ${fullContext}
 CRITICAL RULES:
 1. Return ONLY valid JSON — no markdown fences, no explanation.
 2. Fill EVERY field. No field may be empty or null.
-3. body.en AND body.pl: 6-10 blocks each, 700-1000 words, mix h2/h3/normal styles.
-4. excerpt/description: 2-3 sentences (max 300 chars per language).
+3. ${isServiceLanding ? 'content.en AND content.pl: 6-10 blocks each, 500-900 words, mix h2/h3/normal styles.' : 'body.en AND body.pl: 6-10 blocks each, 700-1000 words, mix h2/h3/normal styles.'}
+4. ${isServiceLanding ? 'intro: 2-3 sentences per language.' : 'excerpt/description: 2-3 sentences (max 300 chars per language).'}
 5. slug: lowercase-with-hyphens from English title.
 6. seo.metaTitle: max 60 chars. seo.metaDescription: max 160 chars.
-7. seo.keywords: 5-8 terms. tags/technologies: 4-8 items.
-${isProject ? '8. URLs: use "https://example.com" if unknown.' : '8. categories: ONLY "Dev", "No-code", or "Wellness".'}
-9. Body blocks: { "_type": "block", "style": "...", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }
+7. ${isServiceLanding ? 'seo.keywords: 5-8 terms; problems/deliverables/processSteps: concrete and specific.' : 'seo.keywords: 5-8 terms. tags/technologies: 4-8 items.'}
+${isServiceLanding ? '8. FAQ must include at least 2 questions per language.' : (isProject ? '8. URLs: use "https://example.com" if unknown.' : '8. categories: ONLY "Dev", "No-code", or "Wellness".')}
+9. ${isServiceLanding ? 'Portable text blocks in content.* must use Sanity block format.' : 'Body blocks: { "_type": "block", "style": "...", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }'}
 
 JSON SCHEMA:
 ${schemaJson}`
@@ -537,7 +660,9 @@ ${schemaJson}`
         setStatus('Validating...')
 
         // ── Validate minimum fields ────────────────────────────────────
-        const requiredKeys = isProject
+        const requiredKeys = isServiceLanding
+          ? ['title', 'slug', 'serviceType', 'intro', 'problems', 'deliverables', 'processSteps', 'faq', 'content', 'ctaLabel', 'seo']
+          : isProject
           ? ['title', 'slug', 'description', 'technologies', 'body', 'seo']
           : ['title', 'slug', 'excerpt', 'categories', 'tags', 'body', 'seo']
 
@@ -561,7 +686,7 @@ ${schemaJson}`
       setLoading(false)
       setStatus('')
     }
-  }, [messages, input, documentId, documentType, titleEn, titlePl, referenceContent, provider, client, onChange])
+  }, [messages, input, documentId, documentType, titleEn, titlePl, referenceContent, provider, client, onChange, bodyEnBlocks, bodyPlBlocks, contentEnBlocks, contentPlBlocks])
 
   // ═══════════════════════════════════════════════════════════════════════════
   // RENDER

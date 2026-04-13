@@ -5,6 +5,8 @@ import author from './documents/author';
 import subscriber from './documents/subscriber';
 import blockContent from './objects/blockContent';
 import pages from './documents/pages';
+import serviceLanding from './documents/serviceLanding';
+import aboutMe from './documents/aboutMe';
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // Documents
@@ -13,6 +15,8 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   author,
   subscriber,
   pages,
+  serviceLanding,
+  aboutMe,
   // Objects
   blockContent,
 ];

@@ -12,6 +12,34 @@ export interface SanityImage {
   };
 }
 
+export interface AboutMe {
+  _id: string;
+  title: LocalizedText;
+  slug: {
+    current: string;
+  };
+  eyebrow?: LocalizedText;
+  intro?: LocalizedText;
+  heroImage?: SanityImage & {
+    alt?: string;
+  };
+  story?: {
+    en?: any[];
+    pl?: any[];
+  };
+  highlights?: LocalizedStringArray;
+  ctaProjects?: LocalizedText;
+  ctaContact?: LocalizedText;
+  seo?: {
+    metaTitle?: LocalizedText;
+    metaDescription?: LocalizedText;
+    keywords?: string[];
+    canonicalUrl?: string;
+    ogImage?: SanityImage;
+    noIndex?: boolean;
+  };
+}
+
 export interface Project {
   _id: string;
   title: {
@@ -92,4 +120,60 @@ export interface Post {
     pl: string;
   };
   viewCount?: number;
+}
+
+export interface LocalizedText {
+  en?: string;
+  pl?: string;
+}
+
+export interface LocalizedStringArray {
+  en?: string[];
+  pl?: string[];
+}
+
+export interface LocalizedFaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface LocalizedFaq {
+  en?: LocalizedFaqItem[];
+  pl?: LocalizedFaqItem[];
+}
+
+export interface ServiceLanding {
+  _id: string;
+  title: LocalizedText;
+  slug: {
+    current: string;
+  };
+  serviceType: string;
+  city?: string;
+  isLocalLanding?: boolean;
+  eyebrow?: LocalizedText;
+  intro?: LocalizedText;
+  heroImage?: SanityImage;
+  problems?: LocalizedStringArray;
+  deliverables?: LocalizedStringArray;
+  processSteps?: LocalizedStringArray;
+  faq?: LocalizedFaq;
+  content?: {
+    en?: any[];
+    pl?: any[];
+  };
+  ctaLabel?: LocalizedText;
+  ctaSecondaryLabel?: LocalizedText;
+  stats?: {
+    en?: Array<{ value: string; label: string }>;
+    pl?: Array<{ value: string; label: string }>;
+  };
+  seo?: {
+    metaTitle?: LocalizedText;
+    metaDescription?: LocalizedText;
+    keywords?: string[];
+    canonicalUrl?: string;
+    ogImage?: SanityImage;
+    noIndex?: boolean;
+  };
 }

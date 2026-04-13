@@ -180,6 +180,79 @@ export async function getProject(slug: string): Promise<any> {
   return project;
 }
 
+export async function getServiceLanding(slug: string): Promise<any> {
+  const cacheKey = `service-landing-${slug}`;
+  const cached = getCache<any>(cacheKey);
+  if (cached) return cached;
+
+  const landing = await executeQuery(
+    `*[_type == "serviceLanding" && slug.current == $slug][0]{
+      _id,
+      title { en, pl },
+      slug,
+      serviceType,
+      city,
+      isLocalLanding,
+      eyebrow { en, pl },
+      intro { en, pl },
+      heroImage,
+      problems { en, pl },
+      deliverables { en, pl },
+      processSteps { en, pl },
+      faq { en, pl },
+      content { en, pl },
+      ctaLabel { en, pl },
+      ctaSecondaryLabel { en, pl },
+      stats { en, pl },
+      seo {
+        metaTitle { en, pl },
+        metaDescription { en, pl },
+        keywords,
+        canonicalUrl,
+        ogImage,
+        noIndex
+      }
+    }`,
+    { slug }
+  );
+
+  setCache(cacheKey, landing);
+  return landing;
+}
+
+export async function getAboutMe(slug: string = 'about-me'): Promise<any> {
+  const cacheKey = `about-me-${slug}`;
+  const cached = getCache<any>(cacheKey);
+  if (cached) return cached;
+
+  const aboutMe = await executeQuery(
+    `*[_type == "aboutMe" && slug.current == $slug][0]{
+      _id,
+      title { en, pl },
+      slug,
+      eyebrow { en, pl },
+      intro { en, pl },
+      heroImage,
+      story { en, pl },
+      highlights { en, pl },
+      ctaProjects { en, pl },
+      ctaContact { en, pl },
+      seo {
+        metaTitle { en, pl },
+        metaDescription { en, pl },
+        keywords,
+        canonicalUrl,
+        ogImage,
+        noIndex
+      }
+    }`,
+    { slug }
+  );
+
+  setCache(cacheKey, aboutMe);
+  return aboutMe;
+}
+
 
 export async function getCategories() {
   return executeQuery(

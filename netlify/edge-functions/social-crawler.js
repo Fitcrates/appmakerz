@@ -2,6 +2,8 @@
 // Dynamic rendering for crawlers: serves bot-friendly HTML for key routes in a Vite SPA.
 
 const BASE_URL = 'https://appcrates.pl';
+const DEFAULT_SANITY_PROJECT_ID = '867nk643';
+const DEFAULT_SANITY_DATASET = 'production';
 
 const BOT_USER_AGENT_PATTERNS = [
   'googlebot',
@@ -229,16 +231,25 @@ function buildHtml({ title, description, canonicalUrl, ogType = 'website', ogIma
 async function buildDynamicDocumentHtml({ url, path, language, context }) {
   const isBlogPost = path.startsWith('/blog/');
   const isProject = path.startsWith('/project/');
-  if (!isBlogPost && !isProject) {
+  const isServiceLanding = path.startsWith('/uslugi/');
+  const isAboutMe = path === '/about-me';
+
+  if (!isBlogPost && !isProject && !isServiceLanding && !isAboutMe) {
     return null;
   }
 
-  const rawSlug = isBlogPost ? path.replace('/blog/', '') : path.replace('/project/', '');
+  const rawSlug = isAboutMe
+    ? 'about-me'
+    : isBlogPost
+      ? path.replace('/blog/', '')
+      : isProject
+        ? path.replace('/project/', '')
+        : path.replace('/uslugi/', '');
   const slug = rawSlug.replace(/\/+$/, '').trim();
   if (!slug) return null;
 
-  const projectId = Deno.env.get('SANITY_PROJECT_ID') || context.env.SANITY_PROJECT_ID;
-  const dataset = Deno.env.get('SANITY_DATASET') || context.env.SANITY_DATASET || 'production';
+  const projectId = Deno.env.get('SANITY_PROJECT_ID') || context.env.SANITY_PROJECT_ID || DEFAULT_SANITY_PROJECT_ID;
+  const dataset = Deno.env.get('SANITY_DATASET') || context.env.SANITY_DATASET || DEFAULT_SANITY_DATASET;
   if (!projectId) return null;
 
   const safeSlug = slug.replace(/"/g, '\\"');
@@ -257,12 +268,38 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
           noIndex
         }
       }`
-    : `*[_type == "project" && slug.current == "${safeSlug}"][0]{
+    : isProject
+      ? `*[_type == "project" && slug.current == "${safeSlug}"][0]{
         title { en, pl },
         slug,
         mainImage,
         description { en, pl },
         publishedAt,
+        seo {
+          metaTitle { en, pl },
+          metaDescription { en, pl },
+          ogImage,
+          noIndex
+        }
+      }`
+      : isServiceLanding
+        ? `*[_type == "serviceLanding" && slug.current == "${safeSlug}"][0]{
+        title { en, pl },
+        slug,
+        heroImage,
+        intro { en, pl },
+        seo {
+          metaTitle { en, pl },
+          metaDescription { en, pl },
+          ogImage,
+          noIndex
+        }
+      }`
+        : `*[_type == "aboutMe" && slug.current == "${safeSlug}"][0]{
+        title { en, pl },
+        slug,
+        heroImage,
+        intro { en, pl },
         seo {
           metaTitle { en, pl },
           metaDescription { en, pl },
@@ -287,12 +324,20 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
   const description =
     pickLocalizedValue(doc?.seo?.metaDescription, language) ||
     pickLocalizedValue(doc?.excerpt, language) ||
+    pickLocalizedValue(doc?.intro, language) ||
     pickLocalizedValue(doc?.description, language) ||
     'AppCrates web development content.';
 
-  const canonicalUrl = isBlogPost ? `${BASE_URL}/blog/${slug}` : `${BASE_URL}/project/${slug}`;
+  const canonicalUrl = isBlogPost
+    ? `${BASE_URL}/blog/${slug}`
+    : isProject
+      ? `${BASE_URL}/project/${slug}`
+      : isServiceLanding
+        ? `${BASE_URL}/uslugi/${slug}`
+        : `${BASE_URL}/about-me`;
   const ogImageUrl =
     imageUrlFromSanityAsset(doc?.seo?.ogImage, projectId, dataset) ||
+    imageUrlFromSanityAsset(doc?.heroImage, projectId, dataset) ||
     imageUrlFromSanityAsset(doc?.mainImage, projectId, dataset) ||
     `${BASE_URL}/media/default-og-image.png`;
 
@@ -316,7 +361,8 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
         },
         inLanguage: language
       }
-    : {
+    : isProject
+      ? {
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',
         name: title,
@@ -328,13 +374,42 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
           name: 'AppCrates'
         },
         inLanguage: language
+      }
+      : isServiceLanding
+        ? {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: title,
+        description,
+        image: ogImageUrl,
+        url: canonicalUrl,
+        provider: {
+          '@type': 'Organization',
+          name: 'AppCrates'
+        },
+        areaServed: 'Worldwide',
+        inLanguage: language
+      }
+        : {
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: 'Arkadiusz Wawrzyniak',
+        description,
+        image: ogImageUrl,
+        url: canonicalUrl,
+        jobTitle: 'Fullstack Developer',
+        worksFor: {
+          '@type': 'Organization',
+          name: 'AppCrates'
+        },
+        inLanguage: language
       };
 
   return buildHtml({
     title,
     description,
     canonicalUrl,
-    ogType: isBlogPost ? 'article' : 'website',
+    ogType: isBlogPost ? 'article' : isProject ? 'website' : isServiceLanding ? 'website' : 'profile',
     ogImageUrl,
     h1: title,
     jsonLd,
@@ -378,33 +453,6 @@ export default async function(request, context) {
   const url = new URL(request.url);
   const path = url.pathname;
   const userAgent = request.headers.get('user-agent') || '';
-
-  if (path === '/ua-debug') {
-    const payload = {
-      userAgent,
-      acceptLanguage: request.headers.get('accept-language') || '',
-      accept: request.headers.get('accept') || '',
-      secFetchSite: request.headers.get('sec-fetch-site') || '',
-      secFetchMode: request.headers.get('sec-fetch-mode') || '',
-      secFetchDest: request.headers.get('sec-fetch-dest') || '',
-      secFetchUser: request.headers.get('sec-fetch-user') || '',
-      secChUa: request.headers.get('sec-ch-ua') || '',
-      secChUaMobile: request.headers.get('sec-ch-ua-mobile') || '',
-      secChUaPlatform: request.headers.get('sec-ch-ua-platform') || '',
-      xForwardedFor: request.headers.get('x-forwarded-for') || '',
-      xForwardedProto: request.headers.get('x-forwarded-proto') || '',
-      via: request.headers.get('via') || ''
-    };
-
-    return new Response(JSON.stringify(payload, null, 2), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Cache-Control': 'no-store',
-        'Vary': 'User-Agent, Accept-Language'
-      }
-    });
-  }
 
   const likelyAssistantFetcher = isLikelyAssistantFetcher(request, userAgent);
   const shouldPrerender =

@@ -209,7 +209,7 @@ const EnergyPulse: React.FC<EnergyPulseProps> = ({ progress, separationProgress 
     return 1.0;
   }, [progress]);
 
-  useFrame((_, delta) => {
+  useFrame((_, delta: number) => {
     if (!pulseRef.current || !visible) return;
     
     timeRef.current += delta * 0.4;

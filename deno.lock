@@ -63,6 +63,7 @@
         "npm:react-syntax-highlighter@^16.1.0",
         "npm:react@^19.2.4",
         "npm:sanity@^5.19.0",
+        "npm:simple-icons@^16.16.0",
         "npm:styled-components@^6.3.11",
         "npm:swiper@^12.1.2",
         "npm:tailwind-merge@^3.5.0",

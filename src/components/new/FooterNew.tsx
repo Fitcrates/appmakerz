@@ -149,7 +149,7 @@ const FooterNew: React.FC = () => {
     <footer className="relative bg-indigo-950" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Newsletter Section */}
-        <div className="py-16 lg:py-20 border-t border-white/10">
+        <div className="py-16 lg:py-20 ">
           <div className="max-w-2xl mx-auto text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 mb-6 bg-teal-300/10 rounded-full">
               <Mail className="w-5 h-5 text-teal-300" />

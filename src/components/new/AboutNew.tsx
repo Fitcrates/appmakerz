@@ -1,5 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import SpotlightText from './SpotlightText';
 import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
@@ -38,73 +40,32 @@ const RevealText: React.FC<{ children: React.ReactNode; delay?: number }> = ({ c
 
 // Burn reveal effect for image - loops continuously
 const BurnRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string }> = ({ src, alt, ariaLabel }) => {
-  const [burnPhase, setBurnPhase] = useState(0);
-  
-  useEffect(() => {
-    // Loop through burn phases: 0 = hidden, 1-10 = burning reveal, 11 = visible, 12-15 = pause, then reset
-    const interval = setInterval(() => {
-      setBurnPhase(prev => (prev + 1) % 60);
-    }, 100);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Calculate burn line position (0-100%)
-  const burnProgress = burnPhase < 30 ? (burnPhase / 30) * 100 : 100;
-  const isFading = burnPhase >= 50;
-
   return (
     <div className="relative w-full h-full overflow-hidden" role="img" aria-label={ariaLabel || alt}>
-      {/* Base image - always present but masked */}
-      <img 
-        src={src} 
-        alt={alt} 
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{
-          clipPath: `inset(0 0 ${100 - burnProgress}% 0)`,
-          opacity: isFading ? 1 - ((burnPhase - 50) / 10) : 1
-        }}
-      />
-      
-      {/* Burn line effect */}
-      {burnPhase < 30 && (
-        <div 
-          className="absolute left-0 right-0 h-8 pointer-events-none z-10"
-          style={{
-            top: `${burnProgress}%`,
-            transform: 'translateY(-50%)',
-            background: 'linear-gradient(to bottom, transparent, rgba(94, 234, 212, 0.8) 40%, rgba(94, 234, 212, 1) 50%, rgba(94, 234, 212, 0.8) 60%, transparent)',
-            boxShadow: '0 0 30px rgba(94, 234, 212, 0.8), 0 0 60px rgba(94, 234, 212, 0.5)',
-            filter: 'blur(2px)'
-          }}
-        />
-      )}
+      <div className="absolute inset-0 burn-reveal-cycle">
+        <div className="absolute inset-0 burn-reveal-image" aria-hidden="true">
+          <img src={src} alt={alt} className="absolute inset-0 w-full h-full object-cover" />
+        </div>
 
-      {/* Sparks along burn line */}
-      {burnPhase < 30 && burnPhase > 2 && (
-        <>
-          {[...Array(5)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-teal-300 rounded-full animate-ping"
-              style={{
-                top: `${burnProgress}%`,
-                left: `${15 + i * 18}%`,
-                animationDelay: `${i * 50}ms`,
-                boxShadow: '0 0 10px rgba(94, 234, 212, 1)'
-              }}
-            />
-          ))}
-        </>
-      )}
+        {/* Burn line effect */}
+        <div className="absolute left-0 right-0 h-8 -translate-y-1/2 pointer-events-none z-10 burn-reveal-line" aria-hidden="true" />
 
-      {/* Dark overlay for unrevealed part */}
-      <div 
-        className="absolute inset-0 bg-indigo-950"
-        style={{
-          clipPath: `inset(${burnProgress}% 0 0 0)`,
-          opacity: isFading ? 1 - ((burnPhase - 50) / 10) : 1
-        }}
-      />
+        {/* Sparks along burn line */}
+        {[...Array(5)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-teal-300 rounded-full pointer-events-none z-10 burn-reveal-spark"
+            style={{
+              left: `${15 + i * 18}%`,
+              ['--spark-delay' as string]: `${i * 0.06}s`,
+            }}
+            aria-hidden="true"
+          />
+        ))}
+
+        {/* Dark overlay for unrevealed part */}
+        <div className="absolute inset-0 bg-indigo-950 pointer-events-none burn-reveal-overlay" aria-hidden="true" />
+      </div>
     </div>
   );
 };
@@ -182,7 +143,7 @@ const AboutNew: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="space-y-6 mb-16"
+              className="space-y-6 mb-10"
             >
               <SpotlightText as="p" className="text-lg font-jakarta font-light leading-relaxed" glowSize={120}>
                 {t.description.p1}
@@ -190,6 +151,26 @@ const AboutNew: React.FC = () => {
               <SpotlightText as="p" className="text-lg font-jakarta font-light leading-relaxed" glowSize={120}>
                 {t.description.p2}
               </SpotlightText>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.55 }}
+              className="mb-16"
+            >
+              <Link
+                to="/about-me"
+                className="group inline-flex items-center gap-4 "
+                aria-label={language === 'pl' ? 'Przejdź do strony O mnie' : 'Go to About Me page'}
+              >
+                <span className="text-white font-jakarta group-hover:text-teal-300 transition-colors">
+                  {language === 'pl' ? 'Poznaj mnie' : 'Get to know me'}
+                </span>
+                <span className="w-11 h-11 border border-white/20 flex items-center justify-center group-hover:bg-teal-300 group-hover:border-teal-300 transition-all">
+                  <ArrowUpRight className="w-4 h-4 text-white group-hover:text-indigo-950 transition-colors" />
+                </span>
+              </Link>
             </motion.div>
 
             {/* Stats row */}

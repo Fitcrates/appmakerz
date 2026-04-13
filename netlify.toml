@@ -36,7 +36,11 @@
   function = "social-crawler"
 
 [[edge_functions]]
-  path = "/ua-debug"
+  path = "/uslugi/*"
+  function = "social-crawler"
+
+[[edge_functions]]
+  path = "/about-me"
   function = "social-crawler"
 
 # AI generation edge function (50s timeout vs 10s for regular functions)

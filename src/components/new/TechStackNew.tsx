@@ -1,165 +1,246 @@
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import * as simpleIcons from 'simple-icons';
 
 interface TechItem {
   name: string;
+  path: string;
+  logoUrl?: string;
 }
 
+const iconMap = simpleIcons as unknown as Record<string, { path: string }>;
+const iconPath = (key: string, fallback: string) => iconMap[key]?.path ?? fallback;
+const awsPath = iconPath(
+  'siAmazonwebservices',
+  iconPath('siAmazonaws', iconPath('siAwslambda', iconPath('siAmazon', '')))
+);
+
 const technologies: TechItem[] = [
-  { name: 'React' },
-  { name: 'Next.js' },
-  { name: 'TypeScript' },
-  { name: 'Node.js' },
-  { name: 'PostgreSQL' },
-  { name: 'Tailwind CSS' },
-  { name: 'Framer Motion' },
-  { name: 'Three.js' },
-  { name: 'Docker' },
-  { name: 'AWS' },
-  { name: 'Railway' },
-  { name: 'Netlify' },
-  { name: 'Vercel' },
-  { name: 'Sanity' },
-  { name: 'GraphQL' },
-  { name: 'Prisma' },
-  { name: 'Git' },
-  { name: 'Figma' },
+  {
+    name: 'React',
+    path: iconPath('siReact', iconPath('siReactjs', '')),
+    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original-wordmark.svg',
+  },
+  {
+    name: 'Next.js',
+    path: iconPath('siNextdotjs', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original-wordmark.svg',
+  },
+  {
+    name: 'TypeScript',
+    path: iconPath('siTypescript', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/typescript.svg',
+  },
+  {
+    name: 'Medusa.js',
+    path: iconPath('siMedusa', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/medusa.svg',
+  },
+  {
+    name: 'Stripe',
+    path: iconPath('siStripe', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/stripe.svg',
+  },
+  {
+    name: 'Node.js',
+    path: iconPath('siNodedotjs', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original-wordmark.svg',
+  },
+  {
+    name: 'PostgreSQL',
+    path: iconPath('siPostgresql', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg',
+  },
+  {
+    name: 'Tailwind CSS',
+    path: iconPath('siTailwindcss', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original-wordmark.svg',
+  },
+  {
+    name: 'Framer Motion',
+    path: iconPath('siFramer', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/framer.svg',
+  },
+  {
+    name: 'Three.js',
+    path: iconPath('siThreedotjs', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/threedotjs.svg',
+  },
+  {
+    name: 'Docker',
+    path: iconPath('siDocker', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original-wordmark.svg',
+  },
+  {
+    name: 'AWS',
+    path: awsPath,
+    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg',
+  },
+  {
+    name: 'Railway',
+    path: iconPath('siRailway', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/railway.svg',
+  },
+  {
+    name: 'AWS S3',
+    path: iconPath('siAmazons3', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/amazons3.svg',
+  },
+  {
+    name: 'Resend',
+    path: iconPath('siResend', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/resend.svg',
+  },
+  {
+    name: 'Netlify',
+    path: iconPath('siNetlify', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/netlify/netlify-original-wordmark.svg',
+  },
+  {
+    name: 'Vercel',
+    path: iconPath('siVercel', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/vercel.svg',
+  },
+  {
+    name: 'Sanity',
+    path: iconPath('siSanity', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/sanity.svg',
+  },
+  {
+    name: 'GraphQL',
+    path: iconPath('siGraphql', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain-wordmark.svg',
+  },
+  {
+    name: 'Prisma',
+    path: iconPath('siPrisma', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/prisma.svg',
+  },
+  {
+    name: 'Git',
+    path: iconPath('siGit', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original-wordmark.svg',
+  },
+  {
+    name: 'Figma',
+    path: iconPath('siFigma', ''),
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/figma.svg',
+  },
 ];
 
-// Badge with corner decorations
-const TechBadge: React.FC<{
-  tech: TechItem;
-  isHighlighted: boolean;
-}> = ({ tech, isHighlighted }) => {
-  return (
-    <div
-      className={`relative w-[130px] px-4 py-2 transition-all duration-300 flex-shrink-0 flex items-center justify-center ${
-        isHighlighted ? " " : "text-white/50"
-      }`}
-    >
-      {/* Corner decorations */}
-      <div
-        className={`absolute top-0 left-0 w-2.5 h-2.5 border-t border-l transition-colors duration-300 ${
-          isHighlighted ? "border-teal-300" : "border-white/20"
-        }`}
-      />
-      <div
-        className={`absolute top-0 right-0 w-2.5 h-2.5 border-t border-r transition-colors duration-300 ${
-          isHighlighted ? "border-teal-300" : "border-white/20"
-        }`}
-      />
-      <div
-        className={`absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l transition-colors duration-300 ${
-          isHighlighted ? "border-teal-300" : "border-white/20"
-        }`}
-      />
-      <div
-        className={`absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r transition-colors duration-300 ${
-          isHighlighted ? "border-teal-300" : "border-white/20"
-        }`}
-      />
+const LOGICAL_SET = [...technologies, ...technologies];
 
-      <span
-        className={`font-jakarta text-sm whitespace-nowrap transition-colors duration-300 ${
-          isHighlighted ? "text-teal-300" : "text-white/50"
-        }`}
-      >
-        {tech.name}
-      </span>
-    </div>
-  );
-};
+const Badge = ({ name, path, logoUrl }: TechItem) => (
+  <div
+    data-badge
+    data-lit="0"
+    className="flex flex-shrink-0 items-center gap-2.5 px-6 py-2 text-white/35 opacity-70 transition-all duration-300 [&[data-lit='1']]:text-white [&[data-lit='1']]:opacity-100"
+  >
+    {path ? (
+      <svg viewBox="0 0 26 26" width={18} height={18} fill="currentColor" aria-hidden="true">
+        <path d={path} />
+      </svg>
+    ) : logoUrl ? (
+      <img
+        src={logoUrl}
+        alt=""
+        aria-hidden="true"
+        className="h-6 w-6 object-contain opacity-90"
+        style={{ filter: 'brightness(0) invert(1)' }}
+      />
+    ) : (
+      <span className="h-2 w-2 rounded-full bg-current" aria-hidden="true" />
+    )}
+    <span className="whitespace-nowrap text-[13px] font-medium tracking-[0.02em]">{name}</span>
+  </div>
+);
 
-const TechStackNew: React.FC = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [highlightedIndices, setHighlightedIndices] = useState<Set<number>>(new Set());
+const TechStackNew = () => {
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
-  // Update highlights based on center position
   useEffect(() => {
-    const updateHighlights = () => {
-      const container = scrollRef.current;
-      if (!container) return;
+    const slider = sliderRef.current;
+    const track = trackRef.current;
+    if (!slider || !track) return;
 
-      const centerX = window.innerWidth / 2;
-      const badges = container.querySelectorAll('[data-badge]');
-      const newHighlighted = new Set<number>();
+    let badges: HTMLElement[] = [];
+    let raf = 0;
+    let lastHL = 0;
 
-      badges.forEach((badge, index) => {
-        const badgeRect = badge.getBoundingClientRect();
-        const badgeCenterX = badgeRect.left + badgeRect.width / 2;
-        const distance = Math.abs(badgeCenterX - centerX);
-        
-        if (distance < 120) {
-          newHighlighted.add(index);
-        }
-      });
-
-      setHighlightedIndices(newHighlighted);
+    const measure = () => {
+      badges = Array.from(slider.querySelectorAll<HTMLElement>('[data-badge]'));
     };
 
-    const interval = setInterval(updateHighlights, 50);
-    return () => clearInterval(interval);
+    const tick = (now: number) => {
+      if (now - lastHL > 50) {
+        lastHL = now;
+        const trackRect = track.getBoundingClientRect();
+        const cx = trackRect.left + trackRect.width / 2;
+        badges.forEach((badge) => {
+          const rect = badge.getBoundingClientRect();
+          const center = rect.left + rect.width / 2;
+          badge.dataset.lit = Math.abs(center - cx) < 110 ? '1' : '0';
+        });
+      }
+
+      raf = requestAnimationFrame(tick);
+    };
+
+    measure();
+    window.addEventListener('resize', measure);
+    raf = requestAnimationFrame(tick);
+
+    return () => {
+      window.removeEventListener('resize', measure);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
-  // Duplicate items multiple times for seamless infinite scroll (no gaps)
-  const items = [...technologies, ...technologies, ...technologies, ...technologies];
-
   return (
-    <section
-      id="tech"
-      className="relative py-2 sm:py-6 bg-indigo-950 overflow-hidden"
-    >
-      {/* Subtle top border */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent " />
+    <section id="tech" className="relative overflow-hidden bg-indigo-950 py-3">
+      <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(to_right,rgba(148,163,184,0.08)_1px,transparent_1px)] [background-size:44px_44px]" />
+      <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-400/60 to-transparent" />
 
-      {/* Center spotlight glow */}
-      <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-24 pointer-events-none z-10 "
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(94, 234, 212, 0.2) 0%, rgba(94, 234, 212, 0.08) 40%, transparent 70%)',
-          filter: 'blur(15px)',
-        }}
-      />
+      <style>{`
+        @keyframes tech-marquee {
+          from { transform: translate3d(0, 0, 0); }
+          to { transform: translate3d(-50%, 0, 0); }
+        }
 
-      {/* Infinite scrolling row */}
-      <div className="relative overflow-hidden">
-        <div 
-          ref={scrollRef}
-          className="flex gap-8 animate-scroll-left"
-          style={{
-            width: 'max-content',
-          }}
+        .tech-marquee-track {
+          animation: tech-marquee 64s linear infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .tech-marquee-track {
+            animation: none !important;
+            transform: translate3d(0, 0, 0) !important;
+          }
+        }
+      `}</style>
+
+      <div ref={trackRef} className="overflow-hidden">
+        <div
+          ref={sliderRef}
+          className="tech-marquee-track flex items-center"
+          style={{ width: 'max-content', willChange: 'transform', backfaceVisibility: 'hidden' }}
         >
-          {items.map((tech, index) => (
-            <div key={`${tech.name}-${index}`} data-badge>
-              <TechBadge 
-                tech={tech} 
-                isHighlighted={highlightedIndices.has(index)}
-              />
-            </div>
-          ))}
+          <div className="flex flex-shrink-0">
+            {LOGICAL_SET.map((tech, index) => (
+              <Badge key={`${tech.name}-${index}`} {...tech} />
+            ))}
+          </div>
+          <div className="flex flex-shrink-0">
+            {LOGICAL_SET.map((tech, index) => (
+              <Badge key={`${tech.name}-2-${index}`} {...tech} />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Fade edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-r from-indigo-950 via-indigo-950/90 to-transparent z-20 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-40 bg-gradient-to-l from-indigo-950 via-indigo-950/90 to-transparent z-20 pointer-events-none" />
-
-      {/* Subtle bottom border */}
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-20 bg-gradient-to-r from-indigo-950 to-transparent" />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-20 bg-gradient-to-l from-indigo-950 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-      <style>{`
-        @keyframes scroll-left {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-25%);
-          }
-        }
-        .animate-scroll-left {
-          animation: scroll-left 25s linear infinite;
-        }
-      `}</style>
     </section>
   );
 };

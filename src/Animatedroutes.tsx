@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
@@ -12,6 +12,8 @@ const ProjectDetails = lazy(() => import('./components/new/ProjectDetailsNew'));
 const Unsubscribe = lazy(() => import('./pages/UnsubscribeNew'));
 const NotFound = lazy(() => import('./components/NotFound'));
 const FAQPage = lazy(() => import('./components/new/FAQNew'));
+const ServiceLandingPage = lazy(() => import('./components/new/ServiceLandingPageNew'));
+const AboutMePage = lazy(() => import('./components/new/AboutMePageNew'));
 
 
 // Loading fallback component
@@ -23,6 +25,34 @@ const LoadingFallback = () => (
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname !== '/' || !location.hash) return;
+
+    const targetId = decodeURIComponent(location.hash.slice(1));
+    if (!targetId) return;
+
+    let attempts = 0;
+    const maxAttempts = 40;
+    const headerOffset = 92;
+
+    const scrollToHashTarget = () => {
+      const element = document.getElementById(targetId);
+
+      if (element) {
+        const targetTop = element.getBoundingClientRect().top + window.scrollY - headerOffset;
+        window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+        return;
+      }
+
+      attempts += 1;
+      if (attempts < maxAttempts) {
+        window.setTimeout(scrollToHashTarget, 80);
+      }
+    };
+
+    scrollToHashTarget();
+  }, [location.pathname, location.hash]);
 
   return (
     <AnimatePresence mode="wait">
@@ -72,6 +102,22 @@ const AnimatedRoutes = () => {
           element={
             <Suspense fallback={<LoadingFallback />}>
               <FAQPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/about-me"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <AboutMePage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/uslugi/:slug"
+          element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ServiceLandingPage />
             </Suspense>
           }
         />

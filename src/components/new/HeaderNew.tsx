@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, ChevronDown, Globe, Bot, ShoppingBag, ShieldCheck } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import LanguageToggle from '../LanguageToggle';
 import { useLanguage } from '../../context/LanguageContext';
@@ -11,21 +11,56 @@ import { getPosts } from '../../lib/sanity.client';
 const getNavItems = (t: typeof translations.en.nav) => [
   { label: t.about, href: '/#about' },
   { label: t.projects, href: '/#projects' },
-  { label: t.services, href: '/#services' },
   { label: t.solutions, href: '/#solutions' },
   { label: t.blog, href: '/blog' },
   { label: t.contact, href: '/#contact' },
   { label: 'FAQ', href: '/faq' },
 ];
 
+interface ServiceLink {
+  icon: React.ElementType;
+  label: string;
+  description: string;
+  href: string;
+}
+
+const getServiceLandingLinks = (language: string): ServiceLink[] => [
+  {
+    icon: Globe,
+    label: language === 'pl' ? 'Strony Internetowe' : 'Websites',
+    description: language === 'pl' ? 'Profesjonalne strony i landing page' : 'Professional sites & landing pages',
+    href: '/uslugi/professional-website-development',
+  },
+  {
+    icon: Bot,
+    label: language === 'pl' ? 'Wdrożenia AI' : 'AI Implementations',
+    description: language === 'pl' ? 'Automatyzacje i integracje AI' : 'Automations & AI integrations',
+    href: '/uslugi/automatyzacje-backend',
+  },
+  {
+    icon: ShoppingBag,
+    label: language === 'pl' ? 'Sklepy E-commerce' : 'E-commerce Shops',
+    description: language === 'pl' ? 'Sklepy online i platformy sprzedażowe' : 'Online stores & sales platforms',
+    href: '/uslugi/e-commerce-shops-medusa-js',
+  },
+  {
+    icon: ShieldCheck,
+    label: language === 'pl' ? 'Audyty WCAG & RODO' : 'WCAG & GDPR Audits',
+    description: language === 'pl' ? 'Dostępność i zgodność prawna' : 'Accessibility & legal compliance',
+    href: '/uslugi/wcag-dostepnosc',
+  },
+];
+
 const HeaderNew: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { language } = useLanguage();
   const t = translations[language].nav;
   const navItems = getNavItems(t);
+  const serviceLandingLinks = getServiceLandingLinks(language);
 
   const prefetchBlogPage = () => {
     void import('../../BlogNew');
@@ -57,10 +92,12 @@ const HeaderNew: React.FC = () => {
       const targetId = href.replace('/#', '');
       
       if (location.pathname !== '/') {
-        window.location.href = href;
+        navigate(`/#${targetId}`);
       } else {
         const element = document.getElementById(targetId);
-        element?.scrollIntoView({ behavior: 'smooth' });
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     }
   };
@@ -101,6 +138,38 @@ const HeaderNew: React.FC = () => {
                   <span className="absolute -bottom-1 left-0 w-0 h-px bg-teal-300 group-hover:w-full transition-all duration-300" />
                 </a>
               ))}
+
+              <div className="relative group">
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-2 text-white/70 font-jakarta font-light text-sm hover:text-white transition-colors focus:outline-none focus:text-teal-300"
+                  aria-haspopup="true"
+                  aria-label={t.services}
+                >
+                  <span>{t.services}</span>
+                  <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
+                </button>
+
+                <div className="pointer-events-none group-hover:pointer-events-auto opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 absolute right-0 top-full pt-4 z-50">
+                  <div className="w-[540px] border border-white/10 bg-indigo-950/95 backdrop-blur-xl shadow-2xl rounded-xl p-2 grid grid-cols-2 gap-1">
+                    {serviceLandingLinks.map((item) => (
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        className="flex items-start gap-4 p-4 rounded-lg hover:bg-white/[0.05] transition-all duration-200 group"
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-teal-300/10 border border-teal-300/20 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-300/20 group-hover:border-teal-300/30 transition-colors">
+                          <item.icon className="w-5 h-5 text-teal-300" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-jakarta font-medium text-white group-hover:text-teal-300 transition-colors">{item.label}</p>
+                          <p className="text-xs font-jakarta text-white/40 mt-1 leading-relaxed">{item.description}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </nav>
 
             {/* CTA Button and Language Toggle */}
@@ -171,6 +240,28 @@ const HeaderNew: React.FC = () => {
                     </a>
                   </motion.div>
                 ))}
+
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navItems.length * 0.1 }}
+                  className="pt-2 border-t border-white/10"
+                >
+                  <p className="text-xs uppercase tracking-[0.2em] text-white/30 font-jakarta mb-4">{t.services}</p>
+                  <div className="space-y-2">
+                    {serviceLandingLinks.map((item) => (
+                      <Link
+                        key={item.href}
+                        to={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center gap-3 py-1 text-base font-jakarta font-light text-white/80 hover:text-teal-300 transition-colors"
+                      >
+                        <item.icon className="w-4 h-4 text-teal-300/60" />
+                        <span>{item.label}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
               </div>
 
               
