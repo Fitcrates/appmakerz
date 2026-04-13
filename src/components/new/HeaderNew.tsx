@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, Globe, Bot, ShoppingBag, ShieldCheck } from 'lucide-react';
+import { Menu, X, ChevronDown, Globe, Bot, ShoppingBag, ShieldCheck, type LucideIcon } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import LanguageToggle from '../LanguageToggle';
@@ -18,7 +18,7 @@ const getNavItems = (t: typeof translations.en.nav) => [
 ];
 
 interface ServiceLink {
-  icon: React.ElementType;
+  icon: LucideIcon;
   label: string;
   description: string;
   href: string;
@@ -35,7 +35,7 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
     icon: Bot,
     label: language === 'pl' ? 'Wdrożenia AI' : 'AI Implementations',
     description: language === 'pl' ? 'Automatyzacje i integracje AI' : 'Automations & AI integrations',
-    href: '/uslugi/automatyzacje-backend',
+    href: '/uslugi/ai-automation-rpa-solutions',
   },
   {
     icon: ShoppingBag,
@@ -43,12 +43,12 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
     description: language === 'pl' ? 'Sklepy online i platformy sprzedażowe' : 'Online stores & sales platforms',
     href: '/uslugi/e-commerce-shops-medusa-js',
   },
-  {
-    icon: ShieldCheck,
-    label: language === 'pl' ? 'Audyty WCAG & RODO' : 'WCAG & GDPR Audits',
-    description: language === 'pl' ? 'Dostępność i zgodność prawna' : 'Accessibility & legal compliance',
-    href: '/uslugi/wcag-dostepnosc',
-  },
+ // {
+  //  icon: ShieldCheck,
+   // label: language === 'pl' ? 'Audyty WCAG & RODO' : 'WCAG & GDPR Audits',
+   // description: language === 'pl' ? 'Dostępność i zgodność prawna' : 'Accessibility & legal compliance',
+  //  href: '/uslugi/wcag-dostepnosc',
+ // },
 ];
 
 const HeaderNew: React.FC = () => {
@@ -152,21 +152,24 @@ const HeaderNew: React.FC = () => {
 
                 <div className="pointer-events-none group-hover:pointer-events-auto opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 absolute right-0 top-full pt-4 z-50">
                   <div className="w-[540px] border border-white/10 bg-indigo-950/95 backdrop-blur-xl shadow-2xl rounded-xl p-2 grid grid-cols-2 gap-1">
-                    {serviceLandingLinks.map((item) => (
-                      <Link
-                        key={item.href}
-                        to={item.href}
-                        className="flex items-start gap-4 p-4 rounded-lg hover:bg-white/[0.05] transition-all duration-200 group"
-                      >
-                        <div className="w-10 h-10 rounded-lg bg-teal-300/10 border border-teal-300/20 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-300/20 group-hover:border-teal-300/30 transition-colors">
-                          <item.icon className="w-5 h-5 text-teal-300" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-jakarta font-medium text-white group-hover:text-teal-300 transition-colors">{item.label}</p>
-                          <p className="text-xs font-jakarta text-white/40 mt-1 leading-relaxed">{item.description}</p>
-                        </div>
-                      </Link>
-                    ))}
+                    {serviceLandingLinks.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <Link
+                          key={item.href}
+                          to={item.href}
+                          className="flex items-start gap-4 p-4 rounded-lg hover:bg-white/[0.05] transition-all duration-200 group"
+                        >
+                          <div className="w-10 h-10 rounded-lg bg-teal-300/10 border border-teal-300/20 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-300/20 group-hover:border-teal-300/30 transition-colors">
+                            <Icon className="w-5 h-5 text-teal-300" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-jakarta font-medium text-white group-hover:text-teal-300 transition-colors">{item.label}</p>
+                            <p className="text-xs font-jakarta text-white mt-1 leading-relaxed">{item.description}</p>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -247,19 +250,22 @@ const HeaderNew: React.FC = () => {
                   transition={{ delay: navItems.length * 0.1 }}
                   className="pt-2 border-t border-white/10"
                 >
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/30 font-jakarta mb-4">{t.services}</p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-white font-jakarta mb-4">{t.services}</p>
                   <div className="space-y-2">
-                    {serviceLandingLinks.map((item) => (
-                      <Link
-                        key={item.href}
-                        to={item.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center gap-3 py-1 text-base font-jakarta font-light text-white/80 hover:text-teal-300 transition-colors"
-                      >
-                        <item.icon className="w-4 h-4 text-teal-300/60" />
-                        <span>{item.label}</span>
-                      </Link>
-                    ))}
+                    {serviceLandingLinks.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <Link
+                          key={item.href}
+                          to={item.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="flex items-center gap-3 py-1 text-base font-jakarta font-light text-white hover:text-teal-300 transition-colors"
+                        >
+                          <Icon className="w-4 h-4 text-teal-300/60" />
+                          <span>{item.label}</span>
+                        </Link>
+                      );
+                    })}
                   </div>
                 </motion.div>
               </div>
