@@ -305,7 +305,13 @@ function renderPortableTextToHtml(blocks, { projectId, dataset } = {}) {
 }
 
 function renderServiceLandingBodyHtml({ doc, language, projectId, dataset }) {
+  const eyebrow = pickLocalizedValue(doc?.eyebrow, language);
   const intro = pickLocalizedValue(doc?.intro, language);
+  const ctaPrimary = pickLocalizedValue(doc?.ctaLabel, language);
+  const ctaSecondary = pickLocalizedValue(doc?.ctaSecondaryLabel, language);
+  const city = doc?.city || '';
+  const serviceType = doc?.serviceType || '';
+  const stats = pickLocalizedArray(doc?.stats, language);
   const problems = pickLocalizedArray(doc?.problems, language);
   const deliverables = pickLocalizedArray(doc?.deliverables, language);
   const processSteps = pickLocalizedArray(doc?.processSteps, language);
@@ -327,8 +333,21 @@ function renderServiceLandingBodyHtml({ doc, language, projectId, dataset }) {
       };
 
   const parts = [];
+  if (eyebrow) {
+    parts.push(`<p>${escapeHtml(eyebrow)}</p>`);
+  }
   if (intro) {
     parts.push(`<p>${escapeHtml(intro)}</p>`);
+  }
+
+  if (city || serviceType) {
+    parts.push(`<p>${escapeHtml([serviceType, city].filter(Boolean).join(' • '))}</p>`);
+  }
+
+  if (stats.length) {
+    parts.push(`<section><h2>${escapeHtml(language === 'pl' ? 'Najważniejsze liczby' : 'Key Stats')}</h2><ul>${stats
+      .map((item) => `<li><strong>${escapeHtml(item?.value || '')}</strong> ${escapeHtml(item?.label || '')}</li>`)
+      .join('')}</ul></section>`);
   }
 
   if (problems.length) {
@@ -352,6 +371,10 @@ function renderServiceLandingBodyHtml({ doc, language, projectId, dataset }) {
   const richContentHtml = renderPortableTextToHtml(richContentBlocks, { projectId, dataset });
   if (richContentHtml) {
     parts.push(richContentHtml);
+  }
+
+  if (ctaPrimary || ctaSecondary) {
+    parts.push(`<section><h2>${escapeHtml(language === 'pl' ? 'Następny krok' : 'Next Step')}</h2><p>${escapeHtml([ctaPrimary, ctaSecondary].filter(Boolean).join(' • '))}</p></section>`);
   }
 
   return parts.join('\n');
@@ -466,6 +489,9 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
         ? `*[_type == "serviceLanding" && slug.current == "${safeSlug}"][0]{
         title { en, pl },
         slug,
+        serviceType,
+        city,
+        eyebrow { en, pl },
         heroImage,
         intro { en, pl },
         problems { en, pl },
@@ -473,6 +499,9 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
         processSteps { en, pl },
         faq { en, pl },
         content { en, pl },
+        ctaLabel { en, pl },
+        ctaSecondaryLabel { en, pl },
+        stats { en, pl },
         seo {
           metaTitle { en, pl },
           metaDescription { en, pl },
