@@ -16,6 +16,9 @@ const SITE_URL = 'https://appcrates.pl';
 const STATIC_PAGES = [
   { path: '/', changefreq: 'weekly', priority: 1.0 },
   { path: '/blog', changefreq: 'daily', priority: 0.9 },
+  { path: '/faq', changefreq: 'monthly', priority: 0.6 },
+  { path: '/about-me', changefreq: 'monthly', priority: 0.6 },
+  { path: '/privacy-policy', changefreq: 'yearly', priority: 0.3 },
 ];
 
 function escapeXml(str) {
@@ -38,17 +41,21 @@ function buildUrlEntry({ loc, lastmod, changefreq, priority }) {
 
 export async function handler(event) {
   try {
-    // Fetch all published posts and projects from Sanity
+    // Fetch all published posts, projects and service landings from Sanity
     // Ordered by _updatedAt because publishedAt is an optional field the user might forget
-    const [posts, projects] = await Promise.all([
-      client.fetch(`*[_type == "post" && defined(slug.current)] | order(_updatedAt desc) {
+    const [posts, projects, serviceLandings] = await Promise.all([
+      client.fetch(`*[_type == "post" && defined(slug.current) && !defined(seo.noIndex) || (_type == "post" && defined(slug.current) && seo.noIndex != true)] | order(_updatedAt desc) {
         "slug": slug.current,
         publishedAt,
         _updatedAt
       }`),
-      client.fetch(`*[_type == "project" && defined(slug.current)] | order(_updatedAt desc) {
+      client.fetch(`*[_type == "project" && defined(slug.current) && !defined(seo.noIndex) || (_type == "project" && defined(slug.current) && seo.noIndex != true)] | order(_updatedAt desc) {
         "slug": slug.current,
         publishedAt,
+        _updatedAt
+      }`),
+      client.fetch(`*[_type == "serviceLanding" && defined(slug.current) && !defined(seo.noIndex) || (_type == "serviceLanding" && defined(slug.current) && seo.noIndex != true)] | order(_updatedAt desc) {
+        "slug": slug.current,
         _updatedAt
       }`),
     ]);
@@ -82,6 +89,15 @@ export async function handler(event) {
           lastmod: (project._updatedAt || project.publishedAt || new Date().toISOString()).split('T')[0],
           changefreq: 'monthly',
           priority: 0.7,
+        })
+      ),
+      // Service landing pages
+      ...serviceLandings.map((service) =>
+        buildUrlEntry({
+          loc: `${SITE_URL}/uslugi/${service.slug}`,
+          lastmod: (service._updatedAt || new Date().toISOString()).split('T')[0],
+          changefreq: 'monthly',
+          priority: 0.8,
         })
       ),
     ];

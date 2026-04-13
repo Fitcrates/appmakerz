@@ -7,6 +7,9 @@ const DEFAULT_SANITY_DATASET = 'production';
 
 const BOT_USER_AGENT_PATTERNS = [
   'googlebot',
+  'google-inspectiontool',
+  'googleother',
+  'adsbot-google',
   'bingbot',
   'duckduckbot',
   'yandex',
@@ -181,10 +184,70 @@ function pickLocalizedValue(field, language) {
   return '';
 }
 
-function buildHtml({ title, description, canonicalUrl, ogType = 'website', ogImageUrl, h1, jsonLd, language }) {
+function slugifyForComparison(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function resolveContentLanguage({ requestedLanguage, path, slug, doc }) {
+  if (requestedLanguage === 'pl' || requestedLanguage === 'en') {
+    return requestedLanguage;
+  }
+
+  if (path.startsWith('/uslugi/')) {
+    return 'pl';
+  }
+
+  const titleEn = pickLocalizedValue(doc?.title, 'en');
+  const titlePl = pickLocalizedValue(doc?.title, 'pl');
+  const slugifiedEn = slugifyForComparison(titleEn);
+  const slugifiedPl = slugifyForComparison(titlePl);
+
+  if (slug && slugifiedPl && slug === slugifiedPl) return 'pl';
+  if (slug && slugifiedEn && slug === slugifiedEn) return 'en';
+
+  return requestedLanguage || 'en';
+}
+
+function renderPortableTextToHtml(blocks) {
+  if (!Array.isArray(blocks) || blocks.length === 0) return '';
+
+  const parts = [];
+  for (const block of blocks) {
+    if (!block || block._type !== 'block') continue;
+
+    const text = (Array.isArray(block.children) ? block.children : [])
+      .map((child) => (child?._type === 'span' ? child.text || '' : ''))
+      .join('')
+      .trim();
+
+    if (!text) continue;
+
+    const safeText = escapeHtml(text);
+    const style = block.style || 'normal';
+    if (style === 'h2') {
+      parts.push(`<h2>${safeText}</h2>`);
+    } else if (style === 'h3') {
+      parts.push(`<h3>${safeText}</h3>`);
+    } else {
+      parts.push(`<p>${safeText}</p>`);
+    }
+  }
+
+  return parts.join('\n');
+}
+
+function buildHtml({ title, description, canonicalUrl, alternateBaseUrl, ogType = 'website', ogImageUrl, h1, bodyHtml, jsonLd, language }) {
   const safeTitle = escapeHtml(title);
   const safeDescription = escapeHtml(description);
   const safeCanonical = escapeHtml(canonicalUrl);
+  const safeAlternateBase = escapeHtml(alternateBaseUrl || canonicalUrl);
+  const safeAlternateEn = `${safeAlternateBase}${safeAlternateBase.includes('?') ? '&' : '?'}lang=en`;
+  const safeAlternatePl = `${safeAlternateBase}${safeAlternateBase.includes('?') ? '&' : '?'}lang=pl`;
   const safeImage = escapeHtml(ogImageUrl || `${BASE_URL}/media/default-og-image.png`);
   const safeH1 = escapeHtml(h1 || title);
   const locale = language === 'pl' ? 'pl_PL' : 'en_US';
@@ -199,9 +262,9 @@ function buildHtml({ title, description, canonicalUrl, ogType = 'website', ogIma
   <meta name="description" content="${safeDescription}" />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="${safeCanonical}" />
-  <link rel="alternate" href="${BASE_URL}/?lang=en" hreflang="en" />
-  <link rel="alternate" href="${BASE_URL}/?lang=pl" hreflang="pl" />
-  <link rel="alternate" href="${BASE_URL}/" hreflang="x-default" />
+  <link rel="alternate" href="${safeAlternateEn}" hreflang="en" />
+  <link rel="alternate" href="${safeAlternatePl}" hreflang="pl" />
+  <link rel="alternate" href="${safeAlternateBase}" hreflang="x-default" />
 
   <meta property="og:type" content="${escapeHtml(ogType)}" />
   <meta property="og:title" content="${safeTitle}" />
@@ -222,7 +285,7 @@ function buildHtml({ title, description, canonicalUrl, ogType = 'website', ogIma
 <body>
   <main>
     <h1>${safeH1}</h1>
-    <p>${safeDescription}</p>
+    ${bodyHtml || `<p>${safeDescription}</p>`}
   </main>
 </body>
 </html>`;
@@ -260,6 +323,7 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
         author->{ name },
         mainImage,
         excerpt { en, pl },
+        body { en, pl },
         publishedAt,
         seo {
           metaTitle { en, pl },
@@ -316,17 +380,29 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
   const doc = data?.result;
   if (!doc || doc?.seo?.noIndex) return null;
 
+  const resolvedLanguage = resolveContentLanguage({
+    requestedLanguage: language,
+    path,
+    slug,
+    doc
+  });
+
   const title =
-    pickLocalizedValue(doc?.seo?.metaTitle, language) ||
-    pickLocalizedValue(doc?.title, language) ||
+    pickLocalizedValue(doc?.seo?.metaTitle, resolvedLanguage) ||
+    pickLocalizedValue(doc?.title, resolvedLanguage) ||
     'AppCrates';
 
   const description =
-    pickLocalizedValue(doc?.seo?.metaDescription, language) ||
-    pickLocalizedValue(doc?.excerpt, language) ||
-    pickLocalizedValue(doc?.intro, language) ||
-    pickLocalizedValue(doc?.description, language) ||
+    pickLocalizedValue(doc?.seo?.metaDescription, resolvedLanguage) ||
+    pickLocalizedValue(doc?.excerpt, resolvedLanguage) ||
+    pickLocalizedValue(doc?.intro, resolvedLanguage) ||
+    pickLocalizedValue(doc?.description, resolvedLanguage) ||
     'AppCrates web development content.';
+
+  const bodyBlocks = isBlogPost
+    ? (Array.isArray(doc?.body) ? doc.body : (doc?.body?.[resolvedLanguage] || doc?.body?.en || doc?.body?.pl || []))
+    : [];
+  const bodyHtml = isBlogPost ? renderPortableTextToHtml(bodyBlocks) : '';
 
   const canonicalUrl = isBlogPost
     ? `${BASE_URL}/blog/${slug}`
@@ -359,7 +435,7 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
           name: 'AppCrates',
           url: BASE_URL
         },
-        inLanguage: language
+        inLanguage: resolvedLanguage
       }
     : isProject
       ? {
@@ -373,7 +449,7 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
           '@type': 'Organization',
           name: 'AppCrates'
         },
-        inLanguage: language
+        inLanguage: resolvedLanguage
       }
       : isServiceLanding
         ? {
@@ -388,7 +464,7 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
           name: 'AppCrates'
         },
         areaServed: 'Worldwide',
-        inLanguage: language
+        inLanguage: resolvedLanguage
       }
         : {
         '@context': 'https://schema.org',
@@ -402,18 +478,20 @@ async function buildDynamicDocumentHtml({ url, path, language, context }) {
           '@type': 'Organization',
           name: 'AppCrates'
         },
-        inLanguage: language
+        inLanguage: resolvedLanguage
       };
 
   return buildHtml({
     title,
     description,
     canonicalUrl,
+    alternateBaseUrl: canonicalUrl,
     ogType: isBlogPost ? 'article' : isProject ? 'website' : isServiceLanding ? 'website' : 'profile',
     ogImageUrl,
     h1: title,
+    bodyHtml,
     jsonLd,
-    language
+    language: resolvedLanguage
   });
 }
 
@@ -437,6 +515,7 @@ function buildStaticDocumentHtml({ path, language }) {
     title: localized.title,
     description: localized.description,
     canonicalUrl,
+    alternateBaseUrl: canonicalUrl,
     ogType: path === '/' ? 'website' : 'article',
     ogImageUrl: `${BASE_URL}/media/default-og-image.png`,
     h1: localized.h1,
