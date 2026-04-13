@@ -27,6 +27,24 @@ const AnimatedRoutes = () => {
   const location = useLocation();
 
   useEffect(() => {
+    const warmUpRoutes = () => {
+      void import('./components/new/AboutMePageNew');
+      void import('./components/new/ServiceLandingPageNew');
+    };
+
+    const requestIdle = (globalThis as { requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number }).requestIdleCallback;
+    const cancelIdle = (globalThis as { cancelIdleCallback?: (handle: number) => void }).cancelIdleCallback;
+
+    if (requestIdle && cancelIdle) {
+      const idleCallback = requestIdle(warmUpRoutes, { timeout: 2000 });
+      return () => cancelIdle(idleCallback);
+    }
+
+    const timeoutId = setTimeout(warmUpRoutes, 1200);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
     if (location.pathname !== '/' || !location.hash) return;
 
     const targetId = decodeURIComponent(location.hash.slice(1));
@@ -55,7 +73,7 @@ const AnimatedRoutes = () => {
   }, [location.pathname, location.hash]);
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="sync">
       <Routes location={location} key={location.pathname}>
         <Route
           path="/"

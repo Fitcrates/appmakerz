@@ -65,6 +65,10 @@ const AboutNew: React.FC = () => {
   const imageY = useTransform(scrollYProgress, [0, 1], ["10%", "-10%"]);
   const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1, 1.05]);
 
+  const prefetchAboutMePage = () => {
+    void import('./AboutMePageNew');
+  };
+
   return (
     <section
       id="about"
@@ -140,6 +144,9 @@ const AboutNew: React.FC = () => {
             >
               <Link
                 to="/about-me"
+                onMouseEnter={prefetchAboutMePage}
+                onFocus={prefetchAboutMePage}
+                onTouchStart={prefetchAboutMePage}
                 className="group inline-flex items-center gap-4 "
                 aria-label={language === 'pl' ? 'Przejdź do strony O mnie' : 'Go to About Me page'}
               >

@@ -35,7 +35,7 @@ const HeroNew: React.FC = () => {
       {/* Hero background image */}
       <div className="absolute inset-0 z-0" aria-hidden="true">
         <picture>
-          <source media="(max-width: 768px)" srcSet="/media/placeholderHero.webp" />
+          <source media="(max-width: 768px)" srcSet="/media/hero2new.webp" />
           <img
             src="/media/hero2new.webp"
             alt=""

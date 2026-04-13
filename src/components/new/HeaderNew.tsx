@@ -71,6 +71,10 @@ const HeaderNew: React.FC = () => {
     });
   };
 
+  const prefetchServiceLandingPage = () => {
+    void import('./ServiceLandingPageNew');
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -142,6 +146,9 @@ const HeaderNew: React.FC = () => {
               <div className="relative group">
                 <button
                   type="button"
+                  onMouseEnter={prefetchServiceLandingPage}
+                  onFocus={prefetchServiceLandingPage}
+                  onTouchStart={prefetchServiceLandingPage}
                   className="inline-flex items-center gap-2 text-white/70 font-jakarta font-light text-sm hover:text-white transition-colors focus:outline-none focus:text-teal-300"
                   aria-haspopup="true"
                   aria-label={t.services}
@@ -151,13 +158,16 @@ const HeaderNew: React.FC = () => {
                 </button>
 
                 <div className="pointer-events-none group-hover:pointer-events-auto opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 absolute right-0 top-full pt-4 z-50">
-                  <div className="w-[540px] border border-white/10 bg-indigo-950/95 backdrop-blur-xl shadow-2xl rounded-xl p-2 grid grid-cols-2 gap-1">
+                  <div className="w-[540px] border border-white/10 bg-indigo-950 shadow-2xl rounded-xl p-2 grid grid-cols-2 gap-1">
                     {serviceLandingLinks.map((item) => {
                       const Icon = item.icon;
                       return (
                         <Link
                           key={item.href}
                           to={item.href}
+                          onMouseEnter={prefetchServiceLandingPage}
+                          onFocus={prefetchServiceLandingPage}
+                          onTouchStart={prefetchServiceLandingPage}
                           className="flex items-start gap-4 p-4 rounded-lg hover:bg-white/[0.05] transition-all duration-200 group"
                         >
                           <div className="w-10 h-10 rounded-lg bg-teal-300/10 border border-teal-300/20 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-300/20 group-hover:border-teal-300/30 transition-colors">
@@ -258,6 +268,9 @@ const HeaderNew: React.FC = () => {
                         <Link
                           key={item.href}
                           to={item.href}
+                          onMouseEnter={prefetchServiceLandingPage}
+                          onFocus={prefetchServiceLandingPage}
+                          onTouchStart={prefetchServiceLandingPage}
                           onClick={() => setIsMobileMenuOpen(false)}
                           className="flex items-center gap-3 py-1 text-base font-jakarta font-light text-white hover:text-teal-300 transition-colors"
                         >
