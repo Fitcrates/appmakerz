@@ -14,7 +14,7 @@ const BurnRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string }
       <div className="absolute inset-0 burn-reveal-cycle">
         <div className="absolute inset-0 burn-reveal-image" aria-hidden="true">
           <picture>
-            <source media="(max-width: 768px)" srcSet="/media/ArekNew.webp" />
+            <source media="(max-width: 768px)" srcSet="/media/newAbout.webp" />
             <img
               src={src}
               alt={alt}
