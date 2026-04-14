@@ -450,8 +450,8 @@ section.hero-section > div {
   }
 }
 
-/* Ensure content stays above background */
-.relative {
+/* Ensure content stays above background where explicitly needed */
+.content-layer {
   position: relative;
   z-index: 1;
 }

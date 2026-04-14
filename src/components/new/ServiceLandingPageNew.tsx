@@ -191,7 +191,7 @@ const ServiceLandingPageNew: React.FC = () => {
                 loading="eager"
                 decoding="async"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/80 to-indigo-950/40" />
+              <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/95 via-indigo-950/60 to-indigo-950/40" />
             </div>
           ) : (
             <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/30 to-indigo-950" />

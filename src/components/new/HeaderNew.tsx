@@ -11,7 +11,7 @@ import { getAboutMe, getPosts, getServiceLanding } from '../../lib/sanity.client
 const getNavItems = (t: typeof translations.en.nav) => [
   { label: t.about, href: '/#about' },
   { label: t.projects, href: '/#projects' },
-  { label: t.solutions, href: '/#solutions' },
+  { label: t.solutions, href: '/#systems' },
   { label: t.blog, href: '/blog' },
   { label: t.contact, href: '/#contact' },
   { label: 'FAQ', href: '/faq' },

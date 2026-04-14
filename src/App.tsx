@@ -4,6 +4,7 @@ import HeroNew from './components/new/HeroNew';
 import { CursorGlowProvider } from './context/CursorGlowContext';
 import './styles/new-design.css';
 
+
 const LoadingFallback = () => (
   <div className="min-h-[50vh] bg-indigo-950" />
 );
@@ -16,7 +17,7 @@ const ServicesNew = lazy(() => import('./components/new/ServicesNew'));
 const ContactNew = lazy(() => import('./components/new/ContactNew'));
 const FooterNew = lazy(() => import('./components/new/FooterNew'));
 const CookieConsent = lazy(() => import('./components/CookieConsent'));
-const SystemsIBuild = lazy(() => import('./components/new/SystemsIBuild'));
+const SolutionsNew = lazy(() => import('./components/new/SolutionsNew'));
 
 function App() {
   return (
@@ -46,7 +47,7 @@ function App() {
       
           
           <Suspense fallback={<LoadingFallback />}>
-            <SystemsIBuild />
+            <SolutionsNew />
           </Suspense>
 
           <Suspense fallback={<LoadingFallback />}>

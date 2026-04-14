@@ -1,17 +1,20 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
-import { motion, useInView, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
 import BurnSpotlightText from './BurnSpotlightText';
 import SpotlightText from './SpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 
+gsap.registerPlugin(ScrollTrigger);
+
 interface Solution {
   number: string;
   title: string;
   problem: string;
   description: string;
-  image: string;
   mobileImage: string;
 }
 
@@ -21,7 +24,6 @@ const getSolutions = (t: typeof translations.en.solutions): Solution[] => [
     title: t.items.landing.title,
     problem: t.items.landing.problem,
     description: t.items.landing.description,
-    image: '/media/solutions/01-Landingpage.webp',
     mobileImage: '/media/solutions/01-mobilLanding.webp',
   },
   {
@@ -29,7 +31,6 @@ const getSolutions = (t: typeof translations.en.solutions): Solution[] => [
     title: t.items.ecommerce.title,
     problem: t.items.ecommerce.problem,
     description: t.items.ecommerce.description,
-    image: '/media/solutions/02-EShop.webp',
     mobileImage: '/media/solutions/02-mobileShop.webp',
   },
   {
@@ -37,7 +38,6 @@ const getSolutions = (t: typeof translations.en.solutions): Solution[] => [
     title: t.items.marketplace.title,
     problem: t.items.marketplace.problem,
     description: t.items.marketplace.description,
-    image: '/media/solutions/03-marketplace.webp',
     mobileImage: '/media/solutions/03-mobileMarket.webp',
   },
   {
@@ -45,7 +45,6 @@ const getSolutions = (t: typeof translations.en.solutions): Solution[] => [
     title: t.items.webApps.title,
     problem: t.items.webApps.problem,
     description: t.items.webApps.description,
-    image: '/media/solutions/04-Webapp.webp',
     mobileImage: '/media/solutions/04-mobileWebapp.webp',
   },
   {
@@ -53,258 +52,284 @@ const getSolutions = (t: typeof translations.en.solutions): Solution[] => [
     title: t.items.seo.title,
     problem: t.items.seo.problem,
     description: t.items.seo.description,
-    image: '/media/solutions/05-SEO.webp',
     mobileImage: '/media/solutions/05-mobileSEO.webp',
   },
 ];
 
-interface SolutionItemProps {
-  solution: Solution;
-  index: number;
-  onHover: (image: string | null) => void;
-  onTouch: (index: number) => void;
-  isActive: boolean;
-}
-
-const SolutionItem: React.FC<SolutionItemProps> = ({ solution, index, onHover, onTouch, isActive }) => {
-  const itemRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(itemRef, { once: true, margin: "-50px" });
-
-  const handleTouchStart = useCallback(() => {
-    onTouch(index);
-  }, [index, onTouch]);
-
-  return (
-    <motion.div
-      ref={itemRef}
-      initial={{ opacity: 0, x: -30 }}
-      animate={isInView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className={`group relative py-6 lg:h-[140px] border-b transition-colors ${
-        isActive ? 'border-teal-300/30 bg-white/5' : 'border-white/10 hover:border-white/20'
-      }`}
-      itemScope
-      itemType="https://schema.org/Service"
-      onMouseEnter={() => onHover(solution.image)}
-      onMouseLeave={() => onHover(null)}
-      onFocus={() => onHover(solution.image)}
-      onBlur={() => onHover(null)}
-      onTouchStart={handleTouchStart}
-    >
-      <div className="flex flex-col lg:flex-row lg:items-start gap-4">
-        {/* Number */}
-        <span className="text-xs text-teal-300 font-jakarta tracking-widest lg:w-12 flex-shrink-0" aria-hidden="true">
-          {solution.number}
-        </span>
-
-        {/* Title & Problem */}
-        <div className="lg:w-72 flex-shrink-0">
-          <SpotlightText as="h3" className="text-2xl sm:text-3xl font-light font-jakarta" glowSize={100}>
-            {solution.title}
-          </SpotlightText>
-          <p className="text-white/40 font-jakarta text-sm mt-2 italic" itemProp="name">
-            {solution.problem}
-          </p>
-        </div>
-
-        {/* Description */}
-        <div className="lg:flex-1">
-          <SpotlightText as="p" className="font-jakarta font-light leading-relaxed" glowSize={100}>
-            {solution.description}
-          </SpotlightText>
-          <meta itemProp="description" content={solution.description} />
-        </div>
-      </div>
-
-      {/* Hover line */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        whileHover={{ scaleX: 1 }}
-        className="absolute bottom-0 left-0 right-0 h-px bg-teal-300 origin-left"
-        aria-hidden="true"
-      />
-    </motion.div>
-  );
-};
-
 const SolutionsNew: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const mobileSceneRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  const [activeImage, setActiveImage] = useState<string | null>(null);
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const { language } = useLanguage();
   const t = translations[language].solutions;
   const solutions = getSolutions(t);
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
+  const [mobilePinState, setMobilePinState] = useState<'before' | 'during' | 'after'>('before');
+  const [isMobilePinned, setIsMobilePinned] = useState(false);
 
-  // Scroll-based card switching
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
+  useLayoutEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
 
-  // Map scroll progress to solution index
-  const solutionIndex = useTransform(
-    scrollYProgress,
-    [0.2, 0.4, 0.5, 0.6, 0.7, 0.8],
-    [0, 1, 2, 3, 4, 4]
-  );
+    const ctx = gsap.context(() => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const mm = gsap.matchMedia();
 
-  // Update active solution based on scroll
-  useEffect(() => {
-    if (isMobile) return; // Only on desktop
-    
-    const unsubscribe = solutionIndex.on('change', (latest) => {
-      const index = Math.round(latest);
-      if (index >= 0 && index < solutions.length) {
-        setActiveIndex(index);
-        setActiveImage(solutions[index].image);
-      }
-    });
+      mm.add('(min-width: 769px)', () => {
+        if (prefersReducedMotion) return;
 
-    return () => unsubscribe();
-  }, [solutionIndex, solutions, isMobile]);
+        const leftCol = scene.querySelector('.solutions-scene__left');
+        const panels = scene.querySelectorAll('.solutions-scene__image-panel');
+        const stepElements = Array.from(scene.querySelectorAll<HTMLElement>('.solutions-scene__step'));
 
-  // Detect mobile/touch device
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.matchMedia('(max-width: 1024px)').matches || 'ontouchstart' in window);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+        if (!leftCol || panels.length === 0) return;
 
-  // Auto-cycle images on mobile when in view
-  useEffect(() => {
-    if (!isMobile || !isInView || !isAutoPlaying) return;
+        const setActiveStep = (activeIndex: number) => {
+          stepElements.forEach((step, index) => {
+            const isActive = index === activeIndex;
+            step.classList.toggle('is-active', isActive);
+            step.classList.toggle('opacity-100', isActive);
+            step.classList.toggle('opacity-0', !isActive);
+          });
+        };
 
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => {
-        const next = prev === null ? 0 : (prev + 1) % solutions.length;
-        setActiveImage(solutions[next].image);
-        return next;
+        ScrollTrigger.create({
+          trigger: scene,
+          start: 'top top',
+          end: 'bottom bottom',
+          pin: leftCol,
+          pinSpacing: false,
+        });
+
+        setActiveStep(0);
+
+        panels.forEach((panel, i) => {
+          ScrollTrigger.create({
+            trigger: panel,
+            start: 'top center',
+            end: 'bottom center',
+            onEnter: () => setActiveStep(i),
+            onEnterBack: () => setActiveStep(i),
+          });
+        });
       });
-    }, 3000);
 
-    // Start with first image
-    if (activeIndex === null) {
-      setActiveIndex(0);
-      setActiveImage(solutions[0].image);
-    }
+      return () => mm.revert();
+    }, sceneRef);
 
-    return () => clearInterval(interval);
-  }, [isMobile, isInView, isAutoPlaying, solutions, activeIndex]);
+    return () => ctx.revert();
+  }, [solutions.length]);
 
-  // Handle touch on solution item
-  const handleTouch = useCallback((index: number) => {
-    setIsAutoPlaying(false);
-    setActiveIndex(index);
-    setActiveImage(solutions[index].image);
-    
-    // Resume auto-play after 5 seconds of no interaction
-    const timeout = setTimeout(() => {
-      setIsAutoPlaying(true);
-    }, 5000);
-    
-    return () => clearTimeout(timeout);
-  }, [solutions]);
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.innerWidth >= 768 || !mobileSceneRef.current) return;
+
+      const rect = mobileSceneRef.current.getBoundingClientRect();
+      const maxScrollable = Math.max(1, rect.height - window.innerHeight);
+      const progress = Math.max(0, Math.min(1, -rect.top / maxScrollable));
+      const index = Math.min(
+        solutions.length - 1,
+        Math.max(0, Math.floor(progress * solutions.length))
+      );
+
+      setMobileActiveIndex(index);
+
+      if (progress <= 0) {
+        setMobilePinState('before');
+        setIsMobilePinned(false);
+      } else if (progress >= 1) {
+        setMobilePinState('after');
+        setIsMobilePinned(false);
+      } else {
+        setMobilePinState('during');
+        setIsMobilePinned(true);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [solutions.length]);
 
   return (
     <section
       ref={sectionRef}
       id="systems"
-      className="relative py-20 lg:py-24 bg-indigo-950 overflow-visible"
+      className="relative bg-indigo-950 overflow-x-hidden"
       itemScope
       itemType="https://schema.org/ItemList"
     >
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section label */}
+        {/* Section label - like AboutNew */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 1 }}
-          className="mb-6 lg:mb-16"
+          className="pt-20 lg:pt-24 mb-6 lg:mb-16"
         >
           <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
             {t.label}
           </span>
         </motion.div>
 
-        {/* Header */}
-        <div className="mb-16 lg:mb-24">
+        {/* Header - like AboutNew */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="mb-16 lg:mb-24"
+        >
           <BurnSpotlightText 
             as="h2" 
-            className="text-4xl sm:text-5xl lg:text-7xl font-light font-jakarta" 
+            className="text-4xl sm:text-5xl lg:text-6xl font-light font-jakarta leading-[1.3]" 
             glowSize={150} 
             baseDelay={200} 
             charDelay={40}
           >
             {t.heading}
           </BurnSpotlightText>
-        </div>
+        </motion.div>
+      </div>
 
-        {/* Solutions list */}
-        <div className="relative border-t border-white/10">
-          {/* Background image overlay - inside solutions list */}
-          <AnimatePresence>
-            {activeImage && (
-              <motion.div
-                key={activeImage}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="absolute inset-0 z-0 pointer-events-none rounded-lg overflow-hidden"
-              >
-                <picture>
-                  <source 
-                    media="(max-width: 1023px)" 
-                    srcSet={solutions.find(s => s.image === activeImage)?.mobileImage || activeImage}
-                  />
-                  <img 
-                    src={activeImage}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-contain object-center"
+      {/* Scene - constrained to max-w-7xl */}
+      <div className="w-full md:max-w-7xl md:mx-auto md:px-6 lg:px-8">
+        <div ref={sceneRef} className="solutions-scene relative" id="process">
+          {/* DESKTOP VIEW */}
+          <div className="solutions-scene__desktop hidden md:block">
+            <div className="solutions-scene__sticky-wrap grid grid-cols-2 min-h-[100svh] bg-indigo-950 rounded-lg overflow-hidden">
+              <div className="solutions-scene__left sticky top-0 h-[100svh] flex flex-col justify-center px-8 lg:px-12 z-10 bg-indigo-950">
+                {solutions.map((solution, i) => (
+                  <article
+                    key={solution.number}
+                    className={`solutions-scene__step absolute top-1/2 -translate-y-1/2 left-8 right-10 lg:left-12 lg:right-14 opacity-0 transition-opacity duration-500 ease-out ${i === 0 ? 'is-active opacity-100' : ''}`}
+                    itemScope
+                    itemType="https://schema.org/Service"
+                  >
+                  <span className="notranslate text-[0.65rem] font-medium tracking-[0.2em] uppercase text-teal-300 mb-5 block" aria-hidden="true">
+                    {solution.number}
+                  </span>
+                  <h3 className="text-white text-[clamp(2.5rem,5vw,4.5rem)] font-jakarta font-light tracking-[-0.03em] leading-[1.05] uppercase mb-5">
+                    {solution.title}
+                  </h3>
+                  <p className="text-white/45 font-jakarta text-sm italic mb-4" itemProp="name">
+                    {solution.problem}
+                  </p>
+                  <p className="font-jakarta font-light text-[clamp(0.95rem,1.1vw,1.1rem)] leading-[1.9] text-white/80 max-w-[420px]" itemProp="description">
+                    {solution.description}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <div className="solutions-scene__right relative  ">
+              {solutions.map((solution) => (
+                <div key={`panel-${solution.number}`} className="solutions-scene__image-panel h-[100svh] relative overflow-hidden">
+                  <img
+                    src={solution.mobileImage}
+                    alt={solution.title}
+                    className="solutions-scene__image w-full h-full object-cover"
                     loading="lazy"
                     decoding="async"
-                    sizes="100vw"
                   />
-                </picture>
-                <div className="absolute inset-0 bg-indigo-950/70" />
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-950/30 via-transparent to-indigo-950/30" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-          
-          {solutions.map((solution, index) => (
-            <SolutionItem 
-              key={solution.number} 
-              solution={solution} 
-              index={index} 
-              onHover={setActiveImage}
-              onTouch={handleTouch}
-              isActive={activeIndex === index}
-            />
-          ))}
-        </div>
+                  <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-r from-indigo-950 via-indigo-950/65 to-transparent pointer-events-none z-[1]" />
+                  <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-l from-indigo-950 via-transparent to-transparent pointer-events-none z-[2]" />
+                </div>
+              ))}
+            </div>
+            </div>
+          </div>
 
-        {/* CTA */}
+          {/* MOBILE STACKING CARDS VIEW */}
+          <div
+            ref={mobileSceneRef}
+            className="solutions-scene__mobile md:hidden block relative"
+            style={{ height: `${solutions.length * 100}svh` }}
+          >
+            <div
+              className="left-0 right-0 h-[100svh] overflow-hidden"
+              style={{
+                position: isMobilePinned ? 'fixed' : 'absolute',
+                top: mobilePinState === 'after' ? 'auto' : 0,
+                bottom: mobilePinState === 'after' ? 0 : 'auto',
+              }}
+            >
+              {solutions.map((solution, i) => {
+                const isActive = i === mobileActiveIndex;
+                const isPast = i < mobileActiveIndex;
+                const distance = mobileActiveIndex - i;
+                const translateY = i > mobileActiveIndex ? 100 : isPast ? -Math.min(18, distance * 6) : 0;
+                const scale = isActive ? 1 : isPast ? Math.max(0.92, 1 - distance * 0.025) : 1;
+                const opacity = i > mobileActiveIndex ? 0 : isActive ? 1 : Math.max(0.45, 0.82 - distance * 0.15);
+
+                return (
+                  <article
+                    key={`mobile-${solution.number}`}
+                    className="solutions-scene__mobile-card absolute inset-0 transition-[transform,opacity] duration-500 ease-out"
+                    style={{
+                      zIndex: isActive ? 100 : i + 1,
+                      transform: `translateY(${translateY}%) scale(${scale})`,
+                      opacity,
+                    }}
+                    itemScope
+                    itemType="https://schema.org/Service"
+                  >
+                    <div className="absolute inset-0 w-full h-full z-0">
+                      <img
+                        src={solution.mobileImage}
+                        alt={solution.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/75 to-transparent z-[1] pointer-events-none" />
+                    </div>
+
+                    <div className="absolute bottom-0 left-0 w-full px-4 sm:px-6 pb-[clamp(4rem,12vh,8rem)] z-[2]">
+                      <span className="notranslate text-[0.65rem] font-medium tracking-[0.2em] uppercase text-teal-300 mb-4 block" aria-hidden="true">
+                        {solution.number}
+                      </span>
+                      <h3 className="text-white text-[clamp(1.8rem,7.5vw,2.2rem)] font-jakarta font-light tracking-[-0.02em] leading-[1.05] uppercase mb-4">
+                        {solution.title}
+                      </h3>
+                      <p className="text-white/50 font-jakarta text-[0.85rem] italic mb-3" itemProp="name">
+                        {solution.problem}
+                      </p>
+                      <p className="font-jakarta font-light text-[0.95rem] leading-[1.75] text-white/90 mb-0 max-w-[42ch]" itemProp="description">
+                        {solution.description}
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="flex flex-row items-center justify-center lg:justify-start mt-16 "
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="flex flex-row items-center justify-center lg:justify-start mt-16 pb-20 lg:pb-24"
         >
           <a
             href="#contact"
             className="group inline-flex items-center gap-4 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 rounded"
             aria-label="Contact me to discuss your project"
           >
-            <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">
-              {t.cta}
-            </span>
+            <SpotlightText glowSize={100}>
+              <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">
+                {t.cta}
+              </span>
+            </SpotlightText>
             <div className="w-12 h-12 border border-white/20 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300" aria-hidden="true">
               <ArrowUpRight className="w-5 h-5 text-white group-hover:text-indigo-950 transition-colors" />
             </div>
@@ -329,6 +354,15 @@ const SolutionsNew: React.FC = () => {
           </ul>
         </div>
       </div>
+
+      {/* Horizontal line accent - like AboutNew */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={isInView ? { scaleX: 1 } : {}}
+        transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute bottom-0 left-0 right-0 h-px bg-white/5 origin-left"
+        aria-hidden="true"
+      />
     </section>
   );
 };

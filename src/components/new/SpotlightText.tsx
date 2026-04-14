@@ -1,7 +1,8 @@
 import React, { useRef, useState, useCallback } from 'react';
 
 interface SpotlightTextProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  text?: string;
   className?: string;
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div';
   glowSize?: number;
@@ -27,6 +28,7 @@ const MID_POSITION = 60;
 
 const SpotlightText: React.FC<SpotlightTextProps> = ({ 
   children, 
+  text,
   className = '', 
   as: Component = 'span',
   glowSize = 120
@@ -49,6 +51,11 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
 
   // Build the mask gradient using configuration values
   const maskGradient = `radial-gradient(circle ${glowSize}px at ${mousePos.x}px ${mousePos.y}px, rgba(0,0,0,${CENTER_OPACITY}) 0%, rgba(0,0,0,${MID_OPACITY}) ${MID_POSITION}%, rgba(0,0,0,0) 100%)`;
+  const content = text ?? children;
+
+  if (content === undefined || content === null) {
+    return null;
+  }
 
   // For span elements, use inline-block to ensure proper positioning
   return (
@@ -61,7 +68,7 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
     >
       {/* Base text - adjust opacity here (text-white/90 = 90% white) */}
       <Component className={`text-white/90 ${className}`}>
-        {children}
+        {content}
       </Component>
       
       {/* Glow text layer - positioned to match base text exactly */}
@@ -78,7 +85,7 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
         }}
         aria-hidden="true"
       >
-        {children}
+        {content}
       </Component>
     </span>
   );

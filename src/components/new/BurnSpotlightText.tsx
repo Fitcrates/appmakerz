@@ -2,7 +2,8 @@ import React, { useRef, useState, useCallback, useEffect } from "react";
 import { useInView } from "framer-motion";
 
 interface BurnSpotlightTextProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  text?: string;
   className?: string;
   as?: "h1" | "h2" | "h3" | "h4" | "p" | "span" | "div";
   glowSize?: number;
@@ -90,6 +91,7 @@ const BurnChar: React.FC<{
 
 const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
   children,
+  text,
   className = "",
   as: Component = "span",
   glowSize = 120,
@@ -104,7 +106,7 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
   const [burnComplete, setBurnComplete] = useState(false);
   const [hasActivated, setHasActivated] = useState(activateOnMount);
   const revealedCount = useRef(0);
-  const textContent = typeof children === 'string' ? children : String(children ?? '');
+  const textContent = text ?? (typeof children === 'string' ? children : String(children ?? ''));
   const totalChars = textContent.replace(/\s/g, "").length;
 
   useEffect(() => {

@@ -1,12 +1,26 @@
 'use client';
 
-import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
+import {
+  Suspense,
+  lazy,
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { useIsWebKit } from '../../hooks/useIsWebKit';
 import { translations } from '../../translations/translations';
 import SpotlightText from './SpotlightText';
 
+const SystemsIBuildCarousel = lazy(() => import('./SystemsIBuildCarousel'));
+
+// ============================================
+// TYPES
+// ============================================
 interface StageData {
   id: string;
   number: string;
@@ -17,6 +31,9 @@ interface StageData {
   mobileImage: string;
 }
 
+// ============================================
+// STAGE CONFIGURATION
+// ============================================
 const getStages = (t: typeof translations.en.solutions): StageData[] => [
   {
     id: 'landing',
@@ -65,209 +82,372 @@ const getStages = (t: typeof translations.en.solutions): StageData[] => [
   },
 ];
 
-type SlideDirection = 1 | -1;
-
-const SystemsIBuildCarousel: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
-  const wheelAccumulatedDeltaRef = useRef(0);
-  const wheelLastEventRef = useRef(0);
-  const wheelLastNavigateRef = useRef(0);
+// ============================================
+// MAIN COMPONENT
+// ============================================
+const SystemsIBuildScroll: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const lastStageChangeRef = useRef(0);
+  const lastScrollYRef = useRef(0);
+  const accumulatedScrollDeltaRef = useRef(0);
+  const activeStageIndexRef = useRef(0);
+  const hasStageChangedInGestureRef = useRef(false);
+  const wasInPinnedRangeRef = useRef(false);
   const { language } = useLanguage();
   const t = translations[language].solutions;
   const stages = useMemo(() => getStages(t), [t]);
 
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState<SlideDirection>(1);
+  const [activeStageIndex, setActiveStageIndex] = useState(0);
   const [isInView, setIsInView] = useState(false);
-
-  const activeStage = stages[activeIndex];
-
-  const goTo = useCallback(
-    (index: number, dir?: SlideDirection) => {
-      const bounded = Math.max(0, Math.min(stages.length - 1, index));
-      if (bounded === activeIndex) return;
-      setDirection(dir ?? (bounded > activeIndex ? 1 : -1));
-      setActiveIndex(bounded);
-    },
-    [activeIndex, stages.length]
-  );
-
-  const next = useCallback(() => {
-    if (activeIndex < stages.length - 1) {
-      goTo(activeIndex + 1, 1);
-    }
-  }, [activeIndex, stages.length, goTo]);
-
-  const prev = useCallback(() => {
-    if (activeIndex > 0) {
-      goTo(activeIndex - 1, -1);
-    }
-  }, [activeIndex, goTo]);
+  const [fixedPosition, setFixedPosition] = useState<
+    'before' | 'during' | 'after'
+  >('before');
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsInView(entry.isIntersecting),
-      { threshold: 0.5 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
+    const mediaQuery = window.matchMedia('(max-width: 1023px)');
+    const updateMobileState = () => setIsMobile(mediaQuery.matches);
+    updateMobileState();
+    mediaQuery.addEventListener('change', updateMobileState);
+    return () =>
+      mediaQuery.removeEventListener('change', updateMobileState);
   }, []);
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+  const goToStage = useCallback(
+    (index: number) => {
+      const boundedIndex = Math.max(
+        0,
+        Math.min(stages.length - 1, index)
+      );
+      setActiveStageIndex(boundedIndex);
+      lastStageChangeRef.current = Date.now();
 
-    const onWheel = (e: WheelEvent) => {
-      if (!isInView) return;
+      const targetProgress = boundedIndex / stages.length;
+      const rect = sectionRef.current?.getBoundingClientRect();
+      const sectionTop = (rect?.top || 0) + window.scrollY;
+      const sectionHeight = rect?.height || 0;
+      const scrollTarget =
+        sectionTop + sectionHeight * targetProgress + 100;
+      window.scrollTo({ top: scrollTarget, behavior: 'smooth' });
+    },
+    [stages.length]
+  );
+
+  useEffect(() => {
+    activeStageIndexRef.current = activeStageIndex;
+  }, [activeStageIndex]);
+
+  const beginGesture = useCallback(() => {
+    if (!isMobile) return;
+    hasStageChangedInGestureRef.current = false;
+    accumulatedScrollDeltaRef.current = 0;
+    lastScrollYRef.current = window.scrollY;
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+
+    lastScrollYRef.current = window.scrollY;
+    accumulatedScrollDeltaRef.current = 0;
+
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
+      const delta = currentScrollY - lastScrollYRef.current;
+      lastScrollYRef.current = currentScrollY;
+
+      if (fixedPosition !== 'during') {
+        accumulatedScrollDeltaRef.current = 0;
+        return;
+      }
+
+      if (hasStageChangedInGestureRef.current) {
+        return;
+      }
 
       const now = Date.now();
-      const cooldownMs = 550;
-
-      if (now - wheelLastEventRef.current > 280) {
-        wheelAccumulatedDeltaRef.current = 0;
-      }
-      wheelLastEventRef.current = now;
-
-      wheelAccumulatedDeltaRef.current += e.deltaY;
-      const threshold = 80;
-      if (Math.abs(wheelAccumulatedDeltaRef.current) < threshold) {
+      const stageChangeCooldown = 420;
+      if (
+        now - lastStageChangeRef.current <
+        stageChangeCooldown
+      ) {
         return;
       }
 
-      const dir = wheelAccumulatedDeltaRef.current > 0 ? 1 : -1;
-      wheelAccumulatedDeltaRef.current = 0;
+      accumulatedScrollDeltaRef.current += delta;
+      const scrollThreshold = 40;
 
-      const canNavigate =
-        (dir === 1 && activeIndex < stages.length - 1) ||
-        (dir === -1 && activeIndex > 0);
-
-      if (!canNavigate) {
+      if (
+        Math.abs(accumulatedScrollDeltaRef.current) <
+        scrollThreshold
+      ) {
         return;
       }
 
-      e.preventDefault();
+      const direction =
+        accumulatedScrollDeltaRef.current > 0 ? 1 : -1;
+      const currentStage = activeStageIndexRef.current;
+      const targetStage = Math.max(
+        0,
+        Math.min(stages.length - 1, currentStage + direction)
+      );
 
-      if (now - wheelLastNavigateRef.current < cooldownMs) {
-        return;
+      accumulatedScrollDeltaRef.current = 0;
+
+      if (targetStage !== currentStage) {
+        hasStageChangedInGestureRef.current = true;
+        goToStage(targetStage);
       }
-
-      wheelLastNavigateRef.current = now;
-      if (dir === 1) next();
-      else prev();
     };
 
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
-  }, [isInView, activeIndex, stages.length, next, prev]);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [fixedPosition, goToStage, isMobile, stages.length]);
 
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-  }, []);
-
-  const onTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
-      if (!touchStartRef.current) return;
-
-      const touch = e.changedTouches[0];
-      const dx = touch.clientX - touchStartRef.current.x;
-      const dy = touch.clientY - touchStartRef.current.y;
-      touchStartRef.current = null;
-
-      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) {
-        return;
-      }
-
-      if (dx < 0) next();
-      else prev();
-    },
-    [next, prev]
-  );
-
+  // =============================================
+  // SCROLL PROGRESS — Safari-safe multi-layer tracking
+  // Replaces getBoundingClientRect per-frame which returns
+  // stale values on Safari with fixed-position children.
+  // Also adds polling + touchend layers for iOS momentum scroll
+  // where scroll events and rAF are paused.
+  // =============================================
   useEffect(() => {
-    if (!isInView) return;
+    let rafId = 0;
+    let lastV = -1;
+    let sectionTop = 0;
+    let sectionHeight = 0;
+    let lastDocHeight = 0;
 
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        next();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        prev();
+    // Cache section position — avoids getBoundingClientRect per frame
+    const measureSection = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      sectionTop = rect.top + window.scrollY;
+      sectionHeight = rect.height;
+    };
+
+    const getProgress = (): number => {
+      // Refresh measurements if document height changes (e.g. from lazy loaded images)
+      const currentDocHeight = document.documentElement.scrollHeight;
+      if (currentDocHeight !== lastDocHeight) {
+        measureSection();
+        lastDocHeight = currentDocHeight;
+      }
+      const total = sectionHeight - window.innerHeight;
+      if (total <= 0) return 0;
+      return Math.max(
+        0,
+        Math.min(1, (window.scrollY - sectionTop) / total)
+      );
+    };
+
+    const process = () => {
+      const v = getProgress();
+      // Skip if nothing meaningfully changed
+      const rounded = Math.round(v * 500) / 500;
+      if (rounded === lastV) return;
+      lastV = rounded;
+
+      // === Mobile logic ===
+      if (isMobile) {
+        if (v <= 0) {
+          setFixedPosition('before');
+          setIsInView(false);
+          setActiveStageIndex(0);
+          activeStageIndexRef.current = 0;
+          wasInPinnedRangeRef.current = false;
+        } else if (v >= 1) {
+          setFixedPosition('after');
+          setIsInView(false);
+          setActiveStageIndex(stages.length - 1);
+          activeStageIndexRef.current = stages.length - 1;
+          wasInPinnedRangeRef.current = false;
+        } else {
+          setFixedPosition('during');
+          setIsInView(true);
+
+          if (!wasInPinnedRangeRef.current) {
+            const entryStage =
+              v < 0.5 ? 0 : stages.length - 1;
+            setActiveStageIndex(entryStage);
+            activeStageIndexRef.current = entryStage;
+            hasStageChangedInGestureRef.current = true;
+            accumulatedScrollDeltaRef.current = 0;
+            lastScrollYRef.current = window.scrollY;
+            wasInPinnedRangeRef.current = true;
+          }
+        }
+        return;
+      }
+
+      // === Desktop logic ===
+      const stageCount = stages.length;
+      const progressInStages = v * (stageCount - 1);
+      const now = Date.now();
+      const stageChangeCooldown = 200;
+
+      setActiveStageIndex((currentStage) => {
+        if (
+          now - lastStageChangeRef.current <
+          stageChangeCooldown
+        ) {
+          return currentStage;
+        }
+
+        let nextStage = currentStage;
+        const forwardThreshold = currentStage + 0.65;
+        const backwardThreshold = currentStage - 0.65;
+
+        if (
+          progressInStages >= forwardThreshold &&
+          currentStage < stageCount - 1
+        ) {
+          nextStage = currentStage + 1;
+        } else if (
+          progressInStages <= backwardThreshold &&
+          currentStage > 0
+        ) {
+          nextStage = currentStage - 1;
+        }
+
+        if (nextStage !== currentStage) {
+          lastStageChangeRef.current = now;
+        }
+
+        return nextStage;
+      });
+
+      if (v <= 0) {
+        setFixedPosition('before');
+        setIsInView(false);
+      } else if (v >= 1) {
+        setFixedPosition('after');
+        setIsInView(false);
+      } else {
+        setFixedPosition('during');
+        setIsInView(true);
       }
     };
 
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [isInView, next, prev]);
+    measureSection();
 
-  const slideVariants = {
-    enter: (d: SlideDirection) => ({
-      y: d > 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
-    center: {
-      y: 0,
-      opacity: 1,
-    },
-    exit: (d: SlideDirection) => ({
-      y: d > 0 ? '-30%' : '30%',
-      opacity: 0,
-    }),
-  };
+    // Layer 1: Scroll event — primary driver
+    const onScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(process);
+    };
+
+    // Layer 2: Resize — recalculate cached section position
+    const onResize = () => {
+      measureSection();
+      process();
+    };
+
+    // Layer 3: Polling — catches iOS Safari momentum scroll
+    // where scroll events and rAF are paused
+    const pollId = setInterval(() => {
+      process();
+    }, 100);
+
+    // Layer 4: touchend — schedule catch-up recalculations
+    // during the full momentum scroll tail (~3 seconds)
+    const onTouchEnd = () => {
+      const delays = [100, 300, 600, 1000, 1500, 2000, 3000];
+      delays.forEach((delay) => {
+        setTimeout(() => {
+          measureSection();
+          process();
+        }, delay);
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, {
+      passive: true,
+    });
+    process(); // initial calculation
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('touchend', onTouchEnd);
+      cancelAnimationFrame(rafId);
+      clearInterval(pollId);
+    };
+  }, [isMobile, stages.length]);
+
+  const activeStage = stages[activeStageIndex];
 
   return (
     <section
+      ref={sectionRef}
       id="solutions"
       className="relative bg-indigo-950"
+      style={{ height: isMobile ? '520vh' : '300vh' }}
       itemScope
       itemType="https://schema.org/ItemList"
     >
+      {/* Fixed viewport container */}
       <div
-        ref={containerRef}
-        className="relative h-screen overflow-hidden"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
+        className="left-0 right-0 h-screen overflow-hidden"
+        onTouchStart={beginGesture}
+        onPointerDown={beginGesture}
+        style={{
+          position: isInView ? 'fixed' : 'absolute',
+          top: fixedPosition === 'after' ? 'auto' : 0,
+          bottom: fixedPosition === 'after' ? 0 : 'auto',
+        }}
       >
-        <AnimatePresence initial={false} custom={direction}>
-          <motion.div
-            key={activeStage.id}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              duration: 0.9,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="absolute inset-0"
-          >
-            <picture className="w-full h-full">
-              <source media="(max-width: 1023px)" srcSet={activeStage.mobileImage} />
-              <motion.img
-                src={activeStage.image}
-                alt={activeStage.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-                sizes="100vw"
-                initial={{ scale: 1.1, filter: 'blur(8px)' }}
-                animate={{ scale: 1, filter: 'blur(0px)' }}
-                transition={{
-                  duration: 1.2,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
-              />
-            </picture>
-          </motion.div>
-        </AnimatePresence>
+        {/* Full-screen stacking background images */}
+        {stages.map((stage, index) => {
+          const shouldShow = index <= activeStageIndex;
+          const isActive = index === activeStageIndex;
 
+          return (
+            <motion.div
+              key={stage.id}
+              className="absolute inset-0 overflow-hidden"
+              style={{ zIndex: index }}
+              initial={{ y: '100%', opacity: 0 }}
+              animate={{
+                y: shouldShow ? 0 : '100%',
+                opacity: shouldShow ? 1 : 0,
+              }}
+              transition={{
+                duration: 0.9,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <picture className="w-full h-full">
+                <source
+                  media="(max-width: 1023px)"
+                  srcSet={stage.mobileImage}
+                />
+                <motion.img
+                  src={stage.image}
+                  alt={stage.title}
+                  className="w-full h-full object-fit"
+                  loading="lazy"
+                  decoding="async"
+                  sizes="100vw"
+                  initial={{ scale: 1.1, filter: 'blur(8px)' }}
+                  animate={{
+                    scale: isActive ? 1 : 1.05,
+                    filter: isActive
+                      ? 'blur(0px)'
+                      : 'blur(4px)',
+                  }}
+                  transition={{
+                    duration: 1.2,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                />
+              </picture>
+            </motion.div>
+          );
+        })}
+
+        {/* Dark overlay for text readability */}
         <div
           className="absolute inset-0 z-10"
           style={{
@@ -276,10 +456,13 @@ const SystemsIBuildCarousel: React.FC = () => {
           }}
         />
 
+        {/* Content overlay */}
         <div className="absolute inset-0 z-20 flex flex-col justify-center bg-gradient-to-t from-indigo-950/95 via-transparent to-indigo-950/95">
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
             <div className="max-w-2xl flex flex-col h-full">
+              {/* Top content area */}
               <div className="flex-1">
+                {/* Section label */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -291,6 +474,7 @@ const SystemsIBuildCarousel: React.FC = () => {
                   </span>
                 </motion.div>
 
+                {/* Section Heading */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -306,6 +490,7 @@ const SystemsIBuildCarousel: React.FC = () => {
                   </SpotlightText>
                 </motion.div>
 
+                {/* Stage content with AnimatePresence */}
                 <div className="relative min-h-[200px] sm:min-h-[180px] lg:min-h-[160px]">
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -315,6 +500,7 @@ const SystemsIBuildCarousel: React.FC = () => {
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.3 }}
                     >
+                      {/* Stage number & title */}
                       <motion.div
                         className="flex items-center gap-4 mb-4"
                         initial={{ opacity: 0, x: -40 }}
@@ -327,9 +513,15 @@ const SystemsIBuildCarousel: React.FC = () => {
                       >
                         <motion.span
                           className="text-teal-300 font-mono text-base tracking-wider shrink-0"
-                          initial={{ scale: 0.8, opacity: 0 }}
+                          initial={{
+                            scale: 0.8,
+                            opacity: 0,
+                          }}
                           animate={{ scale: 1, opacity: 1 }}
-                          transition={{ duration: 0.4, delay: 0.2 }}
+                          transition={{
+                            duration: 0.4,
+                            delay: 0.2,
+                          }}
                         >
                           {activeStage.number}
                         </motion.span>
@@ -342,6 +534,7 @@ const SystemsIBuildCarousel: React.FC = () => {
                         </SpotlightText>
                       </motion.div>
 
+                      {/* Problem */}
                       <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -361,6 +554,7 @@ const SystemsIBuildCarousel: React.FC = () => {
                         </SpotlightText>
                       </motion.div>
 
+                      {/* Description */}
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -383,12 +577,14 @@ const SystemsIBuildCarousel: React.FC = () => {
                 </div>
               </div>
 
+              {/* Bottom area - Progress + CTA (desktop only) */}
               <div className="hidden lg:block mt-auto pt-8">
+                {/* Progress indicator - clickable */}
                 <div className="flex gap-2 mb-8 max-w-md">
                   {stages.map((stage, index) => (
                     <button
                       key={index}
-                      onClick={() => goTo(index)}
+                      onClick={() => goToStage(index)}
                       className="h-2 flex-1 rounded-full bg-white/10 overflow-hidden cursor-pointer hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
                       aria-label={`Go to step ${index + 1}: ${stage.title}`}
                     >
@@ -396,13 +592,24 @@ const SystemsIBuildCarousel: React.FC = () => {
                         className="h-full bg-teal-300 rounded-full"
                         initial={{ scaleX: 0 }}
                         animate={{
-                          scaleX: index <= activeIndex ? 1 : 0,
-                          opacity: index === activeIndex ? 1 : index < activeIndex ? 0.6 : 0,
+                          scaleX:
+                            index <= activeStageIndex
+                              ? 1
+                              : 0,
+                          opacity:
+                            index === activeStageIndex
+                              ? 1
+                              : index < activeStageIndex
+                                ? 0.6
+                                : 0,
                         }}
                         transition={{
                           duration: 0.5,
                           ease: [0.22, 1, 0.36, 1],
-                          delay: index === activeIndex ? 0.1 : 0,
+                          delay:
+                            index === activeStageIndex
+                              ? 0.1
+                              : 0,
                         }}
                         style={{ originX: 0 }}
                       />
@@ -410,6 +617,7 @@ const SystemsIBuildCarousel: React.FC = () => {
                   ))}
                 </div>
 
+                {/* CTA */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -433,20 +641,28 @@ const SystemsIBuildCarousel: React.FC = () => {
           </div>
         </div>
 
+        {/* Mobile fixed bottom bar - Progress + CTA */}
         <div className="lg:hidden absolute bottom-0 left-0 right-0 z-30 px-4 py-4 safe-area-inset-bottom">
+          {/* Progress indicator - clickable */}
           <div className="flex gap-2 mb-4 max-w-md mx-auto">
             {stages.map((stage, index) => (
               <button
                 key={index}
-                onClick={() => goTo(index)}
+                onClick={() => goToStage(index)}
                 className="h-2 flex-1 rounded-full bg-white/10 overflow-hidden cursor-pointer hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-300"
                 aria-label={`Go to step ${index + 1}: ${stage.title}`}
               >
                 <motion.div
                   className="h-full bg-teal-300 rounded-full"
                   animate={{
-                    scaleX: index <= activeIndex ? 1 : 0,
-                    opacity: index === activeIndex ? 1 : index < activeIndex ? 0.6 : 0,
+                    scaleX:
+                      index <= activeStageIndex ? 1 : 0,
+                    opacity:
+                      index === activeStageIndex
+                        ? 1
+                        : index < activeStageIndex
+                          ? 0.6
+                          : 0,
                   }}
                   transition={{
                     duration: 0.5,
@@ -458,6 +674,7 @@ const SystemsIBuildCarousel: React.FC = () => {
             ))}
           </div>
 
+          {/* CTA */}
           <a
             href="#contact"
             className="group flex items-center justify-center gap-3 w-full py-3 transition-colors rounded"
@@ -476,6 +693,7 @@ const SystemsIBuildCarousel: React.FC = () => {
         </div>
       </div>
 
+      {/* SEO content */}
       <div className="sr-only">
         <h2>
           {language === 'pl'
@@ -499,4 +717,34 @@ const SystemsIBuildCarousel: React.FC = () => {
   );
 };
 
-export default SystemsIBuildCarousel;
+const SystemsIBuild: React.FC = () => {
+  const isWebKit = useIsWebKit();
+
+  if (isWebKit === null) {
+    return (
+      <section
+        id="solutions"
+        className="relative bg-indigo-950 h-screen"
+      />
+    );
+  }
+
+  if (!isWebKit) {
+    return <SystemsIBuildScroll />;
+  }
+
+  return (
+    <Suspense
+      fallback={
+        <section
+          id="solutions"
+          className="relative bg-indigo-950 h-screen"
+        />
+      }
+    >
+      <SystemsIBuildCarousel />
+    </Suspense>
+  );
+};
+
+export default SystemsIBuild;
