@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { HelpCircle, ArrowLeft, Plus, Minus, Search } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
+import { ArrowLeft, ChevronDown, Search } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import HeaderNew from './HeaderNew';
 import FooterNew from './FooterNew';
@@ -290,32 +290,20 @@ const FAQAccordionItem: React.FC<{ faq: { question: string; answer: string }; in
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="border-b border-white/10 overflow-hidden group"
+      className="border-b border-white/10"
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-6 text-left hover:bg-white/[0.02] transition-colors focus:outline-none"
+        className="w-full py-6 flex items-center justify-between gap-4 text-left group"
       >
-        <span className="text-lg font-jakarta font-medium text-white pr-8">{faq.question}</span>
-        <div className="text-teal-300 shrink-0">
-          {isOpen ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-        </div>
+        <h3 className="text-white font-jakarta text-lg group-hover:text-teal-300 transition-colors">{faq.question}</h3>
+        <ChevronDown className={`w-5 h-5 text-white/40 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="p-6 pt-0 text-white/60 font-jakarta leading-relaxed text-base border-t border-transparent">
-              {faq.answer}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+        <div className="overflow-hidden">
+          <p className="text-white/60 font-jakarta font-light pb-6 leading-relaxed">{faq.answer}</p>
+        </div>
+      </div>
     </motion.div>
   );
 };

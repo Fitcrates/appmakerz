@@ -2,7 +2,7 @@ import React, { useRef, useState, useCallback, useEffect } from "react";
 import { useInView } from "framer-motion";
 
 interface BurnSpotlightTextProps {
-  children: string;
+  children: React.ReactNode;
   className?: string;
   as?: "h1" | "h2" | "h3" | "h4" | "p" | "span" | "div";
   glowSize?: number;
@@ -104,7 +104,8 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
   const [burnComplete, setBurnComplete] = useState(false);
   const [hasActivated, setHasActivated] = useState(activateOnMount);
   const revealedCount = useRef(0);
-  const totalChars = children.replace(/\s/g, "").length;
+  const textContent = typeof children === 'string' ? children : String(children ?? '');
+  const totalChars = textContent.replace(/\s/g, "").length;
 
   useEffect(() => {
     if (isInView) {
@@ -140,7 +141,7 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
   // Render characters with proper structure for both base and glow layers
   // Must match BurnChar structure exactly for alignment
   const renderChars = () => {
-    return children.split("").map((char, i) => {
+    return textContent.split("").map((char: string, i: number) => {
       if (char === " ") return <span key={i}> </span>;
       if (char === "\n") return <br key={i} />;
       return (
@@ -163,7 +164,7 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
     >
       {/* Base text layer - character by character burn animation */}
       <Component className={`${className}`}>
-        {children.split("").map((char, i) => (
+        {textContent.split("").map((char: string, i: number) => (
           <BurnChar
             key={i}
             char={char}

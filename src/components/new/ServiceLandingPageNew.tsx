@@ -1,11 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { PortableText } from '@portabletext/react';
-import { ArrowUpRight, Check, ChevronDown } from 'lucide-react';
+import { ArrowUpRight, ArrowLeft, Check, ChevronDown } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
 import HeaderNew from './HeaderNew';
 import FooterNew from './FooterNew';
 import NotFound from '../NotFound';
+import SpotlightText from './SpotlightText';
+import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
 import { getServiceLanding, urlFor } from '../../lib/sanity.client';
 import { portableTextComponentsNew } from './PortableTextComponentsNew';
@@ -19,7 +22,7 @@ const FaqItem: React.FC<{ question: string; answer: string }> = ({ question, ans
         onClick={() => setIsOpen(!isOpen)}
         className="w-full py-6 flex items-center justify-between gap-4 text-left group"
       >
-        <h3 className="text-white font-jakarta text-lg group-hover:text-teal-300 transition-colors">{question}</h3>
+        <h3 className="text-white font-jakarta font-medium text-lg group-hover:text-teal-300 transition-colors">{question}</h3>
         <ChevronDown className={`w-5 h-5 text-white/40 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
@@ -34,6 +37,10 @@ const FaqItem: React.FC<{ question: string; answer: string }> = ({ question, ans
 const ServiceLandingPageNew: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { language } = useLanguage();
+  const heroRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
+  const isHeroInView = useInView(heroRef, { once: true, margin: "-100px" });
+  const isMainInView = useInView(mainRef, { once: true, margin: "-100px" });
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -167,11 +174,15 @@ const ServiceLandingPageNew: React.FC = () => {
 
       <HeaderNew />
 
-      <main className="min-h-screen bg-indigo-950">
+      <main ref={mainRef} className="min-h-screen bg-indigo-950">
+       
+
         {/* ===== HERO ===== */}
-        <section className="relative min-h-[60vh] lg:min-h-[75vh] flex items-end overflow-hidden">
+        <section ref={heroRef} className="relative min-h-[60vh] lg:min-h-[75vh] flex items-end overflow-hidden ">
+          
           {heroImageUrl ? (
             <div className="absolute inset-0 z-0">
+              
               <img
                 src={heroImageUrl}
                 alt=""
@@ -185,21 +196,32 @@ const ServiceLandingPageNew: React.FC = () => {
           ) : (
             <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/30 to-indigo-950" />
           )}
+          
 
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-24 pt-32 lg:pt-40 w-full">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-24  w-full">
+
             <span className="text-xs tracking-[0.3em] uppercase text-teal-300/80 font-jakarta">
               {eyebrow}
             </span>
            
 
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-light text-white font-jakarta leading-tight mt-4 max-w-4xl">
-              {title}
-            </h1>
+            <div className="mt-4 max-w-4xl">
+              <BurnSpotlightText as="h1" className="text-4xl sm:text-5xl lg:text-7xl font-light text-white font-jakarta leading-tight" glowSize={200} baseDelay={200} charDelay={25}>
+                {title}
+              </BurnSpotlightText>
+            </div>
 
             {intro ? (
-              <p className="text-white/60 text-lg sm:text-xl font-jakarta font-light mt-8 leading-relaxed max-w-2xl">
-                {intro}
-              </p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="mt-8 max-w-2xl"
+              >
+                <SpotlightText as="p" className="text-white/60 text-lg sm:text-xl font-jakarta font-light leading-relaxed" glowSize={150}>
+                  {intro}
+                </SpotlightText>
+              </motion.div>
             ) : null}
 
             <div className="flex flex-col sm:flex-row gap-4 mt-10">
@@ -254,9 +276,11 @@ const ServiceLandingPageNew: React.FC = () => {
               <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
                 {language === 'pl' ? 'Brzmi znajomo?' : 'Sound familiar?'}
               </span>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta mt-4 mb-12 max-w-3xl">
-                {language === 'pl' ? 'Problemy, które rozwiązuję' : 'Problems I solve'}
-              </h2>
+              <div className="mt-4 mb-12 max-w-3xl">
+                <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta" glowSize={180} baseDelay={100} charDelay={30}>
+                  {language === 'pl' ? 'Problemy, które rozwiązuję' : 'Problems I solve'}
+                </BurnSpotlightText>
+              </div>
               <div className="grid sm:grid-cols-2 gap-4">
                 {problems.map((item: string, index: number) => (
                   <div
@@ -266,7 +290,9 @@ const ServiceLandingPageNew: React.FC = () => {
                     <span className="text-xs text-teal-300 font-jakarta tracking-widest mb-4 block">
                       {String(index + 1).padStart(2, '0')}
                     </span>
-                    <p className="text-white/80 font-jakarta font-light leading-relaxed">{item}</p>
+                    <SpotlightText as="p" className="text-white/80 font-jakarta font-light leading-relaxed" glowSize={120}>
+                      {item}
+                    </SpotlightText>
                   </div>
                 ))}
               </div>
@@ -283,15 +309,17 @@ const ServiceLandingPageNew: React.FC = () => {
                   <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
                     {language === 'pl' ? 'W pakiecie' : "What's included"}
                   </span>
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta mt-4 mb-8">
-                    {language === 'pl' ? 'Co dostajesz' : 'What you get'}
-                  </h2>
+                  <div className="mt-4 mb-8">
+                    <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta" glowSize={180} baseDelay={100} charDelay={30}>
+                      {language === 'pl' ? 'Co dostajesz' : 'What you get'}
+                    </BurnSpotlightText>
+                  </div>
                   <a
                     href="/#contact"
                     className="group inline-flex items-center gap-4"
                   >
                     <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">
-                      {ctaLabel}
+                      <SpotlightText glowSize={100}>{ctaLabel}</SpotlightText>
                     </span>
                     <div className="w-12 h-12 border border-white/20 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300">
                       <ArrowUpRight className="w-5 h-5 text-white group-hover:text-indigo-950 transition-colors" />
@@ -304,10 +332,13 @@ const ServiceLandingPageNew: React.FC = () => {
                       key={`del-${index}`}
                       className="flex items-start gap-4 py-5 border-b border-white/10"
                     >
-                      <div className="w-6 h-6 rounded-full bg-teal-300/10 border border-teal-300/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <Check className="w-3.5 h-3.5 text-teal-300" />
+                      <div className="relative w-6 h-6 rounded-full bg-teal-300/10 border border-teal-300/30 flex items-center justify-center flex-shrink-0 mt-0.5 overflow-hidden">
+                        <Check className="w-3.5 h-3.5 text-teal-300 relative z-10" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-teal-300/50 to-transparent -translate-x-full animate-[shine_3s_ease-in-out_infinite]" />
                       </div>
-                      <p className="text-white/70 font-jakarta font-light leading-relaxed">{item}</p>
+                      <SpotlightText as="p" className="text-white/70 font-jakarta font-light leading-relaxed" glowSize={120}>
+                      {item}
+                    </SpotlightText>
                     </div>
                   ))}
                 </div>
@@ -324,12 +355,16 @@ const ServiceLandingPageNew: React.FC = () => {
                 <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
                   {language === 'pl' ? 'Jak pracuję' : 'How I work'}
                 </span>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta mt-4">
-                  {language === 'pl' ? 'Proces współpracy' : 'Process'}
-                </h2>
+                <div className="mt-4">
+                  <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta" glowSize={180} baseDelay={100} charDelay={30}>
+                    {language === 'pl' ? 'Proces współpracy' : 'Process'}
+                  </BurnSpotlightText>
+                </div>
               </div>
               <div className="relative">
-                <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-teal-300/20 to-transparent" aria-hidden="true" />
+                <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-teal-300/20 to-transparent overflow-visible" aria-hidden="true">
+                  <div className="absolute top-1/2 left-0 right-0 h-0.5 -translate-y-1/2 bg-gradient-to-r from-transparent via-teal-300 to-transparent animate-[pulse-line_8s_ease-in-out_infinite] blur-[2px]" />
+                </div>
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                   {processSteps.map((step: string, index: number) => (
@@ -340,7 +375,9 @@ const ServiceLandingPageNew: React.FC = () => {
                         </span>
                       </div>
                       <div className="p-6 sm:p-8 rounded-2xl bg-white/[0.03] backdrop-blur-sm border border-white/10 hover:border-teal-300/30 transition-all duration-500 h-full group-hover:bg-white/[0.06]">
-                        <p className="text-white/75 font-jakarta font-light leading-relaxed mt-2">{step}</p>
+                        <SpotlightText as="p" className="text-white/75 font-jakarta font-light leading-relaxed mt-2" glowSize={100}>
+                        {step}
+                      </SpotlightText>
                       </div>
                     </div>
                   ))}
@@ -367,9 +404,11 @@ const ServiceLandingPageNew: React.FC = () => {
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
            
-                <h2 className="text-3xl sm:text-4xl font-light text-white font-jakarta mt-4">
-                  {language === 'pl' ? 'Często zadawane pytania' : 'Frequently asked questions'}
-                </h2>
+                <div className="mt-4">
+                  <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl font-light text-white font-jakarta" glowSize={180} baseDelay={100} charDelay={30}>
+                    {language === 'pl' ? 'Często zadawane pytania' : 'Frequently asked questions'}
+                  </BurnSpotlightText>
+                </div>
               </div>
               <div className="border-t border-white/10">
                 {faq.map((item, index) => (
@@ -383,14 +422,18 @@ const ServiceLandingPageNew: React.FC = () => {
         {/* ===== BOTTOM CTA ===== */}
         <section className="py-20 lg:py-24 border-t border-white/10">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta mb-6">
-              {language === 'pl' ? 'Gotowy, żeby zacząć?' : 'Ready to get started?'}
-            </h2>
-            <p className="text-white/50 font-jakarta font-light text-lg mb-10 max-w-2xl mx-auto">
-              {language === 'pl'
-                ? 'Porozmawiajmy o Twoim projekcie. Bezpłatna konsultacja, bez zobowiązań.'
-                : "Let's talk about your project. Free consultation, no obligations."}
-            </p>
+            <div className="mb-6">
+              <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta" glowSize={200} baseDelay={100} charDelay={30}>
+                {language === 'pl' ? 'Gotowy, żeby zacząć?' : 'Ready to get started?'}
+              </BurnSpotlightText>
+            </div>
+            <div className="mb-10 max-w-2xl mx-auto">
+              <SpotlightText as="p" className="text-white/50 font-jakarta font-light text-lg" glowSize={150}>
+                {language === 'pl'
+                  ? 'Porozmawiajmy o Twoim projekcie. Bezpłatna konsultacja, bez zobowiązań.'
+                  : "Let's talk about your project. Free consultation, no obligations."}
+              </SpotlightText>
+            </div>
             <a
               href="/#contact"
               className="group relative inline-block px-12 py-5 bg-teal-300 text-indigo-950 font-jakarta font-medium overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"

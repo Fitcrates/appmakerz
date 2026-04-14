@@ -1111,3 +1111,28 @@ main {
     right: 150px;
   }
 }
+
+/* Shine animation for checkboxes - runs every 3 seconds */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  20% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Pulse line animation for process timeline - runs every 3 seconds */
+@keyframes pulse-line {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-50%) scaleX(1);
+  }
+}

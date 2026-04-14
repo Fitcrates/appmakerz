@@ -1,12 +1,26 @@
 import { useCallback, useState, useEffect, useRef } from 'react'
-import { Stack, Button, Spinner, TextArea, Text, Box, Card, Flex, Select } from '@sanity/ui'
+import { Stack, Button, Spinner, TextArea, Text, Box, Card, Flex, Select, TextInput } from '@sanity/ui'
 import { set, useFormValue, useClient } from 'sanity'
+
+const MODEL_OPTIONS: Record<string, Array<{ label: string; value: string }>> = {
+  openai: [
+    { label: 'GPT-5.4 Thinking', value: 'gpt-5.4-thinking' },
+    { label: 'GPT-5.4', value: 'gpt-5.4' },
+    { label: 'GPT-4.1', value: 'gpt-4.1' },
+    { label: 'GPT-4.1 Mini', value: 'gpt-4.1-mini' },
+    { label: 'GPT-4o', value: 'gpt-4o' },
+    { label: 'GPT-4o Mini', value: 'gpt-4o-mini' },
+  ],
+  groq: [
+    { label: 'Llama 3.3 70B', value: 'llama-3.3-70b-versatile' },
+    { label: 'Llama 3.1 8B Instant', value: 'llama-3.1-8b-instant' },
+  ],
+}
 
 // ─── Provider config ──────────────────────────────────────────────────────────
 const PROVIDERS: Record<string, { label: string; model: string }> = {
-  gemini: { label: 'Gemini 2.0 Flash', model: 'gemini-2.0-flash' },
   groq: { label: 'Groq (Llama 3.3)', model: 'llama-3.3-70b-versatile' },
-  openai: { label: 'OpenAI (GPT-4o mini)', model: 'gpt-4o-mini' },
+  openai: { label: 'OpenAI', model: 'gpt-5.4-thinking' },
 }
 
 // ─── Portable Text Normalizer ─────────────────────────────────────────────────
@@ -22,7 +36,6 @@ function ensureBlocks(input: any): any[] {
 
   if (!input) return []
   if (typeof input === 'string') {
-    // Split by double-newline into paragraphs
     return input.split(/\n\n+/).filter(Boolean).map(p => {
       const trimmed = p.trim()
       if (trimmed.startsWith('### ')) return mkBlock(trimmed.replace(/^### /, ''), 'h3')
@@ -67,7 +80,7 @@ const SCHEMA_POST = `{
   "title": { "en": "English title", "pl": "Polish title" },
   "slug": { "_type": "slug", "current": "url-slug-from-english-title" },
   "excerpt": { "en": "Engaging 2-3 sentence summary in English (max 300 chars)", "pl": "Angażujące 2-3 zdaniowe podsumowanie po polsku (max 300 znaków)" },
-  "categories": ["Dev"],  // allowed values: "Dev", "No-code", "Wellness"
+  "categories": ["Dev"],
   "tags": ["tag1", "tag2", "tag3"],
   "body": {
     "en": [
@@ -129,6 +142,17 @@ const SCHEMA_SERVICE_LANDING = `{
     ]
   },
   "ctaLabel": { "en": "Book a free call", "pl": "Umów bezpłatną konsultację" },
+  "ctaSecondaryLabel": { "en": "View projects", "pl": "Zobacz realizacje" },
+  "stats": {
+    "en": [
+      { "value": "2-4 weeks", "label": "typical launch timeline" },
+      { "value": "100%", "label": "custom implementation" }
+    ],
+    "pl": [
+      { "value": "2-4 tygodnie", "label": "typowy czas wdrożenia" },
+      { "value": "100%", "label": "indywidualne wykonanie" }
+    ]
+  },
   "seo": {
     "metaTitle": { "en": "SEO Title (max 60 chars)", "pl": "Tytuł SEO (max 60 znaków)" },
     "metaDescription": { "en": "Compelling meta description (max 160 chars)", "pl": "Przekonujący opis meta (max 160 znaków)" },
@@ -163,12 +187,29 @@ const SCHEMA_PROJECT = `{
   }
 }`
 
-// ─── API URL helper ───────────────────────────────────────────────────────────
+// ── API URL helper ───────────────────────────────────────────────────────────
 function getApiUrl() {
   const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname)
   return isLocal
     ? 'http://localhost:8888/api/ai-generate'
     : 'https://appcrates.pl/api/ai-generate'
+}
+
+function isPlainObject(value: any) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+}
+
+function mergeGeneratedValue(existing: any, incoming: any): any {
+  if (!isPlainObject(existing) || !isPlainObject(incoming)) return incoming
+  const merged: Record<string, any> = { ...existing }
+  Object.keys(incoming).forEach((key) => {
+    merged[key] = mergeGeneratedValue(existing?.[key], incoming[key])
+  })
+  return merged
+}
+
+function uniqueKeys(keys: string[]) {
+  return Array.from(new Set(keys))
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -180,21 +221,27 @@ export const AIWholePostGenerator = (props: any) => {
   const [status, setStatus] = useState('')
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Array<{ role: string; content: string }>>([])
-  const [provider, setProvider] = useState<'openai' | 'groq' | 'gemini'>('gemini')
+  const [provider, setProvider] = useState<'openai' | 'groq'>('openai')
+  const [model, setModel] = useState<string>(PROVIDERS.openai.model)
 
   const client = useClient({ apiVersion: '2023-05-03' })
   const scrollRef = useRef<HTMLDivElement>(null)
+  const workingDocumentRef = useRef<Record<string, any> | undefined>(undefined)
 
+  const documentValue = useFormValue([]) as Record<string, any> | undefined
   const documentId = useFormValue(['_id']) as string | undefined
   const documentType = useFormValue(['_type']) as string | undefined
   const titleEn = useFormValue(['title', 'en']) as string | undefined
   const titlePl = useFormValue(['title', 'pl']) as string | undefined
-  
+
   const bodyEnBlocks = useFormValue(['body', 'en']) as any[] | undefined
   const bodyPlBlocks = useFormValue(['body', 'pl']) as any[] | undefined
   const contentEnBlocks = useFormValue(['content', 'en']) as any[] | undefined
   const contentPlBlocks = useFormValue(['content', 'pl']) as any[] | undefined
-  const extractText = (blocks: any[]) => Array.isArray(blocks) ? blocks.map((b: any) => b.children?.map((c: any) => c.text).join('')).join('\n') : '';
+  const extractText = (blocks: any[]) => Array.isArray(blocks) ? blocks.map((b: any) => b.children?.map((c: any) => c.text).join('')).join('\n') : ''
+  const selectedPreset = MODEL_OPTIONS[provider].some((option) => option.value === model)
+    ? model
+    : '__custom__'
 
   // ── State: reference content (fetched once) ─────────────────────────────
   const [referenceContent, setReferenceContent] = useState('')
@@ -202,7 +249,7 @@ export const AIWholePostGenerator = (props: any) => {
   // ── Restore saved messages ──────────────────────────────────────────────
   useEffect(() => {
     if (!value) return
-    try { setMessages(JSON.parse(value)) } catch { /* ignore */ }
+    try { setMessages(JSON.parse(value)) } catch { }
   }, [value])
 
   // ── Auto-scroll ─────────────────────────────────────────────────────────
@@ -210,12 +257,15 @@ export const AIWholePostGenerator = (props: any) => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
   }, [messages, loading])
 
+  useEffect(() => {
+    workingDocumentRef.current = documentValue
+  }, [documentValue])
+
   // ── Fetch reference content on mount ────────────────────────────────────
   useEffect(() => {
     if (!documentType) return
     const run = async () => {
       try {
-        // All doc titles for linking context
         const allDocs = await client.fetch(
           `*[_type in ["pages","post","project","serviceLanding"]]{ _type, "en": title.en, "pl": title.pl, "slug": slug.current, "techs": technologies }`
         )
@@ -223,7 +273,6 @@ export const AIWholePostGenerator = (props: any) => {
           `- [${d._type}] ${d.en || d.pl || '?'} (/${d.slug || '?'})${d.techs?.length ? ` [${d.techs.join(',')}]` : ''}`
         ).join('\n')
 
-        // 2 published reference docs of same type
         const refs = await client.fetch(
           `*[_type == $t && defined(coalesce(body.en, content.en)) && !(_id in path("drafts.**"))][0...2]{
             "en": title.en, "pl": title.pl,
@@ -236,7 +285,7 @@ export const AIWholePostGenerator = (props: any) => {
 
         let refBlock = ''
         if (refs?.length) {
-          refBlock = '\n\n=== PUBLISHED REFERENCE EXAMPLES (match this quality, length, and structure) ===\n' +
+          refBlock = '\n\n=== PUBLISHED REFERENCE EXAMPLES (quality benchmark only — never copy wording or structure too closely) ===\n' +
             refs.map((r: any, i: number) =>
               `--- Example ${i + 1} ---\nTitle: ${r.en || r.pl}\nSummary: ${r.exc || 'n/a'}\nTags: ${r.tags?.join(', ') || r.techs?.join(', ') || 'n/a'}\nSEO Title: ${r.seoTitle || 'n/a'}\nSEO Desc: ${r.seoDesc || 'n/a'}\nSEO Keywords: ${r.seoKw?.join(', ') || 'n/a'}\nBody (first 1200 chars):\n${r.body?.substring(0, 1200) || 'n/a'}...`
             ).join('\n\n') +
@@ -262,17 +311,15 @@ export const AIWholePostGenerator = (props: any) => {
   // and fetches the full document body text from Sanity
   const fetchLinkedContent = async (userInput: string): Promise<string> => {
     try {
-      // Extract potential slugs: words with hyphens that look like slugs
       const slugMatches = userInput.match(/\/?([a-z0-9](?:[a-z0-9-]*[a-z0-9]))/gi)
       if (!slugMatches || slugMatches.length === 0) return ''
 
       const cleanSlugs = slugMatches
         .map(s => s.replace(/^\//, '').toLowerCase())
-        .filter(s => s.includes('-') && s.length > 3) // only slug-like strings
+        .filter(s => s.includes('-') && s.length > 3)
 
       if (cleanSlugs.length === 0) return ''
 
-      // Query Sanity for documents matching these slugs
       const docs = await client.fetch(
         `*[slug.current in $slugs]{
           _type, "en": title.en, "pl": title.pl, "slug": slug.current,
@@ -286,7 +333,7 @@ export const AIWholePostGenerator = (props: any) => {
 
       if (!docs || docs.length === 0) return ''
 
-      return '\n\n=== LINKED DOCUMENT CONTENT (user referenced these — use as source material) ===\n' +
+      return '\n\n=== LINKED DOCUMENT CONTENT (user referenced these — use as source material, but do not copy it verbatim) ===\n' +
         docs.map((d: any) =>
           `TYPE: ${d._type}\nTITLE: ${d.en || d.pl}\nSLUG: /${d.slug}\nDESCRIPTION: ${d.desc || 'n/a'}\nTECHNOLOGIES: ${d.techs?.join(', ') || d.tags?.join(', ') || 'n/a'}\nSEO: ${d.seoTitle || ''} — ${d.seoDesc || ''}\n\nFULL BODY CONTENT:\n${d.bodyText || 'No body content'}`
         ).join('\n\n---\n') +
@@ -298,14 +345,16 @@ export const AIWholePostGenerator = (props: any) => {
   }
 
   // ── Call AI backend ─────────────────────────────────────────────────────
-  const callAI = async (prompt: string, opts?: { isJson?: boolean; maxTokens?: number }) => {
+  const callAI = async (prompt: string, opts?: { isJson?: boolean; maxTokens?: number; systemPrompt?: string; temperature?: number }) => {
     const apiUrl = getApiUrl()
     const payload = {
       prompt,
+      systemPrompt: opts?.systemPrompt,
       max_completion_tokens: opts?.maxTokens || 4000,
       provider,
-      model: PROVIDERS[provider].model,
-      isJson: opts?.isJson && provider !== 'gemini',
+      model: model.trim() || PROVIDERS[provider].model,
+      isJson: opts?.isJson,
+      temperature: opts?.temperature,
     }
 
     console.log(`[AI DEBUG] ──────────────────────────────────────`)
@@ -327,7 +376,7 @@ export const AIWholePostGenerator = (props: any) => {
       const elapsed = Date.now() - startTime
       console.error(`[AI DEBUG] ❌ FETCH FAILED after ${elapsed}ms:`, fetchErr.message)
       console.error(`[AI DEBUG] This is likely a Netlify timeout (10s free tier limit) or network error.`)
-      throw new Error(`Network error after ${elapsed}ms: ${fetchErr.message}. If using OpenAI, try Groq or Gemini (they're faster and avoid Netlify's 10s timeout).`)
+      throw new Error(`Network error after ${elapsed}ms: ${fetchErr.message}. If OpenAI is timing out on a heavy model, try Groq or use a lighter OpenAI model.`)
     }
 
     const elapsed = Date.now() - startTime
@@ -368,46 +417,54 @@ export const AIWholePostGenerator = (props: any) => {
     const isProject = documentType === 'project'
     const isServiceLanding = documentType === 'serviceLanding'
 
-    // Normalize portable text blocks (pure code — no AI involved)
     if (generated.body?.en) generated.body.en = ensureBlocks(generated.body.en)
     if (generated.body?.pl) generated.body.pl = ensureBlocks(generated.body.pl)
     if (generated.content?.en) generated.content.en = ensureBlocks(generated.content.en)
     if (generated.content?.pl) generated.content.pl = ensureBlocks(generated.content.pl)
 
-    // Build patch object — only include fields that the AI actually returned
     const patch: any = {}
-    if (generated.title) patch.title = generated.title
-    if (generated.slug) patch.slug = generated.slug
-    if (generated.body) patch.body = generated.body
-    if (generated.seo) patch.seo = generated.seo
-    if (generated.tags) patch.tags = generated.tags
-    if (generated.publishedAt) patch.publishedAt = generated.publishedAt
+    const sourceDocument = workingDocumentRef.current || documentValue || {}
+    const setMergedField = (field: string) => {
+      if (generated[field] !== undefined) patch[field] = mergeGeneratedValue(sourceDocument?.[field], generated[field])
+    }
+
+    setMergedField('title')
+    setMergedField('slug')
+    setMergedField('body')
+    setMergedField('seo')
+    setMergedField('tags')
+    if (generated.publishedAt !== undefined) patch.publishedAt = generated.publishedAt
 
     if (isServiceLanding) {
-      if (generated.serviceType) patch.serviceType = generated.serviceType
+      if (generated.serviceType !== undefined) patch.serviceType = generated.serviceType
       if (generated.city !== undefined) patch.city = generated.city
       if (generated.isLocalLanding !== undefined) patch.isLocalLanding = generated.isLocalLanding
-      if (generated.eyebrow) patch.eyebrow = generated.eyebrow
-      if (generated.intro) patch.intro = generated.intro
-      if (generated.problems) patch.problems = generated.problems
-      if (generated.deliverables) patch.deliverables = generated.deliverables
-      if (generated.processSteps) patch.processSteps = generated.processSteps
-      if (generated.faq) patch.faq = generated.faq
-      if (generated.content) patch.content = generated.content
-      if (generated.ctaLabel) patch.ctaLabel = generated.ctaLabel
+      setMergedField('eyebrow')
+      setMergedField('intro')
+      setMergedField('problems')
+      setMergedField('deliverables')
+      setMergedField('processSteps')
+      setMergedField('faq')
+      setMergedField('content')
+      setMergedField('ctaLabel')
+      setMergedField('ctaSecondaryLabel')
+      setMergedField('stats')
     } else if (isProject) {
-      if (generated.description) patch.description = generated.description
-      if (generated.technologies) patch.technologies = generated.technologies
-      if (generated.projectUrl) patch.projectUrl = generated.projectUrl
-      if (generated.blogUrl) patch.blogUrl = generated.blogUrl
-      if (generated.githubUrl) patch.githubUrl = generated.githubUrl
+      setMergedField('description')
+      setMergedField('technologies')
+      setMergedField('projectUrl')
+      setMergedField('blogUrl')
+      setMergedField('githubUrl')
     } else {
-      if (generated.excerpt) patch.excerpt = generated.excerpt
-      if (generated.categories) patch.categories = generated.categories
+      setMergedField('excerpt')
+      setMergedField('categories')
     }
+
+    if (Object.keys(patch).length === 0) return []
 
     const docId = documentId!.startsWith('drafts.') ? documentId! : `drafts.${documentId}`
     await client.patch(docId).set(patch).commit()
+    workingDocumentRef.current = mergeGeneratedValue(sourceDocument, patch)
 
     return Object.keys(patch)
   }
@@ -424,6 +481,14 @@ export const AIWholePostGenerator = (props: any) => {
     const docTitle = titleEn || titlePl || 'Untitled'
     const schemaJson = isServiceLanding ? SCHEMA_SERVICE_LANDING : (isProject ? SCHEMA_PROJECT : SCHEMA_POST)
     const typeLabel = isServiceLanding ? 'service landing page' : (isProject ? 'project portfolio entry' : 'blog post')
+    const systemPrompt = `You are a senior bilingual SEO content strategist and editor working inside a Sanity CMS. Follow the user's latest request exactly. Reference examples are quality benchmarks only and must never be copied. If source material is provided, transform it into a better version that matches the requested style, purpose, and SEO intent. Never leave requested English or Polish fields empty. Return exactly the format requested by the user.`
+    const promptBehaviorRules = `NON-NEGOTIABLE RULES:
+- Follow the USER REQUEST exactly.
+- PUBLISHED REFERENCE EXAMPLES are for quality benchmarking only. Never copy their wording or structure.
+- LINKED DOCUMENT CONTENT and CURRENT TEXT IN EDITOR are source material to rewrite, expand, adapt, or translate. Do not echo them verbatim.
+- Never copy more than 8 consecutive words from the source material unless it is a required proper noun, brand name, URL, or technical term.
+- If the user asks for a rewrite or specific tone, prioritize the requested transformation over preserving the original phrasing.
+- Keep the output concrete, useful, SEO-friendly, and complete.`
 
     const userMsg = { role: 'user', content: input.trim() }
     const newMsgs = [...messages, userMsg]
@@ -435,23 +500,21 @@ export const AIWholePostGenerator = (props: any) => {
       // ── Fetch linked content if user mentioned slugs ───────────────────
       setStatus('Checking for linked content...')
       const linkedContent = await fetchLinkedContent(input)
-      
+
       const sourceEnBlocks = isServiceLanding ? (contentEnBlocks || []) : (bodyEnBlocks || [])
       const sourcePlBlocks = isServiceLanding ? (contentPlBlocks || []) : (bodyPlBlocks || [])
-      const currentBodyEnText = extractText(sourceEnBlocks);
-      const currentBodyPlText = extractText(sourcePlBlocks);
-      
+      const currentBodyEnText = extractText(sourceEnBlocks)
+      const currentBodyPlText = extractText(sourcePlBlocks)
+
       let currentDraftText = ''
       if (currentBodyEnText || currentBodyPlText) {
-        currentDraftText = `\n\n=== CURRENT TEXT IN EDITOR (The user pasted this into the fields. You MUST base your generation, translation, and metadata strongly around this content) ===\n`
+        currentDraftText = `\n\n=== CURRENT TEXT IN EDITOR (Use this as source material to rewrite, improve, expand, or translate according to the user's prompt. Preserve the facts, but do not copy the wording verbatim.) ===\n`
         if (currentBodyEnText) currentDraftText += `[ENGLISH EDITOR FIELD]:\n${currentBodyEnText}\n`
         if (currentBodyPlText) currentDraftText += `[POLISH EDITOR FIELD]:\n${currentBodyPlText}\n`
         currentDraftText += `========================================================================\n`
       }
 
       const fullContext = referenceContent + linkedContent + currentDraftText
-
-      // ── Is this a question / chat, or a generation request? ────────────
       const isQuestion = /^\s*(what|how|why|when|who|where|can you|could you|tell me|do you|should|is it|are there|which|jakie|jak|dlaczego|czy|co|kiedy)/i.test(input) || input.trim().endsWith('?')
 
       let reply = ''
@@ -460,15 +523,15 @@ export const AIWholePostGenerator = (props: any) => {
         // ── CHAT MODE (lightweight, no patching) ─────────────────────────
         setStatus('Thinking...')
         reply = await callAI(
-          `You are an expert AI content editor helping with a ${typeLabel} titled "${docTitle}" inside a Sanity CMS.\n\nCMS Context:\n${fullContext}\n\nConversation so far:\n${newMsgs.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n')}\n\nRespond helpfully and concisely.`,
-          { maxTokens: 800 }
+          `You are helping with a ${typeLabel} titled "${docTitle}" inside a Sanity CMS.\n\nCMS Context:\n${fullContext}\n\nConversation so far:\n${newMsgs.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n')}\n\nRespond helpfully and concisely.`,
+          { maxTokens: 800, systemPrompt, temperature: 0.5 }
         )
       } else {
         // ── GENERATION MODE — produce JSON, parse in code, patch ─────────
         // Netlify Free Tier has a hard 10s timeout. Generating two languages of text 
         // at once takes ~30s on OpenAI, crashing the function.
         // Groq and Gemini are fast enough for single-shot, but OpenAI needs 3 passes.
-        const useMultiPass = true // Enforce multi-pass for all models to prevent JSON cutoff and ensure translation consistency
+        const useMultiPass = true
         const filledKeys: string[] = []
 
         if (useMultiPass) {
@@ -479,7 +542,9 @@ export const AIWholePostGenerator = (props: any) => {
 TASK: Generate METADATA for a ${typeLabel}: "${docTitle}"
 USER REQUEST: ${input}
 ${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 2000)}` : ''}
-${currentDraftText ? `\nCURRENT DRAFT IN EDITOR:\n${currentDraftText.substring(0, 3000)}\n(Use the above draft to extract metadata accurately)` : ''}
+${currentDraftText ? `\nCURRENT DRAFT IN EDITOR:\n${currentDraftText.substring(0, 3000)}\n(Use the above draft to extract metadata accurately while respecting the user's requested rewrite or tone)` : ''}
+
+${promptBehaviorRules}
 
 CRITICAL TRANSLATION RULE:
 Ensure the Polish fields use natural, native Polish phrasing without English loan-words.
@@ -494,6 +559,7 @@ ${isServiceLanding ? `{
   "eyebrow": { "en": "Service", "pl": "Usługa" },
   "intro": { "en": "2-3 sentences", "pl": "2-3 zdania" },
   "ctaLabel": { "en": "...", "pl": "..." },
+  "ctaSecondaryLabel": { "en": "...", "pl": "..." },
   "seo": { "metaTitle": { "en": "max 60", "pl": "max 60" }, "metaDescription": { "en": "max 160", "pl": "max 160" }, "keywords": ["kw1","kw2","kw3","kw4","kw5"] }
 }` : isProject ? `{
   "title": { "en": "...", "pl": "..." },
@@ -513,14 +579,13 @@ ${isServiceLanding ? `{
   "seo": { "metaTitle": { "en": "max 60", "pl": "max 60" }, "metaDescription": { "en": "max 160", "pl": "max 160" }, "keywords": ["kw1","kw2","kw3","kw4","kw5"] }
 }`}`
 
-            const metaText = await callAI(metaPrompt, { isJson: true, maxTokens: 800 })
+            const metaText = await callAI(metaPrompt, { isJson: true, maxTokens: 1000, systemPrompt, temperature: 0.45 })
             const metaData = extractJson(metaText)
-            
+
             setStatus('Saving metadata...')
             const metaKeys = await patchDocument(metaData)
             filledKeys.push(...metaKeys)
 
-            // Let UI catch up
             await new Promise(r => setTimeout(r, 500))
 
             // ── PASS 2: English Content ─────────────────────────────────────
@@ -530,7 +595,8 @@ ${isServiceLanding ? `{
 Write ENGLISH content fields for a service landing page: "${metaData.title?.en || docTitle}"
 USER REQUEST: ${input}
 ${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 3000)}` : ''}
-${currentDraftText ? `\nCURRENT DRAFT IN EDITOR:\n${currentDraftText.substring(0, 4000)}\n(Use the above draft strongly to structure the content)` : ''}
+${currentDraftText ? `\nCURRENT DRAFT IN EDITOR:\n${currentDraftText.substring(0, 4000)}\n(Use the above draft as source material, but rewrite it so it actually follows the user's prompt)` : ''}
+${promptBehaviorRules}
 Return ONLY valid JSON:
 {
   "intro": { "en": "..." },
@@ -539,24 +605,26 @@ Return ONLY valid JSON:
   "processSteps": { "en": ["...", "...", "...", "..."] },
   "faq": { "en": [{ "question": "...", "answer": "..." }, { "question": "...", "answer": "..." }] },
   "content": { "en": [{ "_type": "block", "style": "h2", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }, { "_type": "block", "style": "normal", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }] },
-  "ctaLabel": { "en": "..." }
+  "ctaLabel": { "en": "..." },
+  "ctaSecondaryLabel": { "en": "..." },
+  "stats": { "en": [{ "value": "...", "label": "..." }, { "value": "...", "label": "..." }] }
 }
 Requirements: content.en should have 6-10 blocks, 500-900 words, mix h2/h3/normal. Do not use markdown fences.`
               : `You are an expert SEO copywriter.
 Write the ENGLISH BODY CONTENT for a ${typeLabel}: "${metaData.title?.en || docTitle}"
 USER REQUEST: ${input}
 ${linkedContent ? `\nSOURCE MATERIAL:\n${linkedContent.substring(0, 3000)}` : ''}
-${currentDraftText ? `\nCURRENT DRAFT IN EDITOR:\n${currentDraftText.substring(0, 4000)}\n(Use the above draft strongly to structure the content)` : ''}
+${currentDraftText ? `\nCURRENT DRAFT IN EDITOR:\n${currentDraftText.substring(0, 4000)}\n(Use the above draft as source material, but rewrite it so it actually follows the user's prompt)` : ''}
+${promptBehaviorRules}
 Return ONLY valid JSON:
 {"body":{"en":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"..."}]}]}}
 Requirements: 6-10 blocks, 600-1000 words, mix h2/h3/normal. DO NOT USE MARKDOWN FENCES IN THE TEXT.`
 
-            const enText = await callAI(enPrompt, { isJson: true, maxTokens: isServiceLanding ? 2600 : 2000 })
+            const enText = await callAI(enPrompt, { isJson: true, maxTokens: isServiceLanding ? 3200 : 2400, systemPrompt, temperature: 0.7 })
             const enData = extractJson(enText)
             const enKeys = await patchDocument(enData)
             filledKeys.push(...enKeys)
 
-            // Let UI catch up
             await new Promise(r => setTimeout(r, 500))
 
             // ── PASS 3: Polish Content ──────────────────────────────────────
@@ -570,8 +638,10 @@ Requirements: 6-10 blocks, 600-1000 words, mix h2/h3/normal. DO NOT USE MARKDOWN
                   faq: enData.faq?.en,
                   content: enData.content?.en,
                   ctaLabel: enData.ctaLabel?.en,
+                  ctaSecondaryLabel: enData.ctaSecondaryLabel?.en,
+                  stats: enData.stats?.en,
                 })
-              : (enData.body?.en ? JSON.stringify(enData.body.en) : '');
+              : (enData.body?.en ? JSON.stringify(enData.body.en) : '')
 
             const plPrompt = isServiceLanding
               ? `You are an expert Polish SEO copywriter and localizer.
@@ -586,6 +656,7 @@ CRITICAL RULES:
 2. Produce natural, native Polish wording.
 3. Do not summarize or drop content.
 4. Do not use markdown.
+5. If the English content reads like a rewrite of source material, produce a natural Polish version of that rewrite instead of copying source wording.
 
 Return ONLY valid JSON:
 {
@@ -595,7 +666,9 @@ Return ONLY valid JSON:
   "processSteps": { "pl": ["...", "...", "...", "..."] },
   "faq": { "pl": [{ "question": "...", "answer": "..." }, { "question": "...", "answer": "..." }] },
   "content": { "pl": [{ "_type": "block", "style": "h2", "markDefs": [], "children": [{ "_type": "span", "marks": [], "text": "..." }] }] },
-  "ctaLabel": { "pl": "..." }
+  "ctaLabel": { "pl": "..." },
+  "ctaSecondaryLabel": { "pl": "..." },
+  "stats": { "pl": [{ "value": "...", "label": "..." }, { "value": "...", "label": "..." }] }
 }`
               : `You are an expert Polish SEO copywriter and localized translator.
 
@@ -605,28 +678,27 @@ SOURCE ENGLISH JSON:
 ${englishContentText}
 
 CRITICAL TRANSLATION RULES:
-1. Translate block by block. The Polish output MUST have the EXACT SAME number of blocks and the EXACT SAME \`style\` attributes as the Source English JSON. 
+1. Translate block by block. The Polish output MUST have the EXACT SAME number of blocks and the EXACT SAME \`style\` attributes as the Source English JSON.
 2. Do not summarize, skip, or invent new sections. If the English JSON has 8 blocks, your JSON must have exactly 8 blocks.
 3. Do not do a naive 1:1 literal translation. Use native, natural Polish phrasing.
 4. Use proper Polish grammar and vocabulary. Do NOT use borrowed English words (loanwords). Adjust the text for a natural, native Polish reading experience.
-5. DO NOT USE MARKDOWN. 
+5. DO NOT USE MARKDOWN.
+6. If the English content is a rewrite of source material, keep the rewritten meaning and structure, not the original source wording.
 
 Return ONLY valid JSON representing the translated blocks:
 {"body":{"pl":[{"_type":"block","style":"h2","markDefs":[],"children":[{"_type":"span","marks":[],"text":"<translated_heading>"}]},{"_type":"block","style":"normal","markDefs":[],"children":[{"_type":"span","marks":[],"text":"<translated_paragraph>"}]}]}}`
 
-            const plText = await callAI(plPrompt, { isJson: true, maxTokens: 4000 })
+            const plText = await callAI(plPrompt, { isJson: true, maxTokens: 4000, systemPrompt, temperature: 0.4 })
             const plData = extractJson(plText)
             const plKeys = await patchDocument(plData)
             filledKeys.push(...plKeys)
 
-            reply = `✅ Document updated in 3 fast passes!\n\nFilled fields: ${filledKeys.join(', ')}\n\nRefresh the page if fields don't update immediately.`
-
+            reply = `✅ Document updated in 3 fast passes!\n\nFilled fields: ${uniqueKeys(filledKeys).join(', ')}\n\nRefresh the page if fields don't update immediately.`
           } catch (err: any) {
-            reply = `⚠️ Generation stopped. Saved so far: ${filledKeys.join(', ')}. Error: ${err.message}`
+            reply = `⚠️ Generation stopped. Saved so far: ${uniqueKeys(filledKeys).join(', ')}. Error: ${err.message}`
             saveMessages([...newMsgs, { role: 'assistant', content: reply }])
             return
           }
-
         } else {
           // ── SINGLE-SHOT (Groq / Gemini — fast enough) ────────────────────
           setStatus('Generating all fields...')
@@ -636,8 +708,10 @@ TASK: Generate a COMPLETE ${typeLabel} for: "${docTitle}"
 
 USER INSTRUCTIONS: ${input}
 
-EXISTING CMS CONTENT (avoid duplicating, suggest internal links):
+EXISTING CMS CONTENT:
 ${fullContext}
+
+${promptBehaviorRules}
 
 CRITICAL RULES:
 1. Return ONLY valid JSON — no markdown fences, no explanation.
@@ -653,40 +727,39 @@ ${isServiceLanding ? '8. FAQ must include at least 2 questions per language.' : 
 JSON SCHEMA:
 ${schemaJson}`
 
-        const aiText = await callAI(prompt, { isJson: true, maxTokens: 4000 })
-        const generated = extractJson(aiText)
+          const aiText = await callAI(prompt, { isJson: true, maxTokens: 4000, systemPrompt, temperature: 0.65 })
+          const generated = extractJson(aiText)
 
-        // ── Parse + Validate (code-side) ─────────────────────────────────
-        setStatus('Validating...')
+          // ── Parse + Validate (code-side) ─────────────────────────────────
+          setStatus('Validating...')
 
-        // ── Validate minimum fields ────────────────────────────────────
-        const requiredKeys = isServiceLanding
-          ? ['title', 'slug', 'serviceType', 'intro', 'problems', 'deliverables', 'processSteps', 'faq', 'content', 'ctaLabel', 'seo']
-          : isProject
-          ? ['title', 'slug', 'description', 'technologies', 'body', 'seo']
-          : ['title', 'slug', 'excerpt', 'categories', 'tags', 'body', 'seo']
+          // ── Validate minimum fields ────────────────────────────────────
+          const requiredKeys = isServiceLanding
+            ? ['title', 'slug', 'serviceType', 'intro', 'problems', 'deliverables', 'processSteps', 'faq', 'content', 'ctaLabel', 'ctaSecondaryLabel', 'stats', 'seo']
+            : isProject
+            ? ['title', 'slug', 'description', 'technologies', 'body', 'seo']
+            : ['title', 'slug', 'excerpt', 'categories', 'tags', 'body', 'seo']
 
-        const missing = requiredKeys.filter(k => !generated[k])
-        if (missing.length > 0) {
-          throw new Error(`AI missed fields: ${missing.join(', ')}. Try again.`)
-        }
+          const missing = requiredKeys.filter(k => !generated[k])
+          if (missing.length > 0) {
+            throw new Error(`AI missed fields: ${missing.join(', ')}. Try again.`)
+          }
 
-        // ── Patch to Sanity (code-side) ────────────────────────────────
-        setStatus('Saving to Sanity...')
-        const keys = await patchDocument(generated)
-        reply = `✅ Document updated!\n\nFilled fields: ${keys.join(', ')}\n\nRefresh if fields don't update immediately.`
+          // ── Patch to Sanity (code-side) ────────────────────────────────
+          setStatus('Saving to Sanity...')
+          const keys = await patchDocument(generated)
+          reply = `✅ Document updated!\n\nFilled fields: ${uniqueKeys(keys).join(', ')}\n\nRefresh if fields don't update immediately.`
         }
       }
 
       saveMessages([...newMsgs, { role: 'assistant', content: reply }])
-
     } catch (err: any) {
       saveMessages([...newMsgs, { role: 'assistant', content: `❌ Error: ${err.message}` }])
     } finally {
       setLoading(false)
       setStatus('')
     }
-  }, [messages, input, documentId, documentType, titleEn, titlePl, referenceContent, provider, client, onChange, bodyEnBlocks, bodyPlBlocks, contentEnBlocks, contentPlBlocks])
+  }, [messages, input, documentId, documentType, titleEn, titlePl, referenceContent, provider, model, client, onChange, bodyEnBlocks, bodyPlBlocks, contentEnBlocks, contentPlBlocks, documentValue])
 
   // ═══════════════════════════════════════════════════════════════════════════
   // RENDER
@@ -701,16 +774,47 @@ ${schemaJson}`
             style={{ borderBottom: '1px solid var(--card-border-color)' }}>
             <Text weight="semibold" size={2}>🤖 AI Agent Copilot</Text>
             <Flex gap={2} align="center">
-              <Box style={{ width: '175px' }}>
+              <Box style={{ width: '145px' }}>
                 <Select
                   value={provider}
-                  onChange={(e: any) => setProvider(e.currentTarget.value)}
+                  onChange={(e: any) => {
+                    const nextProvider = e.currentTarget.value as 'openai' | 'groq'
+                    setProvider(nextProvider)
+                    setModel(PROVIDERS[nextProvider].model)
+                  }}
                   fontSize={1} padding={2}
                 >
                   {Object.entries(PROVIDERS).map(([k, v]) => (
                     <option key={k} value={k}>{v.label}</option>
                   ))}
                 </Select>
+              </Box>
+              <Box style={{ width: '180px' }}>
+                <Select
+                  value={selectedPreset}
+                  onChange={(e: any) => {
+                    const nextValue = e.currentTarget.value
+                    if (nextValue !== '__custom__') setModel(nextValue)
+                  }}
+                  fontSize={1}
+                  padding={2}
+                  disabled={loading}
+                >
+                  {MODEL_OPTIONS[provider].map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                  <option value="__custom__">Custom model ID</option>
+                </Select>
+              </Box>
+              <Box style={{ width: '210px' }}>
+                <TextInput
+                  value={model}
+                  onChange={(e: any) => setModel(e.currentTarget.value)}
+                  fontSize={1}
+                  padding={2}
+                  placeholder="Model, np. gpt-5.4-thinking"
+                  disabled={loading}
+                />
               </Box>
               {status && (
                 <Flex gap={1} align="center">

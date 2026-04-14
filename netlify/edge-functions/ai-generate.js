@@ -26,8 +26,9 @@ export default async function(request, context) {
       messages,
       max_completion_tokens = 4000,
       isJson,
-      provider = "gemini",
+      provider = "openai",
       model: clientModel,
+      temperature,
     } = body;
 
     // ── Provider routing ──────────────────────────────────────────────────
@@ -44,14 +45,15 @@ export default async function(request, context) {
       case "openai":
         endpoint = "https://api.openai.com/v1/chat/completions";
         apiKey = Deno.env.get("OPENAI_API_KEY");
-        model = clientModel || "gpt-4o-mini";
+        model = clientModel || "gpt-4.1";
         break;
-      case "gemini":
       default:
-        endpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-        apiKey = Deno.env.get("GEMINI_API_KEY");
-        model = clientModel || "gemini-2.0-flash";
-        break;
+        return new Response(
+          JSON.stringify({
+            error: `Unsupported provider \"${provider}\". Available providers: openai, groq.`,
+          }),
+          { status: 400, headers }
+        );
     }
 
     if (!apiKey) {
@@ -64,13 +66,18 @@ export default async function(request, context) {
     }
 
     // ── Build messages ────────────────────────────────────────────────────
-    const defaultSystemPrompt = "You are an expert SEO copywriter. Return only the requested content.";
+    const defaultSystemPrompt = "You are a senior bilingual SEO copywriter and editor. Follow the user's instructions exactly. Use references only as background context, never as text to copy. Return only the requested content.";
 
     let payloadMessages = messages;
     if (!payloadMessages) {
       payloadMessages = [
         { role: "system", content: systemPrompt || defaultSystemPrompt },
         { role: "user", content: prompt || "Hello" },
+      ];
+    } else if (!payloadMessages.some((message) => message.role === "system")) {
+      payloadMessages = [
+        { role: "system", content: systemPrompt || defaultSystemPrompt },
+        ...payloadMessages,
       ];
     }
 
@@ -80,9 +87,17 @@ export default async function(request, context) {
       messages: payloadMessages,
     };
 
-    payload.max_tokens = max_completion_tokens;
+    if (provider === "openai") {
+      payload.max_completion_tokens = max_completion_tokens;
+    } else {
+      payload.max_tokens = max_completion_tokens;
+    }
 
-    if (isJson && provider !== "gemini") {
+    if (typeof temperature === "number") {
+      payload.temperature = temperature;
+    }
+
+    if (isJson) {
       payload.response_format = { type: "json_object" };
     }
 
@@ -133,8 +148,13 @@ export default async function(request, context) {
       );
     }
 
+    const content = choices[0].message.content;
+    const normalizedText = Array.isArray(content)
+      ? content.map((item) => item?.text || "").join("")
+      : content || "";
+
     return new Response(
-      JSON.stringify({ text: choices[0].message.content || "" }),
+      JSON.stringify({ text: normalizedText }),
       { status: 200, headers }
     );
   } catch (error) {
