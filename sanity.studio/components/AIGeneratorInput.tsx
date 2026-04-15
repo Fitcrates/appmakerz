@@ -39,6 +39,21 @@ function extractJsonArray(raw: string): any[] {
   return JSON.parse(candidate.slice(start, end + 1))
 }
 
+function hasMeaningfulValue(value: any): boolean {
+  if (typeof value === 'string') return value.trim().length > 0
+  if (Array.isArray(value)) return value.length > 0
+  if (value && typeof value === 'object') return Object.keys(value).length > 0
+  return value !== null && value !== undefined
+}
+
+function valueToPromptText(value: any): string {
+  if (typeof value === 'string') return value
+  if (Array.isArray(value) || (value && typeof value === 'object')) {
+    return JSON.stringify(value, null, 2)
+  }
+  return String(value ?? '')
+}
+
 export const AIGeneratorInput = (props: any) => {
   const { onChange, schemaType } = props
   const [loading, setLoading] = useState(false)
@@ -48,6 +63,17 @@ export const AIGeneratorInput = (props: any) => {
   const documentType = useFormValue(['_type']) as string | undefined
   const titleEn = useFormValue(['title', 'en']) as string | undefined
   const titlePl = useFormValue(['title', 'pl']) as string | undefined
+  const pathArray = Array.isArray(props.path) ? props.path : []
+  const languagePathIndex = pathArray.reduce((lastIndex: number, segment: any, index: number) => {
+    if (segment === 'en' || segment === 'pl') return index
+    return lastIndex
+  }, -1)
+  const activeLanguageKey = languagePathIndex >= 0 ? pathArray[languagePathIndex] : undefined
+  const siblingLanguageKey = activeLanguageKey === 'pl' ? 'en' : activeLanguageKey === 'en' ? 'pl' : undefined
+  const siblingPath = siblingLanguageKey
+    ? pathArray.map((segment: any, index: number) => (index === languagePathIndex ? siblingLanguageKey : segment))
+    : []
+  const siblingLanguageValue = useFormValue(siblingPath as any)
 
   const handleProviderChange = (p: 'openai' | 'groq') => {
     setProvider(p)
@@ -77,6 +103,10 @@ export const AIGeneratorInput = (props: any) => {
       const objectFieldNames: string[] = Array.isArray(schemaType?.of?.[0]?.fields)
         ? schemaType.of[0].fields.map((f: any) => f?.name).filter(Boolean)
         : []
+      const isLocalizedField = activeLanguageKey === 'en' || activeLanguageKey === 'pl'
+      const sourceLanguage = isPolish ? 'English' : 'Polish'
+      const shouldTranslateFromSibling = isLocalizedField && hasMeaningfulValue(siblingLanguageValue)
+      const siblingContent = shouldTranslateFromSibling ? valueToPromptText(siblingLanguageValue) : ''
 
       const contentTypeLabel = documentType === 'project'
         ? 'project case study'
@@ -92,17 +122,21 @@ export const AIGeneratorInput = (props: any) => {
         .replace(/{{title}}/g, titleToUse)
         .replace(/{{language}}/g, languageMatch)
 
+      const translationInstruction = shouldTranslateFromSibling
+        ? `Translate the provided ${sourceLanguage} content into ${languageMatch}. Keep meaning, tone, structure, and level of detail aligned with the source.`
+        : ''
       const returnFormatInstruction = isArrayField
         ? itemJsonType === 'object'
           ? `Return ONLY a valid JSON array of objects. Each object must contain exactly these keys: ${objectFieldNames.join(', ')}. No extra keys, no markdown.`
           : 'Return ONLY a valid JSON array of strings. No markdown.'
         : `Return ONLY the final field value in ${languageMatch}. No labels, no quotes, no markdown.`
 
-      const finalPrompt = `${prompt}
+      const finalPrompt = `${shouldTranslateFromSibling ? translationInstruction : prompt}
 
 Document type: ${contentTypeLabel}
 Target field: ${fieldTitle}
 Language: ${languageMatch}
+${shouldTranslateFromSibling ? `Source language content to translate:\n${siblingContent}\n` : ''}
 ${existingValue ? `Existing field value to improve or rewrite:\n${existingValue}\nRewrite it to be stronger and more useful. Do not copy it verbatim.\n` : ''}
 ${returnFormatInstruction}`
 
@@ -139,7 +173,7 @@ ${returnFormatInstruction}`
     } finally {
       setLoading(false)
     }
-  }, [onChange, titleEn, titlePl, schemaType.options, props.path, provider, model, documentType])
+  }, [onChange, titleEn, titlePl, schemaType.options, schemaType?.jsonType, schemaType?.of, props.path, props.value, siblingLanguageValue, activeLanguageKey, provider, model, documentType])
 
   return (
     <Stack space={3}>

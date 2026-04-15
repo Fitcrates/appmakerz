@@ -671,8 +671,10 @@ RULES:
 3. Do NOT include any other top-level keys.
 4. Keep correct data shapes for each field.
 5. For portable text fields ("content"/"body"), return valid Sanity block arrays.
-6. If a requested field is unclear, keep it unchanged by omitting it.
-7. Do not use markdown fences.`
+6. If language scope is "pl" and the "en" value already exists, prefer translating/adapting from English instead of writing unrelated new text.
+7. If language scope is "en" and the "pl" value already exists, prefer translating/adapting from Polish instead of writing unrelated new text.
+8. If a requested field is unclear, keep it unchanged by omitting it.
+9. Do not use markdown fences.`
 
         const targetedText = await callAI(targetedPrompt, {
           isJson: true,
