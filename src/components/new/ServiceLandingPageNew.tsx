@@ -13,6 +13,71 @@ import { getServiceLanding, urlFor } from '../../lib/sanity.client';
 import { portableTextComponentsNew } from './PortableTextComponentsNew';
 import type { ServiceLanding } from '../../types/sanity.types';
 
+function normalizePortableTextValue(value: unknown): any[] {
+  if (!value) return [];
+
+  const normalize = (input: unknown): any[] => {
+    if (typeof input === 'string') {
+      const trimmed = input.trim();
+      if (!trimmed) return [];
+      if ((trimmed.startsWith('[') && trimmed.endsWith(']')) || (trimmed.startsWith('{') && trimmed.endsWith('}'))) {
+        try {
+          return normalize(JSON.parse(trimmed));
+        } catch {
+          return [{
+            _type: 'block',
+            style: 'normal',
+            markDefs: [],
+            children: [{ _type: 'span', text: trimmed, marks: [] }],
+          }];
+        }
+      }
+      return [{
+        _type: 'block',
+        style: 'normal',
+        markDefs: [],
+        children: [{ _type: 'span', text: trimmed, marks: [] }],
+      }];
+    }
+
+    if (!Array.isArray(input)) return [];
+
+    return input
+      .map((item: any) => {
+        if (!item || typeof item !== 'object') return null;
+        if (item._type === 'image') return item;
+        if (item._type !== 'block') return null;
+
+        const children = Array.isArray(item.children)
+          ? item.children
+              .map((child: any) => {
+                if (!child || child._type !== 'span') return null;
+                const text = typeof child.text === 'string'
+                  ? child.text
+                  : child.text == null
+                    ? ''
+                    : JSON.stringify(child.text);
+                return { ...child, text, marks: Array.isArray(child.marks) ? child.marks : [] };
+              })
+              .filter(Boolean)
+          : [];
+
+        if (!children.length) return null;
+
+        return {
+          ...item,
+          _type: 'block',
+          style: typeof item.style === 'string' ? item.style : 'normal',
+          markDefs: Array.isArray(item.markDefs) ? item.markDefs : [],
+          children,
+        };
+      })
+      .filter(Boolean);
+  };
+
+  return normalize(value);
+}
+
 const FaqItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -127,7 +192,8 @@ const ServiceLandingPageNew: React.FC = () => {
 
   const richContent = useMemo(() => {
     if (!landing?.content) return [];
-    return landing.content[language] || landing.content.en || landing.content.pl || [];
+    const raw = landing.content[language] || landing.content.en || landing.content.pl || [];
+    return normalizePortableTextValue(raw);
   }, [landing, language]);
 
   const stats = useMemo(() => {

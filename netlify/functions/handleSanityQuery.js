@@ -4,12 +4,12 @@ const client = createClient({
   projectId: process.env.SANITY_PROJECT_ID,
   dataset: process.env.SANITY_DATASET,
   token: process.env.BACKEND_SANITY_TOKEN,
-  useCdn: true,
+  useCdn: false,
   apiVersion: '2024-02-20',
 });
 
 const HOT_CACHE_TTL_MS = 60 * 1000;
-const RESPONSE_CACHE_CONTROL = 'public, max-age=0, s-maxage=60, stale-while-revalidate=300';
+const RESPONSE_CACHE_CONTROL = 'no-store';
 const hotQueryCache = new Map();
 
 function getCacheKey(query, params) {

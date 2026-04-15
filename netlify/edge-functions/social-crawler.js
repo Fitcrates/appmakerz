@@ -249,7 +249,13 @@ function renderPortableTextToHtml(blocks, { projectId, dataset } = {}) {
       .map((child) => {
         if (child?._type !== 'span') return '';
 
-        let rendered = escapeHtml(child.text || '');
+        const rawText = child?.text;
+        const safeText = typeof rawText === 'string'
+          ? rawText
+          : rawText == null
+            ? ''
+            : JSON.stringify(rawText);
+        let rendered = escapeHtml(safeText);
         const marks = Array.isArray(child.marks) ? child.marks : [];
 
         for (const mark of marks) {
