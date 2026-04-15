@@ -2,8 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { PortableText } from '@portabletext/react';
-import { ArrowUpRight, ArrowLeft, Check, ChevronDown } from 'lucide-react';
-import { motion, useInView } from 'framer-motion';
+import { ArrowUpRight, Check, ChevronDown } from 'lucide-react';
 import HeaderNew from './HeaderNew';
 import FooterNew from './FooterNew';
 import NotFound from '../NotFound';
@@ -39,8 +38,6 @@ const ServiceLandingPageNew: React.FC = () => {
   const { language } = useLanguage();
   const heroRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
-  const isHeroInView = useInView(heroRef, { once: true, margin: "-100px" });
-  const isMainInView = useInView(mainRef, { once: true, margin: "-100px" });
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -212,16 +209,11 @@ const ServiceLandingPageNew: React.FC = () => {
             </div>
 
             {intro ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="mt-8 max-w-2xl"
-              >
+              <div className="mt-8 max-w-2xl">
                 <SpotlightText as="p" className="text-white/60 text-lg sm:text-xl font-jakarta font-light leading-relaxed" glowSize={150}>
                   {intro}
                 </SpotlightText>
-              </motion.div>
+              </div>
             ) : null}
 
             <div className="flex flex-col sm:flex-row gap-4 mt-10">
@@ -287,9 +279,12 @@ const ServiceLandingPageNew: React.FC = () => {
                     key={`prob-${index}`}
                     className="group border border-white/10 p-6 sm:p-8 hover:border-teal-300/30 transition-all duration-300 bg-white/[0.02]"
                   >
-                    <span className="text-xs text-teal-300 font-jakarta tracking-widest mb-4 block">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
+                    <div className="relative w-8 h-8 rounded-full bg-red-400/10 border border-red-400 flex items-center justify-center mb-4 overflow-hidden">
+                      <span className="text-[0.82rem] text-red-400 font-jakarta font-medium tracking-wider notranslate relative z-10">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-300/40 to-transparent -translate-x-full animate-[shine_3s_ease-in-out_infinite]" />
+                    </div>
                     <SpotlightText as="p" className="text-white/80 font-jakarta font-light leading-relaxed" glowSize={120}>
                       {item}
                     </SpotlightText>
@@ -392,7 +387,7 @@ const ServiceLandingPageNew: React.FC = () => {
           <section className="py-20 lg:py-24 border-t border-white/10">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="prose prose-invert max-w-none">
-                <PortableText value={richContent as any} components={portableTextComponentsNew as any} />
+                <PortableText value={richContent} components={portableTextComponentsNew} />
               </div>
             </div>
           </section>
