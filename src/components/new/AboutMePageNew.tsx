@@ -153,9 +153,9 @@ const AboutMePageNew: React.FC = () => {
 
       <main className="min-h-screen bg-indigo-950 pt-16 lg:pt-24 pb-24">
 
-        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SpotlightText text={title} className="text-4xl lg:text-5xl xl:text-6xl font-light text-white font-jakarta leading-tight mt-4" />
-          <div className="border-t border-white/10 pt-10 sm:pt-14">
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+          <SpotlightText text={title} className="text-4xl lg:text-5xl xl:text-6xl font-light text-white font-jakarta leading-tight" />
+          <div className="border-t border-white/10 pt-6 sm:pt-14">
             {intro ? (
               <p className="text-white/60 text-lg font-jakarta font-light mt-8 leading-relaxed">{intro}</p>
             ) : null}

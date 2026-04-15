@@ -255,7 +255,7 @@ const HeaderNew: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 lg:hidden"
+            className="fixed inset-x-0 bottom-0 top-20 z-40 lg:hidden"
           >
             {/* Backdrop */}
             <div
@@ -270,10 +270,10 @@ const HeaderNew: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-indigo-950 border-l border-white/5 flex flex-col justify-center px-8"
+              className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-indigo-950 border-l border-white/5 flex flex-col justify-center px-8 z-50"
               aria-label="Mobile navigation"
             >
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {navItems.map((item, index) => (
                   <motion.div
                     key={item.label}
@@ -287,7 +287,7 @@ const HeaderNew: React.FC = () => {
                       onTouchStart={item.href === '/blog' ? prefetchBlogPage : undefined}
                       onFocus={item.href === '/blog' ? prefetchBlogPage : undefined}
                       onPointerEnter={item.href === '/faq' ? prefetchFaqPage : undefined}
-                      className="block text-3xl font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
+                      className="block text-2xl font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
                     >
                       {item.label}
                     </a>
