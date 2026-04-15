@@ -60,6 +60,7 @@ const SolutionsNew: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const mobileSceneRef = useRef<HTMLDivElement>(null);
+  const lastMobileStepChangeRef = useRef(0);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const { language } = useLanguage();
   const t = translations[language].solutions;
@@ -128,12 +129,24 @@ const SolutionsNew: React.FC = () => {
       const rect = mobileSceneRef.current.getBoundingClientRect();
       const maxScrollable = Math.max(1, rect.height - window.innerHeight);
       const progress = Math.max(0, Math.min(1, -rect.top / maxScrollable));
-      const index = Math.min(
+      const targetIndex = Math.min(
         solutions.length - 1,
         Math.max(0, Math.floor(progress * solutions.length))
       );
 
-      setMobileActiveIndex(index);
+      setMobileActiveIndex((currentIndex) => {
+        if (targetIndex === currentIndex) return currentIndex;
+
+        const now = Date.now();
+        const STEP_COOLDOWN_MS = 220;
+
+        if (now - lastMobileStepChangeRef.current < STEP_COOLDOWN_MS) {
+          return currentIndex;
+        }
+
+        lastMobileStepChangeRef.current = now;
+        return targetIndex > currentIndex ? currentIndex + 1 : currentIndex - 1;
+      });
 
       if (progress <= 0) {
         setMobilePinState('before');
@@ -288,6 +301,7 @@ const SolutionsNew: React.FC = () => {
                         decoding="async"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/75 to-transparent z-[1] pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-transparent to-transparent z-[1] pointer-events-none" />
                     </div>
 
                     <div className="absolute bottom-0 left-0 w-full px-4 sm:px-6 pb-[clamp(4rem,12vh,8rem)] z-[2]">

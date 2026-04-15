@@ -198,14 +198,14 @@ const ServiceLandingPageNew: React.FC = () => {
           )}
           
 
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-24  w-full">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-24 mt-20 w-full">
 
             <span className="text-xs tracking-[0.3em] uppercase text-teal-300/80 font-jakarta">
               {eyebrow}
             </span>
            
 
-            <div className="mt-4 max-w-4xl">
+            <div className="max-w-4xl">
               <BurnSpotlightText as="h1" className="text-4xl sm:text-5xl lg:text-7xl font-light text-white font-jakarta leading-tight" glowSize={200} baseDelay={200} charDelay={25}>
                 {title}
               </BurnSpotlightText>
