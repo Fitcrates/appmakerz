@@ -6,7 +6,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import LanguageToggle from '../LanguageToggle';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
-import { getAboutMe, getPosts, getServiceLanding } from '../../lib/sanity.client';
 
 const getNavItems = (t: typeof translations.en.nav) => [
   { label: t.about, href: '/#about' },
@@ -66,7 +65,10 @@ const HeaderNew: React.FC = () => {
     void import('../../BlogNew');
     queryClient.prefetchQuery({
       queryKey: ['posts'],
-      queryFn: getPosts,
+      queryFn: async () => {
+        const { getPosts } = await import('../../lib/sanity.client');
+        return getPosts();
+      },
       staleTime: 5 * 60 * 1000,
     });
   };
@@ -83,7 +85,10 @@ const HeaderNew: React.FC = () => {
     void import('./AboutMePageNew');
     queryClient.prefetchQuery({
       queryKey: ['about-me', 'about-me'],
-      queryFn: () => getAboutMe('about-me'),
+      queryFn: async () => {
+        const { getAboutMe } = await import('../../lib/sanity.client');
+        return getAboutMe('about-me');
+      },
       staleTime: 5 * 60 * 1000,
     });
   };
@@ -94,7 +99,10 @@ const HeaderNew: React.FC = () => {
 
     queryClient.prefetchQuery({
       queryKey: ['service-landing', slug],
-      queryFn: () => getServiceLanding(slug),
+      queryFn: async () => {
+        const { getServiceLanding } = await import('../../lib/sanity.client');
+        return getServiceLanding(slug);
+      },
       staleTime: 5 * 60 * 1000,
     });
   };

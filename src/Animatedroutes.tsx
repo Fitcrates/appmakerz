@@ -5,7 +5,6 @@ import { AnimatePresence } from 'framer-motion';
 // Lazy load components
 const App = lazy(() => import('./App'));
 const Blog = lazy(() => import('./BlogNew'));
-const StudioPage = lazy(() => import('./StudioPage'));
 const BlogPostPage = lazy(() => import('./components/new/BlogPostPageNew'));
 const PrivacyPolicy = lazy(() => import('./components/new/PrivacyPolicyNew'));
 const ProjectDetails = lazy(() => import('./components/new/ProjectDetailsNew'));
@@ -137,14 +136,6 @@ const AnimatedRoutes = () => {
           element={
             <Suspense fallback={<LoadingFallback />}>
               <ServiceLandingPage />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/studio/*"
-          element={
-            <Suspense fallback={<LoadingFallback />}>
-              <StudioPage />
             </Suspense>
           }
         />

@@ -16,7 +16,7 @@ const ServicesNew = lazy(() => import('./components/new/ServicesNew'));
 
 const ContactNew = lazy(() => import('./components/new/ContactNew'));
 const FooterNew = lazy(() => import('./components/new/FooterNew'));
-const CookieConsent = lazy(() => import('./components/CookieConsent'));
+const CookieConsentNew = lazy(() => import('./components/new/CookieConsentNew'));
 const SolutionsNew = lazy(() => import('./components/new/SolutionsNew'));
 
 function App() {
@@ -60,7 +60,7 @@ function App() {
         </Suspense>
 
         <Suspense fallback={null}>
-          <CookieConsent />
+          <CookieConsentNew />
         </Suspense>
       </div>
     </CursorGlowProvider>

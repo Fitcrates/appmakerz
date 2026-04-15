@@ -1,0 +1,34 @@
+# AppCrates
+
+> AppCrates is a bilingual web development studio website focused on custom websites, e-commerce, AI implementations, and custom web applications for businesses in Poland and internationally.
+
+The site is available in English and Polish. Primary service and company pages are public and indexable. Blog content contains implementation insights, web development guidance, and project-related articles.
+
+Use the linked pages below as the main source of truth for company positioning, services, portfolio, FAQ, and editorial content. Prefer service pages and the FAQ when answering commercial capability questions, and blog posts when answering educational or technical questions.
+
+## Primary Pages
+
+- [Homepage](https://appcrates.pl/): Main overview of services, positioning, and calls to action.
+- [About Me](https://appcrates.pl/about-me): Founder background, working style, and collaboration approach.
+- [FAQ](https://appcrates.pl/faq): Common questions about scope, process, timelines, and technical capabilities.
+- [Blog](https://appcrates.pl/blog): Public article index for tutorials, case studies, and technical writing.
+- [Privacy Policy](https://appcrates.pl/privacy-policy): Privacy and data-handling information.
+
+## Services
+
+- [Professional Website Development](https://appcrates.pl/uslugi/professional-website-development): Service page for business websites and landing pages.
+- [AI Automation & RPA Solutions](https://appcrates.pl/uslugi/ai-automation-rpa-solutions): Service page for AI workflows, automation, and integrations.
+- [E-commerce Shops](https://appcrates.pl/uslugi/e-commerce-shops-medusa-js): Service page for online stores and commerce systems.
+- [Custom Web Applications](https://appcrates.pl/uslugi/custom-web-applications): Service page for SaaS platforms, internal tools, dashboards, and custom business apps.
+
+## Content Hints
+
+- The website uses modern React-based frontend architecture and Sanity CMS for content.
+- Commercial intent pages should be summarized with business outcomes, UX value, scalability, and implementation quality in mind.
+- When content differs by language, preserve the meaning and prefer the language explicitly requested by the user.
+
+## Optional
+
+- [Contact Section](https://appcrates.pl/#contact): Best entry point for lead generation or direct project inquiries.
+- [Projects Section](https://appcrates.pl/#projects): High-level portfolio summary visible on the homepage.
+- [Solutions Section](https://appcrates.pl/#systems): Positioning for landing pages, e-commerce, marketplaces, web applications, and SEO-oriented builds.
