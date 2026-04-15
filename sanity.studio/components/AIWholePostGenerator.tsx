@@ -212,6 +212,112 @@ function uniqueKeys(keys: string[]) {
   return Array.from(new Set(keys))
 }
 
+function normalizeForMatch(text: string) {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+}
+
+function includesAny(text: string, terms: string[]) {
+  return terms.some((term) => text.includes(term))
+}
+
+function requestWantsFullGeneration(input: string) {
+  const normalized = normalizeForMatch(input)
+  return includesAny(normalized, [
+    'all fields',
+    'all',
+    'everything',
+    'whole document',
+    'full document',
+    'generate all',
+    'complete',
+    'calosc',
+    'całość',
+    'wszystko',
+    'pelny',
+    'pełny',
+    'pelna',
+    'pełna',
+    'kompletn',
+    'cala strone',
+    'całą stronę',
+  ])
+}
+
+function detectLanguageScope(input: string): 'en' | 'pl' | 'both' {
+  const normalized = normalizeForMatch(input)
+  const asksPolish = includesAny(normalized, ['polish', 'po polsku', 'w jezyku polskim', 'po pol', 'pl '])
+  const asksEnglish = includesAny(normalized, ['english', 'po angielsku', 'w jezyku angielskim', 'en '])
+
+  if (asksPolish && !asksEnglish) return 'pl'
+  if (asksEnglish && !asksPolish) return 'en'
+  return 'both'
+}
+
+function detectTargetFields(input: string, documentType?: string): string[] {
+  const normalized = normalizeForMatch(input)
+  const matched = new Set<string>()
+
+  const detect = (field: string, aliases: string[]) => {
+    if (normalized.includes(field.toLowerCase()) || includesAny(normalized, aliases)) {
+      matched.add(field)
+    }
+  }
+
+  // Common fields
+  detect('title', ['tytul', 'naglowek', 'headline'])
+  detect('slug', ['url', 'adres', 'sluga'])
+  detect('seo', [
+    'seo',
+    'meta',
+    'meta title',
+    'meta description',
+    'keywords',
+    'slowa kluczowe',
+    'słowa kluczowe',
+    'canonical',
+    'og image',
+  ])
+  detect('publishedAt', ['published at', 'publish date', 'data publikacji'])
+
+  if (documentType === 'serviceLanding') {
+    detect('serviceType', ['service type', 'typ uslugi', 'typ usługi'])
+    detect('city', ['city', 'miasto'])
+    detect('isLocalLanding', ['local landing', 'lokalna strona', 'local page'])
+    detect('eyebrow', ['eyebrow', 'section label', 'labelka', 'etykieta'])
+    detect('intro', ['intro', 'subtitle', 'subheadline', 'wstep', 'wstęp'])
+    detect('problems', ['problems', 'pain points', 'problemy'])
+    detect('deliverables', ['deliverables', 'what client gets', 'zakres', 'co klient dostaje'])
+    detect('processSteps', ['process', 'steps', 'kroki', 'etapy'])
+    detect('faq', ['faq', 'pytania', 'questions'])
+    detect('content', ['content', 'body', 'rich content', 'tresc', 'treść'])
+    detect('ctaLabel', ['cta', 'primary cta', 'button label', 'przycisk glowny', 'przycisk główny'])
+    detect('ctaSecondaryLabel', ['secondary cta', 'drugi przycisk', 'outline cta'])
+    detect('stats', ['stats', 'numbers', 'kpi', 'statystyki', 'liczby'])
+    return Array.from(matched)
+  }
+
+  if (documentType === 'project') {
+    detect('description', ['description', 'opis'])
+    detect('technologies', ['technologies', 'tech stack', 'stack', 'technologie'])
+    detect('projectUrl', ['project url', 'demo url', 'link projektu'])
+    detect('blogUrl', ['blog url', 'link do bloga'])
+    detect('githubUrl', ['github', 'repo'])
+    detect('body', ['body', 'content', 'tresc', 'treść'])
+    return Array.from(matched)
+  }
+
+  // post/pages fallback
+  detect('excerpt', ['excerpt', 'summary', 'zajawka', 'streszczenie'])
+  detect('categories', ['categories', 'kategorie'])
+  detect('tags', ['tags', 'tagi'])
+  detect('body', ['body', 'content', 'tresc', 'treść'])
+
+  return Array.from(matched)
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -516,6 +622,10 @@ export const AIWholePostGenerator = (props: any) => {
 
       const fullContext = referenceContent + linkedContent + currentDraftText
       const isQuestion = /^\s*(what|how|why|when|who|where|can you|could you|tell me|do you|should|is it|are there|which|jakie|jak|dlaczego|czy|co|kiedy)/i.test(input) || input.trim().endsWith('?')
+      const wantsFullGeneration = requestWantsFullGeneration(input)
+      const requestedFields = detectTargetFields(input, documentType)
+      const languageScope = detectLanguageScope(input)
+      const runTargetedUpdate = !isQuestion && !wantsFullGeneration && requestedFields.length > 0
 
       let reply = ''
 
@@ -526,6 +636,66 @@ export const AIWholePostGenerator = (props: any) => {
           `You are helping with a ${typeLabel} titled "${docTitle}" inside a Sanity CMS.\n\nCMS Context:\n${fullContext}\n\nConversation so far:\n${newMsgs.map(m => `${m.role.toUpperCase()}: ${m.content}`).join('\n')}\n\nRespond helpfully and concisely.`,
           { maxTokens: 800, systemPrompt, temperature: 0.5 }
         )
+      } else if (runTargetedUpdate) {
+        setStatus('Updating requested fields only...')
+        const sourceDocument = workingDocumentRef.current || documentValue || {}
+        const requestedCurrentValues = requestedFields.reduce((acc: Record<string, any>, key) => {
+          if (sourceDocument[key] !== undefined) acc[key] = sourceDocument[key]
+          return acc
+        }, {})
+
+        const targetedPrompt = `You are a senior bilingual SEO editor working in a Sanity CMS.
+TASK: Update ONLY the requested top-level fields for this ${typeLabel}.
+
+USER REQUEST:
+${input}
+
+REQUESTED TOP-LEVEL FIELDS (STRICT ALLOWLIST):
+${requestedFields.join(', ')}
+
+LANGUAGE SCOPE:
+${languageScope}
+- If scope is "pl": for bilingual objects return only "pl" keys.
+- If scope is "en": for bilingual objects return only "en" keys.
+- If scope is "both": return both languages where relevant.
+
+CURRENT VALUES OF REQUESTED FIELDS:
+${JSON.stringify(requestedCurrentValues, null, 2)}
+
+CMS CONTEXT:
+${fullContext.substring(0, 12000)}
+
+RULES:
+1. Return ONLY valid JSON object.
+2. Include ONLY requested top-level keys from the allowlist.
+3. Do NOT include any other top-level keys.
+4. Keep correct data shapes for each field.
+5. For portable text fields ("content"/"body"), return valid Sanity block arrays.
+6. If a requested field is unclear, keep it unchanged by omitting it.
+7. Do not use markdown fences.`
+
+        const targetedText = await callAI(targetedPrompt, {
+          isJson: true,
+          maxTokens: 2600,
+          systemPrompt,
+          temperature: 0.55,
+        })
+        const targetedData = extractJson(targetedText)
+        const allowlist = new Set(requestedFields)
+        const filteredData = Object.fromEntries(
+          Object.entries(targetedData).filter(([key]) => allowlist.has(key))
+        )
+
+        if (Object.keys(filteredData).length === 0) {
+          throw new Error('AI did not return any requested fields. Try naming fields explicitly, e.g. "Update only intro and FAQ".')
+        }
+
+        const patchedKeys = await patchDocument(filteredData)
+        if (!patchedKeys.length) {
+          throw new Error('No changes were applied to the requested fields.')
+        }
+
+        reply = `✅ Updated only requested fields: ${patchedKeys.join(', ')}`
       } else {
         // ── GENERATION MODE — produce JSON, parse in code, patch ─────────
         // Netlify Free Tier has a hard 10s timeout. Generating two languages of text 
@@ -833,7 +1003,7 @@ ${schemaJson}`
                   <Stack space={2} style={{ textAlign: 'center', maxWidth: '85%' }}>
                     <Text muted size={2}>💬 AI Content Agent</Text>
                     <Text muted size={1}>
-                      Type any request to auto-fill ALL fields (title, body EN+PL, SEO, tags, etc).
+                      Name specific fields to update only them (e.g. "update intro and FAQ"). If you ask for full generation, all fields will be regenerated.
                     </Text>
                     <Text muted size={1}>
                       End your message with <strong>?</strong> to chat/discuss without generating.

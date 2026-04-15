@@ -90,8 +90,20 @@ export default {
       type: 'object',
       group: 'content',
       fields: [
-        { name: 'en', title: 'English', type: 'string' },
-        { name: 'pl', title: 'Polish', type: 'string' },
+        {
+          name: 'en',
+          title: 'English',
+          type: 'string',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Write a short service section label in {{language}} for "{{title}}". Max 30 characters.' },
+        },
+        {
+          name: 'pl',
+          title: 'Polish',
+          type: 'string',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Write a short service section label in {{language}} for "{{title}}". Max 30 characters.' },
+        },
       ],
     },
     {
@@ -136,6 +148,8 @@ export default {
           name: 'en',
           title: 'English',
           type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'List 3-6 specific customer problems this service solves in {{language}}.', aiOutput: 'array' },
           of: [{ type: 'string' }],
           validation: (Rule: any) => Rule.min(1).max(6),
         },
@@ -143,6 +157,8 @@ export default {
           name: 'pl',
           title: 'Polish',
           type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'List 3-6 specific customer problems this service solves in {{language}}.', aiOutput: 'array' },
           of: [{ type: 'string' }],
           validation: (Rule: any) => Rule.min(1).max(6),
         },
@@ -158,6 +174,8 @@ export default {
           name: 'en',
           title: 'English',
           type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'List 4-8 concrete deliverables the client receives from this service in {{language}}.', aiOutput: 'array' },
           of: [{ type: 'string' }],
           validation: (Rule: any) => Rule.min(1).max(8),
         },
@@ -165,6 +183,8 @@ export default {
           name: 'pl',
           title: 'Polish',
           type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'List 4-8 concrete deliverables the client receives from this service in {{language}}.', aiOutput: 'array' },
           of: [{ type: 'string' }],
           validation: (Rule: any) => Rule.min(1).max(8),
         },
@@ -180,6 +200,8 @@ export default {
           name: 'en',
           title: 'English',
           type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Write 4-6 clear process steps for delivering this service in {{language}}.', aiOutput: 'array' },
           of: [{ type: 'string' }],
           validation: (Rule: any) => Rule.min(1).max(6),
         },
@@ -187,6 +209,8 @@ export default {
           name: 'pl',
           title: 'Polish',
           type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Write 4-6 clear process steps for delivering this service in {{language}}.', aiOutput: 'array' },
           of: [{ type: 'string' }],
           validation: (Rule: any) => Rule.min(1).max(6),
         },
@@ -202,6 +226,8 @@ export default {
           name: 'en',
           title: 'English FAQ',
           type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Generate 3-6 concise FAQ entries in {{language}} for service "{{title}}".', aiOutput: 'array' },
           of: [
             {
               type: 'object',
@@ -216,6 +242,8 @@ export default {
           name: 'pl',
           title: 'Polish FAQ',
           type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Generate 3-6 concise FAQ entries in {{language}} for service "{{title}}".', aiOutput: 'array' },
           of: [
             {
               type: 'object',
@@ -277,8 +305,20 @@ export default {
       group: 'content',
       description: 'Label for the secondary (outline) CTA button. Falls back to "View projects".',
       fields: [
-        { name: 'en', title: 'English', type: 'string' },
-        { name: 'pl', title: 'Polish', type: 'string' },
+        {
+          name: 'en',
+          title: 'English',
+          type: 'string',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Write a short secondary CTA label in {{language}} for service page "{{title}}". Max 35 characters.' },
+        },
+        {
+          name: 'pl',
+          title: 'Polish',
+          type: 'string',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Write a short secondary CTA label in {{language}} for service page "{{title}}". Max 35 characters.' },
+        },
       ],
     },
     {
@@ -292,6 +332,8 @@ export default {
           name: 'en',
           title: 'English',
           type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Generate up to 4 key stats in {{language}} for service "{{title}}". Each item needs a value and a short label.', aiOutput: 'array' },
           of: [
             {
               type: 'object',
@@ -307,6 +349,8 @@ export default {
           name: 'pl',
           title: 'Polish',
           type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Generate up to 4 key stats in {{language}} for service "{{title}}". Each item needs a value and a short label.', aiOutput: 'array' },
           of: [
             {
               type: 'object',
@@ -379,8 +423,13 @@ export default {
           name: 'keywords',
           title: 'Keywords',
           type: 'array',
+          components: { input: AIGeneratorInput },
           of: [{ type: 'string' }],
-          options: { layout: 'tags' },
+          options: {
+            layout: 'tags',
+            aiPrompt: 'Generate 5-10 SEO keywords in {{language}} for service "{{title}}". Return short keyword phrases only.',
+            aiOutput: 'array',
+          },
         },
         { name: 'canonicalUrl', title: 'Canonical URL', type: 'url' },
         { name: 'ogImage', title: 'Open Graph Image', type: 'image', options: { hotspot: true } },

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, Globe, Bot, ShoppingBag, ShieldCheck, type LucideIcon } from 'lucide-react';
+import { Menu, X, ChevronDown, Globe, Bot, AppWindow, ShoppingCart,   type LucideIcon } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import LanguageToggle from '../LanguageToggle';
@@ -38,17 +38,17 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
     href: '/uslugi/ai-automation-rpa-solutions',
   },
   {
-    icon: ShoppingBag,
+    icon: ShoppingCart,
     label: language === 'pl' ? 'Sklepy E-commerce' : 'E-commerce Shops',
     description: language === 'pl' ? 'Sklepy online i platformy sprzedażowe' : 'Online stores & sales platforms',
     href: '/uslugi/e-commerce-shops-medusa-js',
   },
- // {
-  //  icon: ShieldCheck,
-   // label: language === 'pl' ? 'Audyty WCAG & RODO' : 'WCAG & GDPR Audits',
-   // description: language === 'pl' ? 'Dostępność i zgodność prawna' : 'Accessibility & legal compliance',
-  //  href: '/uslugi/wcag-dostepnosc',
- // },
+  {
+    icon: AppWindow,
+    label: language === 'pl' ? 'Dedykowane aplikacje webowe' : 'Custom Web Apps & SaaS',
+    description: language === 'pl' ? 'Aplikacje webowe i SaaS' : 'Custom web apps & SaaS',
+    href: '/uslugi/custom-web-applications',
+  },
 ];
 
 const HeaderNew: React.FC = () => {

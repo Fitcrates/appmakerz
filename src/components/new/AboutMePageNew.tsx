@@ -5,12 +5,12 @@ import { ArrowUpRight } from 'lucide-react';
 import HeaderNew from './HeaderNew';
 import FooterNew from './FooterNew';
 import NotFound from '../NotFound';
-import SpotlightText from './SpotlightText';
-import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
 import { getAboutMe, urlFor } from '../../lib/sanity.client';
 import { portableTextComponentsNew } from './PortableTextComponentsNew';
 import type { AboutMe } from '../../types/sanity.types';
+import SpotlightText from './SpotlightText';
+import BurnSpotlightText from './BurnSpotlightText';
 
 const AboutMePageNew: React.FC = () => {
   const { language } = useLanguage();
@@ -154,23 +154,10 @@ const AboutMePageNew: React.FC = () => {
       <main className="min-h-screen bg-indigo-950 pt-16 lg:pt-24 pb-24">
 
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SpotlightText text={title} className="text-4xl lg:text-5xl xl:text-6xl font-light text-white font-jakarta leading-tight mt-4" />
           <div className="border-t border-white/10 pt-10 sm:pt-14">
-            <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
-              {eyebrow}
-            </span>
-            <BurnSpotlightText
-              as="h1"
-              className="text-4xl lg:text-5xl xl:text-6xl font-light text-white font-jakarta leading-tight mt-4"
-              glowSize={150}
-              baseDelay={250}
-              charDelay={35}
-            >
-              {title}
-            </BurnSpotlightText>
             {intro ? (
-              <SpotlightText as="p" className="text-lg font-jakarta font-light mt-8 leading-relaxed" glowSize={120}>
-                {intro}
-              </SpotlightText>
+              <p className="text-white/60 text-lg font-jakarta font-light mt-8 leading-relaxed">{intro}</p>
             ) : null}
           </div>
         </section>
@@ -244,7 +231,7 @@ const AboutMePageNew: React.FC = () => {
         {story.length ? (
           <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 lg:mt-20">
             <article className="prose prose-invert max-w-none text-left">
-              <PortableText value={story} components={portableTextComponentsNew} />
+              <PortableText value={story as any} components={portableTextComponentsNew as any} />
             </article>
           </section>
         ) : null}

@@ -23,6 +23,22 @@ const PROVIDER_DEFAULTS: Record<string, string> = {
   openai: 'gpt-5.4-thinking',
 }
 
+function extractJsonArray(raw: string): any[] {
+  const text = (raw || '').trim()
+  if (!text) return []
+
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i)
+  const candidate = fenced?.[1] || text
+
+  const start = candidate.indexOf('[')
+  const end = candidate.lastIndexOf(']')
+  if (start === -1 || end === -1 || end <= start) {
+    throw new Error('AI response did not return a JSON array.')
+  }
+
+  return JSON.parse(candidate.slice(start, end + 1))
+}
+
 export const AIGeneratorInput = (props: any) => {
   const { onChange, schemaType } = props
   const [loading, setLoading] = useState(false)
@@ -51,19 +67,36 @@ export const AIGeneratorInput = (props: any) => {
       const titleToUse = isPolish
         ? (titlePl || titleEn || 'the topic')
         : (titleEn || titlePl || 'the topic')
-      const existingValue = typeof props.value === 'string' ? props.value.trim() : ''
+      const existingValue = typeof props.value === 'string'
+        ? props.value.trim()
+        : Array.isArray(props.value)
+          ? JSON.stringify(props.value, null, 2)
+          : ''
+      const isArrayField = schemaType?.jsonType === 'array'
+      const itemJsonType = schemaType?.of?.[0]?.jsonType
+      const objectFieldNames: string[] = Array.isArray(schemaType?.of?.[0]?.fields)
+        ? schemaType.of[0].fields.map((f: any) => f?.name).filter(Boolean)
+        : []
 
       const contentTypeLabel = documentType === 'project'
         ? 'project case study'
         : documentType === 'serviceLanding'
           ? 'service landing page'
         : 'blog post'
-      const defaultPrompt = `Write a short and compelling text in ${languageMatch} for a ${contentTypeLabel} titled "${titleToUse}".`
+      const defaultPrompt = isArrayField
+        ? `Generate concise, useful list items in ${languageMatch} for the field "${fieldTitle}" on a ${contentTypeLabel} titled "${titleToUse}".`
+        : `Write a short and compelling text in ${languageMatch} for a ${contentTypeLabel} titled "${titleToUse}".`
       let promptTemplate = schemaType.options?.aiPrompt || defaultPrompt
 
       const prompt = promptTemplate
         .replace(/{{title}}/g, titleToUse)
         .replace(/{{language}}/g, languageMatch)
+
+      const returnFormatInstruction = isArrayField
+        ? itemJsonType === 'object'
+          ? `Return ONLY a valid JSON array of objects. Each object must contain exactly these keys: ${objectFieldNames.join(', ')}. No extra keys, no markdown.`
+          : 'Return ONLY a valid JSON array of strings. No markdown.'
+        : `Return ONLY the final field value in ${languageMatch}. No labels, no quotes, no markdown.`
 
       const finalPrompt = `${prompt}
 
@@ -71,7 +104,7 @@ Document type: ${contentTypeLabel}
 Target field: ${fieldTitle}
 Language: ${languageMatch}
 ${existingValue ? `Existing field value to improve or rewrite:\n${existingValue}\nRewrite it to be stronger and more useful. Do not copy it verbatim.\n` : ''}
-Return ONLY the final field value in ${languageMatch}. No labels, no quotes, no markdown.`
+${returnFormatInstruction}`
 
       const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname)
       const apiUrl = isLocalhost
@@ -83,8 +116,8 @@ Return ONLY the final field value in ${languageMatch}. No labels, no quotes, no 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           prompt: finalPrompt,
-          systemPrompt: 'You are a senior bilingual SEO editor working inside a Sanity CMS. Follow the requested field instruction exactly. If source text is provided, improve or rewrite it without copying it verbatim. Return only plain text for the target field.',
-          max_completion_tokens: 300,
+          systemPrompt: 'You are a senior bilingual SEO editor working inside a Sanity CMS. Follow the requested field instruction exactly. If source text is provided, improve or rewrite it without copying it verbatim. Return only the format requested for the target field.',
+          max_completion_tokens: isArrayField ? 700 : 300,
           provider,
           model: model.trim() || PROVIDER_DEFAULTS[provider],
           temperature: 0.7,
@@ -93,7 +126,14 @@ Return ONLY the final field value in ${languageMatch}. No labels, no quotes, no 
 
       const data = await res.json()
       if (data.error) throw new Error(data.error)
-      onChange(data.text ? set(data.text.trim()) : unset())
+      if (!data.text) {
+        onChange(unset())
+      } else if (isArrayField) {
+        const parsed = extractJsonArray(data.text)
+        onChange(parsed.length ? set(parsed) : unset())
+      } else {
+        onChange(set(data.text.trim()))
+      }
     } catch (err: any) {
       alert('Failed to generate content: ' + err.message)
     } finally {
@@ -107,7 +147,7 @@ Return ONLY the final field value in ${languageMatch}. No labels, no quotes, no 
       <Inline space={2} paddingBottom={2}>
         <Button
           onClick={generate}
-          disabled={loading || (!titleEn && !titlePl)}
+          disabled={loading}
           tone="primary"
           mode="ghost"
           text={loading ? 'Generating...' : '✨ Generate'}
