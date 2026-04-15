@@ -22,6 +22,22 @@ const MID_OPACITY = 0.8;
 const MID_POSITION = 60;
 // ============================================
 
+function extractTextContent(node: React.ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map(extractTextContent).join("");
+  }
+
+  if (React.isValidElement(node)) {
+    return extractTextContent(node.props.children);
+  }
+
+  return "";
+}
+
 // Individual character with burn animation
 const BurnChar: React.FC<{
   char: string;
@@ -106,7 +122,7 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
   const [burnComplete, setBurnComplete] = useState(false);
   const [hasActivated, setHasActivated] = useState(activateOnMount);
   const revealedCount = useRef(0);
-  const textContent = text ?? (typeof children === 'string' ? children : String(children ?? ''));
+  const textContent = text ?? extractTextContent(children);
   const totalChars = textContent.replace(/\s/g, "").length;
 
   useEffect(() => {
