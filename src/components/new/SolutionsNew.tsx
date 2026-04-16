@@ -60,14 +60,12 @@ const SolutionsNew: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
   const mobileSceneRef = useRef<HTMLDivElement>(null);
-  const lastMobileStepChangeRef = useRef(0);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const { language } = useLanguage();
   const t = translations[language].solutions;
   const solutions = getSolutions(t);
-  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
+  const [mobileProgress, setMobileProgress] = useState(0);
   const [mobilePinState, setMobilePinState] = useState<'before' | 'during' | 'after'>('before');
-  const [isMobilePinned, setIsMobilePinned] = useState(false);
 
   useLayoutEffect(() => {
     const scene = sceneRef.current;
@@ -123,50 +121,56 @@ const SolutionsNew: React.FC = () => {
   }, [solutions.length]);
 
   useEffect(() => {
-    const onScroll = () => {
-      if (window.innerWidth >= 768 || !mobileSceneRef.current) return;
+    let frameId = 0;
 
-      const rect = mobileSceneRef.current.getBoundingClientRect();
-      const maxScrollable = Math.max(1, rect.height - window.innerHeight);
-      const progress = Math.max(0, Math.min(1, -rect.top / maxScrollable));
-      const targetIndex = Math.min(
-        solutions.length - 1,
-        Math.max(0, Math.floor(progress * solutions.length))
-      );
+    const updateMobileScene = () => {
+      frameId = 0;
 
-      setMobileActiveIndex((currentIndex) => {
-        if (targetIndex === currentIndex) return currentIndex;
-
-        const now = Date.now();
-        const STEP_COOLDOWN_MS = 220;
-
-        if (now - lastMobileStepChangeRef.current < STEP_COOLDOWN_MS) {
-          return currentIndex;
-        }
-
-        lastMobileStepChangeRef.current = now;
-        return targetIndex > currentIndex ? currentIndex + 1 : currentIndex - 1;
-      });
-
-      if (progress <= 0) {
+      if (window.innerWidth >= 768) {
+        setMobileProgress(0);
         setMobilePinState('before');
-        setIsMobilePinned(false);
-      } else if (progress >= 1) {
-        setMobilePinState('after');
-        setIsMobilePinned(false);
-      } else {
-        setMobilePinState('during');
-        setIsMobilePinned(true);
+        return;
       }
+
+      const mobileScene = mobileSceneRef.current;
+
+      if (!mobileScene) return;
+
+      const rect = mobileScene.getBoundingClientRect();
+      const maxScrollable = Math.max(1, mobileScene.offsetHeight - window.innerHeight);
+      const progress = Math.max(0, Math.min(1, -rect.top / maxScrollable));
+
+      setMobileProgress(progress);
+
+      if (rect.top >= 0) {
+        setMobilePinState('before');
+        return;
+      }
+
+      if (rect.bottom <= window.innerHeight) {
+        setMobilePinState('after');
+        return;
+      }
+
+      setMobilePinState('during');
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    onScroll();
+    const requestUpdate = () => {
+      if (frameId !== 0) return;
+      frameId = window.requestAnimationFrame(updateMobileScene);
+    };
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+    requestUpdate();
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      if (frameId !== 0) {
+        window.cancelAnimationFrame(frameId);
+      }
+
+      window.removeEventListener('scroll', requestUpdate);
+      window.removeEventListener('resize', requestUpdate);
     };
   }, [solutions.length]);
 
@@ -174,7 +178,7 @@ const SolutionsNew: React.FC = () => {
     <section
       ref={sectionRef}
       id="systems"
-      className="relative bg-indigo-950 overflow-x-hidden"
+      className="relative bg-indigo-950 overflow-x-clip"
       itemScope
       itemType="https://schema.org/ItemList"
     >
@@ -267,27 +271,25 @@ const SolutionsNew: React.FC = () => {
             <div
               className="left-0 right-0 h-[100svh] overflow-hidden"
               style={{
-                position: isMobilePinned ? 'fixed' : 'absolute',
+                position: mobilePinState === 'during' ? 'fixed' : 'absolute',
                 top: mobilePinState === 'after' ? 'auto' : 0,
                 bottom: mobilePinState === 'after' ? 0 : 'auto',
               }}
             >
               {solutions.map((solution, i) => {
-                const isActive = i === mobileActiveIndex;
-                const isPast = i < mobileActiveIndex;
-                const distance = mobileActiveIndex - i;
-                const translateY = i > mobileActiveIndex ? 100 : isPast ? -Math.min(18, distance * 6) : 0;
-                const scale = isActive ? 1 : isPast ? Math.max(0.92, 1 - distance * 0.025) : 1;
-                const opacity = i > mobileActiveIndex ? 0 : isActive ? 1 : Math.max(0.45, 0.82 - distance * 0.15);
+                const sceneProgress = mobileProgress * Math.max(1, solutions.length - 1);
+                const revealProgress = i === 0
+                  ? 1
+                  : Math.max(0, Math.min(1, sceneProgress - (i - 1)));
+                const translateY = i === 0 ? 0 : (1 - revealProgress) * 100;
 
                 return (
                   <article
                     key={`mobile-${solution.number}`}
-                    className="solutions-scene__mobile-card absolute inset-0 transition-[transform,opacity] duration-500 ease-out"
+                    className="solutions-scene__mobile-card absolute inset-0 overflow-hidden will-change-transform shadow-[0_-10px_40px_rgba(0,0,0,0.6)] transition-transform duration-200 ease-out"
                     style={{
-                      zIndex: isActive ? 100 : i + 1,
-                      transform: `translateY(${translateY}%) scale(${scale})`,
-                      opacity,
+                      zIndex: i + 1,
+                      transform: `translateY(${translateY}%)`,
                     }}
                     itemScope
                     itemType="https://schema.org/Service"
