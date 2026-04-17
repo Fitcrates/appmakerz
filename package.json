@@ -49,6 +49,7 @@
   "devDependencies": {
     "@eslint/js": "^9.9.1",
     "@netlify/functions": "^5.1.5",
+    "@netlify/plugin-nextjs": "^5.13.0",
     "@sanity/cli": "^6.3.1",
     "@sanity/vision": "^5.19.0",
     "@types/node": "^22.10.2",
