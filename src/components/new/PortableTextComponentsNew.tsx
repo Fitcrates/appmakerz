@@ -2,7 +2,6 @@ import React from 'react';
 import { urlFor } from '../../lib/sanity.client';
 import CodeBlock from '../CodeBlock';
 import ImageZoom from '../ImageZoom';
-import BurnSpotlightText from './BurnSpotlightText';
 import SpotlightText from './SpotlightText';
 import type { PortableTextComponentProps } from '@portabletext/react';
 import type { PortableTextBlock, PortableTextMarkDefinition, ArbitraryTypedObject, PortableTextSpan } from '@portabletext/types';
@@ -12,24 +11,24 @@ type BlockComponentProps = PortableTextComponentProps<PortableTextBlock<Portable
 export const portableTextComponentsNew = {
   block: {
     h1: ({ children }: BlockComponentProps) => (
-      <BurnSpotlightText as="h1" className="text-4xl lg:text-5xl font-light text-white font-jakarta mt-12 mb-6 block" glowSize={180} baseDelay={100} charDelay={30}>
+      <SpotlightText as="h1" className="text-4xl lg:text-5xl font-light text-white font-jakarta mt-12 mb-6 block" glowSize={180}>
         {children}
-      </BurnSpotlightText>
+      </SpotlightText>
     ),
     h2: ({ children }: BlockComponentProps) => (
-      <BurnSpotlightText as="h2" className="text-3xl lg:text-4xl font-light text-white font-jakarta mt-10 mb-5 block" glowSize={160} baseDelay={80} charDelay={25}>
+      <SpotlightText as="h2" className="text-3xl lg:text-4xl font-light text-white font-jakarta mt-10 mb-5 block" glowSize={160}>
         {children}
-      </BurnSpotlightText>
+      </SpotlightText>
     ),
     h3: ({ children }: BlockComponentProps) => (
-      <BurnSpotlightText as="h3" className="text-2xl lg:text-3xl font-light text-white font-jakarta mt-8 mb-4 block" glowSize={140} baseDelay={60} charDelay={20}>
+      <SpotlightText as="h3" className="text-2xl lg:text-3xl font-light text-white font-jakarta mt-8 mb-4 block" glowSize={140}>
         {children}
-      </BurnSpotlightText>
+      </SpotlightText>
     ),
     h4: ({ children }: BlockComponentProps) => (
-      <BurnSpotlightText as="h4" className="text-xl lg:text-2xl font-light text-white font-jakarta mt-6 mb-3 block" glowSize={120} baseDelay={50} charDelay={15}>
+      <SpotlightText as="h4" className="text-xl lg:text-2xl font-light text-white font-jakarta mt-6 mb-3 block" glowSize={120}>
         {children}
-      </BurnSpotlightText>
+      </SpotlightText>
     ),
     normal: ({ children }: BlockComponentProps) => (
       <SpotlightText as="p" className="mb-6 leading-relaxed text-white/70 font-jakarta font-light text-lg block" glowSize={150}>
