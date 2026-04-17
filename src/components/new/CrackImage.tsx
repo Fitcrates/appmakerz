@@ -101,7 +101,7 @@ const CrackImage: React.FC<CrackImageProps> = ({
 
   // Generate tiles
   const tiles = useMemo(() => {
-    const result = [];
+    const result: Array<{ id: number; row: number; col: number; x: number; y: number }> = [];
     for (let row = 0; row < gridSize; row++) {
       for (let col = 0; col < gridSize; col++) {
         const index = row * gridSize + col;

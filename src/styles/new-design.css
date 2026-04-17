@@ -2,7 +2,7 @@
 
 /* Smooth scrolling - disabled for better performance */
 html {
-  scroll-behavior: auto;
+  scroll-behavior: smooth;
 }
 
 /* Custom scrollbar - minimal */

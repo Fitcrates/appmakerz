@@ -71,7 +71,7 @@ const HeroNew: React.FC = () => {
 
         {/* Small label */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-8 [@media(max-height:800px)]:mb-4"
@@ -100,7 +100,7 @@ const HeroNew: React.FC = () => {
 
         {/* Subtitle with spotlight effect */}
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={false}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 2.5 }}
           className="max-w-xl mx-auto mb-16 [@media(max-height:800px)]:mb-8 [@media(max-height:700px)]:mb-6"
@@ -116,7 +116,7 @@ const HeroNew: React.FC = () => {
 
         {/* CTA Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-6 [@media(max-height:700px)]:gap-4"
@@ -147,7 +147,7 @@ const HeroNew: React.FC = () => {
       {/* Scroll indicator - hidden on mobile AND short screens */}
       <motion.button
         onClick={scrollToNext}
-        initial={{ opacity: 0 }}
+        initial={false}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 3.5 }}
         className="absolute bottom-12 [@media(max-height:800px)]:bottom-6 left-1/2 -translate-x-1/2 z-20 hidden sm:flex [@media(max-height:700px)]:!hidden flex-col items-center gap-3 text-white/30 hover:text-teal-300 transition-colors cursor-pointer group focus:outline-none focus:text-teal-300"

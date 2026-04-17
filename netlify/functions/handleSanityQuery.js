@@ -1,4 +1,4 @@
-const { createClient } = require('@sanity/client');
+import { createClient } from '@sanity/client';
 
 const client = createClient({
   projectId: process.env.SANITY_PROJECT_ID,
@@ -35,7 +35,7 @@ function setHotCacheValue(cacheKey, value) {
   });
 }
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }

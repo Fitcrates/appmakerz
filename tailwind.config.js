@@ -1,6 +1,6 @@
 // tailwind.config.js
 export default {
-	content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
+	content: ["./app/**/*.{js,jsx,ts,tsx,mdx}", "./src/**/*.{html,js,jsx,ts,tsx}"],
 	theme: {
 	  extend: {
 		fontFamily: {

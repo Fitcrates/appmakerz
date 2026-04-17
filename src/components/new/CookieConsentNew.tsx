@@ -1,23 +1,10 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cookie, X } from 'lucide-react';
+import { Cookie } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
-
-// Type for gtag function
-type GtagFunction = (command: string, action: string, params: Record<string, string>) => void;
-
-// Helper to safely call gtag
-const callGtag = (command: string, action: string, params: Record<string, string>) => {
-  const gtag = (window as unknown as { gtag?: GtagFunction }).gtag;
-  if (typeof gtag === 'function') {
-    gtag(command, action, params);
-    return;
-  }
-
-  const win = window as unknown as { dataLayer?: unknown[] };
-  win.dataLayer = win.dataLayer || [];
-  win.dataLayer.push(['consent', action, params]);
-};
+import { trackCookieConsentDecision, updateAnalyticsConsent } from '../../utils/gtm';
 
 const COOKIE_CONSENT_KEY = 'cookieConsent';
 
@@ -48,7 +35,6 @@ const CookieConsentNew: React.FC = () => {
 
   useEffect(() => {
     const consentStatus = localStorage.getItem(COOKIE_CONSENT_KEY);
-    callGtag('consent', 'default', { analytics_storage: 'denied' });
 
     if (!consentStatus) {
       const timer = setTimeout(() => setIsVisible(true), 1500);
@@ -56,25 +42,27 @@ const CookieConsentNew: React.FC = () => {
     } else if (consentStatus === 'accepted') {
       loadAnalytics();
     } else {
-      callGtag('consent', 'update', { analytics_storage: 'denied' });
+      updateAnalyticsConsent(false);
     }
   }, []);
 
   const loadAnalytics = async () => {
-    callGtag('consent', 'update', { 'analytics_storage': 'granted' });
+    updateAnalyticsConsent(true);
   };
 
   const handleAccept = async () => {
     setIsLoading(true);
     persistConsent('accepted');
     await loadAnalytics();
+    trackCookieConsentDecision('accepted');
     setIsLoading(false);
     setIsVisible(false);
   };
 
   const handleDecline = () => {
     persistConsent('declined');
-    callGtag('consent', 'update', { 'analytics_storage': 'denied' });
+    updateAnalyticsConsent(false);
+    trackCookieConsentDecision('declined');
     setIsVisible(false);
   };
 

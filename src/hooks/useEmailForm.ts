@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast';
 import { useLanguage } from '../context/LanguageContext';
 import { translations } from '../translations/translations';
 import { sendEmail } from '../services/emailService';
-import { trackFormSubmit } from '../utils/gtm';
+import { trackFormSubmit, trackLeadGenerated } from '../utils/gtm';
 
 interface FormData {
   name: string;
@@ -50,7 +50,7 @@ export const useEmailForm = () => {
     // Listen for hash changes
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [t]);
+  }, [planPrefix]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -72,6 +72,7 @@ export const useEmailForm = () => {
         
         // Track the successful form submission in GTM
         trackFormSubmit('contact_form');
+        trackLeadGenerated('contact_form');
         
         setFormData(initialState);
         setIsSuccess(true);

@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+'use client';
 
-type Language = 'en' | 'pl';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import type { Language } from '../lib/language';
 
 interface LanguageContextType {
   language: Language;
@@ -9,7 +10,15 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-const getInitialLanguage = (): Language => {
+const getInitialLanguage = (initialLanguage?: Language): Language => {
+  if (initialLanguage) {
+    return initialLanguage;
+  }
+
+  if (typeof window === 'undefined') {
+    return 'pl';
+  }
+
   const url = new URL(window.location.href);
   const langFromQuery = url.searchParams.get('lang');
   if (langFromQuery === 'en' || langFromQuery === 'pl') {
@@ -31,14 +40,16 @@ const getInitialLanguage = (): Language => {
   return 'en';
 };
 
-export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+export const LanguageProvider: React.FC<{ children: React.ReactNode; initialLanguage?: Language }> = ({ children, initialLanguage }) => {
+  const [language, setLanguage] = useState<Language>(() => getInitialLanguage(initialLanguage));
 
   useEffect(() => {
-    // Persist language to localStorage whenever it changes
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     localStorage.setItem('language', language);
-    
-    // Update HTML lang attribute for accessibility and SEO
+    document.cookie = `language=${language}; path=/; max-age=31536000; SameSite=Lax`;
     document.documentElement.lang = language;
   }, [language]);
 

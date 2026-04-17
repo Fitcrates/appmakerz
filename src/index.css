@@ -39,7 +39,7 @@ html, body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: url('../public/media/tinypng-cropedbackground-min.webp') no-repeat center center;
+  background: url('/media/tinypng-cropedbackground-min.webp') no-repeat center center;
   background-size: cover;
   z-index: -1;
 }
@@ -178,7 +178,7 @@ html, body {
   overflow: hidden;
   isolation: isolate;
   background-attachment: fixed;
-  background-image: url('../public/media/tinypng-cropedbackground-min.webp');
+  background-image: url('/media/tinypng-cropedbackground-min.webp');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

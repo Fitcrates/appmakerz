@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+"use client";
+
+import React, { useEffect, useState, type MouseEvent } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, Globe, Bot, AppWindow, ShoppingCart,   type LucideIcon } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
-import LanguageToggle from '../LanguageToggle';
+import { Menu, X, ChevronDown, Globe, Bot, AppWindow, ShoppingCart, type LucideIcon } from 'lucide-react';
+import LanguageToggleNext from '../next/LanguageToggleNext';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 
@@ -39,7 +41,7 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
   {
     icon: ShoppingCart,
     label: language === 'pl' ? 'Sklepy E-commerce' : 'E-commerce Shops',
-    description: language === 'pl' ? 'Sklepy online i platformy sprzedażowe' : 'Online stores & sales platforms',
+    description: language === 'pl' ? 'Sklepy online i platformy sprzedazowe' : 'Online stores & sales platforms',
     href: '/uslugi/e-commerce-shops-medusa-js',
   },
   {
@@ -53,127 +55,72 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
 const HeaderNew: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const pathname = usePathname();
+  const router = useRouter();
   const { language } = useLanguage();
   const t = translations[language].nav;
   const navItems = getNavItems(t);
   const serviceLandingLinks = getServiceLandingLinks(language);
-
-  const prefetchBlogPage = () => {
-    void import('../../BlogNew');
-    queryClient.prefetchQuery({
-      queryKey: ['posts'],
-      queryFn: async () => {
-        const { getPosts } = await import('../../lib/sanity.client');
-        return getPosts();
-      },
-      staleTime: 5 * 60 * 1000,
-    });
-  };
-
-  const prefetchServiceLandingPage = () => {
-    void import('./ServiceLandingPageNew');
-  };
-
-  const prefetchFaqPage = () => {
-    void import('./FAQNew');
-  };
-
-  const prefetchAboutMePage = () => {
-    void import('./AboutMePageNew');
-    queryClient.prefetchQuery({
-      queryKey: ['about-me', 'about-me'],
-      queryFn: async () => {
-        const { getAboutMe } = await import('../../lib/sanity.client');
-        return getAboutMe('about-me');
-      },
-      staleTime: 5 * 60 * 1000,
-    });
-  };
-
-  const prefetchServiceLandingData = (href: string) => {
-    const slug = href.replace('/uslugi/', '');
-    if (!slug || slug === href) return;
-
-    queryClient.prefetchQuery({
-      queryKey: ['service-landing', slug],
-      queryFn: async () => {
-        const { getServiceLanding } = await import('../../lib/sanity.client');
-        return getServiceLanding(slug);
-      },
-      staleTime: 5 * 60 * 1000,
-    });
-  };
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
 
-    // Use passive listener for better scroll performance
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
-  }, [location]);
+  }, [pathname]);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
     setIsMobileMenuOpen(false);
-    if (href.startsWith('/#')) {
-      e.preventDefault();
-      const targetId = href.replace('/#', '');
-      
-      if (location.pathname !== '/') {
-        navigate(`/#${targetId}`);
-      } else {
-        const element = document.getElementById(targetId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
+
+    if (!href.startsWith('/#')) {
+      return;
     }
+
+    event.preventDefault();
+    const targetId = href.replace('/#', '');
+
+    if (pathname !== '/') {
+      router.push(href);
+      return;
+    }
+
+    const element = document.getElementById(targetId);
+    if (!element) {
+      return;
+    }
+
+    const headerOffset = 92;
+    const targetTop = element.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
   };
 
   return (
     <>
       <header
         className={`fixed w-full backdrop-blur-sm z-50 shadow-sm transition-all duration-300 ${
-          isScrolled
-            ? 'bg-indigo-950/80 border-b border-white/5'
-            : ''
+          isScrolled ? 'bg-indigo-950/80 border-b border-white/5' : ''
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link
-              to="/"
-              className="relative z-10"
-              onMouseEnter={prefetchAboutMePage}
-              onFocus={prefetchAboutMePage}
-            >
-              <motion.span
-                whileHover={{ scale: 1.05 }}
-                className="text-xl font-jakarta font-light text-white"
-              >
+            <Link href="/" className="relative z-10">
+              <motion.span whileHover={{ scale: 1.05 }} className="text-xl font-jakarta font-light text-white">
                 App<span className="text-teal-300">Crates</span>
               </motion.span>
             </Link>
 
-            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
               {navItems.map((item) => (
                 <a
                   key={item.label}
                   href={item.href}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                  onMouseEnter={item.href === '/blog' ? prefetchBlogPage : undefined}
-                  onFocus={item.href === '/blog' ? prefetchBlogPage : undefined}
-                  onPointerEnter={item.href === '/faq' ? prefetchFaqPage : undefined}
+                  onClick={(event) => handleNavClick(event, item.href)}
                   className="relative text-white/70 font-jakarta font-light text-sm hover:text-white transition-colors group focus:outline-none focus:text-teal-300"
                 >
                   {item.label}
@@ -184,9 +131,6 @@ const HeaderNew: React.FC = () => {
               <div className="relative group">
                 <button
                   type="button"
-                  onMouseEnter={prefetchServiceLandingPage}
-                  onFocus={prefetchServiceLandingPage}
-                  onTouchStart={prefetchServiceLandingPage}
                   className="inline-flex items-center gap-2 text-white/70 font-jakarta font-light text-sm hover:text-white transition-colors focus:outline-none focus:text-teal-300"
                   aria-haspopup="true"
                   aria-label={t.services}
@@ -202,19 +146,7 @@ const HeaderNew: React.FC = () => {
                       return (
                         <Link
                           key={item.href}
-                          to={item.href}
-                          onMouseEnter={() => {
-                            prefetchServiceLandingPage();
-                            prefetchServiceLandingData(item.href);
-                          }}
-                          onFocus={() => {
-                            prefetchServiceLandingPage();
-                            prefetchServiceLandingData(item.href);
-                          }}
-                          onTouchStart={() => {
-                            prefetchServiceLandingPage();
-                            prefetchServiceLandingData(item.href);
-                          }}
+                          href={item.href}
                           className="flex items-start gap-4 p-4 rounded-lg hover:bg-white/[0.05] transition-all duration-200 group"
                         >
                           <div className="w-10 h-10 rounded-lg bg-teal-300/10 border border-teal-300/20 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-300/20 group-hover:border-teal-300/30 transition-colors">
@@ -232,17 +164,15 @@ const HeaderNew: React.FC = () => {
               </div>
             </nav>
 
-            {/* CTA Button and Language Toggle */}
             <div className="hidden lg:flex items-center gap-4">
-              <LanguageToggle />
-             
+              <LanguageToggleNext />
             </div>
 
-            {/* Mobile: Language Toggle + Menu Button */}
             <div className="lg:hidden flex items-center gap-3">
-              <LanguageToggle />
+              <LanguageToggleNext />
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                type="button"
+                onClick={() => setIsMobileMenuOpen((value) => !value)}
                 className="relative z-10 w-10 h-10 flex items-center justify-center text-white focus:outline-none focus:ring-2 focus:ring-teal-300 rounded"
                 aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 aria-expanded={isMobileMenuOpen}
@@ -255,9 +185,8 @@ const HeaderNew: React.FC = () => {
         </div>
       </header>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
-        {isMobileMenuOpen && (
+        {isMobileMenuOpen ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -265,13 +194,8 @@ const HeaderNew: React.FC = () => {
             transition={{ duration: 0.3 }}
             className="fixed inset-x-0 bottom-0 top-20 z-40 lg:hidden"
           >
-            {/* Backdrop */}
-            <div
-              className="absolute inset-0 bg-indigo-950/95 backdrop-blur-lg"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
+            <div className="absolute inset-0 bg-indigo-950/95 backdrop-blur-lg" onClick={() => setIsMobileMenuOpen(false)} />
 
-            {/* Menu content */}
             <motion.nav
               id="mobile-menu"
               initial={{ x: '100%' }}
@@ -291,10 +215,7 @@ const HeaderNew: React.FC = () => {
                   >
                     <a
                       href={item.href}
-                      onClick={(e) => handleNavClick(e, item.href)}
-                      onTouchStart={item.href === '/blog' ? prefetchBlogPage : undefined}
-                      onFocus={item.href === '/blog' ? prefetchBlogPage : undefined}
-                      onPointerEnter={item.href === '/faq' ? prefetchFaqPage : undefined}
+                      onClick={(event) => handleNavClick(event, item.href)}
                       className="block text-2xl font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
                     >
                       {item.label}
@@ -315,19 +236,7 @@ const HeaderNew: React.FC = () => {
                       return (
                         <Link
                           key={item.href}
-                          to={item.href}
-                          onMouseEnter={() => {
-                            prefetchServiceLandingPage();
-                            prefetchServiceLandingData(item.href);
-                          }}
-                          onFocus={() => {
-                            prefetchServiceLandingPage();
-                            prefetchServiceLandingData(item.href);
-                          }}
-                          onTouchStart={() => {
-                            prefetchServiceLandingPage();
-                            prefetchServiceLandingData(item.href);
-                          }}
+                          href={item.href}
                           onClick={() => setIsMobileMenuOpen(false)}
                           className="flex items-center gap-3 py-1 text-base font-jakarta font-light text-white hover:text-teal-300 transition-colors"
                         >
@@ -339,11 +248,9 @@ const HeaderNew: React.FC = () => {
                   </div>
                 </motion.div>
               </div>
-
-              
             </motion.nav>
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </>
   );

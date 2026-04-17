@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import { useInView } from "framer-motion";
 
@@ -31,7 +33,7 @@ function extractTextContent(node: React.ReactNode): string {
     return node.map(extractTextContent).join("");
   }
 
-  if (React.isValidElement(node)) {
+  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
     return extractTextContent(node.props.children);
   }
 
@@ -47,9 +49,7 @@ const BurnChar: React.FC<{
   onRevealed?: () => void;
   isActive: boolean;
 }> = ({ char, delay, burnDuration, isSpace, onRevealed, isActive }) => {
-  const [state, setState] = useState<"hidden" | "burning" | "revealed">(
-    "hidden",
-  );
+  const [state, setState] = useState<"hidden" | "burning" | "revealed">("revealed");
 
   useEffect(() => {
     if (!isActive) return;

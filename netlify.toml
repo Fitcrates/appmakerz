@@ -1,49 +1,17 @@
 [build]
-  command = "tsc && vite build"
-  publish = "dist"
+  command = "npm run build:next"
   functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "22"
 
-# Bot prerendering
-[[edge_functions]]
-  path = "/"
-  function = "social-crawler"
+[[redirects]]
+  from = "https://appcrates.netlify.app/*"
+  to = "https://appcrates.pl/:splat"
+  status = 301
+  force = true
 
-[[edge_functions]]
-  path = "/blog"
-  function = "social-crawler"
-
-[[edge_functions]]
-  path = "/faq"
-  function = "social-crawler"
-
-[[edge_functions]]
-  path = "/privacy-policy"
-  function = "social-crawler"
-
-[[edge_functions]]
-  path = "/unsubscribe"
-  function = "social-crawler"
-
-[[edge_functions]]
-  path = "/blog/*"
-  function = "social-crawler"
-
-[[edge_functions]]
-  path = "/project/*"
-  function = "social-crawler"
-
-[[edge_functions]]
-  path = "/uslugi/*"
-  function = "social-crawler"
-
-[[edge_functions]]
-  path = "/about-me"
-  function = "social-crawler"
-
-# AI generation edge function (50s timeout vs 10s for regular functions)
+# Keep the custom AI edge function on Netlify while the site itself runs on Next.js.
 [[edge_functions]]
   path = "/api/ai-generate"
   function = "ai-generate"

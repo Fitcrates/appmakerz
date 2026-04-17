@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
@@ -6,14 +6,34 @@ import { useEmailForm } from '../../hooks/useEmailForm';
 import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
-import { trackContactClick } from '../../utils/gtm';
+import { trackContactClick, trackFormStart, trackFormView } from '../../utils/gtm';
 
 const ContactNew: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const hasTrackedViewRef = useRef(false);
+  const hasTrackedStartRef = useRef(false);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
   const { formData, isSubmitting, isSuccess, handleSubmit, handleChange } = useEmailForm();
   const { language } = useLanguage();
   const t = translations[language].contact;
+
+  useEffect(() => {
+    if (!isInView || hasTrackedViewRef.current) {
+      return;
+    }
+
+    hasTrackedViewRef.current = true;
+    trackFormView('contact_form');
+  }, [isInView]);
+
+  const handleFieldFocus = () => {
+    if (hasTrackedStartRef.current) {
+      return;
+    }
+
+    hasTrackedStartRef.current = true;
+    trackFormStart('contact_form');
+  };
 
   return (
     <section
@@ -125,6 +145,7 @@ const ContactNew: React.FC = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
+                  onFocus={handleFieldFocus}
                   required
                   disabled={isSubmitting}
                   aria-required="true"
@@ -145,6 +166,7 @@ const ContactNew: React.FC = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
+                  onFocus={handleFieldFocus}
                   required
                   disabled={isSubmitting}
                   aria-required="true"
@@ -164,6 +186,7 @@ const ContactNew: React.FC = () => {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
+                  onFocus={handleFieldFocus}
                   required
                   disabled={isSubmitting}
                   aria-required="true"
