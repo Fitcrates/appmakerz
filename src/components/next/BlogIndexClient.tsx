@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import Link from 'next/link';
 import { ArrowUpRight, Search } from 'lucide-react';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import { useLanguage } from '@/context/LanguageContext';
 import { urlFor } from '@/lib/sanity.image';
 import { getLocalizedText } from '@/lib/localize';
@@ -64,7 +64,7 @@ export default function BlogIndexClient({ posts }: BlogIndexClientProps) {
             const imageUrl = post.mainImage ? urlFor(post.mainImage).width(400).height(300).url() : '';
 
             return (
-              <Link key={post._id} href={`/blog/${post.slug.current}`} className="group block">
+              <PrefetchLink key={post._id} href={`/blog/${post.slug.current}`} className="group block">
                 <div className="relative overflow-hidden border border-white/10 hover:border-teal-300/30 transition-all duration-500">
                   <div className="flex flex-col md:flex-row md:h-[250px]">
                     {imageUrl ? (
@@ -114,7 +114,7 @@ export default function BlogIndexClient({ posts }: BlogIndexClientProps) {
 
                   <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-teal-300/0 group-hover:border-teal-300/50 transition-colors duration-500" />
                 </div>
-              </Link>
+              </PrefetchLink>
             );
           })}
         </div>

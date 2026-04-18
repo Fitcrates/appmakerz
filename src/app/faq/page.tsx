@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import FaqPageClient from '@/components/next/FaqPageClient';
 import { faqContent } from '@/content/faq';
 import { getRequestLanguage } from '@/lib/request-language';
@@ -50,9 +51,9 @@ export default async function FaqPage() {
 
       <main className="pt-32 pb-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <a href="/" className="inline-flex items-center text-white/40 hover:text-teal-300 transition-colors mb-12 group">
+          <PrefetchLink href="/" className="inline-flex items-center text-white/40 hover:text-teal-300 transition-colors mb-12 group">
             <span className="font-jakarta text-sm">{content.backToHome}</span>
-          </a>
+          </PrefetchLink>
 
           <div className="mb-16">
             <div className="flex items-center gap-4 mb-6">

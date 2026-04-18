@@ -1,5 +1,6 @@
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
+import PrefetchLink from '@/components/next/PrefetchLink';
 
 export default function NotFound() {
   return (
@@ -12,9 +13,9 @@ export default function NotFound() {
           <p className="mt-6 text-white/60 font-jakarta font-light leading-relaxed">
             The page you are looking for does not exist or may have been moved.
           </p>
-          <a href="/" className="inline-flex mt-8 px-6 py-3 bg-teal-300 text-indigo-950 font-jakarta font-medium hover:bg-teal-200 transition-colors">
+          <PrefetchLink href="/" className="inline-flex mt-8 px-6 py-3 bg-teal-300 text-indigo-950 font-jakarta font-medium hover:bg-teal-200 transition-colors">
             Back to home
-          </a>
+          </PrefetchLink>
         </div>
       </main>
       <NextFooter />

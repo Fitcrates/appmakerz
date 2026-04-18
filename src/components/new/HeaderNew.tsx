@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState, type MouseEvent } from 'react';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, Globe, Bot, AppWindow, ShoppingCart, type LucideIcon } from 'lucide-react';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import LanguageToggleNext from '../next/LanguageToggleNext';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
@@ -109,15 +109,15 @@ const HeaderNew: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <Link href="/" className="relative z-10">
+            <PrefetchLink href="/" className="relative z-10">
               <motion.span whileHover={{ scale: 1.05 }} className="text-xl font-jakarta font-light text-white">
                 App<span className="text-teal-300">Crates</span>
               </motion.span>
-            </Link>
+            </PrefetchLink>
 
             <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
               {navItems.map((item) => (
-                <a
+                <PrefetchLink
                   key={item.label}
                   href={item.href}
                   onClick={(event) => handleNavClick(event, item.href)}
@@ -125,7 +125,7 @@ const HeaderNew: React.FC = () => {
                 >
                   {item.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-px bg-teal-300 group-hover:w-full transition-all duration-300" />
-                </a>
+                </PrefetchLink>
               ))}
 
               <div className="relative group">
@@ -144,7 +144,7 @@ const HeaderNew: React.FC = () => {
                     {serviceLandingLinks.map((item) => {
                       const Icon = item.icon;
                       return (
-                        <Link
+                        <PrefetchLink
                           key={item.href}
                           href={item.href}
                           className="flex items-start gap-4 p-4 rounded-lg hover:bg-white/[0.05] transition-all duration-200 group"
@@ -156,7 +156,7 @@ const HeaderNew: React.FC = () => {
                             <p className="text-sm font-jakarta font-medium text-white group-hover:text-teal-300 transition-colors">{item.label}</p>
                             <p className="text-xs font-jakarta text-white mt-1 leading-relaxed">{item.description}</p>
                           </div>
-                        </Link>
+                        </PrefetchLink>
                       );
                     })}
                   </div>
@@ -213,13 +213,13 @@ const HeaderNew: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <a
+                    <PrefetchLink
                       href={item.href}
                       onClick={(event) => handleNavClick(event, item.href)}
                       className="block text-2xl font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
                     >
                       {item.label}
-                    </a>
+                    </PrefetchLink>
                   </motion.div>
                 ))}
 
@@ -234,7 +234,7 @@ const HeaderNew: React.FC = () => {
                     {serviceLandingLinks.map((item) => {
                       const Icon = item.icon;
                       return (
-                        <Link
+                        <PrefetchLink
                           key={item.href}
                           href={item.href}
                           onClick={() => setIsMobileMenuOpen(false)}
@@ -242,7 +242,7 @@ const HeaderNew: React.FC = () => {
                         >
                           <Icon className="w-4 h-4 text-teal-300/60" />
                           <span>{item.label}</span>
-                        </Link>
+                        </PrefetchLink>
                       );
                     })}
                   </div>

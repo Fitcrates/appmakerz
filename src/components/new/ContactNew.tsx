@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import { useEmailForm } from '../../hooks/useEmailForm';
 import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
@@ -217,9 +218,9 @@ const ContactNew: React.FC = () => {
 
                 <p className="text-xs text-white/20 font-jakarta">
                   {t.form.privacy.text}{' '}
-                  <a href="/privacy-policy" className="text-white/40 hover:text-teal-300 transition-colors">
+                  <PrefetchLink href="/privacy-policy" className="text-white/40 hover:text-teal-300 transition-colors">
                     {t.form.privacy.link}
-                  </a>
+                  </PrefetchLink>
                 </p>
               </div>
             </form>

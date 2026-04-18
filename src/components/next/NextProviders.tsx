@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import GlobalRoutePrefetch from '@/components/next/GlobalRoutePrefetch';
 import { LanguageProvider } from '@/context/LanguageContext';
 import type { Language } from '@/lib/language';
 
@@ -10,5 +11,10 @@ interface NextProvidersProps {
 }
 
 export default function NextProviders({ children, initialLanguage }: NextProvidersProps) {
-  return <LanguageProvider initialLanguage={initialLanguage}>{children}</LanguageProvider>;
+  return (
+    <LanguageProvider initialLanguage={initialLanguage}>
+      <GlobalRoutePrefetch />
+      {children}
+    </LanguageProvider>
+  );
 }

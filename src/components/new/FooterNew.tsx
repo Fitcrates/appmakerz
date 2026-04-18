@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUp, Mail, ArrowRight, Check } from 'lucide-react';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 import { trackContactClick } from '../../utils/gtm';
@@ -196,11 +197,11 @@ const FooterNew: React.FC = () => {
         <div className="py-16 lg:py-24 border-t border-white/10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
             <div>
-              <a href="/#hero" className="inline-block mb-8">
+              <PrefetchLink href="/#hero" className="inline-block mb-8">
                 <span className="text-3xl font-jakarta font-light text-white">
                   App<span className="text-teal-300">Crates</span>
                 </span>
-              </a>
+              </PrefetchLink>
               <p className="text-white/40 font-jakarta font-light max-w-md text-lg leading-relaxed">{t.brand.description}</p>
             </div>
 
@@ -210,9 +211,9 @@ const FooterNew: React.FC = () => {
                 <ul className="space-y-4" role="list">
                   {footerNavItems.map((link) => (
                     <li key={link.name}>
-                      <a href={link.href} className="text-white/60 font-jakarta hover:text-teal-300 transition-colors">
+                      <PrefetchLink href={link.href} className="text-white/60 font-jakarta hover:text-teal-300 transition-colors">
                         {link.name}
-                      </a>
+                      </PrefetchLink>
                     </li>
                   ))}
                 </ul>
@@ -251,9 +252,9 @@ const FooterNew: React.FC = () => {
                     </a>
                   </li>
                   <li>
-                    <a href="/blog" className="text-white/60 font-jakarta hover:text-teal-300 transition-colors">
+                    <PrefetchLink href="/blog" className="text-white/60 font-jakarta hover:text-teal-300 transition-colors">
                       {t.links.blog}
-                    </a>
+                    </PrefetchLink>
                   </li>
                 </ul>
               </div>
@@ -265,15 +266,15 @@ const FooterNew: React.FC = () => {
           <p className="text-white/20 text-sm font-jakarta">{t.copyright.replace('{year}', currentYear.toString())}</p>
 
           <div className="flex items-center gap-8">
-            <a href="/faq" className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors">
+            <PrefetchLink href="/faq" className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors">
               FAQ
-            </a>
-            <a href="/privacy-policy" className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors">
+            </PrefetchLink>
+            <PrefetchLink href="/privacy-policy" className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors">
               {t.legal.privacy}
-            </a>
-            <a href="/unsubscribe" className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors">
+            </PrefetchLink>
+            <PrefetchLink href="/unsubscribe" className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors">
               {t.legal.unsubscribe}
-            </a>
+            </PrefetchLink>
 
             <motion.button
               onClick={scrollToTop}

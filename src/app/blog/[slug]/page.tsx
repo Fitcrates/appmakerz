@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { PortableText } from '@portabletext/react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -7,6 +6,7 @@ import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BlogPostViewTracker from '@/components/next/BlogPostViewTracker';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getPopularPosts, getPost, getPosts, urlFor } from '@/lib/sanity.server';
 import { getRequestLanguage } from '@/lib/request-language';
@@ -108,9 +108,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 text-sm text-white/40 font-jakarta mb-8 overflow-hidden">
-            <Link href="/" className="hover:text-teal-300 transition-colors">{translations[language].navigation.home}</Link>
+            <PrefetchLink href="/" className="hover:text-teal-300 transition-colors">{translations[language].navigation.home}</PrefetchLink>
             <span>/</span>
-            <Link href="/blog" className="hover:text-teal-300 transition-colors">{translations[language].navigation.blog}</Link>
+            <PrefetchLink href="/blog" className="hover:text-teal-300 transition-colors">{translations[language].navigation.blog}</PrefetchLink>
             <span>/</span>
             <span className="text-white/60 truncate max-w-[200px]">{title}</span>
           </div>
@@ -160,7 +160,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
           <div className="mt-16 pt-16 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-8">
             {previousPost ? (
-              <Link href={`/blog/${previousPost.slug.current}`} className="group flex items-center gap-4 flex-1">
+              <PrefetchLink href={`/blog/${previousPost.slug.current}`} className="group flex items-center gap-4 flex-1">
                 <div className="w-12 h-12 border border-white/10 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300 flex-shrink-0">
                   <ArrowLeft className="w-5 h-5 text-white/50 group-hover:text-indigo-950 transition-colors" />
                 </div>
@@ -168,11 +168,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <p className="text-xs text-white/30 font-jakarta tracking-widest uppercase mb-1">{language === 'pl' ? 'Poprzedni' : 'Previous'}</p>
                   <p className="text-white font-jakarta group-hover:text-teal-300 transition-colors truncate">{getLocalizedText(previousPost.title, language)}</p>
                 </div>
-              </Link>
+              </PrefetchLink>
             ) : <div />}
 
             {nextPost ? (
-              <Link href={`/blog/${nextPost.slug.current}`} className="group flex items-center gap-4 flex-1 justify-end text-right">
+              <PrefetchLink href={`/blog/${nextPost.slug.current}`} className="group flex items-center gap-4 flex-1 justify-end text-right">
                 <div className="min-w-0">
                   <p className="text-xs text-white/30 font-jakarta tracking-widest uppercase mb-1">{language === 'pl' ? 'Następny' : 'Next'}</p>
                   <p className="text-white font-jakarta group-hover:text-teal-300 transition-colors truncate">{getLocalizedText(nextPost.title, language)}</p>
@@ -180,7 +180,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 <div className="w-12 h-12 border border-white/10 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300 flex-shrink-0">
                   <ArrowRight className="w-5 h-5 text-white/50 group-hover:text-indigo-950 transition-colors" />
                 </div>
-              </Link>
+              </PrefetchLink>
             ) : null}
           </div>
         </div>
@@ -193,7 +193,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 const popularTitle = getLocalizedText(popularPost.title, language);
                 const imageUrl = popularPost.mainImage ? urlFor(popularPost.mainImage).width(64).height(64).url() : '';
                 return (
-                  <Link
+                  <PrefetchLink
                     key={popularPost._id}
                     href={`/blog/${popularPost.slug.current}`}
                     className="flex items-center gap-4 group p-3 -mx-3 border border-transparent hover:border-white/10 transition-all duration-300"
@@ -205,7 +205,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                         {popularPost.viewCount || 0} {t.views} • {new Date(popularPost.publishedAt).toLocaleDateString(language === 'pl' ? 'pl-PL' : 'en-US')}
                       </p>
                     </div>
-                  </Link>
+                  </PrefetchLink>
                 );
               })}
             </div>

@@ -4,6 +4,7 @@ import { PortableText } from '@portabletext/react';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getAboutMe, urlFor } from '@/lib/sanity.server';
 import { getRequestLanguage } from '@/lib/request-language';
@@ -117,12 +118,12 @@ export default async function AboutMePage() {
               <div className="border border-white/10 p-6 sm:p-8 bg-white/[0.02]">
                 <h3 className="text-white font-jakarta text-xl font-light mb-6">{language === 'pl' ? 'Przejdź dalej' : 'Continue exploring'}</h3>
                 <div className="flex flex-col space-y-4">
-                  <a href="/#services" className="group inline-flex items-center gap-3 text-white font-jakarta hover:text-teal-300 transition-colors">
+                  <PrefetchLink href="/#services" className="group inline-flex items-center gap-3 text-white font-jakarta hover:text-teal-300 transition-colors">
                     <span>{ctaProjects}</span>
-                  </a>
-                  <a href="/#contact" className="group inline-flex items-center gap-3 text-white font-jakarta hover:text-teal-300 transition-colors">
+                  </PrefetchLink>
+                  <PrefetchLink href="/#contact" className="group inline-flex items-center gap-3 text-white font-jakarta hover:text-teal-300 transition-colors">
                     <span>{ctaContact}</span>
-                  </a>
+                  </PrefetchLink>
                 </div>
               </div>
             </div>

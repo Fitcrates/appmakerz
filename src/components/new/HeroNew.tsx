@@ -12,7 +12,6 @@ const HeroNew: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language].hero;
 
-  // Scroll transforms - optimized
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
@@ -32,7 +31,6 @@ const HeroNew: React.FC = () => {
       ref={containerRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-indigo-950"
     >
-      {/* Hero background image */}
       <div className="absolute inset-0 z-0" aria-hidden="true">
         <picture>
           <source media="(max-width: 768px)" srcSet="/media/hero2new.webp" />
@@ -49,7 +47,6 @@ const HeroNew: React.FC = () => {
         <div className="absolute inset-0 bg-indigo-950/70" />
       </div>
 
-      {/* Subtle noise texture */}
       <div
         className="absolute inset-0 opacity-[0.02] pointer-events-none z-10"
         aria-hidden="true"
@@ -58,18 +55,14 @@ const HeroNew: React.FC = () => {
         }}
       />
 
-      {/* Animated pulse path decoration */}
       <HeroPulsePath />
 
-      {/* Main content */}
       <motion.div
         style={{ y, willChange: "transform" }}
         className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20 [@media(max-height:800px)]:py-12"
       >
-        {/* Visually hidden SEO h1 */}
         <h1 className="sr-only">{t.seoHeading}</h1>
 
-        {/* Small label */}
         <motion.div
           initial={false}
           animate={{ opacity: 1, y: 0 }}
@@ -81,7 +74,6 @@ const HeroNew: React.FC = () => {
           </span>
         </motion.div>
 
-        {/* Decorative heading with burn animation (not the SEO h1) */}
         <div
           className="mb-8 [@media(max-height:800px)]:mb-4"
           aria-hidden="true"
@@ -98,11 +90,10 @@ const HeroNew: React.FC = () => {
           </BurnSpotlightText>
         </div>
 
-        {/* Subtitle with spotlight effect */}
         <motion.div
           initial={false}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2.5 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 2.35 }}
           className="max-w-xl mx-auto mb-16 [@media(max-height:800px)]:mb-8 [@media(max-height:700px)]:mb-6"
         >
           <SpotlightText
@@ -114,11 +105,10 @@ const HeroNew: React.FC = () => {
           </SpotlightText>
         </motion.div>
 
-        {/* CTA Buttons */}
         <motion.div
           initial={false}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 3 }}
+          transition={{ duration: 0.8, delay: 2.8 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-6 [@media(max-height:700px)]:gap-4"
         >
           <a
@@ -127,7 +117,6 @@ const HeroNew: React.FC = () => {
             aria-label="Find out more about me"
           >
             <span className="relative z-10">{t.cta.viewWork}</span>
-            {/* Hover wipe effect */}
             <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
           </a>
 
@@ -144,10 +133,9 @@ const HeroNew: React.FC = () => {
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator - hidden on mobile AND short screens */}
       <motion.button
         onClick={scrollToNext}
-        initial={false}
+        initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 3.5 }}
         className="absolute bottom-12 [@media(max-height:800px)]:bottom-6 left-1/2 -translate-x-1/2 z-20 hidden sm:flex [@media(max-height:700px)]:!hidden flex-col items-center gap-3 text-white/30 hover:text-teal-300 transition-colors cursor-pointer group focus:outline-none focus:text-teal-300"
@@ -168,7 +156,6 @@ const HeroNew: React.FC = () => {
         </motion.div>
       </motion.button>
 
-      {/* Minimal corner accents */}
       <div
         className="absolute top-8 left-8 w-16 h-16 border-l border-t border-white/10 z-10"
         aria-hidden="true"

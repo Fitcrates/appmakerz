@@ -5,6 +5,7 @@ import { ArrowUpRight, Check } from 'lucide-react';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import FaqAccordionList from '@/components/next/FaqAccordionList';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getServiceLanding, getServiceLandings, urlFor } from '@/lib/sanity.server';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
@@ -123,14 +124,14 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
             ) : null}
 
             <div className="flex flex-col sm:flex-row gap-4 mt-10">
-              <a
+              <PrefetchLink
                 href="/#contact"
                 className="group relative px-10 py-5 bg-teal-300 text-indigo-950 font-jakarta font-medium overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
               >
                 <span className="relative z-10">{ctaLabel}</span>
                 <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-              </a>
-              <a
+              </PrefetchLink>
+              <PrefetchLink
                 href="/#projects"
                 className="group px-10 py-5 border border-white/20 text-white font-jakarta font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
               >
@@ -138,7 +139,7 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
                   {ctaSecondaryLabel}
                 </span>
                 <div className="absolute inset-0 bg-teal-300 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-              </a>
+              </PrefetchLink>
             </div>
           </div>
 
@@ -215,7 +216,7 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
                       {language === 'pl' ? 'Co dostajesz' : 'What you get'}
                     </BurnSpotlightText>
                   </div>
-                  <a
+                  <PrefetchLink
                     href="/#contact"
                     className="group inline-flex items-center gap-4"
                   >
@@ -225,7 +226,7 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
                     <div className="w-12 h-12 border border-white/20 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300">
                       <ArrowUpRight className="w-5 h-5 text-white group-hover:text-indigo-950 transition-colors" />
                     </div>
-                  </a>
+                  </PrefetchLink>
                 </div>
                 <div>
                   {deliverables.map((item: string, index: number) => (
@@ -332,13 +333,13 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
                   : "Let's talk about your project. Free consultation, no obligations."}
               </SpotlightText>
             </div>
-            <a
+            <PrefetchLink
               href="/#contact"
               className="group relative inline-block px-12 py-5 bg-teal-300 text-indigo-950 font-jakarta font-medium overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
             >
               <span className="relative z-10">{ctaLabel}</span>
               <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-            </a>
+            </PrefetchLink>
           </div>
         </section>
       </main>

@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import Link from 'next/link';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import SpotlightText from './SpotlightText';
 import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
@@ -124,14 +124,14 @@ const AboutNew: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.55 }}
               className="mb-16"
             >
-              <Link href="/about-me" className="group inline-flex items-center gap-4" aria-label="Go to About Me page">
+              <PrefetchLink href="/about-me" className="group inline-flex items-center gap-4" aria-label="Go to About Me page">
                 <span className="text-white font-jakarta group-hover:text-teal-300 transition-colors">
                   {language === 'pl' ? 'Poznaj mnie' : 'Get to know me'}
                 </span>
                 <span className="w-11 h-11 border border-white/20 flex items-center justify-center group-hover:bg-teal-300 group-hover:border-teal-300 transition-all">
                   <ArrowUpRight className="w-4 h-4 text-white group-hover:text-indigo-950 transition-colors" />
                 </span>
-              </Link>
+              </PrefetchLink>
             </motion.div>
 
             <motion.div

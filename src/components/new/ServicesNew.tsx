@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef } from 'react';
-import Link from 'next/link';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import CrackImage from './CrackImage';
 import SpotlightText from './SpotlightText';
 import BurnSpotlightText from './BurnSpotlightText';
@@ -56,7 +56,7 @@ const ServiceItem: React.FC<{ service: Service; index: number }> = ({ service, i
       transition={{ duration: 0.6, delay: index * 0.15 }}
       className="group relative py-12 border-b border-white/10 hover:border-white/20 transition-colors"
     >
-      <Link href={service.href} className="block focus:outline-none focus:ring-2 focus:ring-teal-300/40 rounded">
+      <PrefetchLink href={service.href} className="block focus:outline-none focus:ring-2 focus:ring-teal-300/40 rounded">
         <div className="flex flex-col lg:flex-row lg:items-start gap-4">
           <span className="text-xs text-teal-300 font-jakarta tracking-widest lg:w-12 flex-shrink-0">{service.number}</span>
 
@@ -72,7 +72,7 @@ const ServiceItem: React.FC<{ service: Service; index: number }> = ({ service, i
             </SpotlightText>
           </div>
         </div>
-      </Link>
+      </PrefetchLink>
 
       <motion.div
         initial={{ scaleX: 0 }}

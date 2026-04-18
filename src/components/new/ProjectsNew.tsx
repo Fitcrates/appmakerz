@@ -1,7 +1,7 @@
 import { useRef, memo } from 'react';
-import Link from 'next/link';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 import BurnSpotlightText from './BurnSpotlightText';
@@ -96,7 +96,7 @@ const ProjectRow = memo<{ project: Project; index: number; mobileActionLabel: st
       animate={isInView ? { opacity: 1 } : {}}
       transition={{ duration: 0.8, delay: index * 0.1 }}
     >
-      <Link href={`/project/${project.slug}`} aria-label={`View project: ${project.title}`}>
+      <PrefetchLink href={`/project/${project.slug}`} aria-label={`View project: ${project.title}`}>
         <article className="group relative py-6 lg:min-h-[180px] border-b border-white/10 cursor-pointer hover:border-white/20 hover:z-50 transition-colors">
           <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-300" />
 
@@ -142,7 +142,7 @@ const ProjectRow = memo<{ project: Project; index: number; mobileActionLabel: st
             <div className="absolute -bottom-1 -right-1 w-3 h-3 border-r border-b border-teal-300" aria-hidden="true" />
           </div>
         </article>
-      </Link>
+      </PrefetchLink>
     </motion.div>
   );
 });

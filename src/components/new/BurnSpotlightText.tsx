@@ -121,10 +121,15 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
   const isInView = useInView(containerRef, { once: true, amount: 0.1 });
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
   const [burnComplete, setBurnComplete] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const [hasActivated, setHasActivated] = useState(activateOnMount);
   const revealedCount = useRef(0);
   const textContent = text ?? extractTextContent(children);
   const totalChars = textContent.replace(/\s/g, "").length;
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
     revealedCount.current = 0;
@@ -161,6 +166,18 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
   }, []);
 
   const maskGradient = `radial-gradient(circle ${glowSize}px at ${mousePos.x}px ${mousePos.y}px, rgba(0,0,0,${CENTER_OPACITY}) 0%, rgba(0,0,0,${MID_OPACITY}) ${MID_POSITION}%, rgba(0,0,0,0) 100%)`;
+
+  if (!hasMounted) {
+    return (
+      <div
+        ref={containerRef}
+        className="relative cursor-default inline-block w-full"
+        style={{ isolation: "isolate", overflowWrap: "break-word" }}
+      >
+        <Component className={className}>{textContent}</Component>
+      </div>
+    );
+  }
 
   // Render characters with proper structure for both base and glow layers
   // Must match BurnChar structure exactly for alignment

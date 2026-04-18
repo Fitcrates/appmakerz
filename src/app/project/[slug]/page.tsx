@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowUpRight, Feather, Github, Globe } from 'lucide-react';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
+import PrefetchLink from '@/components/next/PrefetchLink';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getProject, getProjects, urlFor } from '@/lib/sanity.server';
 import { getRequestLanguage } from '@/lib/request-language';
@@ -94,10 +95,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <a href="/#services" className="inline-flex items-center text-white/60 hover:text-teal-300 transition-colors group">
+            <PrefetchLink href="/#services" className="inline-flex items-center text-white/60 hover:text-teal-300 transition-colors group">
               <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
               <span className="font-jakarta text-sm">{t.backToProjects}</span>
-            </a>
+            </PrefetchLink>
           </div>
 
           <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white font-jakarta leading-tight mb-8">
