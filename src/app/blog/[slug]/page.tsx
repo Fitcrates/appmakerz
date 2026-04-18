@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BlogPostViewTracker from '@/components/next/BlogPostViewTracker';
+import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getPopularPosts, getPost, getPosts, urlFor } from '@/lib/sanity.server';
 import { getRequestLanguage } from '@/lib/request-language';
@@ -114,7 +115,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <span className="text-white/60 truncate max-w-[200px]">{title}</span>
           </div>
 
-          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white font-jakarta leading-tight mb-8">{title}</h1>
+          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white font-jakarta leading-tight mb-8">
+            <BurnSpotlightText as="span" className="font-inherit text-inherit" glowSize={150}>
+              {title}
+            </BurnSpotlightText>
+          </h1>
 
           <div className="flex items-center gap-4 mb-12 pb-12 border-b border-white/10">
             {authorImageUrl ? <img src={authorImageUrl} alt={post.author?.name || ''} className="w-14 h-14 rounded-full object-cover" /> : null}

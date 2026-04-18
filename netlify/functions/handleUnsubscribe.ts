@@ -1,81 +1,55 @@
-import { Handler } from '@netlify/functions';
-import { createClient } from '@sanity/client';
+import type { Handler } from '@netlify/functions';
 
-// Initialize Sanity client with write access
-const client = createClient({
-  projectId: process.env.VITE_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID,
-  dataset: process.env.VITE_SANITY_DATASET || process.env.SANITY_DATASET,
-  token: process.env.BACKEND_SANITY_TOKEN || process.env.SANITY_TOKEN,
-  apiVersion: '2023-03-25',
-  useCdn: false,
-});
+import { getSanityWriteClient, jsonResponse, normalizeEmail, parseJsonBody } from './_shared';
+
+type UnsubscribePayload = {
+  token?: string;
+  email?: string;
+};
 
 export const handler: Handler = async (event) => {
-  // Only allow POST requests
   if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method not allowed' }),
-    };
+    return jsonResponse(405, { message: 'Method not allowed.' });
   }
 
   try {
-    const { token, email } = JSON.parse(event.body || '{}');
+    const body = parseJsonBody<UnsubscribePayload>(event.body);
+    const token = typeof body.token === 'string' && body.token.trim().length > 0 ? body.token.trim() : undefined;
+    const email = typeof body.email === 'string' && body.email.trim().length > 0 ? normalizeEmail(body.email) : undefined;
 
-    // If token is provided, use it to find and patch subscriber status
-    if (token) {
-      const subscriberId = await client.fetch(
-        `*[_type == "subscriber" && unsubscribeToken == $token][0]._id`,
-        { token }
-      );
-
-      if (!subscriberId) {
-        return {
-          statusCode: 404,
-          body: JSON.stringify({ message: 'Subscriber not found' }),
-        };
-      }
-
-      await client
-        .patch(subscriberId)
-        .set({ status: 'inactive' })
-        .commit();
-    }
-    // If email is provided, use it to find and patch subscriber status
-    else if (email) {
-      const subscriberId = await client.fetch(
-        `*[_type == "subscriber" && email == $email][0]._id`,
-        { email }
-      );
-
-      if (!subscriberId) {
-        return {
-          statusCode: 404,
-          body: JSON.stringify({ message: 'Subscriber not found' }),
-        };
-      }
-
-      await client
-        .patch(subscriberId)
-        .set({ status: 'inactive' })
-        .commit();
-    }
-    else {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ message: 'Token or email is required' }),
-      };
+    if (!token && !email) {
+      return jsonResponse(400, { message: 'Token or email is required.' });
     }
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: 'Successfully unsubscribed' }),
-    };
+    const client = getSanityWriteClient();
+    const subscriberId = token
+      ? ((await client.fetch(
+          `*[_type == "subscriber" && unsubscribeToken == $token][0]._id`,
+          { token } as Record<string, string>
+        )) as string | null)
+      : ((await client.fetch(
+          `*[_type == "subscriber" && email == $email][0]._id`,
+          { email: email as string } as Record<string, string>
+        )) as string | null);
+
+    if (!subscriberId) {
+      return jsonResponse(404, { message: 'Subscriber not found.' });
+    }
+
+    await client
+      .patch(subscriberId)
+      .set({
+        isActive: false,
+        status: 'inactive',
+        unsubscribedAt: new Date().toISOString(),
+      })
+      .commit();
+
+    return jsonResponse(200, { message: 'Successfully unsubscribed.' });
   } catch (error) {
-    console.error('Error:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Internal server error' }),
-    };
+    console.error('Newsletter unsubscribe error:', error);
+    return jsonResponse(500, {
+      message: error instanceof Error ? error.message : 'Internal server error.',
+    });
   }
 };

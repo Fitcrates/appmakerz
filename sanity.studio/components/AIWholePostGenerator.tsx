@@ -1,6 +1,10 @@
 import { useCallback, useState, useEffect, useRef } from 'react'
 import { Stack, Button, Spinner, TextArea, Text, Box, Card, Flex, Select, TextInput } from '@sanity/ui'
 import { set, useFormValue, useClient } from 'sanity'
+import {
+  rebuildPortableTextFromTranslation,
+  serializePortableTextForTranslation,
+} from './portableTextAi'
 
 const MODEL_OPTIONS: Record<string, Array<{ label: string; value: string }>> = {
   openai: [
@@ -519,6 +523,61 @@ export const AIWholePostGenerator = (props: any) => {
   }
 
   // ── Patch document in Sanity ────────────────────────────────────────────
+  const translatePortableTextField = async (
+    fieldName: 'body' | 'content',
+    targetLanguage: 'en' | 'pl',
+    systemPrompt: string,
+    userRequest: string
+  ) => {
+    const sourceLanguage = targetLanguage === 'en' ? 'pl' : 'en'
+    const sourceDocument = workingDocumentRef.current || documentValue || {}
+    const sourceNodes = Array.isArray(sourceDocument?.[fieldName]?.[sourceLanguage])
+      ? sourceDocument[fieldName][sourceLanguage]
+      : []
+
+    if (!sourceNodes.length) return null
+
+    const translatedText = await callAI(
+      `You are a senior bilingual content localizer working inside a Sanity CMS.
+
+TASK:
+Translate ${fieldName}.${sourceLanguage} into ${fieldName}.${targetLanguage}.
+
+USER REQUEST:
+${userRequest}
+
+CRITICAL RULES:
+1. Keep EXACTLY the same node indexes and node order.
+2. For "_type":"block", translate each item in "texts" naturally and preserve the same count whenever possible.
+3. For "_type":"image", keep the image itself. Translate "alt" and "caption" only if they already exist.
+4. For "_type":"code" and any other non-text nodes, keep only the index and "_type". Do not invent translated code.
+5. Return ONLY valid JSON in this exact shape:
+{ "nodes": [{ "index": 0, "_type": "block", "texts": ["..."] }] }
+
+SOURCE STRUCTURE TO TRANSLATE:
+${JSON.stringify(serializePortableTextForTranslation(sourceNodes), null, 2)}`,
+      {
+        isJson: true,
+        maxTokens: 2600,
+        systemPrompt,
+        temperature: 0.35,
+      }
+    )
+
+    const translatedData = extractJson(translatedText)
+    const translatedNodes = Array.isArray(translatedData?.nodes) ? translatedData.nodes : []
+
+    if (!translatedNodes.length) {
+      throw new Error(`AI did not return translated nodes for ${fieldName}.${targetLanguage}.`)
+    }
+
+    return {
+      [fieldName]: {
+        [targetLanguage]: rebuildPortableTextFromTranslation(sourceNodes, translatedNodes),
+      },
+    }
+  }
+
   const patchDocument = async (generated: any) => {
     const isProject = documentType === 'project'
     const isServiceLanding = documentType === 'serviceLanding'
@@ -639,7 +698,31 @@ export const AIWholePostGenerator = (props: any) => {
       } else if (runTargetedUpdate) {
         setStatus('Updating requested fields only...')
         const sourceDocument = workingDocumentRef.current || documentValue || {}
-        const requestedCurrentValues = requestedFields.reduce((acc: Record<string, any>, key) => {
+        const portableTextField = isServiceLanding ? 'content' : 'body'
+        const requestedKeysQueue = [...requestedFields]
+        const patchedKeys: string[] = []
+
+        if (
+          (languageScope === 'en' || languageScope === 'pl') &&
+          requestedKeysQueue.includes(portableTextField)
+        ) {
+          setStatus(`Translating ${portableTextField}.${languageScope} with preserved structure...`)
+          const translatedPortableText = await translatePortableTextField(
+            portableTextField as 'body' | 'content',
+            languageScope,
+            systemPrompt,
+            input
+          )
+
+          if (translatedPortableText) {
+            const translatedKeys = await patchDocument(translatedPortableText)
+            patchedKeys.push(...translatedKeys)
+            const indexToRemove = requestedKeysQueue.indexOf(portableTextField)
+            if (indexToRemove >= 0) requestedKeysQueue.splice(indexToRemove, 1)
+          }
+        }
+
+        const requestedCurrentValues = requestedKeysQueue.reduce((acc: Record<string, any>, key) => {
           if (sourceDocument[key] !== undefined) acc[key] = sourceDocument[key]
           return acc
         }, {})
@@ -651,7 +734,7 @@ USER REQUEST:
 ${input}
 
 REQUESTED TOP-LEVEL FIELDS (STRICT ALLOWLIST):
-${requestedFields.join(', ')}
+${requestedKeysQueue.join(', ')}
 
 LANGUAGE SCOPE:
 ${languageScope}
@@ -676,28 +759,36 @@ RULES:
 8. If a requested field is unclear, keep it unchanged by omitting it.
 9. Do not use markdown fences.`
 
-        const targetedText = await callAI(targetedPrompt, {
+        let filteredData: Record<string, any> = {}
+        if (requestedKeysQueue.length > 0) {
+          const targetedText = await callAI(targetedPrompt, {
           isJson: true,
-          maxTokens: 2600,
+          maxTokens: 2200,
           systemPrompt,
           temperature: 0.55,
         })
-        const targetedData = extractJson(targetedText)
-        const allowlist = new Set(requestedFields)
-        const filteredData = Object.fromEntries(
-          Object.entries(targetedData).filter(([key]) => allowlist.has(key))
-        )
+          const targetedData = extractJson(targetedText)
+          const allowlist = new Set(requestedKeysQueue)
+          filteredData = Object.fromEntries(
+            Object.entries(targetedData).filter(([key]) => allowlist.has(key))
+          )
+        }
 
-        if (Object.keys(filteredData).length === 0) {
+        if (Object.keys(filteredData).length === 0 && patchedKeys.length === 0) {
           throw new Error('AI did not return any requested fields. Try naming fields explicitly, e.g. "Update only intro and FAQ".')
         }
 
-        const patchedKeys = await patchDocument(filteredData)
+        if (Object.keys(filteredData).length > 0) {
+          const aiPatchedKeys = await patchDocument(filteredData)
+          patchedKeys.push(...aiPatchedKeys)
+        }
+
         if (!patchedKeys.length) {
           throw new Error('No changes were applied to the requested fields.')
         }
 
         reply = `✅ Updated only requested fields: ${patchedKeys.join(', ')}`
+        reply = `Updated only requested fields: ${uniqueKeys(patchedKeys).join(', ')}`
       } else {
         // ── GENERATION MODE — produce JSON, parse in code, patch ─────────
         // Netlify Free Tier has a hard 10s timeout. Generating two languages of text 

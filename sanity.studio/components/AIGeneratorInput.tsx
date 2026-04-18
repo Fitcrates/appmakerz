@@ -1,6 +1,14 @@
 import { useCallback, useState } from 'react'
 import { Stack, Button, Inline, Spinner, Select, Box, TextInput } from '@sanity/ui'
 import { set, unset, useFormValue } from 'sanity'
+import {
+  ensureBlocks,
+  extractJsonArray,
+  extractJsonObject,
+  isPortableTextInput,
+  rebuildPortableTextFromTranslation,
+  serializePortableTextForTranslation,
+} from './portableTextAi'
 
 const MODEL_OPTIONS: Record<string, Array<{ label: string; value: string }>> = {
   openai: [
@@ -21,22 +29,6 @@ const MODEL_OPTIONS: Record<string, Array<{ label: string; value: string }>> = {
 const PROVIDER_DEFAULTS: Record<string, string> = {
   groq: 'llama-3.3-70b-versatile',
   openai: 'gpt-5.4-thinking',
-}
-
-function extractJsonArray(raw: string): any[] {
-  const text = (raw || '').trim()
-  if (!text) return []
-
-  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i)
-  const candidate = fenced?.[1] || text
-
-  const start = candidate.indexOf('[')
-  const end = candidate.lastIndexOf(']')
-  if (start === -1 || end === -1 || end <= start) {
-    throw new Error('AI response did not return a JSON array.')
-  }
-
-  return JSON.parse(candidate.slice(start, end + 1))
 }
 
 function hasMeaningfulValue(value: any): boolean {
@@ -80,6 +72,7 @@ export const AIGeneratorInput = (props: any) => {
     setModel(PROVIDER_DEFAULTS[p])
   }
 
+  const isPortableTextField = isPortableTextInput(pathArray, schemaType)
   const selectedPreset = MODEL_OPTIONS[provider].some((option) => option.value === model)
     ? model
     : '__custom__'
@@ -106,7 +99,9 @@ export const AIGeneratorInput = (props: any) => {
       const isLocalizedField = activeLanguageKey === 'en' || activeLanguageKey === 'pl'
       const sourceLanguage = isPolish ? 'English' : 'Polish'
       const shouldTranslateFromSibling = isLocalizedField && hasMeaningfulValue(siblingLanguageValue)
-      const siblingContent = shouldTranslateFromSibling ? valueToPromptText(siblingLanguageValue) : ''
+      const siblingContent = shouldTranslateFromSibling && !isPortableTextField
+        ? valueToPromptText(siblingLanguageValue)
+        : ''
 
       const contentTypeLabel = documentType === 'project'
         ? 'project case study'
@@ -125,7 +120,11 @@ export const AIGeneratorInput = (props: any) => {
       const translationInstruction = shouldTranslateFromSibling
         ? `Translate the provided ${sourceLanguage} content into ${languageMatch}. Keep meaning, tone, structure, and level of detail aligned with the source.`
         : ''
-      const returnFormatInstruction = isArrayField
+      const returnFormatInstruction = isPortableTextField
+        ? shouldTranslateFromSibling
+          ? 'Return ONLY a valid JSON object: { "nodes": [{ "index": 0, "_type": "block", "texts": ["..."] }] }. Keep the same node indexes and node order. For image nodes, you may translate "alt" and "caption" if present. For non-text nodes like code, return the node with its index and "_type", without inventing text.'
+          : 'Return ONLY a valid JSON array of Sanity Portable Text nodes. Prefer block nodes. Each block must use the Sanity structure with "_type":"block", "style", "markDefs", and "children" span items. Include image/code nodes only if explicitly useful.'
+        : isArrayField
         ? itemJsonType === 'object'
           ? `Return ONLY a valid JSON array of objects. Each object must contain exactly these keys: ${objectFieldNames.join(', ')}. No extra keys, no markdown.`
           : 'Return ONLY a valid JSON array of strings. No markdown.'
@@ -138,7 +137,7 @@ Target field: ${fieldTitle}
 Language: ${languageMatch}
 ${shouldTranslateFromSibling ? `Source language content to translate:\n${siblingContent}\n` : ''}
 ${existingValue ? `Existing field value to improve or rewrite:\n${existingValue}\nRewrite it to be stronger and more useful. Do not copy it verbatim.\n` : ''}
-${returnFormatInstruction}`
+${isPortableTextField && shouldTranslateFromSibling ? `Source Portable Text structure to translate and preserve:\n${JSON.stringify(serializePortableTextForTranslation(Array.isArray(siblingLanguageValue) ? siblingLanguageValue : []), null, 2)}\n` : ''}${returnFormatInstruction}`
 
       const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname)
       const apiUrl = isLocalhost
@@ -151,7 +150,7 @@ ${returnFormatInstruction}`
         body: JSON.stringify({
           prompt: finalPrompt,
           systemPrompt: 'You are a senior bilingual SEO editor working inside a Sanity CMS. Follow the requested field instruction exactly. If source text is provided, improve or rewrite it without copying it verbatim. Return only the format requested for the target field.',
-          max_completion_tokens: isArrayField ? 700 : 300,
+          max_completion_tokens: isPortableTextField ? 2200 : isArrayField ? 700 : 300,
           provider,
           model: model.trim() || PROVIDER_DEFAULTS[provider],
           temperature: 0.7,
@@ -162,6 +161,17 @@ ${returnFormatInstruction}`
       if (data.error) throw new Error(data.error)
       if (!data.text) {
         onChange(unset())
+      } else if (isPortableTextField && shouldTranslateFromSibling) {
+        const translated = extractJsonObject(data.text)
+        const translatedNodes = Array.isArray(translated?.nodes) ? translated.nodes : []
+        const rebuilt = rebuildPortableTextFromTranslation(
+          Array.isArray(siblingLanguageValue) ? siblingLanguageValue : [],
+          translatedNodes
+        )
+        onChange(rebuilt.length ? set(rebuilt) : unset())
+      } else if (isPortableTextField) {
+        const parsed = ensureBlocks(extractJsonArray(data.text))
+        onChange(parsed.length ? set(parsed) : unset())
       } else if (isArrayField) {
         const parsed = extractJsonArray(data.text)
         onChange(parsed.length ? set(parsed) : unset())
@@ -173,7 +183,7 @@ ${returnFormatInstruction}`
     } finally {
       setLoading(false)
     }
-  }, [onChange, titleEn, titlePl, schemaType.options, schemaType?.jsonType, schemaType?.of, props.path, props.value, siblingLanguageValue, activeLanguageKey, provider, model, documentType])
+  }, [onChange, titleEn, titlePl, schemaType, props.path, props.value, siblingLanguageValue, activeLanguageKey, provider, model, documentType, pathArray, isPortableTextField])
 
   return (
     <Stack space={3}>

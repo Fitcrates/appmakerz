@@ -1,3 +1,4 @@
+import { AIGeneratorInput } from '../../components/AIGeneratorInput';
 import { AIWholePostGenerator } from '../../components/AIWholePostGenerator';
 
 export default {
@@ -131,6 +132,7 @@ export default {
           name: 'en',
           title: 'English Content',
           type: 'array',
+          components: { input: AIGeneratorInput },
           of: [
             {
               type: 'block',
@@ -209,6 +211,7 @@ export default {
           name: 'pl',
           title: 'Polish Content',
           type: 'array',
+          components: { input: AIGeneratorInput },
           of: [
             {
               type: 'block',

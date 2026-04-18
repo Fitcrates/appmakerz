@@ -49,11 +49,12 @@ const BurnChar: React.FC<{
   onRevealed?: () => void;
   isActive: boolean;
 }> = ({ char, delay, burnDuration, isSpace, onRevealed, isActive }) => {
-  const [state, setState] = useState<"hidden" | "burning" | "revealed">("revealed");
+  const [state, setState] = useState<"hidden" | "burning" | "revealed">("hidden");
 
   useEffect(() => {
     if (!isActive) return;
 
+    setState("hidden");
     const burnTimer = setTimeout(() => setState("burning"), delay);
     const revealTimer = setTimeout(() => {
       setState("revealed");
@@ -124,6 +125,11 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
   const revealedCount = useRef(0);
   const textContent = text ?? extractTextContent(children);
   const totalChars = textContent.replace(/\s/g, "").length;
+
+  useEffect(() => {
+    revealedCount.current = 0;
+    setBurnComplete(false);
+  }, [textContent]);
 
   useEffect(() => {
     if (isInView) {

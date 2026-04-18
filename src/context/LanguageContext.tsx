@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { Language } from '../lib/language';
+import { DEFAULT_LANGUAGE, type Language } from '../lib/language';
 
 interface LanguageContextType {
   language: Language;
@@ -10,13 +10,9 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-const getInitialLanguage = (initialLanguage?: Language): Language => {
-  if (initialLanguage) {
-    return initialLanguage;
-  }
-
+const getPreferredClientLanguage = (): Language => {
   if (typeof window === 'undefined') {
-    return 'pl';
+    return DEFAULT_LANGUAGE;
   }
 
   const url = new URL(window.location.href);
@@ -40,8 +36,17 @@ const getInitialLanguage = (initialLanguage?: Language): Language => {
   return 'en';
 };
 
+const getInitialLanguage = (initialLanguage?: Language): Language => initialLanguage || DEFAULT_LANGUAGE;
+
 export const LanguageProvider: React.FC<{ children: React.ReactNode; initialLanguage?: Language }> = ({ children, initialLanguage }) => {
   const [language, setLanguage] = useState<Language>(() => getInitialLanguage(initialLanguage));
+
+  useEffect(() => {
+    const preferredLanguage = getPreferredClientLanguage();
+    if (preferredLanguage !== language) {
+      setLanguage(preferredLanguage);
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') {

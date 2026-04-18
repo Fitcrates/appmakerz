@@ -1,14 +1,16 @@
 'use client';
 
 import { useTransition } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import type { Language } from '@/lib/language';
 
 export default function LanguageToggleNext() {
   const router = useRouter();
+  const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const { language, setLanguage } = useLanguage();
+  const isHomePage = pathname === '/';
 
   const handleChange = (nextLanguage: Language) => {
     if (nextLanguage === language) {
@@ -16,6 +18,10 @@ export default function LanguageToggleNext() {
     }
 
     setLanguage(nextLanguage);
+    if (isHomePage) {
+      return;
+    }
+
     startTransition(() => {
       router.refresh();
     });

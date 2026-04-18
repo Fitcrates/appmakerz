@@ -1,53 +1,71 @@
-import { Handler } from '@netlify/functions';
-import { createClient } from '@sanity/client';
+import type { Handler } from '@netlify/functions';
 import { v4 as uuidv4 } from 'uuid';
 
-const client = createClient({
-  projectId: process.env.VITE_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID,
-  dataset: process.env.VITE_SANITY_DATASET || process.env.SANITY_DATASET,
-  token: process.env.BACKEND_SANITY_TOKEN || process.env.SANITY_TOKEN,
-  useCdn: false,
-  apiVersion: '2024-02-20'
-});
+import { getSanityWriteClient, jsonResponse, normalizeEmail, parseJsonBody } from './_shared';
+
+type SubscriptionPayload = {
+  email?: string;
+  categories?: unknown;
+};
 
 export const handler: Handler = async (event) => {
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return jsonResponse(405, { success: false, message: 'Method not allowed.' });
   }
 
   try {
-    const { email, categories } = JSON.parse(event.body || '');
+    const body = parseJsonBody<SubscriptionPayload>(event.body);
+    const email = typeof body.email === 'string' ? normalizeEmail(body.email) : '';
+    const categories = Array.isArray(body.categories)
+      ? body.categories.filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+      : [];
 
-    if (!email || !categories?.length) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ 
-          error: 'Email and at least one category are required' 
-        })
-      };
+    if (!email || categories.length === 0) {
+      return jsonResponse(400, {
+        success: false,
+        message: 'Email and at least one category are required.',
+      });
     }
 
-    // Create subscriber in Sanity
+    const client = getSanityWriteClient();
+    const query = `*[_type == "subscriber" && email == $email][0]._id`;
+    const existingSubscriberId = (await client.fetch(
+      query,
+      { email } as Record<string, string>
+    )) as string | null;
+
+    if (existingSubscriberId) {
+      await client
+        .patch(existingSubscriberId)
+        .set({
+          email,
+          subscribedCategories: categories,
+          unsubscribeToken: uuidv4(),
+          isActive: true,
+          status: 'active',
+          subscribedAt: new Date().toISOString(),
+        })
+        .commit();
+
+      return jsonResponse(200, { success: true, reactivated: true });
+    }
+
     await client.create({
       _type: 'subscriber',
       email,
       subscribedCategories: categories,
       unsubscribeToken: uuidv4(),
       isActive: true,
+      status: 'active',
       subscribedAt: new Date().toISOString(),
     });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true })
-    };
+    return jsonResponse(200, { success: true, reactivated: false });
   } catch (error) {
-    console.error('Subscription error:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ 
-        error: 'Failed to process subscription' 
-      })
-    };
+    console.error('Newsletter subscription error:', error);
+    return jsonResponse(500, {
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to process subscription.',
+    });
   }
 };

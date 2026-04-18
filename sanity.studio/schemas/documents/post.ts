@@ -153,6 +153,7 @@ export default {
           name: 'en',
           title: 'English Content',
           type: 'array',
+          components: { input: AIGeneratorInput },
           of: [
             {
               type: 'block',
@@ -230,6 +231,7 @@ export default {
           name: 'pl',
           title: 'Polish Content',
           type: 'array',
+          components: { input: AIGeneratorInput },
           of: [
             {
               type: 'block',

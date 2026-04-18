@@ -6,7 +6,7 @@ import type { Language } from '@/lib/language';
 
 interface NextProvidersProps {
   children: ReactNode;
-  initialLanguage: Language;
+  initialLanguage?: Language;
 }
 
 export default function NextProviders({ children, initialLanguage }: NextProvidersProps) {

@@ -1,13 +1,46 @@
 import type { PortableTextComponents } from '@portabletext/react';
 import { urlFor } from '@/lib/sanity.server';
+import SpotlightText from '@/components/new/SpotlightText';
+import PortableTextCodeBlock from '@/components/next/PortableTextCodeBlock';
+import styles from '@/components/next/PortableTextCodeBlock.module.css';
 
 export const portableTextComponentsServer: PortableTextComponents = {
   block: {
-    h1: ({ children }) => <h1 className="text-4xl lg:text-5xl font-light text-white font-jakarta mt-12 mb-6">{children}</h1>,
-    h2: ({ children }) => <h2 className="text-3xl lg:text-4xl font-light text-white font-jakarta mt-10 mb-5">{children}</h2>,
-    h3: ({ children }) => <h3 className="text-2xl lg:text-3xl font-light text-white font-jakarta mt-8 mb-4">{children}</h3>,
-    h4: ({ children }) => <h4 className="text-xl lg:text-2xl font-light text-white font-jakarta mt-6 mb-3">{children}</h4>,
-    normal: ({ children }) => <p className="mb-6 leading-relaxed text-white/70 font-jakarta font-light text-lg">{children}</p>,
+    h1: ({ children }) => (
+      <h1 className="text-4xl lg:text-5xl font-light text-white font-jakarta mt-12 mb-6">
+        <SpotlightText as="span" className="font-inherit" baseClassName="!text-white" glowSize={140} glowColor="#5eead4">
+          {children}
+        </SpotlightText>
+      </h1>
+    ),
+    h2: ({ children }) => (
+      <h2 className="text-3xl lg:text-4xl font-light text-white font-jakarta mt-10 mb-5">
+        <SpotlightText as="span" className="font-inherit" baseClassName="!text-white" glowSize={130} glowColor="#5eead4">
+          {children}
+        </SpotlightText>
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="text-2xl lg:text-3xl font-light text-white font-jakarta mt-8 mb-4">
+        <SpotlightText as="span" className="font-inherit" baseClassName="!text-white" glowSize={120} glowColor="#5eead4">
+          {children}
+        </SpotlightText>
+      </h3>
+    ),
+    h4: ({ children }) => (
+      <h4 className="text-xl lg:text-2xl font-light text-white font-jakarta mt-6 mb-3">
+        <SpotlightText as="span" className="font-inherit" baseClassName="!text-white" glowSize={110} glowColor="#5eead4">
+          {children}
+        </SpotlightText>
+      </h4>
+    ),
+    normal: ({ children }) => (
+      <p className="mb-6 leading-relaxed text-white/70 font-jakarta font-light text-lg">
+        <SpotlightText as="span" className="font-inherit" baseClassName="!text-white/70" glowSize={115} glowColor="#5eead4">
+          {children}
+        </SpotlightText>
+      </p>
+    ),
     blockquote: ({ children }) => <blockquote className="border-l-2 border-teal-300 pl-6 my-8 italic text-white/60 font-jakarta">{children}</blockquote>,
   },
   list: {
@@ -26,7 +59,7 @@ export const portableTextComponentsServer: PortableTextComponents = {
   marks: {
     strong: ({ children }) => <strong className="font-medium text-white">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,
-    code: ({ children }) => <code className="bg-white/5 text-teal-300 px-2 py-1 rounded font-mono text-sm border border-white/10">{children}</code>,
+    code: ({ children }) => <code className={styles.inlineCode}>{children}</code>,
     link: ({ value, children }) => {
       const target = (value?.href || '').startsWith('http') ? '_blank' : undefined;
       return (
@@ -65,11 +98,7 @@ export const portableTextComponentsServer: PortableTextComponents = {
         return null;
       }
 
-      return (
-        <pre className="my-8 overflow-x-auto bg-white/5 border border-white/10 p-4 text-sm text-white/80">
-          <code>{value.code}</code>
-        </pre>
-      );
+      return <PortableTextCodeBlock code={value.code} language={value.language} />;
     },
   },
 };

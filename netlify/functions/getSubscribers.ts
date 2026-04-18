@@ -1,44 +1,30 @@
-import { Handler } from '@netlify/functions';
-import { createClient } from '@sanity/client';
+import type { Handler } from '@netlify/functions';
 
-// Initialize Sanity client
-const client = createClient({
-  projectId: process.env.VITE_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID,
-  dataset: process.env.VITE_SANITY_DATASET || process.env.SANITY_DATASET,
-  token: process.env.BACKEND_SANITY_TOKEN || process.env.SANITY_TOKEN,
-  apiVersion: '2024-02-20',
-  useCdn: false,
-});
+import { getSanityWriteClient, jsonResponse } from './_shared';
 
 export const handler: Handler = async (event) => {
-  // Only allow GET requests
   if (event.httpMethod !== 'GET') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method not allowed' }),
-    };
+    return jsonResponse(405, { message: 'Method not allowed.' });
   }
 
   try {
+    const client = getSanityWriteClient();
     const subscribers = await client.fetch(
       `*[_type == "subscriber"] | order(subscribedAt desc) {
         _id,
         email,
         subscribedCategories,
         isActive,
-        subscribedAt
+        subscribedAt,
+        unsubscribedAt
       }`
     );
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(subscribers),
-    };
+    return jsonResponse(200, subscribers);
   } catch (error) {
-    console.error('Error:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ message: 'Internal server error' }),
-    };
+    console.error('Get subscribers error:', error);
+    return jsonResponse(500, {
+      message: error instanceof Error ? error.message : 'Internal server error.',
+    });
   }
 };

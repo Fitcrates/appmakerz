@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import NextProviders from '@/components/next/NextProviders';
-import { getRequestLanguage } from '@/lib/request-language';
+import { DEFAULT_LANGUAGE } from '@/lib/language';
 import { siteUrl } from '@/lib/site';
 import '../index.css';
 import '../styles/new-design.css';
@@ -30,8 +30,7 @@ export const metadata: Metadata = {
   robots: 'index, follow',
 };
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const language = await getRequestLanguage();
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const googleTagId = process.env.NEXT_PUBLIC_GOOGLE_TAG_ID;
 
   const websiteSchema = {
@@ -79,7 +78,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   };
 
   return (
-    <html lang={language}>
+    <html lang={DEFAULT_LANGUAGE}>
       <head>
         <link rel="preload" href="/fonts/PlusJakartaSans-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <Script id="google-tag-bootstrap" strategy="beforeInteractive">
@@ -112,7 +111,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }} />
       </head>
       <body className="bg-indigo-950 text-white antialiased">
-        <NextProviders initialLanguage={language}>{children}</NextProviders>
+        <NextProviders>{children}</NextProviders>
       </body>
     </html>
   );

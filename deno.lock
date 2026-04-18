@@ -15,6 +15,7 @@
         "npm:@emailjs/nodejs@^5.0.2",
         "npm:@eslint/js@^9.9.1",
         "npm:@netlify/functions@^5.1.5",
+        "npm:@netlify/plugin-nextjs@^5.13.0",
         "npm:@portabletext/react@^3.2.1",
         "npm:@react-three/drei@^10.7.7",
         "npm:@react-three/fiber@^9.5.0",

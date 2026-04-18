@@ -1,0 +1,165 @@
+.container {
+  position: relative;
+  margin: 2.5rem 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    #0b1120;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.22);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.92);
+}
+
+.language {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-jakarta, inherit);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.language::before {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #5eead4;
+  box-shadow: 0 0 18px rgba(94, 234, 212, 0.6);
+  content: "";
+}
+
+.copyButton {
+  border: 1px solid rgba(94, 234, 212, 0.24);
+  background: rgba(94, 234, 212, 0.08);
+  color: #ccfbf1;
+  padding: 0.45rem 0.8rem;
+  font-family: var(--font-jakarta, inherit);
+  font-size: 0.78rem;
+  font-weight: 500;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.copyButton:hover {
+  background: rgba(94, 234, 212, 0.16);
+  border-color: rgba(94, 234, 212, 0.45);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.copyButton:focus-visible {
+  outline: 2px solid rgba(94, 234, 212, 0.55);
+  outline-offset: 2px;
+}
+
+.pre {
+  margin: 0;
+  overflow-x: auto;
+  padding: 1.25rem 1.1rem 1.35rem;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.1), rgba(15, 23, 42, 0.28)),
+    rgba(2, 6, 23, 0.82);
+  tab-size: 2;
+}
+
+.pre::-webkit-scrollbar {
+  height: 10px;
+}
+
+.pre::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.pre::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.36);
+}
+
+.code {
+  display: inline-block;
+  min-width: 100%;
+  color: #e2e8f0;
+  font-family: "Fira Code", "Consolas", "Menlo", monospace;
+  font-size: 0.92rem;
+  line-height: 1.72;
+  white-space: pre;
+}
+
+.inlineCode {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #5eead4;
+  padding: 0.15rem 0.45rem;
+  font-family: "Fira Code", "Consolas", "Menlo", monospace;
+  font-size: 0.9em;
+}
+
+.code :global(.token.comment),
+.code :global(.token.prolog),
+.code :global(.token.doctype),
+.code :global(.token.cdata) {
+  color: #64748b;
+}
+
+.code :global(.token.punctuation) {
+  color: #cbd5e1;
+}
+
+.code :global(.token.property),
+.code :global(.token.tag),
+.code :global(.token.boolean),
+.code :global(.token.number),
+.code :global(.token.constant),
+.code :global(.token.symbol),
+.code :global(.token.deleted) {
+  color: #fda4af;
+}
+
+.code :global(.token.selector),
+.code :global(.token.attr-name),
+.code :global(.token.string),
+.code :global(.token.char),
+.code :global(.token.builtin),
+.code :global(.token.inserted) {
+  color: #86efac;
+}
+
+.code :global(.token.operator),
+.code :global(.token.entity),
+.code :global(.token.url),
+.code :global(.language-css .token.string),
+.code :global(.style .token.string) {
+  color: #93c5fd;
+}
+
+.code :global(.token.atrule),
+.code :global(.token.attr-value),
+.code :global(.token.keyword) {
+  color: #c4b5fd;
+}
+
+.code :global(.token.function),
+.code :global(.token.class-name) {
+  color: #67e8f9;
+}
+
+.code :global(.token.regex),
+.code :global(.token.important),
+.code :global(.token.variable) {
+  color: #fde68a;
+}

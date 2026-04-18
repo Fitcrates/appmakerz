@@ -4,6 +4,7 @@ import { PortableText } from '@portabletext/react';
 import { ArrowLeft, ArrowUpRight, Feather, Github, Globe } from 'lucide-react';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
+import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getProject, getProjects, urlFor } from '@/lib/sanity.server';
 import { getRequestLanguage } from '@/lib/request-language';
@@ -99,7 +100,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </a>
           </div>
 
-          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white font-jakarta leading-tight mb-8">{title}</h1>
+          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white font-jakarta leading-tight mb-8">
+            <BurnSpotlightText as="span" className="font-inherit text-inherit" glowSize={150}>
+              {title}
+            </BurnSpotlightText>
+          </h1>
 
           {project.technologies?.length ? (
             <div className="flex flex-wrap gap-3 mb-12">

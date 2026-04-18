@@ -1,17 +1,18 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import HeroNew from '@/components/new/HeroNew';
-import TechStackNew from '@/components/new/TechStackNew';
-import AboutNew from '@/components/new/AboutNew';
-import ServicesNew from '@/components/new/ServicesNew';
-import ProjectsNew from '@/components/new/ProjectsNew';
-import SolutionsNew from '@/components/new/SolutionsNew';
-import ContactNew from '@/components/new/ContactNew';
-import CookieConsentNew from '@/components/new/CookieConsentNew';
-import { CursorGlowProvider } from '@/context/CursorGlowContext';
+
+const TechStackNew = dynamic(() => import('@/components/new/TechStackNew'));
+const AboutNew = dynamic(() => import('@/components/new/AboutNew'));
+const ServicesNew = dynamic(() => import('@/components/new/ServicesNew'));
+const ProjectsNew = dynamic(() => import('@/components/new/ProjectsNew'));
+const SolutionsNew = dynamic(() => import('@/components/new/SolutionsNew'));
+const ContactNew = dynamic(() => import('@/components/new/ContactNew'));
+const CookieConsentNew = dynamic(() => import('@/components/new/CookieConsentNew'), { ssr: false });
 
 function scrollToHashWithOffset() {
   if (typeof window === 'undefined' || !window.location.hash) {
@@ -45,21 +46,19 @@ export default function HomePageClient() {
   }, []);
 
   return (
-    <CursorGlowProvider>
-      <div className="bg-indigo-950 min-h-screen">
-        <NextHeader />
-        <main>
-          <HeroNew />
-          <TechStackNew />
-          <AboutNew />
-          <ServicesNew />
-          <ProjectsNew />
-          <SolutionsNew />
-          <ContactNew />
-        </main>
-        <NextFooter />
-        <CookieConsentNew />
-      </div>
-    </CursorGlowProvider>
+    <div className="bg-indigo-950 min-h-screen">
+      <NextHeader />
+      <main>
+        <HeroNew />
+        <TechStackNew />
+        <AboutNew />
+        <ServicesNew />
+        <ProjectsNew />
+        <SolutionsNew />
+        <ContactNew />
+      </main>
+      <NextFooter />
+      <CookieConsentNew />
+    </div>
   );
 }

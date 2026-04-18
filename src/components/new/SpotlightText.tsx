@@ -6,8 +6,11 @@ interface SpotlightTextProps {
   children?: React.ReactNode;
   text?: string;
   className?: string;
+  baseClassName?: string;
+  glowClassName?: string;
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div';
   glowSize?: number;
+  glowColor?: string;
 }
 
 // ============================================
@@ -32,8 +35,11 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
   children, 
   text,
   className = '', 
+  baseClassName = '',
+  glowClassName = '',
   as: Component = 'span',
-  glowSize = 120
+  glowSize = 120,
+  glowColor = GLOW_COLOR
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
@@ -69,15 +75,15 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
       style={{ isolation: 'isolate' }}
     >
       {/* Base text - adjust opacity here (text-white/90 = 90% white) */}
-      <Component className={`text-white/90 ${className}`}>
+      <Component className={`text-white/90 ${className} ${baseClassName}`}>
         {content}
       </Component>
       
       {/* Glow text layer - positioned to match base text exactly */}
       <Component 
-        className={`absolute top-0 left-0 w-full h-full pointer-events-none select-none z-20 ${className}`}
+        className={`absolute top-0 left-0 w-full h-full pointer-events-none select-none z-20 ${className} ${glowClassName}`}
         style={{
-          color: GLOW_COLOR,
+          color: glowColor,
           WebkitMaskImage: maskGradient,
           maskImage: maskGradient,
           // Ensure identical text rendering
