@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useRef, useState, type MutableRefObject, type ReactNode } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import RouteTransitionDisplay from '@/components/next/RouteTransitionDisplay';
 
 interface RouteTransitionContextValue {
@@ -19,8 +19,6 @@ const FAILSAFE_MS = 10000;
 
 export default function RouteTransitionProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const searchKey = searchParams.toString();
   const [isNavigating, setIsNavigating] = useState(false);
   const [phase, setPhase] = useState<'idle' | 'pre-cover' | 'cover' | 'hold' | 'reveal'>('idle');
   const [navigationTarget, setNavigationTarget] = useState<string | undefined>(undefined);
@@ -70,13 +68,13 @@ export default function RouteTransitionProvider({ children }: { children: ReactN
       return;
     }
 
-    const currentLocation = `${pathname}?${searchKey}`;
+    const currentLocation = pathname;
     if ((phase !== 'cover' && phase !== 'hold') || currentLocation === navigationOriginRef.current) {
       return;
     }
 
     startReveal();
-  }, [pathname, searchKey, isNavigating, phase]);
+  }, [pathname, isNavigating, phase]);
 
   useEffect(() => {
     if (!isNavigating) {
@@ -102,7 +100,7 @@ export default function RouteTransitionProvider({ children }: { children: ReactN
       value={{
         beginNavigation: (target, navigate) => {
           activeNavigationId.current += 1;
-          navigationOriginRef.current = `${pathname}?${searchKey}`;
+          navigationOriginRef.current = pathname;
           clearAllTimers();
           pendingNavigationRef.current = navigate || null;
           setNavigationTarget(target);

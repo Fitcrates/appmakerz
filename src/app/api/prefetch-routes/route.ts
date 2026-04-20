@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSitemapEntries, SANITY_REVALIDATE_SECONDS } from '@/lib/sanity.server';
 
-export const revalidate = SANITY_REVALIDATE_SECONDS;
+export const revalidate = 3600;
 
 export async function GET() {
   const { posts, projects, serviceLandings } = await getSitemapEntries();
