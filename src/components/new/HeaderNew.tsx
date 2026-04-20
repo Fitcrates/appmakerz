@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, type MouseEvent } from 'react';
+import React, { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, Globe, Bot, AppWindow, ShoppingCart, type LucideIcon } from 'lucide-react';
@@ -56,6 +56,7 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
 const HeaderNew: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const { beginNavigation } = useRouteTransition();
@@ -77,8 +78,29 @@ const HeaderNew: React.FC = () => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+
+    if (!isMobileMenuOpen) {
+      requestAnimationFrame(() => {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      });
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
+  const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+    mobileMenuButtonRef.current?.blur();
+  };
+
+  const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    closeMobileMenu();
 
     if (!href.startsWith('/#')) {
       return;
@@ -175,9 +197,10 @@ const HeaderNew: React.FC = () => {
             <div className="lg:hidden flex items-center gap-3">
               <LanguageToggleNext />
               <button
+                ref={mobileMenuButtonRef}
                 type="button"
                 onClick={() => setIsMobileMenuOpen((value) => !value)}
-                className="relative z-10 w-10 h-10 flex items-center justify-center text-white focus:outline-none focus:ring-2 focus:ring-teal-300 rounded"
+                className="relative z-10 w-10 h-10 flex items-center justify-center text-white rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300"
                 aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-menu"
@@ -196,9 +219,9 @@ const HeaderNew: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-x-0 bottom-0 top-20 z-40 lg:hidden"
+            className="fixed inset-0 z-[60] lg:hidden"
           >
-            <div className="absolute inset-0 bg-indigo-950/95 backdrop-blur-lg" onClick={() => setIsMobileMenuOpen(false)} />
+            <div className="absolute inset-0 bg-indigo-950/95 backdrop-blur-lg" onClick={closeMobileMenu} />
 
             <motion.nav
               id="mobile-menu"
@@ -206,10 +229,19 @@ const HeaderNew: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-indigo-950 border-l border-white/5 flex flex-col justify-center px-8 z-50"
+              className="absolute inset-0 bg-indigo-950 flex flex-col px-6 pb-10 pt-24 z-50"
               aria-label="Mobile navigation"
             >
-              <div className="space-y-4">
+              <button
+                type="button"
+                onClick={closeMobileMenu}
+                className="absolute right-4 top-6 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300"
+                aria-label="Close navigation menu"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <div className="space-y-4 overflow-y-auto">
                 {navItems.map((item, index) => (
                   <motion.div
                     key={item.label}
@@ -220,7 +252,7 @@ const HeaderNew: React.FC = () => {
                     <PrefetchLink
                       href={item.href}
                       onClick={(event) => handleNavClick(event, item.href)}
-                      className="block text-2xl font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
+                      className="block text-2xl font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
                     >
                       {item.label}
                     </PrefetchLink>
@@ -241,8 +273,8 @@ const HeaderNew: React.FC = () => {
                         <PrefetchLink
                           key={item.href}
                           href={item.href}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex items-center gap-3 py-1 text-base font-jakarta font-light text-white hover:text-teal-300 transition-colors"
+                          onClick={closeMobileMenu}
+                          className="flex items-center gap-3 py-1 text-base font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
                         >
                           <Icon className="w-4 h-4 text-teal-300/60" />
                           <span>{item.label}</span>

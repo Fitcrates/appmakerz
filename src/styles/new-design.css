@@ -361,3 +361,302 @@ html {
   );
   pointer-events: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   CYBER GLITCH TRANSITION
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Color tokens */
+:root {
+  --gt-teal-200: #99f6e4;
+  --gt-teal-300: #5eead4;
+  --gt-indigo-900: #312e81;
+  --gt-indigo-950: #1e1b4b;
+}
+
+.glitch-transition {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* ── Backdrop ── */
+.glitch-transition__backdrop {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--gt-indigo-950) 0%,
+    #0a0a1a 50%,
+    var(--gt-indigo-950) 100%
+  );
+  z-index: 1;
+}
+
+/* ── RGB Split Layers ── */
+.glitch-transition__rgb-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.glitch-transition__rgb-layer--red {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 50, 80, 0.08) 30%,
+    transparent 60%
+  );
+  animation: glitch-rgb-red 180ms steps(3, end) infinite;
+}
+
+.glitch-transition__rgb-layer--cyan {
+  background: linear-gradient(
+    90deg,
+    transparent 40%,
+    rgba(94, 234, 212, 0.1) 70%,
+    transparent 100%
+  );
+  animation: glitch-rgb-cyan 220ms steps(4, end) infinite;
+}
+
+@keyframes glitch-rgb-red {
+  0% {
+    transform: translate(0, 0);
+    clip-path: inset(0 0 85% 0);
+  }
+  33% {
+    transform: translate(-3px, 1px);
+    clip-path: inset(20% 0 40% 0);
+  }
+  66% {
+    transform: translate(2px, -1px);
+    clip-path: inset(60% 0 10% 0);
+  }
+  100% {
+    transform: translate(0, 0);
+    clip-path: inset(0 0 85% 0);
+  }
+}
+
+@keyframes glitch-rgb-cyan {
+  0% {
+    transform: translate(0, 0);
+    clip-path: inset(40% 0 30% 0);
+  }
+  25% {
+    transform: translate(4px, 0);
+    clip-path: inset(0 0 70% 0);
+  }
+  50% {
+    transform: translate(-2px, 1px);
+    clip-path: inset(70% 0 5% 0);
+  }
+  75% {
+    transform: translate(1px, -1px);
+    clip-path: inset(15% 0 60% 0);
+  }
+  100% {
+    transform: translate(0, 0);
+    clip-path: inset(40% 0 30% 0);
+  }
+}
+
+/* ── Scanlines ── */
+.glitch-transition__scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.glitch-transition__scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(94, 234, 212, 0.15);
+  animation: glitch-scanline-flicker 2s linear infinite;
+}
+
+@keyframes glitch-scanline-flicker {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  10% {
+    opacity: 1;
+  }
+  11% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  51% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 0.4;
+  }
+}
+
+/* ── Glitch Blocks ── */
+.glitch-transition__blocks {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.glitch-transition__block {
+  position: absolute;
+  top: var(--gb-top);
+  left: var(--gb-left);
+  width: var(--gb-w);
+  height: var(--gb-h);
+  background: var(--gb-color);
+  transform: translateX(0);
+  animation: glitch-block-shift var(--gb-duration) steps(2, end)
+    var(--gb-delay) infinite alternate;
+  will-change: transform;
+}
+
+@keyframes glitch-block-shift {
+  0% {
+    transform: translateX(0) scaleX(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(var(--gb-tx)) scaleX(1.2);
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(var(--gb-tx) * -0.5)) scaleX(0.8);
+    opacity: 0;
+  }
+}
+
+/* ── Noise overlay ── */
+.glitch-transition__noise {
+  position: absolute;
+  inset: -50%;
+  z-index: 5;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  mix-blend-mode: overlay;
+}
+
+/* ── Teal Flash ── */
+.glitch-transition__flash {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: radial-gradient(
+    ellipse at center,
+    var(--gt-teal-300) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* ── Displacement Slices ── */
+.glitch-transition__displacement {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+
+.glitch-transition__disp-slice {
+  position: absolute;
+  top: var(--disp-top);
+  left: 0;
+  right: 0;
+  height: var(--disp-h);
+  background: var(--gt-indigo-950);
+  opacity: 0;
+  transform: translateX(0);
+}
+
+.glitch-transition__displacement--active
+  .glitch-transition__disp-slice {
+  animation: glitch-disp-in 500ms cubic-bezier(0.22, 1, 0.36, 1)
+    var(--disp-delay) forwards;
+}
+
+.glitch-transition__displacement--reverse
+  .glitch-transition__disp-slice {
+  animation: glitch-disp-out 400ms cubic-bezier(0.55, 0, 1, 0.45)
+    var(--disp-delay) forwards;
+}
+
+@keyframes glitch-disp-in {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(var(--disp-tx));
+  }
+  30% {
+    transform: translateX(calc(var(--disp-tx) * -0.3));
+  }
+  50% {
+    transform: translateX(calc(var(--disp-tx) * 0.15));
+  }
+  100% {
+    opacity: 0.6;
+    transform: translateX(0);
+  }
+}
+
+@keyframes glitch-disp-out {
+  0% {
+    opacity: 0.6;
+    transform: translateX(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateX(var(--disp-tx));
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(calc(var(--disp-tx) * 2));
+  }
+}
+
+/* ── Center Teal Line Wipe ── */
+.glitch-transition__wipe {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 8;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--gt-teal-300) 20%,
+    var(--gt-teal-200) 50%,
+    var(--gt-teal-300) 80%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 20px var(--gt-teal-300),
+    0 0 60px rgba(94, 234, 212, 0.3),
+    0 0 120px rgba(94, 234, 212, 0.1);
+  transform: scaleX(0);
+  pointer-events: none;
+}
