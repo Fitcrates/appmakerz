@@ -14,8 +14,6 @@ import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { translations } from '@/translations/translations';
 
-export const dynamic = 'force-dynamic';
-
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }

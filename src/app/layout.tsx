@@ -3,8 +3,8 @@ import Script from 'next/script';
 import NextProviders from '@/components/next/NextProviders';
 import { DEFAULT_LANGUAGE } from '@/lib/language';
 import { siteUrl } from '@/lib/site';
-import '../index.css';
-import '../styles/new-design.css';
+import './globals.css';
+
 
 export const viewport: Viewport = {
   themeColor: '#140F2D',

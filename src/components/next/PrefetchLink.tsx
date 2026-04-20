@@ -1,8 +1,9 @@
 'use client';
 
 import Link, { type LinkProps } from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { forwardRef, type AnchorHTMLAttributes, type FocusEvent, type MouseEvent, type TouchEvent } from 'react';
+import { useRouteTransition } from '@/components/next/RouteTransitionProvider';
 
 type PrefetchLinkProps = LinkProps &
   Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> & {
@@ -22,9 +23,18 @@ function getPrefetchTarget(href: LinkProps['href']) {
   return path || '/';
 }
 
+function getNavigationTarget(href: LinkProps['href']) {
+  if (typeof href === 'string' && href.startsWith('/')) {
+    return href;
+  }
+
+  return getPrefetchTarget(href);
+}
+
 const PrefetchLink = forwardRef<HTMLAnchorElement, PrefetchLinkProps>(function PrefetchLink(
   {
     href,
+    onClick,
     onMouseEnter,
     onFocus,
     onTouchStart,
@@ -35,6 +45,8 @@ const PrefetchLink = forwardRef<HTMLAnchorElement, PrefetchLinkProps>(function P
   ref,
 ) {
   const router = useRouter();
+  const pathname = usePathname();
+  const { beginNavigation } = useRouteTransition();
 
   const prefetchRoute = () => {
     if (!prefetchOnIntent) {
@@ -64,11 +76,41 @@ const PrefetchLink = forwardRef<HTMLAnchorElement, PrefetchLinkProps>(function P
     onTouchStart?.(event);
   };
 
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    onClick?.(event);
+
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    if (typeof href === 'string' && href.startsWith('/#') && pathname === '/') {
+      return;
+    }
+
+    const target = getNavigationTarget(href);
+    if (!target || target === pathname) {
+      return;
+    }
+
+    event.preventDefault();
+    beginNavigation(target, () => {
+      router.push(typeof href === 'string' ? href : target);
+    });
+  };
+
   return (
     <Link
       ref={ref}
       href={href}
       prefetch={prefetch}
+      onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onFocus={handleFocus}
       onTouchStart={handleTouchStart}

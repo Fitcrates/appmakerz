@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, Globe, Bot, AppWindow, ShoppingCart, type LucideIcon } from 'lucide-react';
 import PrefetchLink from '@/components/next/PrefetchLink';
+import { useRouteTransition } from '@/components/next/RouteTransitionProvider';
 import LanguageToggleNext from '../next/LanguageToggleNext';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
@@ -57,6 +58,7 @@ const HeaderNew: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { beginNavigation } = useRouteTransition();
   const { language } = useLanguage();
   const t = translations[language].nav;
   const navItems = getNavItems(t);
@@ -86,7 +88,9 @@ const HeaderNew: React.FC = () => {
     const targetId = href.replace('/#', '');
 
     if (pathname !== '/') {
-      router.push(href);
+      beginNavigation(href, () => {
+        router.push(href);
+      });
       return;
     }
 

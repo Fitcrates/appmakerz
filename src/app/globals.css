@@ -1,0 +1,94 @@
+@import '../index.css';
+@import '../styles/new-design.css';
+
+:root {
+  --route-transition-bg: rgb(49, 46, 129);
+}
+
+@keyframes route-stripes-loading {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.88;
+  }
+}
+
+.route-stripes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+.route-stripes__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--route-transition-bg);
+  opacity: 0;
+  transition: opacity 120ms linear;
+}
+
+.route-stripes--hold .route-stripes__backdrop,
+.route-stripes--loading .route-stripes__backdrop {
+  opacity: 1;
+}
+
+.route-stripes--reveal .route-stripes__backdrop {
+  opacity: 0;
+  transition-delay: 40ms;
+}
+
+.route-stripes__rows {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+}
+
+.route-stripes__row {
+  position: relative;
+  overflow: hidden;
+}
+
+.route-stripes__bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--stripe-left);
+  width: var(--stripe-width);
+  background: var(--route-transition-bg);
+  transform: translate3d(calc(-100vw - var(--stripe-width)), 0, 0);
+  transition-property: transform;
+  transition-duration: 700ms;
+  transition-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+  transition-delay: var(--stripe-delay);
+  will-change: transform;
+}
+
+.route-stripes--cover .route-stripes__bar {
+  transform: translate3d(0, 0, 0);
+}
+
+.route-stripes--hold .route-stripes__bar,
+.route-stripes--loading .route-stripes__bar {
+  transform: translate3d(0, 0, 0);
+}
+
+.route-stripes--reveal .route-stripes__bar {
+  transform: translate3d(calc(100vw + var(--stripe-width) + 8vw), 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-stripes--loading .route-stripes__bar {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+
+  .route-stripes__backdrop,
+  .route-stripes__bar {
+    transition-duration: 0.01ms;
+    transition-delay: 0ms;
+  }
+}

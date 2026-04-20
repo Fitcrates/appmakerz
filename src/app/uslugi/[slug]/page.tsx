@@ -14,8 +14,6 @@ import { getRequestLanguage } from '@/lib/request-language';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 
-export const dynamic = 'force-dynamic';
-
 interface ServiceLandingPageProps {
   params: Promise<{ slug: string }>;
 }

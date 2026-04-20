@@ -7,8 +7,6 @@ import { faqContent } from '@/content/faq';
 import { getRequestLanguage } from '@/lib/request-language';
 import { absoluteUrl } from '@/lib/site';
 
-export const dynamic = 'force-dynamic';
-
 export async function generateMetadata(): Promise<Metadata> {
   const language = await getRequestLanguage();
   const content = faqContent[language];

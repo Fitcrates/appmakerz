@@ -8,8 +8,6 @@ import { getRequestLanguage } from '@/lib/request-language';
 import { absoluteUrl } from '@/lib/site';
 import { translations } from '@/translations/translations';
 
-export const dynamic = 'force-dynamic';
-
 export async function generateMetadata(): Promise<Metadata> {
   const language = await getRequestLanguage();
   const t = translations[language].blog;

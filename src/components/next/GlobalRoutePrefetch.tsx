@@ -17,7 +17,7 @@ function scheduleIdleCallback(callback: () => void) {
     return () => window.cancelIdleCallback(id);
   }
 
-  const timeoutId = globalThis.setTimeout(callback, 1200);
+  const timeoutId = globalThis.setTimeout(callback, 250);
   return () => globalThis.clearTimeout(timeoutId);
 }
 
@@ -50,8 +50,6 @@ export default function GlobalRoutePrefetch() {
     };
 
     const runPrefetch = async () => {
-      warmStaticRoutes();
-
       if (manifestLoaded) {
         return;
       }
@@ -82,6 +80,7 @@ export default function GlobalRoutePrefetch() {
       }
     };
 
+    warmStaticRoutes();
     const cancelIdle = scheduleIdleCallback(runPrefetch);
 
     return () => {
