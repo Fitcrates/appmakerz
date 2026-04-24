@@ -165,7 +165,7 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
     setMousePos({ x: -1000, y: -1000 });
   }, []);
 
-  const maskGradient = `radial-gradient(circle ${glowSize}px at ${mousePos.x}px ${mousePos.y}px, rgba(0,0,0,${CENTER_OPACITY}) 0%, rgba(0,0,0,${MID_OPACITY}) ${MID_POSITION}%, rgba(0,0,0,0) 100%)`;
+  const maskGradient = `radial-gradient(circle ${glowSize}px at calc(${mousePos.x}px + 24px) calc(${mousePos.y}px + 24px), rgba(0,0,0,${CENTER_OPACITY}) 0%, rgba(0,0,0,${MID_OPACITY}) ${MID_POSITION}%, rgba(0,0,0,0) 100%)`;
 
   if (!hasMounted) {
     return (
@@ -218,18 +218,20 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
         ))}
       </Component>
 
-      {/* Glow layer - same character structure for proper alignment */}
+      {/* Expanded Mask Wrapper to prevent clipping descenders/swashes */}
       {burnComplete && (
-        <Component
-          className={`absolute inset-0 pointer-events-none select-none z-20 ${className}`}
+        <span
+          className="absolute -inset-6 p-6 pointer-events-none select-none z-20 block"
           style={{
             WebkitMaskImage: maskGradient,
             maskImage: maskGradient,
           }}
           aria-hidden="true"
         >
-          {renderChars()}
-        </Component>
+          <Component className={className}>
+            {renderChars()}
+          </Component>
+        </span>
       )}
     </div>
   );

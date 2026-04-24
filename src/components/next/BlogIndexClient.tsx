@@ -7,12 +7,15 @@ import { useLanguage } from '@/context/LanguageContext';
 import { urlFor } from '@/lib/sanity.image';
 import { getLocalizedText } from '@/lib/localize';
 import { translations } from '@/translations/translations';
+import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 
 interface BlogIndexClientProps {
   posts: any[];
+  title: string;
+  subtitle: string;
 }
 
-export default function BlogIndexClient({ posts }: BlogIndexClientProps) {
+export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexClientProps) {
   const { language } = useLanguage();
   const t = translations[language].blog;
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,18 +40,49 @@ export default function BlogIndexClient({ posts }: BlogIndexClientProps) {
 
   return (
     <>
-      <div className="mb-16">
-        <div className="relative max-w-md">
-          <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
-          <input
-            type="text"
-            placeholder={t.search || 'Search posts...'}
-            value={searchQuery}
-            onChange={(event) => {
-              setSearchQuery(event.target.value);
-              setCurrentPage(1);
-            }}
-            className="w-full bg-transparent border-b border-white/10 focus:border-teal-300 pl-8 pr-4 py-3 text-white font-jakarta placeholder:text-white/30 outline-none transition-colors"
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 mb-16 lg:mb-24 items-center">
+        <div className="order-2 lg:order-1">
+          <div className="mb-8">
+            <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
+              [ Blog ]
+            </span>
+          </div>
+
+          <div className="mb-8">
+            <BurnSpotlightText
+              as="h1"
+              className="text-5xl sm:text-6xl lg:text-8xl font-light text-white font-jakarta"
+              glowSize={200}
+              baseDelay={200}
+            >
+              {title}
+            </BurnSpotlightText>
+          </div>
+
+          <div className="text-white/40 font-jakarta font-light text-lg max-w-xl mb-12">
+            <p>{subtitle}</p>
+          </div>
+
+          <div className="relative max-w-md">
+            <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
+            <input
+              type="text"
+              placeholder={t.search || 'Search posts...'}
+              value={searchQuery}
+              onChange={(event) => {
+                setSearchQuery(event.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full bg-transparent border-b border-white/10 focus:border-teal-300 pl-8 pr-4 py-3 text-white font-jakarta placeholder:text-white/30 outline-none transition-colors"
+            />
+          </div>
+        </div>
+
+        <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+          <img
+            src="/media/AppcratesLogo.webp"
+            alt="AppCrates Logo"
+            className="w-40 lg:w-full max-w-sm lg:max-w-md object-contain"
           />
         </div>
       </div>
@@ -134,11 +168,10 @@ export default function BlogIndexClient({ posts }: BlogIndexClientProps) {
                 setCurrentPage(index + 1);
                 document.getElementById('blog-posts')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className={`w-10 h-10 border font-jakarta text-sm transition-all duration-300 ${
-                currentPage === index + 1
+              className={`w-10 h-10 border font-jakarta text-sm transition-all duration-300 ${currentPage === index + 1
                   ? 'border-teal-300 bg-teal-300 text-indigo-950'
                   : 'border-white/10 text-white/50 hover:border-teal-300 hover:text-teal-300'
-              }`}
+                }`}
             >
               <span className="notranslate">{index + 1}</span>
             </button>

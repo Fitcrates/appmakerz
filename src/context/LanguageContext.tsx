@@ -39,7 +39,16 @@ const getPreferredClientLanguage = (): Language => {
 const getInitialLanguage = (initialLanguage?: Language): Language => initialLanguage || DEFAULT_LANGUAGE;
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode; initialLanguage?: Language }> = ({ children, initialLanguage }) => {
-  const [language, setLanguage] = useState<Language>(() => getInitialLanguage(initialLanguage));
+  const [language, setLanguageState] = useState<Language>(() => getInitialLanguage(initialLanguage));
+
+  const setLanguage = (newLang: Language) => {
+    setLanguageState(newLang);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('language', newLang);
+      document.cookie = `language=${newLang}; path=/; max-age=31536000; SameSite=Lax`;
+      document.documentElement.lang = newLang;
+    }
+  };
 
   useEffect(() => {
     const preferredLanguage = getPreferredClientLanguage();
@@ -47,16 +56,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode; initialLang
       setLanguage(preferredLanguage);
     }
   }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    localStorage.setItem('language', language);
-    document.cookie = `language=${language}; path=/; max-age=31536000; SameSite=Lax`;
-    document.documentElement.lang = language;
-  }, [language]);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage }}>

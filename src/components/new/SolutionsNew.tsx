@@ -220,7 +220,7 @@ const SolutionsNew: React.FC = () => {
           {/* DESKTOP VIEW */}
           <div className="solutions-scene__desktop hidden md:block">
             <div className="solutions-scene__sticky-wrap grid grid-cols-2 min-h-[100svh] bg-indigo-950 rounded-lg overflow-hidden">
-              <div className="solutions-scene__left sticky top-0 h-[100svh] flex flex-col justify-center px-8 lg:px-12 z-10 bg-indigo-950">
+              <div className="solutions-scene__left h-[100svh] flex flex-col justify-center px-8 lg:px-12 z-10 bg-indigo-950">
                 {solutions.map((solution, i) => (
                   <article
                     key={solution.number}

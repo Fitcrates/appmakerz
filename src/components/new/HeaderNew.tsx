@@ -129,16 +129,19 @@ const HeaderNew: React.FC = () => {
   return (
     <>
       <header
-        className={`fixed w-full backdrop-blur-sm z-50 shadow-sm transition-all duration-300 ${
-          isScrolled ? 'bg-indigo-950/80 border-b border-white/5' : ''
-        }`}
+        className={`fixed top-0 left-0 w-full backdrop-blur-sm z-[100] shadow-sm transition-all duration-300 ${isScrolled ? 'bg-indigo-950/80 border-b border-white/5' : ''
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <PrefetchLink href="/" className="relative z-10">
-              <motion.span whileHover={{ scale: 1.05 }} className="text-xl font-jakarta font-light text-white">
-                App<span className="text-teal-300">Crates</span>
-              </motion.span>
+            <PrefetchLink href="/" className="relative z-10 block">
+              <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-1">
+
+                <span className="text-xl font-jakarta font-light text-white">
+                  App<span className="text-teal-300">Crates</span>
+                </span>
+                <img src="/media/AppcratesLogoSmaller.webp" alt="AppCrates Logo" className="w-8 h-8 object-contain hidden md:block" />
+              </motion.div>
             </PrefetchLink>
 
             <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">

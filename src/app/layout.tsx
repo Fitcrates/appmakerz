@@ -3,6 +3,7 @@ import Script from 'next/script';
 import NextProviders from '@/components/next/NextProviders';
 import { DEFAULT_LANGUAGE } from '@/lib/language';
 import { siteUrl } from '@/lib/site';
+import CookieConsentNew from '@/components/new/CookieConsentNew';
 import './globals.css';
 
 
@@ -111,7 +112,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }} />
       </head>
       <body className="bg-indigo-950 text-white antialiased">
-        <NextProviders>{children}</NextProviders>
+        <NextProviders>
+          {children}
+          <CookieConsentNew />
+        </NextProviders>
       </body>
     </html>
   );

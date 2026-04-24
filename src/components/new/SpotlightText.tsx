@@ -57,8 +57,8 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
     setMousePos({ x: -1000, y: -1000 });
   }, []);
 
-  // Build the mask gradient using configuration values
-  const maskGradient = `radial-gradient(circle ${glowSize}px at ${mousePos.x}px ${mousePos.y}px, rgba(0,0,0,${CENTER_OPACITY}) 0%, rgba(0,0,0,${MID_OPACITY}) ${MID_POSITION}%, rgba(0,0,0,0) 100%)`;
+  // Build the mask gradient using configuration values (offset by 24px to match the -inset-6 wrapper)
+  const maskGradient = `radial-gradient(circle ${glowSize}px at calc(${mousePos.x}px + 24px) calc(${mousePos.y}px + 24px), rgba(0,0,0,${CENTER_OPACITY}) 0%, rgba(0,0,0,${MID_OPACITY}) ${MID_POSITION}%, rgba(0,0,0,0) 100%)`;
   const content = text ?? children;
 
   if (content === undefined || content === null) {
@@ -79,22 +79,27 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
         {content}
       </Component>
       
-      {/* Glow text layer - positioned to match base text exactly */}
-      <Component 
-        className={`absolute top-0 left-0 w-full h-full pointer-events-none select-none z-20 ${className} ${glowClassName}`}
+      {/* Expanded Mask Wrapper to prevent clipping descenders/swashes */}
+      <span 
+        className="absolute -inset-6 p-6 pointer-events-none select-none z-20 block"
         style={{
-          color: glowColor,
           WebkitMaskImage: maskGradient,
           maskImage: maskGradient,
-          // Ensure identical text rendering
-          textRendering: 'inherit',
-          WebkitFontSmoothing: 'inherit',
-          MozOsxFontSmoothing: 'inherit',
         }}
         aria-hidden="true"
       >
-        {content}
-      </Component>
+        <Component 
+          className={`${className} ${glowClassName}`}
+          style={{
+            color: glowColor,
+            textRendering: 'inherit',
+            WebkitFontSmoothing: 'inherit',
+            MozOsxFontSmoothing: 'inherit',
+          }}
+        >
+          {content}
+        </Component>
+      </span>
     </span>
   );
 };
