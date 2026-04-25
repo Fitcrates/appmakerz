@@ -18,7 +18,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticPages.map((page) => ({
       url: absoluteUrl(page.path),
-      lastModified: new Date(),
       changeFrequency: page.changeFrequency,
       priority: page.priority,
     })),

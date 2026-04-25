@@ -173,26 +173,53 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
               <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
                 {language === 'pl' ? 'Brzmi znajomo?' : 'Sound familiar?'}
               </span>
-              <div className="mt-4 mb-12 max-w-3xl">
-                <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta" glowSize={180} baseDelay={100} charDelay={30}>
-                  {language === 'pl' ? 'Problemy, które rozwiązuję' : 'Problems I solve'}
+              <div className="mt-4 mb-16 max-w-3xl">
+                <BurnSpotlightText
+                  as="h2"
+                  className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta"
+                  glowSize={180}
+                  baseDelay={100}
+                  charDelay={30}
+                >
+                  {language === 'pl'
+                    ? 'Problemy, które rozwiązuję'
+                    : 'Problems I solve'}
                 </BurnSpotlightText>
               </div>
-              <div className="grid sm:grid-cols-2 gap-4">
+
+              <div className="grid sm:grid-cols-2 gap-px bg-white/[0.06] overflow-hidden">
                 {problems.map((item: string, index: number) => (
                   <div
                     key={`prob-${index}`}
-                    className="group border border-white/10 p-6 sm:p-8 hover:border-teal-300/30 transition-all duration-300 bg-white/[0.02]"
+                    className="group relative bg-indigo-950 p-8 sm:p-10 hover:bg-white/[0.03] transition-all duration-700"
                   >
-                    <div className="relative w-8 h-8 rounded-full bg-red-400/10 border border-red-400 flex items-center justify-center mb-4 overflow-hidden">
-                      <span className="text-[0.82rem] text-red-400 font-jakarta font-medium tracking-wider notranslate relative z-10">
+                    {/* Animated corner accents */}
+                    <div className="absolute top-0 left-0 w-0 h-px bg-red-400/60 group-hover:w-16 transition-all duration-500" />
+                    <div className="absolute top-0 left-0 w-px h-0 bg-red-400/60 group-hover:h-16 transition-all duration-500" />
+                    <div className="absolute bottom-0 right-0 w-0 h-px bg-red-400/60 group-hover:w-16 transition-all duration-500" />
+                    <div className="absolute bottom-0 right-0 w-px h-0 bg-red-400/60 group-hover:h-16 transition-all duration-500" />
+
+                    {/* Number with red glow pulse */}
+                    <span className="relative text-5xl font-extralight font-jakarta notranslate mb-5 block w-fit bg-red-600 bg-clip-text text-transparent group-hover:animate-pulse">
+                      <span className="absolute inset-0 bg-red-600 bg-clip-text text-transparent blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-700" aria-hidden="true">
                         {String(index + 1).padStart(2, '0')}
                       </span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-300/40 to-transparent -translate-x-full animate-[shine_3s_ease-in-out_infinite]" />
-                    </div>
-                    <SpotlightText as="p" className="text-white/80 font-jakarta font-light leading-relaxed" glowSize={120}>
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+
+                    <SpotlightText
+                      as="p"
+                      className="text-white/60 font-jakarta font-light leading-relaxed group-hover:text-white/85 transition-colors duration-500"
+                      glowSize={120}
+                    >
                       {item}
                     </SpotlightText>
+
+                    {/* Bottom glow on hover */}
+                    <div
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-red-400/0 to-transparent group-hover:via-red-400/40 transition-all duration-700"
+                      aria-hidden="true"
+                    />
                   </div>
                 ))}
               </div>

@@ -42,11 +42,7 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 mb-16 lg:mb-24 items-center">
         <div className="order-2 lg:order-1">
-          <div className="mb-8">
-            <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
-              [ Blog ]
-            </span>
-          </div>
+
 
           <div className="mb-8">
             <BurnSpotlightText
@@ -169,8 +165,8 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
                 document.getElementById('blog-posts')?.scrollIntoView({ behavior: 'smooth' });
               }}
               className={`w-10 h-10 border font-jakarta text-sm transition-all duration-300 ${currentPage === index + 1
-                  ? 'border-teal-300 bg-teal-300 text-indigo-950'
-                  : 'border-white/10 text-white/50 hover:border-teal-300 hover:text-teal-300'
+                ? 'border-teal-300 bg-teal-300 text-indigo-950'
+                : 'border-white/10 text-white/50 hover:border-teal-300 hover:text-teal-300'
                 }`}
             >
               <span className="notranslate">{index + 1}</span>

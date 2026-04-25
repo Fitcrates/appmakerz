@@ -29,6 +29,14 @@ html, body {
   overflow-x: hidden;
 }
 
+* {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="-11.5 -10.23174 23 20.46348" width="24" height="24"><circle cx="0" cy="0" r="2.05" fill="%235eead4"/><g stroke="%235eead4" stroke-width="1" fill="none"><ellipse rx="11" ry="4.2"/><ellipse rx="11" ry="4.2" transform="rotate(60)"/><ellipse rx="11" ry="4.2" transform="rotate(120)"/></g></svg>') 12 12, auto !important;
+}
+
+a, button, [role="button"], input, select, textarea, a *, button *, [role="button"] * {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="-11.5 -10.23174 23 20.46348" width="24" height="24"><circle cx="0" cy="0" r="2.05" fill="%232dd4bf"/><g stroke="%232dd4bf" stroke-width="1.5" fill="none"><ellipse rx="11" ry="4.2"/><ellipse rx="11" ry="4.2" transform="rotate(60)"/><ellipse rx="11" ry="4.2" transform="rotate(120)"/></g></svg>') 12 12, pointer !important;
+}
+
 *, *::before, *::after {
   box-sizing: inherit;
 }

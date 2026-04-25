@@ -18,13 +18,13 @@
     "migrate:viewcount": "ts-node migrations/addViewCount.ts"
   },
   "dependencies": {
-    "@portabletext/react": "^3.2.1",
     "@emailjs/browser": "^4.1.0",
     "@emailjs/nodejs": "^5.0.2",
+    "@portabletext/react": "^3.2.1",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
-    "@sanity/client": "^7.20.0",
     "@sanity/assist": "^6.0.4",
+    "@sanity/client": "^7.20.0",
     "@sanity/code-input": "^7.0.12",
     "@sanity/image-url": "^1.0.2",
     "@types/prismjs": "^1.26.5",
@@ -40,6 +40,7 @@
     "react-dom": "^19.2.4",
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.4.0",
+    "resend": "^6.12.2",
     "swiper": "^12.1.2",
     "tailwind-merge": "^3.5.0",
     "tailwindcss-animate": "^1.0.7",

@@ -9,12 +9,14 @@ interface FormData {
   name: string;
   email: string;
   message: string;
+  budget: number;
 }
 
 const initialState: FormData = {
   name: '',
   email: '',
   message: '',
+  budget: 15000,
 };
 
 export const useEmailForm = () => {
@@ -60,12 +62,23 @@ export const useEmailForm = () => {
     }));
   };
 
+  const handleBudgetChange = (value: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      budget: value,
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      const response = await sendEmail(formData);
+      const payload = {
+        ...formData,
+        message: `Budżet: ${formData.budget} PLN\n\nWiadomość:\n${formData.message}`,
+      };
+      const response = await sendEmail(payload);
 
       if (response.status === 200) {
         toast.success(successToastMessage);
@@ -92,6 +105,7 @@ export const useEmailForm = () => {
     isSubmitting,
     isSuccess,
     handleChange,
+    handleBudgetChange,
     handleSubmit,
   };
 };

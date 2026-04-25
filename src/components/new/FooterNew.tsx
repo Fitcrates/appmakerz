@@ -198,9 +198,12 @@ const FooterNew: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
             <div>
               <PrefetchLink href="/#hero" className="inline-block mb-8">
-                <span className="text-3xl font-jakarta font-light text-white">
-                  App<span className="text-teal-300">Crates</span>
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl font-jakarta font-light text-white">
+                    App<span className="text-teal-300">Crates</span>
+                  </span>
+                  <img src="/media/AppcratesLogoSmaller.webp" alt="AppCrates Logo" className="w-10 h-10 object-contain hidden md:block" />
+                </div>
               </PrefetchLink>
               <p className="text-white/40 font-jakarta font-light max-w-md text-lg leading-relaxed">{t.brand.description}</p>
             </div>
