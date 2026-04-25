@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { getContactTemplate } from '@/utils/emailTemplates';
 
 // Make sure to add RESEND_API_KEY to your .env file
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -13,9 +14,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Default to onboarding@resend.dev if a custom domain is not yet verified.
-    // Replace with your verified domain email (e.g., 'kontakt@appcrates.pl') when ready.
-    const fromEmail = 'onboarding@resend.dev';
+    // Używamy zweryfikowanej domeny AppCrates
+    const fromEmail = 'kontakt@appcrates.pl';
     const toEmail = process.env.EMAIL_USER || 'appcratesdev@gmail.com';
 
     const data = await resend.emails.send({
@@ -23,13 +23,7 @@ export async function POST(request: Request) {
       to: toEmail,
       subject: `Nowa wiadomość z AppCrates od: ${name}`,
       replyTo: email,
-      html: `
-        <h2>Nowa wiadomość z formularza kontaktowego</h2>
-        <p><strong>Od:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <hr />
-        <p style="white-space: pre-wrap;">${message}</p>
-      `,
+      html: getContactTemplate(name, message),
     });
 
     if (data.error) {
