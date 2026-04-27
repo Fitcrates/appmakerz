@@ -86,6 +86,11 @@ export const translations = {
           title: "HWA / 火 — Korean BBQ",
           category: "Premium Frontend Experience",
           description: "A conceptual frontend project simulating a luxury Korean BBQ restaurant. Built with Next.js featuring cinematic GSAP ScrollTrigger animations, a custom CSS architecture, and full i18n support."
+        },
+        lumier: {
+          title: "Interior Lighting Design Demo",
+          category: "Landing Page",
+          description: "Professional demo website for an interior lighting design company. Built around light, motion, and code. Real-time 3D rendering, GSAP, Canvas — no compromises on performance."
         }
       },
     },
@@ -386,6 +391,11 @@ export const translations = {
           title: "HWA / 火 — Premium Korean BBQ",
           category: "Koncepcyjny Projekt Frontendowy",
           description: "W pełni immersyjna platforma symulująca stronę luksusowej restauracji. Stworzona w Next.js z kinowymi animacjami GSAP ScrollTrigger, dedykowanym systemem CSS i pełnym wsparciem dla wielojęzyczności."
+        },
+        lumier: {
+          title: "Demo strona designu oświetlenia wnętrz",
+          category: "Landing Page",
+          description: "Profesjonalna strona demonstracyjna dla firmy zajmującej się designem oświetlenia wnętrz. Zbudowane wokół światła, ruchu i kodu. Rendering 3D w czasie rzeczywistym, GSAP, Canvas — bez kompromisów w wydajności."
         }
       },
     },

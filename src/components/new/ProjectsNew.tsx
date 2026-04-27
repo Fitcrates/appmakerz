@@ -37,6 +37,16 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
   },
   {
     id: '3',
+    title: t.items.lumier.title,
+    category: t.items.lumier.category,
+    description: t.items.lumier.description,
+    image: '/media/LumierDemo.webp',
+    slug: 'demo-strona-designu-oswietlenia-wnetrz',
+    year: '2026',
+  },
+
+  {
+    id: '4',
     title: t.items.koreanBbq.title,
     category: t.items.koreanBbq.category,
     description: t.items.koreanBbq.description,
@@ -45,7 +55,7 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
     year: '2026',
   },
   {
-    id: '4',
+    id: '5',
     title: t.items.animeSearch.title,
     category: t.items.animeSearch.category,
     description: t.items.animeSearch.description,
@@ -54,7 +64,7 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
     year: '2025',
   },
   {
-    id: '5',
+    id: '6',
     title: t.items.homebudget.title,
     category: t.items.homebudget.category,
     description: t.items.homebudget.description,
@@ -63,7 +73,7 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
     year: '2026',
   },
   {
-    id: '6',
+    id: '7',
     title: t.items.portfolio.title,
     category: t.items.portfolio.category,
     description: t.items.portfolio.description,
@@ -72,7 +82,7 @@ const getProjects = (t: typeof translations.en.projects): Project[] => [
     year: '2026',
   },
   {
-    id: '7',
+    id: '8',
     title: t.items.flixstock.title,
     category: t.items.flixstock.category,
     description: t.items.flixstock.description,

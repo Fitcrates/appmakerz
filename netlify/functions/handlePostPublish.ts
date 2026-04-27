@@ -1,14 +1,16 @@
 import type { Handler } from '@netlify/functions';
-import emailjs from '@emailjs/nodejs';
+import { Resend } from 'resend';
+import { getNewsletterTemplate } from '../../src/utils/emailTemplates';
 
 import {
-  getEmailJsConfig,
   getSanityWriteClient,
   getSiteUrl,
   jsonResponse,
   normalizeEmail,
   parseJsonBody,
 } from './_shared';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 type PublishPayload = {
   _id?: string;
@@ -103,27 +105,31 @@ function buildUnsubscribeUrl(siteUrl: string, subscriber: SubscriberRecord) {
 }
 
 async function sendNewsletterEmail(subscriber: SubscriberRecord, post: PostRecord) {
-  const emailConfig = getEmailJsConfig();
   const siteUrl = getSiteUrl();
   const blogTitle = getPostTitle(post.title);
   const blogUrl = `${siteUrl}/blog/${post.slug}`;
+  const categoriesStr = Array.isArray(post.categories) ? post.categories.join(', ') : '';
+  const unsubscribeUrl = buildUnsubscribeUrl(siteUrl, subscriber);
 
-  await emailjs.send(
-    emailConfig.serviceId,
-    emailConfig.templateId,
-    {
-      categories: Array.isArray(post.categories) ? post.categories.join(', ') : '',
-      blog_title: blogTitle,
-      blog_url: blogUrl,
-      unsubscribe_url: buildUnsubscribeUrl(siteUrl, subscriber),
-      to_email: subscriber.email,
-      author_name: 'AppCrates Team',
-    },
-    {
-      publicKey: emailConfig.publicKey,
-      privateKey: emailConfig.privateKey,
-    }
+  const htmlContent = getNewsletterTemplate(
+    subscriber.email,
+    categoriesStr,
+    blogTitle,
+    blogUrl,
+    'AppCrates Team',
+    unsubscribeUrl
   );
+
+  const data = await resend.emails.send({
+    from: 'AppCrates Blog <kontakt@appcrates.pl>',
+    to: subscriber.email,
+    subject: `Nowy wpis na blogu: ${blogTitle}`,
+    html: htmlContent,
+  });
+
+  if (data.error) {
+    throw new Error(data.error.message);
+  }
 }
 
 export const handler: Handler = async (event) => {
