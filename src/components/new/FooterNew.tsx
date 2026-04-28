@@ -266,7 +266,9 @@ const FooterNew: React.FC = () => {
         </div>
 
         <div className="py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/20 text-sm font-jakarta">{t.copyright.replace('{year}', currentYear.toString())}</p>
+          <p className="text-white/20 text-sm font-jakarta">
+            {t.copyright.replace('{year}', `2024 – ${currentYear}`)}
+          </p>
 
           <div className="flex items-center gap-8">
             <PrefetchLink href="/faq" className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors">

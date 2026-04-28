@@ -134,8 +134,8 @@ export default async function AboutMePage() {
         {/* Hero section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-20">
           <div className="grid lg:grid-cols-2 gap-2 lg:gap-16 items-center">
-            {/* Left: logo on mobile first, text content */}
-            <div className="order-2 lg:order-1">
+            {/* Right: logo on mobile first, text content */}
+            <div className="order-2 lg:order-2">
 
               <div className="mt-0 md:mt-8">
                 <BurnSpotlightText
@@ -178,8 +178,8 @@ export default async function AboutMePage() {
               </div>
             </div>
 
-            {/* Right: logo */}
-            <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+            {/* Left: logo */}
+            <div className="order-1 lg:order-1 flex justify-center lg:justify-start">
               <img
                 src="/media/AppcratesLogo.webp"
                 alt="AppCrates Logo"
@@ -215,7 +215,7 @@ export default async function AboutMePage() {
                       Arkadiusz Wawrzyniak
                     </p>
                     <p className="text-teal-300/60 font-jakarta text-sm mt-1">
-                      Fullstack Developer
+                      Fullstack Web Developer
                     </p>
                   </div>
                 </div>

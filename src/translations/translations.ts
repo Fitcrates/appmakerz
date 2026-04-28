@@ -18,7 +18,7 @@ export const translations = {
 
     // Hero Section (HeroNew)
     hero: {
-      label: "Fullstack Developer",
+      label: "Fullstack Web Developer",
       heading: "ELECTRIFY\nYOUR BUSINESS\nONLINE",
       seoHeading: "Fullstack Web Developer — React & Next.js Applications, Websites and e-commerce shops and marketplaces | AppCrates",
       subtitle: "I build online shops, landing pages, and AI-powered apps that grow your business. Complete solutions from start to finish.",
@@ -323,7 +323,7 @@ export const translations = {
 
     // Hero Section (HeroNew)
     hero: {
-      label: "Fullstack Developer",
+      label: "Fullstack Web Developer",
       heading: "ELEKTRYZUJ\nSWÓJ BIZNES\nW SIECI",
       seoHeading: "Fullstack Web Developer — Strony, aplikacje, sklepy i marketplace w React & Next.js | AppCrates",
       subtitle: "Tworzę sklepy internetowe, landing page i aplikacje AI, które rozwijają Twój biznes. Kompleksowe rozwiązania od początku do końca.",

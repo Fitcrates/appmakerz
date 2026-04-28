@@ -25,6 +25,7 @@
         "npm:@sanity/code-input@^7.0.12",
         "npm:@sanity/image-url@^1.0.2",
         "npm:@sanity/vision@^5.19.0",
+        "npm:@sanity/webhook@^4.0.4",
         "npm:@types/node@^22.10.2",
         "npm:@types/prismjs@^1.26.5",
         "npm:@types/react-dom@^19.2.3",

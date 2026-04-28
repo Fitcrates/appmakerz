@@ -41,7 +41,7 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 mb-16 lg:mb-24 items-center">
-        <div className="order-2 lg:order-1">
+        <div className="order-2 lg:order-2">
 
 
           <div className="mb-8">
@@ -74,7 +74,7 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
           </div>
         </div>
 
-        <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+        <div className="order-1 lg:order-1 flex justify-center lg:justify-start">
           <img
             src="/media/AppcratesLogo.webp"
             alt="AppCrates Logo"

@@ -27,6 +27,7 @@
     "@sanity/client": "^7.20.0",
     "@sanity/code-input": "^7.0.12",
     "@sanity/image-url": "^1.0.2",
+    "@sanity/webhook": "^4.0.4",
     "@types/prismjs": "^1.26.5",
     "@types/uuid": "^10.0.0",
     "class-variance-authority": "^0.7.1",
