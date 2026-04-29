@@ -20,6 +20,8 @@ export const metadata: Metadata = {
     'rag',
     'retrieval-augmented generation',
     'sklepy ecommerce medusa js',
+    'sklepy internetowe medusa js',
+    'sklepy internetowe',
     'marketplace ecommerce medusa js',
     'audyty wcag',
     'audyty gdpr',
