@@ -121,14 +121,15 @@ function normalizeServiceLandingPayload(landing: any) {
   };
 }
 
-async function fetchSanity<T>(query: string, params?: Record<string, unknown>): Promise<T> {
+async function fetchSanity<T>(query: string, params?: Record<string, unknown>, tags?: string[]): Promise<T> {
   return client.fetch(query, params || {}, {
-    next: { revalidate: SANITY_REVALIDATE_SECONDS },
+    next: { revalidate: SANITY_REVALIDATE_SECONDS, tags },
   });
 }
 
 export async function getPosts() {
-  return fetchSanity<any[]>(`
+  return fetchSanity<any[]>(
+    `
     *[_type == "post" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc) {
       _id,
       title { en, pl },
@@ -154,7 +155,10 @@ export async function getPosts() {
         noIndex
       }
     }
-  `);
+  `,
+    {},
+    ['posts', 'blog']
+  );
 }
 
 export async function getPost(slug: string) {
@@ -185,12 +189,14 @@ export async function getPost(slug: string) {
         noIndex
       }
     }`,
-    { slug }
+    { slug },
+    ['post', slug]
   );
 }
 
 export async function getPopularPosts() {
-  return fetchSanity<any[]>(`
+  return fetchSanity<any[]>(
+    `
     *[_type == "post" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(viewCount desc, publishedAt desc) [0...3] {
       _id,
       title { en, pl },
@@ -203,11 +209,15 @@ export async function getPopularPosts() {
       },
       tags
     }
-  `);
+  `,
+    {},
+    ['posts']
+  );
 }
 
 export async function getProjects() {
-  return fetchSanity<any[]>(`
+  return fetchSanity<any[]>(
+    `
     *[_type == "project" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc) {
       _id,
       title,
@@ -229,7 +239,10 @@ export async function getProjects() {
         noIndex
       }
     }
-  `);
+  `,
+    {},
+    ['projects']
+  );
 }
 
 export async function getProject(slug: string) {
@@ -255,7 +268,8 @@ export async function getProject(slug: string) {
         noIndex
       }
     }`,
-    { slug }
+    { slug },
+    ['project', slug]
   );
 }
 
@@ -288,14 +302,16 @@ export async function getServiceLanding(slug: string) {
         noIndex
       }
     }`,
-    { slug }
+    { slug },
+    ['service-landing', slug]
   );
 
   return normalizeServiceLandingPayload(landing);
 }
 
 export async function getServiceLandings() {
-  const landings = await fetchSanity<any[]>(`
+  const landings = await fetchSanity<any[]>(
+    `
     *[_type == "serviceLanding" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(_updatedAt desc) {
       _id,
       title { en, pl },
@@ -311,7 +327,10 @@ export async function getServiceLandings() {
         noIndex
       }
     }
-  `);
+  `,
+    {},
+    ['service-landings']
+  );
 
   return landings.map(normalizeServiceLandingPayload);
 }
@@ -338,7 +357,8 @@ export async function getAboutMe(slug: string = 'about-me') {
         noIndex
       }
     }`,
-    { slug }
+    { slug },
+    ['about-me']
   );
 }
 
@@ -350,20 +370,20 @@ export async function getSitemapEntries() {
         publishedAt,
         _updatedAt
       }
-    `),
+    `, {}, ['posts', 'sitemap']),
     fetchSanity<Array<{ slug: string; publishedAt?: string; _updatedAt?: string }>>(`
       *[_type == "project" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(_updatedAt desc) {
         "slug": slug.current,
         publishedAt,
         _updatedAt
       }
-    `),
+    `, {}, ['projects', 'sitemap']),
     fetchSanity<Array<{ slug: string; _updatedAt?: string }>>(`
       *[_type == "serviceLanding" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(_updatedAt desc) {
         "slug": slug.current,
         _updatedAt
       }
-    `),
+    `, {}, ['service-landings', 'sitemap']),
   ]);
 
   return { posts, projects, serviceLandings };

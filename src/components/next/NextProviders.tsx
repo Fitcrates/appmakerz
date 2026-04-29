@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import GlobalRoutePrefetch from '@/components/next/GlobalRoutePrefetch';
 import RouteTransitionProvider from '@/components/next/RouteTransitionProvider';
+import AnalyticsPageTracker from '@/components/next/AnalyticsPageTracker';
 import { LanguageProvider } from '@/context/LanguageContext';
 import type { Language } from '@/lib/language';
 
@@ -16,6 +17,7 @@ export default function NextProviders({ children, initialLanguage }: NextProvide
     <RouteTransitionProvider>
       <LanguageProvider initialLanguage={initialLanguage}>
         <GlobalRoutePrefetch />
+        <AnalyticsPageTracker />
         {children}
       </LanguageProvider>
     </RouteTransitionProvider>

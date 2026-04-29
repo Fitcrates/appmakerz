@@ -105,3 +105,21 @@ export const trackContactClick = (contactType: 'email' | 'phone', contactValue: 
     contact_value: contactValue,
   });
 };
+
+/**
+ * Sends a manual page_view event to gtag for client-side navigation.
+ * Required in Next.js App Router when using custom routing (e.g. PrefetchLink)
+ * that does not trigger a full page reload.
+ */
+export const trackPageView = (pathname: string) => {
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function') {
+    return;
+  }
+
+  window.gtag('event', 'page_view', {
+    page_path: pathname,
+    page_location: window.location.href,
+    page_title: document.title,
+    send_to: process.env.NEXT_PUBLIC_GOOGLE_TAG_ID,
+  });
+};

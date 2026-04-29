@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { PortableText } from '@portabletext/react';
 import { ArrowLeft, ArrowUpRight, Feather, Github, Globe } from 'lucide-react';
@@ -69,7 +70,33 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const title = getLocalizedText(project.title, language);
   const description = getLocalizedText(project.description, language);
   const body = getLocalizedArray<any>(project.body, language);
-  const heroImageUrl = project.mainImage ? urlFor(project.mainImage).auto('format').fit('max').url() : '';
+  const heroImageUrl = project.mainImage ? urlFor(project.mainImage).width(1200).height(630).auto('format').fit('crop').url() : '';
+
+  // BreadcrumbList structured data
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: translations[language].navigation.home,
+        item: absoluteUrl('/'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: translations[language].projectDetails.backToProjects || 'Projects',
+        item: absoluteUrl('/#projects'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: title,
+        item: absoluteUrl(`/project/${project.slug.current}`),
+      },
+    ],
+  };
 
   return (
     <>
@@ -79,12 +106,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         {heroImageUrl ? (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 lg:mb-16">
             <div className="relative h-[38vh] sm:h-[44vh] lg:h-[50vh] overflow-hidden border border-white/10">
-              <img
+              <Image
                 src={heroImageUrl}
                 alt={title}
-                className="w-full h-full object-cover"
-                loading="eager"
-                decoding="async"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 1200px"
+                className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/70 via-indigo-950/20 to-transparent pointer-events-none" />
             </div>
@@ -144,6 +172,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </main>
 
       <NextFooter />
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
     </>
   );
 }

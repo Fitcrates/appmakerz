@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { PortableText } from '@portabletext/react';
 import { ArrowUpRight, Check } from 'lucide-react';
@@ -79,6 +80,45 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
   const stats = getLocalizedArray<{ value: string; label: string }>(landing.stats, language);
   const heroImageUrl = landing.heroImage ? urlFor(landing.heroImage).width(1600).auto('format').url() : '';
 
+  // BreadcrumbList structured data
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: language === 'pl' ? 'Strona główna' : 'Home',
+        item: absoluteUrl('/'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: language === 'pl' ? 'Usługi' : 'Services',
+        item: absoluteUrl('/'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: title,
+        item: absoluteUrl(`/uslugi/${landing.slug.current}`),
+      },
+    ],
+  };
+
+  const faqSchema = faq.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  } : null;
+
   return (
     <>
       <NextHeader />
@@ -88,13 +128,14 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
         <section className="relative min-h-[60vh] lg:min-h-[75vh] flex items-end overflow-hidden ">
           {heroImageUrl ? (
             <div className="absolute inset-0 z-0">
-              <img
+              <Image
                 src={heroImageUrl}
                 alt=""
-                role="presentation"
-                className="w-full h-full object-cover opacity-25"
-                loading="eager"
-                decoding="async"
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover opacity-25"
+                aria-hidden="true"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/95 via-indigo-950/60 to-indigo-950/40" />
             </div>
@@ -370,6 +411,9 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
       </main>
 
       <NextFooter />
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {faqSchema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}
     </>
   );
 }

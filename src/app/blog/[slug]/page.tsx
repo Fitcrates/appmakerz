@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { PortableText } from '@portabletext/react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -75,13 +76,68 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const title = getLocalizedText(post.title, language);
   const body = getLocalizedArray<any>(post.body, language);
-  const heroImageUrl = post.mainImage ? urlFor(post.mainImage).auto('format').fit('max').url() : '';
-  const authorImageUrl = post.author?.image ? urlFor(post.author.image).width(80).height(80).url() : '';
+  const heroImageUrl = post.mainImage ? urlFor(post.mainImage).width(1200).height(630).auto('format').fit('crop').url() : '';
+  const authorImageUrl = post.author?.image ? urlFor(post.author.image).width(80).height(80).auto('format').url() : '';
+  const authorImageDimensions = { width: 80, height: 80 };
   const allPostsSorted = [...posts].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
   const currentIndex = allPostsSorted.findIndex((item) => item._id === post._id);
   const previousPost = currentIndex > 0 ? allPostsSorted[currentIndex - 1] : null;
   const nextPost = currentIndex < allPostsSorted.length - 1 ? allPostsSorted[currentIndex + 1] : null;
   const popularLabel = language === 'pl' ? 'Popularne wpisy' : 'Popular Posts';
+
+  // BlogPosting structured data
+  const blogPostingSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    description: getLocalizedText(post.excerpt, language),
+    image: heroImageUrl,
+    datePublished: post.publishedAt,
+    dateModified: post._updatedAt || post.publishedAt,
+    author: post.author ? {
+      '@type': 'Person',
+      name: post.author.name,
+      image: authorImageUrl || undefined,
+    } : undefined,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': absoluteUrl(`/blog/${post.slug.current}`),
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AppCrates',
+      logo: {
+        '@type': 'ImageObject',
+        url: absoluteUrl('/media/android-chrome-512x512.png'),
+      },
+    },
+  };
+
+  // BreadcrumbList structured data
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: translations[language].navigation.home,
+        item: absoluteUrl('/'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: translations[language].navigation.blog,
+        item: absoluteUrl('/blog'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: title,
+        item: absoluteUrl(`/blog/${post.slug.current}`),
+      },
+    ],
+  };
 
   return (
     <div className="bg-indigo-950 min-h-screen">
@@ -92,12 +148,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {heroImageUrl ? (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 lg:mb-16">
             <div className="relative h-[38vh] sm:h-[44vh] lg:h-[50vh] overflow-hidden">
-              <img
+              <Image
                 src={heroImageUrl}
                 alt={title}
-                className="w-full h-full object-cover"
-                loading="eager"
-                decoding="async"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 1200px"
+                className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/70 to-indigo-950/20 pointer-events-none" />
             </div>
@@ -120,7 +177,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </h1>
 
           <div className="flex items-center gap-4 mb-12 pb-12 border-b border-white/10">
-            {authorImageUrl ? <img src={authorImageUrl} alt={post.author?.name || ''} className="w-14 h-14 rounded-full object-cover" /> : null}
+            {authorImageUrl ? (
+              <Image
+                src={authorImageUrl}
+                alt={post.author?.name || ''}
+                width={authorImageDimensions.width}
+                height={authorImageDimensions.height}
+                className="w-14 h-14 rounded-full object-cover"
+              />
+            ) : null}
             <div>
               <p className="text-white font-jakarta">{post.author?.name}</p>
               <p className="text-white/40 text-sm font-jakarta">
@@ -142,7 +207,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <div className="mt-16 p-8 border border-white/10">
               <div className="flex items-center gap-6">
                 {authorImageUrl ? (
-                  <img src={authorImageUrl} alt={post.author.name} className="w-20 h-20 rounded-full object-cover shrink-0" />
+                  <Image
+                    src={authorImageUrl}
+                    alt={post.author.name}
+                    width={authorImageDimensions.width}
+                    height={authorImageDimensions.height}
+                    className="w-20 h-20 rounded-full object-cover shrink-0"
+                  />
                 ) : (
                   <div className="w-20 h-20 rounded-full bg-white/10 text-white/70 flex items-center justify-center font-jakarta text-2xl shrink-0">
                     {(post.author?.name || '?').charAt(0).toUpperCase()}
@@ -196,7 +267,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     href={`/blog/${popularPost.slug.current}`}
                     className="flex items-center gap-4 group p-3 -mx-3 border border-transparent hover:border-white/10 transition-all duration-300"
                   >
-                    {imageUrl ? <img src={imageUrl} alt={popularTitle} className="w-16 h-16 object-cover flex-shrink-0" loading="lazy" /> : null}
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt={popularTitle}
+                        width={64}
+                        height={64}
+                        className="w-16 h-16 object-cover flex-shrink-0"
+                      />
+                    ) : null}
                     <div className="flex-1 min-w-0">
                       <h4 className="text-sm text-white font-jakarta group-hover:text-teal-300 transition-colors duration-200 line-clamp-2">{popularTitle}</h4>
                       <p className="text-xs text-white/30 font-jakarta mt-1">
@@ -212,6 +291,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </main>
 
       <NextFooter />
+
+      {/* Structured Data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
     </div>
   );
 }
