@@ -2,7 +2,7 @@
 
 ## About
 
-AppCrates creates custom web applications, websites, AI integrations, automation systems, e-commerce platforms, and marketplaces.
+AppCrates creates custom web applications, websites, blogs, landing pages, AI integrations, automation systems, e-commerce platforms, and marketplaces.
 
 Projects are usually priced individually based on:
 - scope
@@ -287,6 +287,15 @@ Frontend:
 - React
 - TypeScript
 - TailwindCSS
+- Three.js
+- GSAP
+- Framer Motion
+- Lucide React
+- Shadcn UI
+- Zustand
+- React Hook Form
+- Zod
+- WebGL
 
 Backend:
 - Node.js

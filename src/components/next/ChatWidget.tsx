@@ -144,7 +144,7 @@ export default function ChatWidget() {
 
   return (
     // MOBILE: bottom-20 żeby nie wchodzić pod navbar; SM+: bottom-6
-    <div className="fixed bottom-3 right-2 z-50 sm:bottom-6 sm:right-6">
+    <div className="fixed bottom-3 right-2 z-50 sm:bottom-8 sm:right-8">
       {isOpen ? (
         // MOBILE: chat zajmuje pełną szerokość z małymi marginesami i nie wychodzi poza ekran w pionie
         <div className="mb-4 flex h-[min(520px,calc(100dvh-10rem))] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-3xl border border-white/10 bg-indigo-950/95 shadow-2xl shadow-teal-950/40 backdrop-blur-xl">

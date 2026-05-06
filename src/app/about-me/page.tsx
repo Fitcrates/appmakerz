@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { PortableText } from '@portabletext/react';
 import SpotlightText from "@/components/new/SpotlightText";
-
+import ChatWidget from '@/components/next/ChatWidget';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
@@ -160,7 +160,7 @@ export default async function AboutMePage() {
               <div className="flex flex-col sm:flex-row gap-4 mt-10">
                 <PrefetchLink
                   href="/#services"
-                  className="group relative px-10 py-5 bg-teal-300 text-indigo-950  font-medium overflow-hidden transition-all duration-500 min-w-[230px] text-center hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                  className="group relative px-10 py-5 bg-teal-300 text-indigo-950  font-normal overflow-hidden transition-all duration-500 min-w-[230px] text-center hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
                 >
                   <span className="relative z-10">{ctaProjects}</span>
                   <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
@@ -168,7 +168,7 @@ export default async function AboutMePage() {
 
                 <PrefetchLink
                   href="/#contact"
-                  className="group px-10 py-5 border border-white/20 text-white  font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                  className="group px-10 py-5 border border-white/20 text-white  font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
                 >
                   <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
                     {ctaContact}
@@ -293,7 +293,7 @@ export default async function AboutMePage() {
                     </SpotlightText>
                     <PrefetchLink
                       href="/#contact"
-                      className="group px-10 py-5 border border-white/20 text-white  font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                      className="group px-10 py-5 border border-white/20 text-white  font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
                     >
                       <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
                         {language === 'pl' ? 'Napisz do mnie' : 'Get in touch'}
@@ -316,6 +316,7 @@ export default async function AboutMePage() {
       </main>
 
       <NextFooter />
+      <ChatWidget />
     </div>
   );
 }
