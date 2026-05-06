@@ -61,7 +61,7 @@ const ContactNew: React.FC = () => {
           transition={{ duration: 1 }}
           className="mb-6 lg:mb-16"
         >
-          <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
+          <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">
             {t.label}
           </span>
         </motion.div>
@@ -76,7 +76,7 @@ const ContactNew: React.FC = () => {
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
-                <BurnSpotlightText as="h2" className="text-4xl sm:text-5xl lg:text-7xl font-light font-jakarta leading-[1.1] pb-2" glowSize={150} baseDelay={300} charDelay={35}>
+                <BurnSpotlightText as="h2" className="text-4xl sm:text-5xl lg:text-7xl font-light font-oxanium leading-[1.1] pb-2" glowSize={150} baseDelay={300} charDelay={35}>
                   {t.heading}
                 </BurnSpotlightText>
               </motion.div>
@@ -90,41 +90,41 @@ const ContactNew: React.FC = () => {
               className="space-y-8"
             >
               <div>
-                <span className="text-xs text-teal-300 font-jakarta tracking-widest uppercase block mb-2">
+                <span className="text-xs text-teal-300  tracking-widest uppercase block mb-2">
                   {t.info.email.label}
                 </span>
                 <a
                   href="mailto:appcratesdev@gmail.com"
                   onClick={() => trackContactClick('email', 'appcratesdev@gmail.com')}
-                  className="text-xl text-white font-jakarta hover:text-teal-300 transition-colors"
+                  className="text-xl text-white  hover:text-teal-300 transition-colors"
                 >
                   {t.info.email.value}
                 </a>
               </div>
 
               <div>
-                <span className="text-xs text-teal-300 font-jakarta tracking-widest uppercase block mb-2">
+                <span className="text-xs text-teal-300  tracking-widest uppercase block mb-2">
                   {t.info.phone.label}
                 </span>
                 <a
                   href="tel:+48733433230"
                   onClick={() => trackContactClick('phone', '+48733433230')}
-                  className="text-xl text-white font-jakarta hover:text-teal-300 transition-colors"
+                  className="text-xl text-white  hover:text-teal-300 transition-colors"
                 >
                   {t.info.phone.value}
                 </a>
               </div>
 
               <div>
-                <span className="text-xs text-teal-300 font-jakarta tracking-widest uppercase block mb-2">
+                <span className="text-xs text-teal-300  tracking-widest uppercase block mb-2">
                   {t.info.location.label}
                 </span>
-                <span className="text-xl text-white font-jakarta">
+                <span className="text-xl text-white ">
                   {t.info.location.value}
                 </span>
               </div>
 
-              
+
             </motion.div>
           </div>
 
@@ -136,7 +136,7 @@ const ContactNew: React.FC = () => {
           >
             <form onSubmit={handleSubmit} className="space-y-8">
               <div>
-                <label htmlFor="contact-budget" className="block text-xs text-teal-300 font-jakarta tracking-widest uppercase mb-3">
+                <label htmlFor="contact-budget" className="block text-xs text-teal-300  tracking-widest uppercase mb-3">
                   {language === 'pl' ? 'Szacowany budżet (PLN)' : 'Estimated budget (PLN)'}
                 </label>
                 <div className="flex items-center gap-4 py-4 border-b border-white/20">
@@ -153,14 +153,14 @@ const ContactNew: React.FC = () => {
                     disabled={isSubmitting}
                     className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-teal-300 hover:accent-teal-200 transition-all focus:outline-none focus:ring-2 focus:ring-teal-300/50"
                   />
-                  <span className="text-white font-jakarta text-lg min-w-[120px] text-right">
+                  <span className="text-white  text-lg min-w-[120px] text-right">
                     {formData.budget.toLocaleString('pl-PL')} +
                   </span>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="contact-name" className="block text-xs text-teal-300 font-jakarta tracking-widest uppercase mb-3">
+                <label htmlFor="contact-name" className="block text-xs text-teal-300  tracking-widest uppercase mb-3">
                   {t.form.name.label} <span className="text-red-400" aria-hidden="true">*</span>
                   <span className="sr-only">(required)</span>
                 </label>
@@ -175,13 +175,13 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   autoComplete="name"
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg font-jakarta placeholder-white/20 focus:outline-none  transition-colors [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/20 focus:outline-none  transition-colors [color-scheme:dark]"
                   placeholder={t.form.name.placeholder}
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-email" className="block text-xs text-teal-300 font-jakarta tracking-widest uppercase mb-3">
+                <label htmlFor="contact-email" className="block text-xs text-teal-300  tracking-widest uppercase mb-3">
                   {t.form.email.label} <span className="text-red-400" aria-hidden="true">*</span>
                   <span className="sr-only">(required)</span>
                 </label>
@@ -196,13 +196,13 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   autoComplete="email"
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg font-jakarta placeholder-white/20 focus:outline-none transition-colors [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/20 focus:outline-none transition-colors [color-scheme:dark]"
                   placeholder={t.form.email.placeholder}
                 />
               </div>
 
               <div>
-                <label htmlFor="contact-message" className="block text-xs text-teal-300 font-jakarta tracking-widest uppercase mb-3">
+                <label htmlFor="contact-message" className="block text-xs text-teal-300  tracking-widest uppercase mb-3">
                   {t.form.message.label} <span className="text-red-400" aria-hidden="true">*</span>
                   <span className="sr-only">(required)</span>
                 </label>
@@ -216,7 +216,7 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   rows={4}
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg font-jakarta placeholder-white/20 focus:outline-none transition-colors resize-none [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/20 focus:outline-none transition-colors resize-none [color-scheme:dark]"
                   placeholder={t.form.message.placeholder}
                 />
               </div>
@@ -228,7 +228,7 @@ const ContactNew: React.FC = () => {
                   className="group inline-flex items-center gap-4 disabled:opacity-50 focus:outline-none rounded"
                   aria-label={isSubmitting ? 'Sending message...' : 'Send message'}
                 >
-                  <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">
+                  <span className="text-lg text-white  group-hover:text-teal-300 transition-colors font-oxanium font-oxanium font-light">
                     {isSubmitting ? t.form.sending : t.form.submit}
                   </span>
                   <div className="w-12 h-12 border border-white/20 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300">
@@ -240,7 +240,7 @@ const ContactNew: React.FC = () => {
                   </div>
                 </button>
 
-                <p className="text-xs text-white/20 font-jakarta">
+                <p className="text-xs text-white/20 ">
                   {t.form.privacy.text}{' '}
                   <PrefetchLink href="/privacy-policy" className="text-white/40 hover:text-teal-300 transition-colors">
                     {t.form.privacy.link}
@@ -264,8 +264,8 @@ const ContactNew: React.FC = () => {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="text-lg font-jakarta text-white mb-1">{t.form.success.title}</h4>
-                    <p className="text-sm text-white/50 font-jakarta">{t.form.success.message}</p>
+                    <h4 className="text-lg  text-white mb-1">{t.form.success.title}</h4>
+                    <p className="text-sm text-white/50 ">{t.form.success.message}</p>
                   </div>
                 </div>
               </motion.div>

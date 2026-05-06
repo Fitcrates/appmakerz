@@ -16,7 +16,7 @@ const initialState: FormData = {
   name: '',
   email: '',
   message: '',
-  budget: 15000,
+  budget: 2000,
 };
 
 export const useEmailForm = () => {

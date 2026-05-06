@@ -69,7 +69,7 @@ const HeroNew: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-8 [@media(max-height:800px)]:mb-4"
         >
-          <span className="text-xs tracking-[0.3em] uppercase font-jakarta text-white/90">
+          <span className="text-xs tracking-[0.3em] uppercase  text-white/90">
             {t.label}
           </span>
         </motion.div>
@@ -80,7 +80,7 @@ const HeroNew: React.FC = () => {
         >
           <BurnSpotlightText
             as="div"
-            className="text-3xl sm:text-7xl lg:text-[120px] [@media(max-height:800px)]:lg:text-[80px] [@media(max-height:700px)]:lg:text-[64px] font-light font-jakarta tracking-normal leading-[1.2]"
+            className="text-3xl sm:text-7xl lg:text-[120px] [@media(max-height:800px)]:lg:text-[80px] [@media(max-height:700px)]:lg:text-[64px] font-light font-oxanium tracking-normal leading-[1.2]"
             glowSize={200}
             baseDelay={500}
             charDelay={40}
@@ -98,7 +98,7 @@ const HeroNew: React.FC = () => {
         >
           <SpotlightText
             as="p"
-            className="text-lg sm:text-xl [@media(max-height:700px)]:text-base font-jakarta font-light"
+            className="text-lg sm:text-xl [@media(max-height:700px)]:text-base  font-light"
             glowSize={100}
           >
             {t.subtitle}
@@ -113,7 +113,7 @@ const HeroNew: React.FC = () => {
         >
           <a
             href="#about"
-            className="group relative px-10 py-5 [@media(max-height:700px)]:py-4 bg-teal-300 text-indigo-950 font-jakarta font-medium overflow-hidden transition-all duration-500 min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+            className="group relative px-10 py-5 [@media(max-height:700px)]:py-4 bg-teal-300 text-indigo-950  font-normal overflow-hidden transition-all duration-500 min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
             aria-label="Find out more about me"
           >
             <span className="relative z-10">{t.cta.viewWork}</span>
@@ -122,7 +122,7 @@ const HeroNew: React.FC = () => {
 
           <a
             href="#contact"
-            className="group px-10 py-5 [@media(max-height:700px)]:py-4 border border-white/20 text-white font-jakarta font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+            className="group px-10 py-5 [@media(max-height:700px)]:py-4 border border-white/20 text-white  font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
             aria-label="Contact me to discuss your project"
           >
             <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
@@ -141,7 +141,7 @@ const HeroNew: React.FC = () => {
         className="absolute bottom-12 [@media(max-height:800px)]:bottom-6 left-1/2 -translate-x-1/2 z-20 hidden sm:flex [@media(max-height:700px)]:!hidden flex-col items-center gap-3 text-white/30 hover:text-teal-300 transition-colors cursor-pointer group focus:outline-none focus:text-teal-300"
         aria-label="Scroll down to About section"
       >
-        <span className="text-[10px] font-jakarta tracking-[0.3em] uppercase">
+        <span className="text-[10px]  tracking-[0.3em] uppercase">
           {t.scroll}
         </span>
         <motion.div

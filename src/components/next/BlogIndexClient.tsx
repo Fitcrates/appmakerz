@@ -47,7 +47,7 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
           <div className="mb-8">
             <BurnSpotlightText
               as="h1"
-              className="text-5xl sm:text-6xl lg:text-8xl font-light text-white font-jakarta"
+              className="text-5xl sm:text-6xl lg:text-8xl font-light text-white font-oxanium "
               glowSize={200}
               baseDelay={200}
             >
@@ -55,7 +55,7 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
             </BurnSpotlightText>
           </div>
 
-          <div className="text-white/40 font-jakarta font-light text-lg max-w-xl mb-12">
+          <div className="text-white/40  font-light text-lg max-w-xl mb-12">
             <p>{subtitle}</p>
           </div>
 
@@ -69,7 +69,7 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
                 setSearchQuery(event.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full bg-transparent border-b border-white/10 focus:border-teal-300 pl-8 pr-4 py-3 text-white font-jakarta placeholder:text-white/30 outline-none transition-colors"
+              className="w-full bg-transparent border-b border-white/10 focus:border-teal-300 pl-8 pr-4 py-3 text-white  placeholder:text-white/30 outline-none transition-colors"
             />
           </div>
         </div>
@@ -113,11 +113,11 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
                       <div>
                         <div className="flex items-center gap-4 mb-4 flex-wrap">
                           {category ? (
-                            <span className="text-xs px-3 py-1 bg-teal-300/10 text-teal-300 font-jakarta tracking-wider uppercase">
+                            <span className="text-xs px-3 py-1 bg-teal-300/10 text-teal-300  tracking-wider uppercase">
                               {category}
                             </span>
                           ) : null}
-                          <span className="text-xs text-white/30 font-jakarta">
+                          <span className="text-xs text-white/30 ">
                             {new Date(post.publishedAt).toLocaleDateString(language === 'pl' ? 'pl-PL' : 'en-US', {
                               year: 'numeric',
                               month: 'short',
@@ -126,17 +126,17 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
                           </span>
                         </div>
 
-                        <h2 className="text-xl lg:text-2xl font-light text-white font-jakarta mb-3 group-hover:text-teal-300 transition-colors duration-300 line-clamp-2">
+                        <h2 className="text-xl lg:text-2xl font-light font-oxanium text-white  mb-3 group-hover:text-teal-300 transition-colors duration-300 line-clamp-2">
                           {title}
                         </h2>
 
-                        <p className="text-white/40 font-jakarta font-light text-sm leading-relaxed line-clamp-3">
+                        <p className="text-white/40  font-light text-sm leading-relaxed line-clamp-3">
                           {excerpt}
                         </p>
                       </div>
 
                       <div className="flex items-center gap-2 mt-2 text-white/50 group-hover:text-teal-300 transition-colors duration-300">
-                        <span className="text-sm font-jakarta">{t.readMore}</span>
+                        <span className="text-sm ">{t.readMore}</span>
                         <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                       </div>
                     </div>
@@ -150,7 +150,7 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
         </div>
       ) : (
         <div className="text-center py-16">
-          <p className="text-white/40 font-jakarta">{t.noPosts}</p>
+          <p className="text-white/40 ">{t.noPosts}</p>
         </div>
       )}
 
@@ -164,7 +164,7 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
                 setCurrentPage(index + 1);
                 document.getElementById('blog-posts')?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className={`w-10 h-10 border font-jakarta text-sm transition-all duration-300 ${currentPage === index + 1
+              className={`w-10 h-10 border  text-sm transition-all duration-300 ${currentPage === index + 1
                 ? 'border-teal-300 bg-teal-300 text-indigo-950'
                 : 'border-white/10 text-white/50 hover:border-teal-300 hover:text-teal-300'
                 }`}

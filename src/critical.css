@@ -1,11 +1,26 @@
 /* Critical CSS for above-the-fold content */
 @font-face {
-  font-family: 'Plus Jakarta Sans';
+  font-family: 'Orbitron';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 100 900;
   font-display: swap;
-  src: local('Plus Jakarta Sans'),
-       url('/fonts/PlusJakartaSans-Regular.woff2') format('woff2');
+  src: local('Orbitron'),
+    url('/fonts/Orbitron/Orbitron-VariableFont_wght.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: local('IBM Plex Sans'),
+    url('/fonts/IBM_Plex_Sans/IBMPlexSans-VariableFont_wdth,wght.ttf') format('truetype');
+}
+
+/* Global typography overrides */
+h1, h2, h3, h4, h5, h6, .heading,
+[class*="text-4xl"], [class*="text-5xl"], [class*="text-6xl"], [class*="text-7xl"], [class*="text-[120px]"], [class*="text-[80px]"], [class*="text-[64px]"] {
+  font-family: 'Oxanium', system-ui, sans-serif !important;
 }
 
 /* Critical Tailwind utilities */
@@ -18,9 +33,17 @@
 .justify-center { justify-content: center; }
 .text-3xl { font-size: 1.875rem; }
 .text-white { color: rgb(255, 255, 255); }
-.font-jakarta { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
-.leading-tight { line-height: 1.25; }
-.overflow-x-hidden { overflow-x: hidden; }
+.font-jakarta { font-family: 'IBM Plex Sans', system-ui, sans-serif; }
+.font-oxanium { font-family: 'Oxanium', system-ui, sans-serif !important; }
+.font-plex { font-family: 'IBM Plex Sans', system-ui, sans-serif !important; }
+
+.leading-tight {
+  line-height: 1.25;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
 
 /* Hero section specific styles */
 .hero-section {

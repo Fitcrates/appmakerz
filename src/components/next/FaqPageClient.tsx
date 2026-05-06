@@ -18,12 +18,12 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
         onClick={() => setIsOpen((value) => !value)}
         className="w-full py-6 flex items-center justify-between gap-4 text-left group"
       >
-        <h3 className="text-white font-jakarta text-lg group-hover:text-teal-300 transition-colors">{question}</h3>
+        <h3 className="text-white  text-lg group-hover:text-teal-300 transition-colors font-oxanium font-light">{question}</h3>
         <ChevronDown className={`w-5 h-5 text-white/40 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
         <div className="overflow-hidden">
-          <p className="text-white/60 font-jakarta font-light pb-6 leading-relaxed">{answer}</p>
+          <p className="text-white/60  font-light pb-6 leading-relaxed">{answer}</p>
         </div>
       </div>
     </div>
@@ -56,7 +56,7 @@ export default function FaqPageClient({ content }: FaqPageClientProps) {
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
           placeholder={content.searchPlaceholder}
-          className="w-full bg-white/5 border border-white/10 text-white placeholder-white/40 font-jakarta text-base py-4 pl-12 pr-4 focus:outline-none focus:border-teal-300/50 transition-colors"
+          className="w-full bg-white/5 border border-white/10 text-white placeholder-white/40  text-base py-4 pl-12 pr-4 focus:outline-none focus:border-teal-300/50 transition-colors"
         />
       </div>
 
@@ -64,7 +64,7 @@ export default function FaqPageClient({ content }: FaqPageClientProps) {
         {filteredFaqs.length ? (
           filteredFaqs.map((faq) => <AccordionItem key={faq.question} question={faq.question} answer={faq.answer} />)
         ) : (
-          <div className="text-white/40 font-jakarta py-8 text-center">{content.emptyState}</div>
+          <div className="text-white/40  py-8 text-center">{content.emptyState}</div>
         )}
       </div>
     </div>

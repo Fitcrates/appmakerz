@@ -190,23 +190,23 @@ const SolutionsNew: React.FC = () => {
           transition={{ duration: 1 }}
           className="pt-20 lg:pt-24 mb-6 lg:mb-16"
         >
-          <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
+          <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">
             {t.label}
           </span>
         </motion.div>
 
         {/* Header - like AboutNew */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.1 }}
           className="mb-16 lg:mb-24"
         >
-          <BurnSpotlightText 
-            as="h2" 
-            className="text-4xl sm:text-5xl lg:text-6xl font-light font-jakarta leading-[1.3]" 
-            glowSize={150} 
-            baseDelay={200} 
+          <BurnSpotlightText
+            as="h2"
+            className="text-4xl sm:text-5xl lg:text-6xl font-light font-oxanium leading-[1.3]"
+            glowSize={150}
+            baseDelay={200}
             charDelay={40}
           >
             {t.heading}
@@ -228,37 +228,37 @@ const SolutionsNew: React.FC = () => {
                     itemScope
                     itemType="https://schema.org/Service"
                   >
-                  <span className="notranslate text-[0.65rem] font-medium tracking-[0.2em] uppercase text-teal-300 mb-5 block" aria-hidden="true">
-                    {solution.number}
-                  </span>
-                  <h3 className="text-white text-[clamp(2.5rem,5vw,4.5rem)] font-jakarta font-light tracking-[-0.03em] leading-[1.05] uppercase mb-5">
-                    {solution.title}
-                  </h3>
-                  <p className="text-white/45 font-jakarta text-sm italic mb-4" itemProp="name">
-                    {solution.problem}
-                  </p>
-                  <p className="font-jakarta font-light text-[clamp(0.95rem,1.1vw,1.1rem)] leading-[1.9] text-white/80 max-w-[420px]" itemProp="description">
-                    {solution.description}
-                  </p>
-                </article>
-              ))}
-            </div>
+                    <span className="notranslate text-[0.65rem] font-medium tracking-[0.2em] uppercase text-teal-300 mb-5 block" aria-hidden="true">
+                      {solution.number}
+                    </span>
+                    <h3 className="text-white text-[clamp(2.5rem,5vw,4.5rem)]  font-light tracking-[-0.03em] leading-[1.05] font-oxanium uppercase mb-5">
+                      {solution.title}
+                    </h3>
+                    <p className="text-white/45  text-sm italic mb-4" itemProp="name">
+                      {solution.problem}
+                    </p>
+                    <p className=" font-light text-[clamp(0.95rem,1.1vw,1.1rem)] leading-[1.9] text-white/80 max-w-[420px]" itemProp="description">
+                      {solution.description}
+                    </p>
+                  </article>
+                ))}
+              </div>
 
-            <div className="solutions-scene__right relative  ">
-              {solutions.map((solution) => (
-                <div key={`panel-${solution.number}`} className="solutions-scene__image-panel h-[100svh] relative overflow-hidden">
-                  <img
-                    src={solution.mobileImage}
-                    alt={solution.title}
-                    className="solutions-scene__image w-full h-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-r from-indigo-950 via-indigo-950/65 to-transparent pointer-events-none z-[1]" />
-                  <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-l from-indigo-950 via-transparent to-transparent pointer-events-none z-[2]" />
-                </div>
-              ))}
-            </div>
+              <div className="solutions-scene__right relative  ">
+                {solutions.map((solution) => (
+                  <div key={`panel-${solution.number}`} className="solutions-scene__image-panel h-[100svh] relative overflow-hidden">
+                    <img
+                      src={solution.mobileImage}
+                      alt={solution.title}
+                      className="solutions-scene__image w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-r from-indigo-950 via-indigo-950/65 to-transparent pointer-events-none z-[1]" />
+                    <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-l from-indigo-950 via-transparent to-transparent pointer-events-none z-[2]" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -310,13 +310,13 @@ const SolutionsNew: React.FC = () => {
                       <span className="notranslate text-[0.65rem] font-medium tracking-[0.2em] uppercase text-teal-300 mb-4 block" aria-hidden="true">
                         {solution.number}
                       </span>
-                      <h3 className="text-white text-[clamp(1.8rem,7.5vw,2.2rem)] font-jakarta font-light tracking-[-0.02em] leading-[1.05] uppercase mb-4">
+                      <h3 className="text-white text-[clamp(1.8rem,7.5vw,2.2rem)]  font-light tracking-[-0.02em] leading-[1.05] uppercase mb-4">
                         {solution.title}
                       </h3>
-                      <p className="text-white/50 font-jakarta text-[0.85rem] italic mb-3" itemProp="name">
+                      <p className="text-white/50  text-[0.85rem] italic mb-3" itemProp="name">
                         {solution.problem}
                       </p>
-                      <p className="font-jakarta font-light text-[0.95rem] leading-[1.75] text-white/90 mb-0 max-w-[42ch]" itemProp="description">
+                      <p className=" font-light text-[0.95rem] leading-[1.75] text-white/90 mb-0 max-w-[42ch]" itemProp="description">
                         {solution.description}
                       </p>
                     </div>
@@ -342,7 +342,7 @@ const SolutionsNew: React.FC = () => {
             aria-label="Contact me to discuss your project"
           >
             <SpotlightText glowSize={100}>
-              <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">
+              <span className="text-lg text-white  group-hover:text-teal-300 transition-colors font-oxanium font-oxanium font-light">
                 {t.cta}
               </span>
             </SpotlightText>
@@ -356,9 +356,9 @@ const SolutionsNew: React.FC = () => {
         <div className="sr-only">
           <h2>Web Development Services - Hire a Developer</h2>
           <p>
-            Professional fullstack developer offering landing page development, 
-            e-commerce solutions, marketplace platforms, custom web applications, 
-            and SEO-optimized development services. Looking for a developer to build 
+            Professional fullstack developer offering landing page development,
+            e-commerce solutions, marketplace platforms, custom web applications,
+            and SEO-optimized development services. Looking for a developer to build
             your landing page, online shop, or web application? Contact me today.
           </p>
           <ul>

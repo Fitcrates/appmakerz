@@ -8,6 +8,9 @@ import {
 
 const MODEL_OPTIONS: Record<string, Array<{ label: string; value: string }>> = {
   openai: [
+    { label: 'GPT-5.5 Medium', value: 'gpt-5.5-medium' },
+    { label: 'GPT-5.5 High', value: 'gpt-5.5-high' },
+    { label: 'GPT-5.5 Low', value: 'gpt-5.5-low' },
     { label: 'GPT-5.4 Thinking', value: 'gpt-5.4-thinking' },
     { label: 'GPT-5.4', value: 'gpt-5.4' },
     { label: 'GPT-4.1', value: 'gpt-4.1' },
@@ -24,7 +27,7 @@ const MODEL_OPTIONS: Record<string, Array<{ label: string; value: string }>> = {
 // ─── Provider config ──────────────────────────────────────────────────────────
 const PROVIDERS: Record<string, { label: string; model: string }> = {
   groq: { label: 'Groq (Llama 3.3)', model: 'llama-3.3-70b-versatile' },
-  openai: { label: 'OpenAI', model: 'gpt-5.4-thinking' },
+  openai: { label: 'OpenAI', model: 'gpt-5.5-medium' },
 }
 
 // ─── Portable Text Normalizer ─────────────────────────────────────────────────
@@ -1075,7 +1078,7 @@ ${schemaJson}`
                   onChange={(e: any) => setModel(e.currentTarget.value)}
                   fontSize={1}
                   padding={2}
-                  placeholder="Model, np. gpt-5.4-thinking"
+                  placeholder="Model, np. gpt-5.5-medium"
                   disabled={loading}
                 />
               </Box>

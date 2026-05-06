@@ -147,14 +147,14 @@ const FooterNew: React.FC = () => {
             <div className="inline-flex items-center justify-center w-12 h-12 mb-6 bg-teal-300/10 rounded-full">
               <Mail className="w-5 h-5 text-teal-300" />
             </div>
-            <h3 className="text-2xl sm:text-3xl font-light text-white font-jakarta mb-3">{t.newsletter.title}</h3>
-            <p className="text-white/40 font-jakarta mb-8">{t.newsletter.description}</p>
+            <h3 className="text-2xl sm:text-3xl font-light text-white mb-3">{t.newsletter.title}</h3>
+            <p className="text-white/40  mb-8">{t.newsletter.description}</p>
 
             {isSubscribed ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="inline-flex items-center gap-3 px-6 py-3 bg-teal-300/10 text-teal-300 font-jakarta"
+                className="inline-flex items-center gap-3 px-6 py-3 bg-teal-300/10 text-teal-300 "
               >
                 <Check className="w-5 h-5" />
                 <span>{t.newsletter.success}</span>
@@ -173,15 +173,14 @@ const FooterNew: React.FC = () => {
                     aria-label="Email address for newsletter"
                     aria-required="true"
                     autoComplete="email"
-                    className={`w-full px-4 py-3 bg-white/5 border text-white placeholder-white/30 font-jakarta focus:outline-none focus:ring-2 focus:ring-teal-300/30 transition-colors ${
-                      error && touched ? 'border-red-400/50 focus:border-red-400' : 'border-white/10 focus:border-teal-300/50'
-                    }`}
+                    className={`w-full px-4 py-3 bg-white/5 border text-white placeholder-white/30  focus:outline-none focus:ring-2 focus:ring-teal-300/30 transition-colors ${error && touched ? 'border-red-400/50 focus:border-red-400' : 'border-white/10 focus:border-teal-300/50'
+                      }`}
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={isSubmitting || !isEmailValid}
-                  className="group px-6 py-3 bg-teal-300 text-indigo-950 font-jakarta font-medium hover:bg-teal-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                  className="group px-6 py-3 bg-teal-300 text-indigo-950  font-normal hover:bg-teal-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
                   aria-label={isSubmitting ? 'Subscribing to newsletter...' : 'Subscribe to newsletter'}
                 >
                   <span>{isSubmitting ? t.newsletter.subscribing : t.newsletter.button}</span>
@@ -190,7 +189,7 @@ const FooterNew: React.FC = () => {
               </form>
             )}
 
-            {error ? <p className="mt-3 text-red-400 font-jakarta text-sm">{error}</p> : null}
+            {error ? <p className="mt-3 text-red-400  text-sm">{error}</p> : null}
           </div>
         </div>
 
@@ -199,22 +198,22 @@ const FooterNew: React.FC = () => {
             <div>
               <PrefetchLink href="/#hero" className="inline-block mb-8">
                 <div className="flex items-center gap-2">
-                  <span className="text-3xl font-jakarta font-light text-white">
+                  <span className="text-3xl font-light font-oxanium text-white">
                     App<span className="text-teal-300">Crates</span>
                   </span>
                   <img src="/media/AppcratesLogoSmaller.webp" alt="AppCrates Logo" className="w-10 h-10 object-contain hidden md:block" />
                 </div>
               </PrefetchLink>
-              <p className="text-white/40 font-jakarta font-light max-w-md text-lg leading-relaxed">{t.brand.description}</p>
+              <p className="text-white/40  font-light max-w-md text-lg leading-relaxed">{t.brand.description}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-8">
               <nav aria-label="Footer navigation">
-                <h4 className="text-xs text-white/30 font-jakarta tracking-widest uppercase mb-6">{t.navigation}</h4>
+                <h4 className="text-xs text-white/30  tracking-widest uppercase mb-6">{t.navigation}</h4>
                 <ul className="space-y-4" role="list">
                   {footerNavItems.map((link) => (
                     <li key={link.name}>
-                      <PrefetchLink href={link.href} className="text-white/60 font-jakarta hover:text-teal-300 transition-colors">
+                      <PrefetchLink href={link.href} className="text-white/60  hover:text-teal-300 transition-colors">
                         {link.name}
                       </PrefetchLink>
                     </li>
@@ -223,13 +222,13 @@ const FooterNew: React.FC = () => {
               </nav>
 
               <div>
-                <h4 className="text-xs text-white/30 font-jakarta tracking-widest uppercase mb-6">{t.connect}</h4>
+                <h4 className="text-xs text-white/30  tracking-widest uppercase mb-6">{t.connect}</h4>
                 <ul className="space-y-4" role="list">
                   <li>
                     <a
                       href="mailto:appcratesdev@gmail.com"
                       onClick={() => trackContactClick('email', 'appcratesdev@gmail.com')}
-                      className="text-white/60 font-jakarta hover:text-teal-300 transition-colors"
+                      className="text-white/60  hover:text-teal-300 transition-colors"
                     >
                       {t.links.email}
                     </a>
@@ -239,7 +238,7 @@ const FooterNew: React.FC = () => {
                       href="https://github.com/Fitcrates"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white/60 font-jakarta hover:text-teal-300 transition-colors"
+                      className="text-white/60  hover:text-teal-300 transition-colors"
                     >
                       {t.links.github}
                     </a>
@@ -249,13 +248,13 @@ const FooterNew: React.FC = () => {
                       href="https://www.linkedin.com/in/arkadiusz-wawrzyniak-5a536015a"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-white/60 font-jakarta hover:text-teal-300 transition-colors"
+                      className="text-white/60  hover:text-teal-300 transition-colors"
                     >
                       {t.links.linkedin}
                     </a>
                   </li>
                   <li>
-                    <PrefetchLink href="/blog" className="text-white/60 font-jakarta hover:text-teal-300 transition-colors">
+                    <PrefetchLink href="/blog" className="text-white/60  hover:text-teal-300 transition-colors">
                       {t.links.blog}
                     </PrefetchLink>
                   </li>
@@ -266,25 +265,25 @@ const FooterNew: React.FC = () => {
         </div>
 
         <div className="py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/20 text-sm font-jakarta">
+          <p className="text-white/20 text-sm ">
             {t.copyright.replace('{year}', `2024 – ${currentYear}`)}
           </p>
 
           <div className="flex items-center gap-8">
-            <PrefetchLink href="/faq" className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors">
+            <PrefetchLink href="/faq" className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
               FAQ
             </PrefetchLink>
-            <PrefetchLink href="/privacy-policy" className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors">
+            <PrefetchLink href="/privacy-policy" className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
               {t.legal.privacy}
             </PrefetchLink>
-            <PrefetchLink href="/unsubscribe" className="text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors">
+            <PrefetchLink href="/unsubscribe" className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
               {t.legal.unsubscribe}
             </PrefetchLink>
 
             <motion.button
               onClick={scrollToTop}
               whileHover={{ y: -2 }}
-              className="group flex items-center gap-2 text-white/20 text-sm font-jakarta hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
+              className="group flex items-center gap-2 text-white/20 text-sm  hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
               aria-label="Scroll back to top of page"
             >
               <span>{t.backToTop}</span>

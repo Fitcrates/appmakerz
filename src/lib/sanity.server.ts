@@ -12,7 +12,6 @@ if (!projectId || !dataset) {
 const client = createClient({
   projectId,
   dataset,
-  token: process.env.BACKEND_SANITY_TOKEN,
   useCdn: false,
   apiVersion: '2024-02-20',
 });

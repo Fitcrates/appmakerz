@@ -111,7 +111,7 @@ export default function UnsubscribePageClient() {
           {status === 'loading' ? (
             <div className="text-center py-8">
               <div className="w-12 h-12 mx-auto mb-6 border-2 border-teal-300/30 border-t-teal-300 rounded-full animate-spin" />
-              <p className="text-white/50 font-jakarta">{language === 'pl' ? 'Przetwarzanie...' : 'Processing...'}</p>
+              <p className="text-white/50 ">{language === 'pl' ? 'Przetwarzanie...' : 'Processing...'}</p>
             </div>
           ) : null}
 
@@ -120,9 +120,9 @@ export default function UnsubscribePageClient() {
               <div className="w-16 h-16 mx-auto mb-6 bg-teal-300/10 rounded-full flex items-center justify-center">
                 <Check className="w-8 h-8 text-teal-300" />
               </div>
-              <h1 className="text-2xl text-white font-jakarta font-light mb-2">{t.title.line1}</h1>
-              <p className="text-white/50 font-jakarta">{t.note.line1}</p>
-              <p className="text-white/30 font-jakarta text-sm mt-4">{t.note.line2}</p>
+              <h1 className="text-2xl text-white  font-light mb-2">{t.title.line1}</h1>
+              <p className="text-white/50 ">{t.note.line1}</p>
+              <p className="text-white/30  text-sm mt-4">{t.note.line2}</p>
             </div>
           ) : null}
 
@@ -131,9 +131,9 @@ export default function UnsubscribePageClient() {
               <div className="w-16 h-16 mx-auto mb-6 bg-red-400/10 rounded-full flex items-center justify-center">
                 <AlertCircle className="w-8 h-8 text-red-400" />
               </div>
-              <h1 className="text-2xl text-white font-jakarta font-light mb-2">{t.error.line1}</h1>
-              <p className="text-white/50 font-jakarta mb-6">{error || t.error.line2}</p>
-              <button type="button" onClick={() => setStatus('input')} className="text-teal-300 hover:text-teal-200 font-jakarta transition-colors">
+              <h1 className="text-2xl text-white  font-light mb-2">{t.error.line1}</h1>
+              <p className="text-white/50  mb-6">{error || t.error.line2}</p>
+              <button type="button" onClick={() => setStatus('input')} className="text-teal-300 hover:text-teal-200  transition-colors">
                 {t.error.line3}
               </button>
             </div>
@@ -145,8 +145,8 @@ export default function UnsubscribePageClient() {
                 <div className="w-12 h-12 mb-6 bg-teal-300/10 rounded-full flex items-center justify-center">
                   <Mail className="w-6 h-6 text-teal-300" />
                 </div>
-                <h1 className="text-2xl sm:text-3xl text-white font-jakarta font-light mb-2">{t.title.line1}</h1>
-                <p className="text-white/50 font-jakarta text-sm">{t.title.line2}</p>
+                <h1 className="text-2xl sm:text-3xl text-white  font-light mb-2">{t.title.line1}</h1>
+                <p className="text-white/50  text-sm">{t.title.line2}</p>
               </div>
 
               <form onSubmit={handleManualUnsubscribe} className="space-y-6">
@@ -157,16 +157,16 @@ export default function UnsubscribePageClient() {
                     onChange={(event) => setEmail(event.target.value)}
                     required
                     placeholder={t.title.line3}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white placeholder-white/30 font-jakarta focus:border-teal-300/50 focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white placeholder-white/30  focus:border-teal-300/50 focus:outline-none transition-colors"
                   />
                 </div>
 
-                {error ? <p className="text-red-400 font-jakarta text-sm">{error}</p> : null}
+                {error ? <p className="text-red-400  text-sm">{error}</p> : null}
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full px-6 py-3 bg-teal-300 text-indigo-950 font-jakarta font-medium hover:bg-teal-200 transition-colors disabled:opacity-50"
+                  className="w-full px-6 py-3 bg-teal-300 text-indigo-950  font-medium hover:bg-teal-200 transition-colors disabled:opacity-50"
                 >
                   {isSubmitting ? (language === 'pl' ? 'Wypisywanie...' : 'Unsubscribing...') : t.title.line4}
                 </button>
@@ -176,7 +176,7 @@ export default function UnsubscribePageClient() {
                 <button
                   type="button"
                   onClick={() => router.push('/')}
-                  className="inline-flex items-center text-white/50 hover:text-teal-300 font-jakarta text-sm transition-colors group"
+                  className="inline-flex items-center text-white/50 hover:text-teal-300  text-sm transition-colors group"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
                   {language === 'pl' ? 'Powrot do strony glownej' : 'Back to home'}

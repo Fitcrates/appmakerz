@@ -140,7 +140,7 @@ export default async function AboutMePage() {
               <div className="mt-0 md:mt-8">
                 <BurnSpotlightText
                   as="h1"
-                  className="text-5xl sm:text-6xl lg:text-8xl font-light text-white font-jakarta leading-tight"
+                  className="text-5xl sm:text-6xl lg:text-8xl font-light text-white  leading-tight"
                   glowSize={200}
                   baseDelay={200}
                 >
@@ -151,7 +151,7 @@ export default async function AboutMePage() {
               {intro ? (
                 <SpotlightText
                   text={intro}
-                  className="text-white/40 font-jakarta font-light text-lg max-w-xl mt-8 leading-relaxed"
+                  className="text-white/40  font-light text-lg max-w-xl mt-8 leading-relaxed"
                   glowSize={200}
 
                 />
@@ -160,7 +160,7 @@ export default async function AboutMePage() {
               <div className="flex flex-col sm:flex-row gap-4 mt-10">
                 <PrefetchLink
                   href="/#services"
-                  className="group relative px-10 py-5 bg-teal-300 text-indigo-950 font-jakarta font-medium overflow-hidden transition-all duration-500 min-w-[230px] text-center hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                  className="group relative px-10 py-5 bg-teal-300 text-indigo-950  font-medium overflow-hidden transition-all duration-500 min-w-[230px] text-center hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
                 >
                   <span className="relative z-10">{ctaProjects}</span>
                   <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
@@ -168,7 +168,7 @@ export default async function AboutMePage() {
 
                 <PrefetchLink
                   href="/#contact"
-                  className="group px-10 py-5 border border-white/20 text-white font-jakarta font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                  className="group px-10 py-5 border border-white/20 text-white  font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
                 >
                   <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
                     {ctaContact}
@@ -211,10 +211,10 @@ export default async function AboutMePage() {
                   </div>
 
                   <div className="mt-6 text-center lg:text-left">
-                    <p className="text-white font-jakarta text-lg font-light">
+                    <p className="text-white  text-lg font-light">
                       Arkadiusz Wawrzyniak
                     </p>
-                    <p className="text-teal-300/60 font-jakarta text-sm mt-1">
+                    <p className="text-teal-300/60  text-sm mt-1">
                       Fullstack Web Developer
                     </p>
                   </div>
@@ -234,7 +234,7 @@ export default async function AboutMePage() {
                   <div>
                     <SpotlightText
                       as="h2"
-                      className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta mb-8"
+                      className="text-xs tracking-[0.3em] uppercase text-white/30  mb-8"
                     >
                       {language === 'pl'
                         ? 'Specjalizacje'
@@ -247,10 +247,10 @@ export default async function AboutMePage() {
                           key={`${item}-${index}`}
                           className="group flex items-center gap-6 py-4 border-b border-white/5 hover:border-teal-300/20 transition-all duration-500 hover:pl-2"
                         >
-                          <span className="text-[10px] tracking-[0.2em] text-teal-300/30 font-jakarta tabular-nums group-hover:text-teal-300/70 transition-colors duration-500 notranslate">
+                          <span className="text-[10px] tracking-[0.2em] text-teal-300/30  tabular-nums group-hover:text-teal-300/70 transition-colors duration-500 notranslate">
                             {String(index + 1).padStart(2, '0')}
                           </span>
-                          <span className="text-white/50 font-jakarta font-light text-[15px] group-hover:text-white/80 transition-colors duration-500">
+                          <span className="text-white/50  font-light text-[15px] group-hover:text-white/80 transition-colors duration-500">
                             {item}
                           </span>
                           <div className="flex-1 h-px bg-gradient-to-r from-white/5 to-transparent group-hover:from-teal-300/10 transition-colors duration-500" />
@@ -265,13 +265,13 @@ export default async function AboutMePage() {
                   <div>
                     <SpotlightText
                       as="h2"
-                      className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta mb-6"
+                      className="text-xs tracking-[0.3em] uppercase text-white/30  mb-6"
                     >
                       {language === 'pl'
                         ? 'Kim jestem'
                         : 'Who am I'}
                     </SpotlightText>
-                    <div className="prose prose-invert prose-lg max-w-none font-jakarta font-light prose-p:text-white/60 prose-p:leading-relaxed prose-headings:text-white prose-headings:font-light prose-a:text-teal-300 prose-strong:text-white/80">
+                    <div className="prose prose-invert prose-lg max-w-none  font-light prose-p:text-white/60 prose-p:leading-relaxed prose-headings:text-white prose-headings:font-light prose-a:text-teal-300 prose-strong:text-white/80">
                       <PortableText
                         value={story}
                         components={portableTextComponentsServer}
@@ -285,7 +285,7 @@ export default async function AboutMePage() {
                   <div className="flex flex-col sm:flex-row gap-6 sm:items-center justify-between">
                     <SpotlightText
                       as="p"
-                      className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta mb-6"
+                      className="text-xs tracking-[0.3em] uppercase text-white/30  mb-6"
                     >
                       {language === 'pl'
                         ? 'Zainteresowany współpracą?'
@@ -293,7 +293,7 @@ export default async function AboutMePage() {
                     </SpotlightText>
                     <PrefetchLink
                       href="/#contact"
-                      className="group px-10 py-5 border border-white/20 text-white font-jakarta font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                      className="group px-10 py-5 border border-white/20 text-white  font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
                     >
                       <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
                         {language === 'pl' ? 'Napisz do mnie' : 'Get in touch'}

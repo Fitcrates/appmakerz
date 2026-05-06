@@ -111,21 +111,21 @@ const ProjectRow = memo<{ project: Project; index: number; mobileActionLabel: st
           <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-300" />
 
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-start gap-4">
-            <span className="text-xs text-teal-300 font-jakarta tracking-widest lg:w-12 flex-shrink-0" aria-hidden="true">
+            <span className="text-xs text-teal-300  tracking-widest lg:w-12 flex-shrink-0" aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </span>
 
             <div className="lg:w-72 flex-shrink-0">
-              <h3 className="text-2xl sm:text-3xl font-light text-white font-jakarta group-hover:text-teal-300 transition-colors duration-300">
+              <h3 className="text-2xl sm:text-3xl font-oxanium font-light  text-white group-hover:text-teal-300 transition-colors duration-300">
                 {project.title}
               </h3>
-              <p className="text-sm font-jakarta mt-1 text-white/40 italic">
+              <p className="text-sm  mt-1 text-white/40 italic">
                 {project.category} - {project.year}
               </p>
             </div>
 
             <div className="lg:flex-1">
-              <p className="font-jakarta font-light leading-relaxed text-white/70">{project.description}</p>
+              <p className=" font-light leading-relaxed text-white/70">{project.description}</p>
             </div>
 
             <div className="hidden lg:flex items-center flex-shrink-0">
@@ -134,7 +134,7 @@ const ProjectRow = memo<{ project: Project; index: number; mobileActionLabel: st
           </div>
 
           <div className="flex lg:hidden items-center justify-end gap-2 flex-shrink-0 mt-4">
-            <span className="text-[11px] uppercase tracking-[0.16em] text-white/55 font-jakarta">{mobileActionLabel}</span>
+            <span className="text-[11px] uppercase tracking-[0.16em] text-white/55 ">{mobileActionLabel}</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-teal-300/80" aria-hidden="true" />
           </div>
 
@@ -185,11 +185,11 @@ const ProjectsNew: React.FC = () => {
           transition={{ duration: 1 }}
           className="mb-6 lg:mb-16"
         >
-          <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">{t.label}</span>
+          <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">{t.label}</span>
         </motion.div>
 
         <div className="mb-16">
-          <BurnSpotlightText as="h2" className="text-4xl sm:text-5xl lg:text-7xl font-light font-jakarta" glowSize={150} baseDelay={200} charDelay={40}>
+          <BurnSpotlightText as="h2" className="text-4xl sm:text-5xl lg:text-7xl font-light font-oxanium" glowSize={150} baseDelay={200} charDelay={40}>
             {t.heading}
           </BurnSpotlightText>
 
@@ -213,7 +213,7 @@ const ProjectsNew: React.FC = () => {
             className="group inline-flex items-center gap-4 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 rounded"
             aria-label="Contact me to work together"
           >
-            <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">{t.cta}</span>
+            <span className="text-lg text-white  group-hover:text-teal-300 transition-colors font-oxanium font-oxanium font-light">{t.cta}</span>
             <div className="w-12 h-12 border border-white/20 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300" aria-hidden="true">
               <ArrowUpRight className="w-5 h-5 text-white group-hover:text-indigo-950 transition-colors" />
             </div>

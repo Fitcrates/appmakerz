@@ -137,7 +137,7 @@ const HeaderNew: React.FC = () => {
             <PrefetchLink href="/" className="relative z-10 block">
               <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-1">
 
-                <span className="text-xl font-jakarta font-light text-white">
+                <span className="text-xl  font-light text-white">
                   App<span className="text-teal-300">Crates</span>
                 </span>
                 <img src="/media/AppcratesLogoSmaller.webp" alt="AppCrates Logo" className="w-8 h-8 object-contain hidden md:block" />
@@ -150,7 +150,7 @@ const HeaderNew: React.FC = () => {
                   key={item.label}
                   href={item.href}
                   onClick={(event) => handleNavClick(event, item.href)}
-                  className="relative text-white/70 font-jakarta font-light text-sm hover:text-white transition-colors group focus:outline-none focus:text-teal-300"
+                  className="relative text-white/70  font-light text-sm hover:text-white transition-colors group focus:outline-none focus:text-teal-300"
                 >
                   {item.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-px bg-teal-300 group-hover:w-full transition-all duration-300" />
@@ -160,7 +160,7 @@ const HeaderNew: React.FC = () => {
               <div className="relative group">
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 text-white/70 font-jakarta font-light text-sm hover:text-white transition-colors focus:outline-none focus:text-teal-300"
+                  className="inline-flex items-center gap-2 text-white/70  font-light text-sm hover:text-white transition-colors focus:outline-none focus:text-teal-300"
                   aria-haspopup="true"
                   aria-label={t.services}
                 >
@@ -182,8 +182,8 @@ const HeaderNew: React.FC = () => {
                             <Icon className="w-5 h-5 text-teal-300" />
                           </div>
                           <div>
-                            <p className="text-sm font-jakarta font-medium text-white group-hover:text-teal-300 transition-colors">{item.label}</p>
-                            <p className="text-xs font-jakarta text-white mt-1 leading-relaxed">{item.description}</p>
+                            <p className="text-sm  font-medium text-white group-hover:text-teal-300 transition-colors">{item.label}</p>
+                            <p className="text-xs  text-white mt-1 leading-relaxed">{item.description}</p>
                           </div>
                         </PrefetchLink>
                       );
@@ -255,7 +255,7 @@ const HeaderNew: React.FC = () => {
                     <PrefetchLink
                       href={item.href}
                       onClick={(event) => handleNavClick(event, item.href)}
-                      className="block text-2xl font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
+                      className="block text-2xl  font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
                     >
                       {item.label}
                     </PrefetchLink>
@@ -268,7 +268,7 @@ const HeaderNew: React.FC = () => {
                   transition={{ delay: navItems.length * 0.1 }}
                   className="pt-2 border-t border-white/10"
                 >
-                  <p className="text-xs uppercase tracking-[0.2em] text-white font-jakarta mb-4">{t.services}</p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-white  mb-4">{t.services}</p>
                   <div className="space-y-2">
                     {serviceLandingLinks.map((item) => {
                       const Icon = item.icon;
@@ -277,7 +277,7 @@ const HeaderNew: React.FC = () => {
                           key={item.href}
                           href={item.href}
                           onClick={closeMobileMenu}
-                          className="flex items-center gap-3 py-1 text-base font-jakarta font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
+                          className="flex items-center gap-3 py-1 text-base  font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
                         >
                           <Icon className="w-4 h-4 text-teal-300/60" />
                           <span>{item.label}</span>

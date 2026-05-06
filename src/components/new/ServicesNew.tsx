@@ -74,14 +74,14 @@ const ServiceItem: React.FC<{
         className="block focus:outline-none focus:ring-2 focus:ring-teal-300/40 rounded"
       >
         <div className="flex items-start gap-6">
-          <span className="text-xs text-teal-300 font-jakarta tracking-widest flex-shrink-0 pt-1">
+          <span className="text-xs text-teal-300  tracking-widest flex-shrink-0 pt-1">
             {service.number}
           </span>
 
           <div className="flex-1">
             <SpotlightText
               as="h3"
-              className="text-2xl sm:text-3xl font-light font-jakarta mb-3"
+              className="text-2xl sm:text-3xl  mb-3 font-oxanium font-light "
               glowSize={100}
             >
               {service.title}
@@ -89,7 +89,7 @@ const ServiceItem: React.FC<{
 
             <SpotlightText
               as="p"
-              className="text-white/50 font-jakarta font-light leading-relaxed max-w-lg group-hover:text-white/70 transition-colors duration-500"
+              className="text-white/50  font-light leading-relaxed max-w-lg group-hover:text-white/70 transition-colors duration-500"
               glowSize={100}
             >
               {service.description}
@@ -97,7 +97,7 @@ const ServiceItem: React.FC<{
 
             <div className="mt-4 flex items-center gap-2 text-teal-300/0 group-hover:text-teal-300/80 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
               <ArrowUpRight className="w-4 h-4" />
-              <span className="text-xs font-jakarta tracking-wider uppercase">
+              <span className="text-xs  tracking-wider uppercase">
                 {service.href ? "Zobacz więcej" : "More"}
               </span>
             </div>
@@ -150,7 +150,7 @@ const ServicesNew: React.FC = () => {
           transition={{ duration: 1 }}
           className="mb-6"
         >
-          <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
+          <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">
             {t.label}
           </span>
         </motion.div>
@@ -158,7 +158,7 @@ const ServicesNew: React.FC = () => {
         <div className="mb-16 lg:mb-24">
           <BurnSpotlightText
             as="h2"
-            className="text-4xl sm:text-5xl lg:text-7xl font-light font-jakarta"
+            className="text-4xl sm:text-5xl lg:text-7xl font-light font-oxanium"
             glowSize={150}
             baseDelay={200}
             charDelay={50}
@@ -192,7 +192,7 @@ const ServicesNew: React.FC = () => {
                 className="group inline-flex items-center gap-4 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 rounded"
                 aria-label="Contact me to discuss your project"
               >
-                <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">
+                <span className="text-lg text-white  group-hover:text-teal-300 transition-colors font-oxanium font-oxanium font-light">
                   {t.cta}
                 </span>
                 <div

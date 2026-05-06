@@ -85,23 +85,23 @@ const CookieConsentNew: React.FC = () => {
             <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-teal-300/50" />
             <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-teal-300/50" />
 
-          
+
 
             {/* Icon */}
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-teal-300/10 flex items-center justify-center rounded-full">
                 <Cookie className="w-5 h-5 text-teal-300" />
               </div>
-              <span className="text-xs text-white/30 font-jakarta tracking-widest uppercase">
+              <span className="text-xs text-white/30  tracking-widest uppercase">
                 Cookies
               </span>
             </div>
 
             {/* Message */}
-            <p className="text-white/60 font-jakarta text-sm leading-relaxed mb-6">
+            <p className="text-white/60  text-sm leading-relaxed mb-6">
               {content[language].message}{' '}
-              <a 
-                href="/privacy-policy" 
+              <a
+                href="/privacy-policy"
                 className="text-teal-300 hover:text-teal-200 transition-colors"
               >
                 {content[language].privacyLink}
@@ -113,14 +113,14 @@ const CookieConsentNew: React.FC = () => {
               <button
                 onClick={handleDecline}
                 disabled={isLoading}
-                className="flex-1  px-4 py-2.5 text-sm font-jakarta text-white/60 border border-white/10 hover:border-white/30 hover:text-white transition-all disabled:opacity-50"
+                className="flex-1  px-4 py-2.5 text-sm  text-white/60 border border-white/10 hover:border-white/30 hover:text-white transition-all disabled:opacity-50"
               >
                 {content[language].decline}
               </button>
               <button
                 onClick={handleAccept}
                 disabled={isLoading}
-                className="flex-1   px-4 py-2.5 text-sm font-jakarta font-medium text-indigo-950 bg-teal-300 hover:bg-teal-200 transition-colors disabled:opacity-75 flex items-center justify-center gap-2"
+                className="flex-1   px-4 py-2.5 text-sm  font-normal text-indigo-950 bg-teal-300 hover:bg-teal-200 transition-colors disabled:opacity-75 flex items-center justify-center gap-2"
               >
                 {isLoading ? (
                   <>

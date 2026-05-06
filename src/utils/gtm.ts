@@ -1,8 +1,12 @@
 // Type declarations to make TypeScript happy with window.dataLayer / gtag
+type GtagCommand = 'event' | 'config' | 'consent' | 'js';
+
+type GtagFunction = (command: GtagCommand, ...args: unknown[]) => void;
+
 declare global {
   interface Window {
-    dataLayer: any[];
-    gtag?: (...args: any[]) => void;
+    dataLayer: Array<Record<string, unknown>>;
+    gtag?: GtagFunction;
   }
 }
 
@@ -21,7 +25,7 @@ const ensureDataLayer = () => {
  * @param eventName The name of the event to track (e.g. 'form_submit')
  * @param eventData Additional tracking metadata (e.g. URL, form name, etc.)
  */
-export const pushToDataLayer = (eventName: string, eventData: Record<string, any> = {}) => {
+export const pushToDataLayer = (eventName: string, eventData: Record<string, unknown> = {}) => {
   if (typeof window !== 'undefined') {
     ensureDataLayer().push({
       event: eventName,
@@ -31,7 +35,7 @@ export const pushToDataLayer = (eventName: string, eventData: Record<string, any
   }
 };
 
-export const sendGoogleEvent = (eventName: string, eventData: Record<string, any> = {}) => {
+export const sendGoogleEvent = (eventName: string, eventData: Record<string, unknown> = {}) => {
   if (typeof window === 'undefined') {
     return;
   }
@@ -65,7 +69,7 @@ export const updateAnalyticsConsent = (granted: boolean) => {
     window.gtag('consent', 'update', params);
   }
 
-  ensureDataLayer().push(['consent', 'update', params]);
+  ensureDataLayer().push({ event: 'consent_update', ...params });
 };
 
 /**

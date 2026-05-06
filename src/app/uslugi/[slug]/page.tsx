@@ -7,8 +7,9 @@ import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import FaqAccordionList from '@/components/next/FaqAccordionList';
 import PrefetchLink from '@/components/next/PrefetchLink';
+import ChatWidget from '@/components/next/ChatWidget';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
-import { getServiceLanding, getServiceLandings, urlFor } from '@/lib/sanity.server';
+import { getServiceLanding, urlFor } from '@/lib/sanity.server';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import SpotlightText from '@/components/new/SpotlightText';
 import { getRequestLanguage } from '@/lib/request-language';
@@ -144,19 +145,19 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
           )}
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-24 mt-20 w-full">
-            <span className="text-xs tracking-[0.3em] uppercase text-teal-300/80 font-jakarta">
+            <span className="text-xs tracking-[0.3em] uppercase text-teal-300/80 font-plex">
               {eyebrow}
             </span>
 
             <div className="max-w-4xl">
-              <BurnSpotlightText as="h1" className="text-4xl sm:text-5xl lg:text-7xl font-light text-white font-jakarta leading-tight" glowSize={200} baseDelay={200} charDelay={25}>
+              <BurnSpotlightText as="h1" className="text-4xl sm:text-5xl lg:text-7xl font-light font-oxanium text-white leading-tight" glowSize={200} baseDelay={200} charDelay={25}>
                 {title}
               </BurnSpotlightText>
             </div>
 
             {intro ? (
               <div className="mt-8 max-w-2xl">
-                <SpotlightText as="p" className="text-white/60 text-lg sm:text-xl font-jakarta font-light leading-relaxed" glowSize={150}>
+                <SpotlightText as="p" className="text-white/60 text-lg sm:text-xl font-light font-plex leading-relaxed" glowSize={150}>
                   {intro}
                 </SpotlightText>
               </div>
@@ -165,14 +166,14 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
             <div className="flex flex-col sm:flex-row gap-4 mt-10">
               <PrefetchLink
                 href="/#contact"
-                className="group relative px-10 py-5 bg-teal-300 text-indigo-950 font-jakarta font-medium overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                className="group relative px-10 py-5 bg-teal-300 text-indigo-950  font-normal overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
               >
                 <span className="relative z-10">{ctaLabel}</span>
                 <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
               </PrefetchLink>
               <PrefetchLink
                 href="/#projects"
-                className="group px-10 py-5 border border-white/20 text-white font-jakarta font-medium hover:border-teal-300 transition-all duration-500 relative overflow-hidden text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                className="group px-10 py-5 border border-white/20 text-white  font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
               >
                 <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
                   {ctaSecondaryLabel}
@@ -196,10 +197,10 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
                     key={`stat-${index}`}
                     className={`py-8 lg:py-10 px-6 ${index > 0 ? 'border-l border-white/10' : ''}`}
                   >
-                    <p className="text-3xl sm:text-4xl font-light text-teal-300 font-jakarta notranslate">
+                    <p className="text-3xl sm:text-4xl font-light font-oxanium text-teal-300 notranslate">
                       {stat.value}
                     </p>
-                    <p className="text-white/50 font-jakarta text-sm mt-2">{stat.label}</p>
+                    <p className="text-white/50  text-sm mt-2">{stat.label}</p>
                   </div>
                 ))}
               </div>
@@ -211,13 +212,13 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
         {problems.length > 0 ? (
           <section className="py-20 lg:py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
+              <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">
                 {language === 'pl' ? 'Brzmi znajomo?' : 'Sound familiar?'}
               </span>
               <div className="mt-4 mb-16 max-w-3xl">
                 <BurnSpotlightText
                   as="h2"
-                  className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta"
+                  className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-oxanium "
                   glowSize={180}
                   baseDelay={100}
                   charDelay={30}
@@ -241,7 +242,7 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
                     <div className="absolute bottom-0 right-0 w-px h-0 bg-red-400/60 group-hover:h-16 transition-all duration-500" />
 
                     {/* Number with red glow pulse */}
-                    <span className="relative text-5xl font-extralight font-jakarta notranslate mb-5 block w-fit bg-red-600 bg-clip-text text-transparent group-hover:animate-pulse">
+                    <span className="relative text-5xl font-extralight  notranslate mb-5 block w-fit bg-red-600 bg-clip-text text-transparent group-hover:animate-pulse">
                       <span className="absolute inset-0 bg-red-600 bg-clip-text text-transparent blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-700" aria-hidden="true">
                         {String(index + 1).padStart(2, '0')}
                       </span>
@@ -250,7 +251,7 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
 
                     <SpotlightText
                       as="p"
-                      className="text-white/60 font-jakarta font-light leading-relaxed group-hover:text-white/85 transition-colors duration-500"
+                      className="text-white/60  font-light leading-relaxed group-hover:text-white/85 transition-colors duration-500"
                       glowSize={120}
                     >
                       {item}
@@ -274,11 +275,11 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
                 <div>
-                  <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
+                  <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">
                     {language === 'pl' ? 'W pakiecie' : "What's included"}
                   </span>
                   <div className="mt-4 mb-8">
-                    <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta" glowSize={180} baseDelay={100} charDelay={30}>
+                    <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-white " glowSize={180} baseDelay={100} charDelay={30}>
                       {language === 'pl' ? 'Co dostajesz' : 'What you get'}
                     </BurnSpotlightText>
                   </div>
@@ -286,7 +287,7 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
                     href="/#contact"
                     className="group inline-flex items-center gap-4"
                   >
-                    <span className="text-lg text-white font-jakarta group-hover:text-teal-300 transition-colors">
+                    <span className="text-lg text-white  group-hover:text-teal-300 transition-colors font-oxanium font-oxanium font-light">
                       <SpotlightText glowSize={100}>{ctaLabel}</SpotlightText>
                     </span>
                     <div className="w-12 h-12 border border-white/20 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300">
@@ -304,7 +305,7 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
                         <Check className="w-3.5 h-3.5 text-teal-300 relative z-10" />
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-teal-300/50 to-transparent -translate-x-full animate-[shine_3s_ease-in-out_infinite]" />
                       </div>
-                      <SpotlightText as="p" className="text-white/70 font-jakarta font-light leading-relaxed" glowSize={120}>
+                      <SpotlightText as="p" className="text-white/70 font-light font-plex leading-relaxed" glowSize={120}>
                         {item}
                       </SpotlightText>
                     </div>
@@ -320,11 +321,11 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
           <section className="py-20 lg:py-24 border-t border-white/10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
-                <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">
+                <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">
                   {language === 'pl' ? 'Jak pracuję' : 'How I work'}
                 </span>
                 <div className="mt-4">
-                  <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta" glowSize={180} baseDelay={100} charDelay={30}>
+                  <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-white " glowSize={180} baseDelay={100} charDelay={30}>
                     {language === 'pl' ? 'Proces współpracy' : 'Process'}
                   </BurnSpotlightText>
                 </div>
@@ -338,12 +339,12 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
                   {processSteps.map((step: string, index: number) => (
                     <div key={`step-${index}`} className="relative group">
                       <div className="absolute -top-4 -left-3 w-8 h-8 rounded-full bg-indigo-950 border border-teal-300/30 flex items-center justify-center z-10">
-                        <span className="text-teal-300 text-xs font-jakarta font-medium notranslate">
+                        <span className="text-teal-300 text-xs  font-normal notranslate">
                           {String(index + 1).padStart(2, '0')}
                         </span>
                       </div>
                       <div className="p-6 sm:p-8 rounded-2xl bg-white/[0.03] backdrop-blur-sm border border-white/10 hover:border-teal-300/30 transition-all duration-500 h-full group-hover:bg-white/[0.06]">
-                        <SpotlightText as="p" className="text-white/75 font-jakarta font-light leading-relaxed mt-2" glowSize={100}>
+                        <SpotlightText as="p" className="text-white/75 font-light font-plex leading-relaxed mt-2" glowSize={100}>
                           {step}
                         </SpotlightText>
                       </div>
@@ -372,7 +373,7 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
                 <div className="mt-4">
-                  <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl font-light text-white font-jakarta" glowSize={180} baseDelay={100} charDelay={30}>
+                  <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl font-light font-oxanium text-white " glowSize={180} baseDelay={100} charDelay={30}>
                     {language === 'pl' ? 'Często zadawane pytania' : 'Frequently asked questions'}
                   </BurnSpotlightText>
                 </div>
@@ -388,12 +389,12 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
         <section className="py-20 lg:py-24 border-t border-white/10">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="mb-6">
-              <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-jakarta" glowSize={200} baseDelay={100} charDelay={30}>
+              <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-white " glowSize={200} baseDelay={100} charDelay={30}>
                 {language === 'pl' ? 'Gotowy, żeby zacząć?' : 'Ready to get started?'}
               </BurnSpotlightText>
             </div>
             <div className="mb-10 max-w-2xl mx-auto">
-              <SpotlightText as="p" className="text-white/50 font-jakarta font-light text-lg" glowSize={150}>
+              <SpotlightText as="p" className="text-white/50 font-light font-plex text-lg" glowSize={150}>
                 {language === 'pl'
                   ? 'Porozmawiajmy o Twoim projekcie. Bezpłatna konsultacja, bez zobowiązań.'
                   : "Let's talk about your project. Free consultation, no obligations."}
@@ -401,7 +402,7 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
             </div>
             <PrefetchLink
               href="/#contact"
-              className="group relative inline-block px-12 py-5 bg-teal-300 text-indigo-950 font-jakarta font-medium overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+              className="group relative inline-block px-12 py-5 bg-teal-300 text-indigo-950  font-normal overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
             >
               <span className="relative z-10">{ctaLabel}</span>
               <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
@@ -411,6 +412,7 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
       </main>
 
       <NextFooter />
+      <ChatWidget />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       {faqSchema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}

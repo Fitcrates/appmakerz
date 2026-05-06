@@ -69,7 +69,7 @@ const AboutNew: React.FC = () => {
           transition={{ duration: 1 }}
           className="mb-6 lg:mb-16"
         >
-          <span className="text-xs tracking-[0.3em] uppercase text-white/30 font-jakarta">{t.label}</span>
+          <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">{t.label}</span>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
@@ -95,7 +95,7 @@ const AboutNew: React.FC = () => {
             <div className="mb-12">
               <BurnSpotlightText
                 as="h2"
-                className="text-4xl sm:text-5xl lg:text-6xl font-light font-jakarta leading-[1.3] mb-2"
+                className="text-4xl sm:text-5xl lg:text-6xl font-light font-oxanium leading-[1.3] mb-2"
                 glowSize={150}
                 baseDelay={300}
                 charDelay={35}
@@ -110,10 +110,10 @@ const AboutNew: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="space-y-6 mb-10"
             >
-              <SpotlightText as="p" className="text-lg font-jakarta font-light leading-relaxed" glowSize={120}>
+              <SpotlightText as="p" className="text-lg  font-light leading-relaxed" glowSize={120}>
                 {t.description.p1}
               </SpotlightText>
-              <SpotlightText as="p" className="text-lg font-jakarta font-light leading-relaxed" glowSize={120}>
+              <SpotlightText as="p" className="text-lg  font-light leading-relaxed" glowSize={120}>
                 {t.description.p2}
               </SpotlightText>
             </motion.div>
@@ -125,7 +125,7 @@ const AboutNew: React.FC = () => {
               className="mb-16"
             >
               <PrefetchLink href="/about-me" className="group inline-flex items-center gap-4" aria-label="Go to About Me page">
-                <span className="text-white font-jakarta group-hover:text-teal-300 transition-colors">
+                <span className="text-white  group-hover:text-teal-300 transition-colors font-oxanium">
                   {language === 'pl' ? 'Poznaj mnie' : 'Get to know me'}
                 </span>
                 <span className="w-11 h-11 border border-white/20 flex items-center justify-center group-hover:bg-teal-300 group-hover:border-teal-300 transition-all">
@@ -156,11 +156,11 @@ const AboutNew: React.FC = () => {
                   aria-label={stat.description}
                 >
                   <div className="mb-2">
-                    <SpotlightText as="span" className="text-3xl sm:text-4xl lg:text-5xl font-light font-jakarta" glowSize={80}>
+                    <SpotlightText as="span" className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium" glowSize={80}>
                       {stat.value}
                     </SpotlightText>
                   </div>
-                  <div className="text-xs text-teal-300 font-jakarta tracking-widest uppercase">{stat.label}</div>
+                  <div className="text-xs text-teal-300  tracking-widest uppercase">{stat.label}</div>
                 </motion.div>
               ))}
             </motion.div>

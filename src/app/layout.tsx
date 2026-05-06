@@ -4,8 +4,8 @@ import NextProviders from '@/components/next/NextProviders';
 import { DEFAULT_LANGUAGE } from '@/lib/language';
 import { siteUrl } from '@/lib/site';
 import CookieConsentNew from '@/components/new/CookieConsentNew';
+import ScrollBlurOverlay from '@/components/new/ScrollBlurOverlay';
 import './globals.css';
-
 
 export const viewport: Viewport = {
   themeColor: '#140F2D',
@@ -81,7 +81,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang={DEFAULT_LANGUAGE}>
       <head>
-        <link rel="preload" href="/fonts/PlusJakartaSans-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/IBM_Plex_Sans/IBMPlexSans-VariableFont_wdth,wght.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/Oxanium-VariableFont_wght.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
         <Script id="google-tag-bootstrap" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -116,6 +117,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <NextProviders>
           {children}
           <CookieConsentNew />
+          <ScrollBlurOverlay />
         </NextProviders>
       </body>
     </html>

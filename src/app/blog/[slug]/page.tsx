@@ -162,7 +162,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         ) : null}
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 text-sm text-white/40 font-jakarta mb-8 overflow-hidden">
+          <div className="flex items-center gap-2 text-sm text-white/40  mb-8 overflow-hidden">
             <PrefetchLink href="/" className="hover:text-teal-300 transition-colors">{translations[language].navigation.home}</PrefetchLink>
             <span>/</span>
             <PrefetchLink href="/blog" className="hover:text-teal-300 transition-colors">{translations[language].navigation.blog}</PrefetchLink>
@@ -170,7 +170,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <span className="text-white/60 truncate max-w-[200px]">{title}</span>
           </div>
 
-          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white font-jakarta leading-tight mb-8">
+          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white  leading-tight mb-8">
             <BurnSpotlightText as="span" className="font-inherit text-inherit" glowSize={150}>
               {title}
             </BurnSpotlightText>
@@ -187,8 +187,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               />
             ) : null}
             <div>
-              <p className="text-white font-jakarta">{post.author?.name}</p>
-              <p className="text-white/40 text-sm font-jakarta">
+              <p className="text-white ">{post.author?.name}</p>
+              <p className="text-white/40 text-sm ">
                 {new Date(post.publishedAt).toLocaleDateString(language === 'pl' ? 'pl-PL' : 'en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -215,13 +215,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     className="w-20 h-20 rounded-full object-cover shrink-0"
                   />
                 ) : (
-                  <div className="w-20 h-20 rounded-full bg-white/10 text-white/70 flex items-center justify-center font-jakarta text-2xl shrink-0">
+                  <div className="w-20 h-20 rounded-full bg-white/10 text-white/70 flex items-center justify-center  text-2xl shrink-0">
                     {(post.author?.name || '?').charAt(0).toUpperCase()}
                   </div>
                 )}
                 <div>
-                  <p className="text-xs text-white/30 font-jakarta tracking-widest uppercase mb-1">{t.post?.author || 'AUTHOR'}</p>
-                  <h3 className="text-xl text-white font-jakarta">{post.author.name}</h3>
+                  <p className="text-xs text-white/30  tracking-widest uppercase mb-1">{t.post?.author || 'AUTHOR'}</p>
+                  <h3 className="text-xl text-white ">{post.author.name}</h3>
                 </div>
               </div>
             </div>
@@ -234,8 +234,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   <ArrowLeft className="w-5 h-5 text-white/50 group-hover:text-indigo-950 transition-colors" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs text-white/30 font-jakarta tracking-widest uppercase mb-1">{language === 'pl' ? 'Poprzedni' : 'Previous'}</p>
-                  <p className="text-white font-jakarta group-hover:text-teal-300 transition-colors truncate">{getLocalizedText(previousPost.title, language)}</p>
+                  <p className="text-xs text-white/30  tracking-widest uppercase mb-1">{language === 'pl' ? 'Poprzedni' : 'Previous'}</p>
+                  <p className="text-white  group-hover:text-teal-300 transition-colors font-oxanium truncate">{getLocalizedText(previousPost.title, language)}</p>
                 </div>
               </PrefetchLink>
             ) : <div />}
@@ -243,8 +243,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {nextPost ? (
               <PrefetchLink href={`/blog/${nextPost.slug.current}`} className="group flex items-center gap-4 flex-1 justify-end text-right">
                 <div className="min-w-0">
-                  <p className="text-xs text-white/30 font-jakarta tracking-widest uppercase mb-1">{language === 'pl' ? 'Następny' : 'Next'}</p>
-                  <p className="text-white font-jakarta group-hover:text-teal-300 transition-colors truncate">{getLocalizedText(nextPost.title, language)}</p>
+                  <p className="text-xs text-white/30  tracking-widest uppercase mb-1">{language === 'pl' ? 'Następny' : 'Next'}</p>
+                  <p className="text-white  group-hover:text-teal-300 transition-colors font-oxanium truncate">{getLocalizedText(nextPost.title, language)}</p>
                 </div>
                 <div className="w-12 h-12 border border-white/10 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300 flex-shrink-0">
                   <ArrowRight className="w-5 h-5 text-white/50 group-hover:text-indigo-950 transition-colors" />
@@ -256,7 +256,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
           <div className="border-t border-white/10 pt-16">
-            <h3 className="text-lg font-light text-white font-jakarta mb-6">{popularLabel}</h3>
+            <h3 className="text-lg font-light text-white  mb-6">{popularLabel}</h3>
             <div className="space-y-4">
               {popularPosts.map((popularPost) => {
                 const popularTitle = getLocalizedText(popularPost.title, language);
@@ -277,8 +277,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       />
                     ) : null}
                     <div className="flex-1 min-w-0">
-                      <h4 className="text-sm text-white font-jakarta group-hover:text-teal-300 transition-colors duration-200 line-clamp-2">{popularTitle}</h4>
-                      <p className="text-xs text-white/30 font-jakarta mt-1">
+                      <h4 className="text-sm text-white  group-hover:text-teal-300 transition-colors font-oxanium duration-200 line-clamp-2">{popularTitle}</h4>
+                      <p className="text-xs text-white/30  mt-1">
                         {popularPost.viewCount || 0} {t.views} • {new Date(popularPost.publishedAt).toLocaleDateString(language === 'pl' ? 'pl-PL' : 'en-US')}
                       </p>
                     </div>
