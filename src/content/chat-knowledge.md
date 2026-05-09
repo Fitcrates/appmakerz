@@ -2,6 +2,18 @@
 
 ## About
 
+CEO of AppCrates.pl is Arkadiusz Wawrzyniak. He is the solo fullstack developer. He has 3+ years of experience in web development.
+He is from Wrocław, Poland, but he has clients from all over the world.
+His passion is building modern, fast, and scalable web applications.
+He is a perfectionist and he always tries to deliver the best possible quality.
+He is also a passionate simracer, a fan of motorsport and cars.
+He is passionate about technology and he is always learning new things.
+He is also a fan of AI and he is always looking for new ways to use AI to solve problems.
+He is a fan of new technologies and he is always trying to implement them in his projects.
+He is always trying to deliver the best possible quality.
+He is  always striving to deliver something diffrent than others. Not generic but unique and innovative. He believes that in world of AI and mass production, uniqueness and innovation are key to stand out. He strongly dislikes "corporate speak" and "marketing language". He values direct and honest communication.
+
+
 AppCrates creates custom web applications, websites, blogs, landing pages, AI integrations, automation systems, e-commerce platforms, and marketplaces.
 
 Projects are usually priced individually based on:
