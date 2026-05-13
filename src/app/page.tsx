@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 
 import HomePageClient from '@/components/next/HomePageClient';
+import { getFeaturedProjects } from '@/lib/sanity.server';
+import type { Project } from '@/types/sanity.types';
 import { absoluteUrl } from '@/lib/site';
 
 const url = absoluteUrl('/');
@@ -68,6 +70,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
-  return <HomePageClient />;
+export default async function HomePage() {
+  let featuredProjects: Project[] = [];
+  try {
+    featuredProjects = await getFeaturedProjects();
+  } catch {
+    // Fallback to empty array; ProjectsNew will use hardcoded projects
+  }
+  return <HomePageClient projects={featuredProjects} />;
 }

@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BlogPostViewTracker from '@/components/next/BlogPostViewTracker';
+import FaqAccordionList from '@/components/next/FaqAccordionList';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
@@ -76,6 +77,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const title = getLocalizedText(post.title, language);
   const body = getLocalizedArray<any>(post.body, language);
+  const faq = getLocalizedArray<{ question: string; answer: string }>(post.faq, language);
   const heroImageUrl = post.mainImage ? urlFor(post.mainImage).width(1200).height(630).auto('format').fit('crop').url() : '';
   const authorImageUrl = post.author?.image ? urlFor(post.author.image).width(80).height(80).auto('format').url() : '';
   const authorImageDimensions = { width: 80, height: 80 };
@@ -138,6 +140,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       },
     ],
   };
+
+  const faqSchema = faq.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  } : null;
 
   return (
     <div className="bg-indigo-950 min-h-screen">
@@ -202,6 +217,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <article className="blog-content">
             <PortableText value={body} components={portableTextComponentsServer} />
           </article>
+
+          {faq.length > 0 ? (
+            <section className="mt-16 pt-16 border-t border-white/10">
+              <div className="mb-10">
+                <p className="text-xs text-teal-300 tracking-[0.32em] uppercase mb-3">FAQ</p>
+                <h2 className="text-3xl lg:text-4xl font-light font-oxanium text-white">
+                  {language === 'pl' ? 'Najczęściej zadawane pytania' : 'Frequently asked questions'}
+                </h2>
+              </div>
+              <FaqAccordionList items={faq} />
+            </section>
+          ) : null}
 
           {post.author ? (
             <div className="mt-16 p-8 border border-white/10">
@@ -295,6 +322,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Structured Data */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {faqSchema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}
     </div>
   );
 }

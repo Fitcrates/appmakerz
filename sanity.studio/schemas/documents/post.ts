@@ -1,5 +1,6 @@
 import { AIGeneratorInput } from '../../components/AIGeneratorInput';
 import { AIWholePostGenerator } from '../../components/AIWholePostGenerator';
+import { aiContextField } from '../aiContextField';
 
 export default {
   name: 'post',
@@ -11,13 +12,7 @@ export default {
     { name: 'meta', title: 'Metadata' },
   ],
   fields: [
-    {
-      name: 'aiGenerate',
-      title: 'AI Generator',
-      type: 'text',
-      group: 'content',
-      components: { input: AIWholePostGenerator },
-    },
+    { ...aiContextField, components: { input: AIWholePostGenerator } },
     {
       name: 'title',
       title: 'Title',
@@ -28,12 +23,14 @@ export default {
           name: 'en',
           title: 'English Title',
           type: 'string',
+          components: { input: AIGeneratorInput },
           validation: (Rule: any) => Rule.required(),
         },
         {
           name: 'pl',
           title: 'Polish Title',
           type: 'string',
+          components: { input: AIGeneratorInput },
           validation: (Rule: any) => Rule.required(),
         },
       ],
@@ -97,6 +94,7 @@ export default {
       type: 'array',
       group: 'content',
       of: [{ type: 'string' }],
+      components: { input: AIGeneratorInput },
       options: {
         layout: 'tags',
       },
@@ -307,6 +305,44 @@ export default {
         },
       ],
     },
+    {
+      name: 'faq',
+      title: 'FAQ',
+      type: 'object',
+      group: 'content',
+      fields: [
+        {
+          name: 'en',
+          title: 'English FAQ',
+          type: 'array',
+          components: { input: AIGeneratorInput },
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'question', title: 'Question', type: 'string', validation: (Rule: any) => Rule.required() },
+                { name: 'answer', title: 'Answer', type: 'text', rows: 3, validation: (Rule: any) => Rule.required() },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'pl',
+          title: 'Polish FAQ',
+          type: 'array',
+          components: { input: AIGeneratorInput },
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'question', title: 'Question', type: 'string', validation: (Rule: any) => Rule.required() },
+                { name: 'answer', title: 'Answer', type: 'text', rows: 3, validation: (Rule: any) => Rule.required() },
+              ],
+            },
+          ],
+        },
+      ],
+    },
     // ─── SEO Fields ───────────────────────────────────────────
     {
       name: 'seo',
@@ -375,6 +411,7 @@ export default {
           title: 'Focus Keywords',
           type: 'array',
           of: [{ type: 'string' }],
+          components: { input: AIGeneratorInput },
           options: { layout: 'tags' },
           description: 'Primary keywords for this post (used in meta keywords tag)',
         },

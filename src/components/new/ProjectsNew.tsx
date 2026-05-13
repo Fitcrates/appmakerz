@@ -5,6 +5,8 @@ import PrefetchLink from '@/components/next/PrefetchLink';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 import BurnSpotlightText from './BurnSpotlightText';
+import { urlFor } from '@/lib/sanity.image';
+import type { Project as SanityProject } from '@/types/sanity.types';
 
 interface Project {
   id: string;
@@ -159,7 +161,23 @@ const ProjectRow = memo<{ project: Project; index: number; mobileActionLabel: st
 
 ProjectRow.displayName = 'ProjectRow';
 
-const ProjectsNew: React.FC = () => {
+interface ProjectsNewProps {
+  sanityProjects?: SanityProject[];
+}
+
+function mapSanityToLocal(projects: SanityProject[], lang: 'en' | 'pl'): Project[] {
+  return projects.map((p, index) => ({
+    id: p._id || String(index),
+    title: p.title[lang] || p.title.en || '',
+    category: p.category?.[lang] || p.category?.en || '',
+    description: p.description[lang] || p.description.en || '',
+    image: p.mainImage ? urlFor(p.mainImage).url() : '',
+    slug: p.slug.current,
+    year: p.year || new Date(p.publishedAt).getFullYear().toString(),
+  }));
+}
+
+const ProjectsNew: React.FC<ProjectsNewProps> = ({ sanityProjects }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, {
     once: true,
@@ -167,7 +185,9 @@ const ProjectsNew: React.FC = () => {
   });
   const { language } = useLanguage();
   const t = translations[language].projects;
-  const projects = getProjects(t);
+  const projects = sanityProjects?.length
+    ? mapSanityToLocal(sanityProjects, language)
+    : getProjects(t);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,

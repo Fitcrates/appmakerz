@@ -89,6 +89,43 @@ export default {
       ],
     },
     {
+      name: 'category',
+      title: 'Category',
+      type: 'object',
+      group: 'content',
+      description: 'Short category label shown on the homepage project list',
+      fields: [
+        {
+          name: 'en',
+          title: 'English Category',
+          type: 'string',
+          validation: (Rule: any) => Rule.required(),
+        },
+        {
+          name: 'pl',
+          title: 'Polish Category',
+          type: 'string',
+          validation: (Rule: any) => Rule.required(),
+        },
+      ],
+    },
+    {
+      name: 'year',
+      title: 'Year',
+      type: 'string',
+      group: 'content',
+      description: 'Release or completion year shown on the homepage',
+      validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'featured',
+      title: 'Featured on Homepage',
+      type: 'boolean',
+      group: 'content',
+      description: 'Show this project in the Selected Projects section on the homepage',
+      initialValue: false,
+    },
+    {
       name: 'technologies',
       title: 'Technologies',
       type: 'array',

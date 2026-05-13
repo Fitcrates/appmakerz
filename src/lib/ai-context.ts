@@ -129,7 +129,7 @@ export async function buildAIContext(language: Language = 'pl'): Promise<string>
     : {
       about: 'ABOUT',
       privacy: 'PRIVACY POLICY',
-      knowledge: 'ADDITIONAL KNOWLEDGE: SERVICES AND PRICING',
+      knowledge: 'ADDITIONAL KNOWLEDGE: APPCRATES, PERSON, SERVICES AND PRICING',
       services: 'SERVICES',
       projects: 'PROJECTS',
       posts: 'LATEST BLOG POSTS',

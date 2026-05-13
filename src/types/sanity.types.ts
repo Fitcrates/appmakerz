@@ -53,6 +53,12 @@ export interface Project {
     en: string;
     pl: string;
   };
+  category?: {
+    en: string;
+    pl: string;
+  };
+  year?: string;
+  featured?: boolean;
   mainImage: SanityImage;
   body: {
     en: any[];

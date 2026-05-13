@@ -173,6 +173,7 @@ export async function getPost(slug: string) {
       mainImage,
       publishedAt,
       body { en, pl },
+      faq { en, pl },
       excerpt { en, pl },
       viewCount,
       categories[]->{
@@ -241,6 +242,37 @@ export async function getProjects() {
   `,
     {},
     ['projects']
+  );
+}
+
+export async function getFeaturedProjects() {
+  return fetchSanity<any[]>(
+    `
+    *[_type == "project" && featured == true && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc) {
+      _id,
+      title,
+      slug,
+      description,
+      category,
+      year,
+      mainImage,
+      technologies,
+      projectUrl,
+      githubUrl,
+      blogUrl,
+      publishedAt,
+      seo {
+        metaTitle { en, pl },
+        metaDescription { en, pl },
+        keywords,
+        canonicalUrl,
+        ogImage,
+        noIndex
+      }
+    }
+  `,
+    {},
+    ['projects', 'featured']
   );
 }
 

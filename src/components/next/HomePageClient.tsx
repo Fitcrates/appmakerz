@@ -6,6 +6,7 @@ import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import ChatWidget from '@/components/next/ChatWidget';
 import HeroNew from '@/components/new/HeroNew';
+import type { Project } from '@/types/sanity.types';
 
 const TechStackNew = dynamic(() => import('@/components/new/TechStackNew'));
 const AboutNew = dynamic(() => import('@/components/new/AboutNew'));
@@ -13,6 +14,10 @@ const ServicesNew = dynamic(() => import('@/components/new/ServicesNew'));
 const ProjectsNew = dynamic(() => import('@/components/new/ProjectsNew'));
 const SolutionsNew = dynamic(() => import('@/components/new/SolutionsNew'));
 const ContactNew = dynamic(() => import('@/components/new/ContactNew'));
+
+interface HomePageClientProps {
+  projects?: Project[];
+}
 
 function scrollToHashWithOffset() {
   if (typeof window === 'undefined' || !window.location.hash) {
@@ -34,7 +39,7 @@ function scrollToHashWithOffset() {
   window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
 }
 
-export default function HomePageClient() {
+export default function HomePageClient({ projects }: HomePageClientProps) {
   useEffect(() => {
     const runScroll = () => {
       window.setTimeout(scrollToHashWithOffset, 50);
@@ -53,7 +58,7 @@ export default function HomePageClient() {
         <TechStackNew />
         <AboutNew />
         <ServicesNew />
-        <ProjectsNew />
+        <ProjectsNew sanityProjects={projects} />
         <SolutionsNew />
         <ContactNew />
       </main>

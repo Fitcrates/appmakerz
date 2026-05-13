@@ -42,6 +42,7 @@
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.4.0",
     "resend": "^6.12.2",
+    "styled-components": "^6.4.1",
     "swiper": "^12.1.2",
     "tailwind-merge": "^3.5.0",
     "tailwindcss-animate": "^1.0.7",

@@ -3,6 +3,7 @@
 ## About
 
 CEO of AppCrates.pl is Arkadiusz Wawrzyniak. He is the solo fullstack developer. He has 3+ years of experience in web development.
+Arkadiusz Wawrzyniak is also the owner, founder, and the person behind AppCrates.pl.
 He is from Wrocław, Poland, but he has clients from all over the world.
 His passion is building modern, fast, and scalable web applications.
 He is a perfectionist and he always tries to deliver the best possible quality.
