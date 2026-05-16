@@ -24,6 +24,7 @@ function localizedEntries(path: string, options: { changeFrequency: MetadataRout
       languages: {
         en: absoluteUrl(localizedPath('en', path)),
         pl: absoluteUrl(localizedPath('pl', path)),
+        'x-default': absoluteUrl(localizedPath('pl', path)),
       },
     },
   }));
