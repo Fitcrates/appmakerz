@@ -10,14 +10,14 @@ import PrefetchLink from '@/components/next/PrefetchLink';
 import ChatWidget from '@/components/next/ChatWidget';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getProject, getSitemapEntries, urlFor } from '@/lib/sanity.server';
-import { getRequestLanguage } from '@/lib/request-language';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
+import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
 import { translations } from '@/translations/translations';
 
-interface ProjectPageProps {
-  params: Promise<{ slug: string }>;
+interface LocalizedProjectPageProps {
+  params: Promise<{ lang: string; slug: string }>;
 }
 
 export const revalidate = 3600;
@@ -27,14 +27,22 @@ export const dynamicParams = true;
 export async function generateStaticParams() {
   const { projects } = await getSitemapEntries();
 
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
+  return SUPPORTED_LANGUAGES.flatMap((lang) => (
+    projects.map((project) => ({
+      lang,
+      slug: project.slug,
+    }))
+  ));
 }
 
-export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const language = await getRequestLanguage();
+export async function generateMetadata({ params }: LocalizedProjectPageProps): Promise<Metadata> {
+  const { lang, slug } = await params;
+
+  if (!isLanguage(lang)) {
+    notFound();
+  }
+
+  const language = lang as Language;
   const project = await getProject(slug);
 
   if (!project?._id) {
@@ -75,13 +83,20 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
       title: metaTitle,
       description: metaDescription,
       images: ogImage ? [{ url: ogImage }] : undefined,
+      locale: language === 'pl' ? 'pl_PL' : 'en_US',
+      alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
     },
   };
 }
 
-export default async function ProjectPage({ params }: ProjectPageProps) {
-  const { slug } = await params;
-  const language = await getRequestLanguage();
+export default async function LocalizedProjectPage({ params }: LocalizedProjectPageProps) {
+  const { lang, slug } = await params;
+
+  if (!isLanguage(lang)) {
+    notFound();
+  }
+
+  const language = lang as Language;
   const t = translations[language].projectDetails;
   const project = await getProject(slug);
 
@@ -93,8 +108,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const description = getLocalizedText(project.description, language);
   const body = getLocalizedArray<any>(project.body, language);
   const heroImageUrl = project.mainImage ? urlFor(project.mainImage).width(1200).height(630).auto('format').fit('crop').url() : '';
+  const path = `/project/${project.slug.current}`;
 
-  // BreadcrumbList structured data
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -115,7 +130,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         '@type': 'ListItem',
         position: 3,
         name: title,
-        item: absoluteUrl(localizedPath(language, `/project/${project.slug.current}`)),
+        item: absoluteUrl(localizedPath(language, path)),
       },
     ],
   };
@@ -128,14 +143,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         {heroImageUrl ? (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 lg:mb-16">
             <div className="relative h-[38vh] sm:h-[44vh] lg:h-[50vh] overflow-hidden border border-white/10">
-              <Image
-                src={heroImageUrl}
-                alt={title}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 1200px"
-                className="object-cover"
-              />
+              <Image src={heroImageUrl} alt={title} fill priority sizes="(max-width: 768px) 100vw, 1200px" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/70 via-indigo-950/20 to-transparent pointer-events-none" />
             </div>
           </div>
@@ -143,7 +151,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <PrefetchLink href="/#services" className="inline-flex items-center text-white/60 hover:text-teal-300 transition-colors group">
+            <PrefetchLink href={localizedPath(language, '/#projects')} className="inline-flex items-center text-white/60 hover:text-teal-300 transition-colors group">
               <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
               <span className=" text-sm">{t.backToProjects}</span>
             </PrefetchLink>
@@ -187,7 +195,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             ) : null}
           </div>
 
-          <article className="prose prose-lg prose-invert max-w-none  prose-headings: prose-headings:font-light prose-headings:text-white prose-h1:text-teal-300 prose-h2:text-teal-300 prose-h3:text-white prose-h4:text-white prose-p:text-white/60 prose-p:leading-relaxed prose-a:text-teal-300 prose-a:no-underline hover:prose-a:text-teal-200 prose-strong:text-white prose-strong:font-medium prose-li:text-white/60 prose-li:marker:text-teal-300 prose-ul:text-white/60 prose-ol:text-white/60 prose-code:text-teal-300 prose-code:bg-white/5 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-white/5 prose-pre:border prose-pre:border-white/10 prose-blockquote:border-l-teal-300 prose-blockquote:text-white/50 prose-img:rounded-lg prose-img:border prose-img:border-white/10">
+          <article className="prose prose-lg prose-invert max-w-none prose-headings:font-light prose-headings:text-white prose-h1:text-teal-300 prose-h2:text-teal-300 prose-h3:text-white prose-h4:text-white prose-p:text-white/60 prose-p:leading-relaxed prose-a:text-teal-300 prose-a:no-underline hover:prose-a:text-teal-200 prose-strong:text-white prose-strong:font-medium prose-li:text-white/60 prose-li:marker:text-teal-300 prose-ul:text-white/60 prose-ol:text-white/60 prose-code:text-teal-300 prose-code:bg-white/5 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-white/5 prose-pre:border prose-pre:border-white/10 prose-blockquote:border-l-teal-300 prose-blockquote:text-white/50 prose-img:rounded-lg prose-img:border prose-img:border-white/10">
             {body.length ? <PortableText value={body} components={portableTextComponentsServer} /> : <p>{description}</p>}
           </article>
         </section>
@@ -195,7 +203,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       <NextFooter />
       <ChatWidget />
-
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
     </>
   );

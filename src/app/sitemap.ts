@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
 import { getSitemapEntries } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
+import { localizedPath } from '@/lib/i18n-routing';
+import { SUPPORTED_LANGUAGES } from '@/lib/language';
 
 export const revalidate = 3600;
 
@@ -12,31 +14,39 @@ const staticPages = [
   { path: '/privacy-policy', changeFrequency: 'yearly' as const, priority: 0.3 },
 ];
 
+function localizedEntries(path: string, options: { changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency']; priority: number; lastModified?: string }) {
+  return SUPPORTED_LANGUAGES.map((language) => ({
+    url: absoluteUrl(localizedPath(language, path)),
+    lastModified: options.lastModified,
+    changeFrequency: options.changeFrequency,
+    priority: options.priority,
+    alternates: {
+      languages: {
+        en: absoluteUrl(localizedPath('en', path)),
+        pl: absoluteUrl(localizedPath('pl', path)),
+      },
+    },
+  }));
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { posts, projects, serviceLandings } = await getSitemapEntries();
 
   return [
-    ...staticPages.map((page) => ({
-      url: absoluteUrl(page.path),
-      changeFrequency: page.changeFrequency,
-      priority: page.priority,
-    })),
-    ...posts.map((post) => ({
-      url: absoluteUrl(`/blog/${post.slug}`),
+    ...staticPages.flatMap((page) => localizedEntries(page.path, page)),
+    ...posts.flatMap((post) => localizedEntries(`/blog/${post.slug}`, {
       lastModified: post._updatedAt || post.publishedAt || new Date().toISOString(),
-      changeFrequency: 'monthly' as const,
+      changeFrequency: 'monthly',
       priority: 0.7,
     })),
-    ...projects.map((project) => ({
-      url: absoluteUrl(`/project/${project.slug}`),
+    ...projects.flatMap((project) => localizedEntries(`/project/${project.slug}`, {
       lastModified: project._updatedAt || project.publishedAt || new Date().toISOString(),
-      changeFrequency: 'monthly' as const,
+      changeFrequency: 'monthly',
       priority: 0.7,
     })),
-    ...serviceLandings.map((service) => ({
-      url: absoluteUrl(`/uslugi/${service.slug}`),
+    ...serviceLandings.flatMap((service) => localizedEntries(`/uslugi/${service.slug}`, {
       lastModified: service._updatedAt || new Date().toISOString(),
-      changeFrequency: 'monthly' as const,
+      changeFrequency: 'monthly',
       priority: 0.8,
     })),
   ];

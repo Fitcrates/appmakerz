@@ -12,6 +12,10 @@ import { getAboutMe, urlFor } from '@/lib/sanity.server';
 import { getRequestLanguage } from '@/lib/request-language';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
+import { localizedPath } from '@/lib/i18n-routing';
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export async function generateMetadata(): Promise<Metadata> {
   const language = await getRequestLanguage();
@@ -20,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!about?._id) {
     return {
       title: language === 'pl' ? 'O mnie' : 'About me',
-      alternates: { canonical: absoluteUrl('/about-me') },
+      alternates: { canonical: absoluteUrl(localizedPath(language, '/about-me')) },
     };
   }
 
@@ -40,8 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
     language,
     intro
   );
-  const canonical =
-    about.seo?.canonicalUrl || absoluteUrl('/about-me');
+  const canonical = absoluteUrl(localizedPath(language, '/about-me'));
   const ogImageUrl = about.seo?.ogImage
     ? urlFor(about.seo.ogImage)
       .width(1200)
@@ -62,7 +65,14 @@ export async function generateMetadata(): Promise<Metadata> {
     title: seoTitle,
     description: seoDescription,
     keywords: about.seo?.keywords,
-    alternates: { canonical },
+    alternates: {
+      canonical,
+      languages: {
+        en: absoluteUrl(localizedPath('en', '/about-me')),
+        pl: absoluteUrl(localizedPath('pl', '/about-me')),
+        'x-default': absoluteUrl(localizedPath('pl', '/about-me')),
+      },
+    },
     robots: about.seo?.noIndex
       ? { index: false, follow: false }
       : { index: true, follow: true },
@@ -119,7 +129,7 @@ export default async function AboutMePage() {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: 'Arkadiusz Wawrzyniak',
-    url: about.seo?.canonicalUrl || absoluteUrl('/about-me'),
+    url: absoluteUrl(localizedPath(language, '/about-me')),
     image: heroImageUrl || undefined,
     jobTitle: 'Fullstack Developer',
     description: intro || undefined,

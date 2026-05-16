@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { DEFAULT_LANGUAGE, type Language } from '../lib/language';
+import { getExplicitLanguageFromPathname } from '../lib/i18n-routing';
 
 interface LanguageContextType {
   language: Language;
@@ -13,6 +14,11 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const getPreferredClientLanguage = (): Language => {
   if (typeof window === 'undefined') {
     return DEFAULT_LANGUAGE;
+  }
+
+  const pathLanguage = getExplicitLanguageFromPathname(window.location.pathname);
+  if (pathLanguage) {
+    return pathLanguage;
   }
 
   const url = new URL(window.location.href);
@@ -51,11 +57,11 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode; initialLang
   };
 
   useEffect(() => {
-    const preferredLanguage = getPreferredClientLanguage();
+    const preferredLanguage = initialLanguage || getPreferredClientLanguage();
     if (preferredLanguage !== language) {
       setLanguage(preferredLanguage);
     }
-  }, []);
+  }, [initialLanguage, language]);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage }}>

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { getLanguageFromPathname, localizedPath } from '@/lib/i18n-routing';
 
 const STATIC_ROUTES = ['/', '/about-me', '/blog', '/faq', '/privacy-policy', '/unsubscribe'];
 const globalPrefetchedRoutes = new Set<string>();
@@ -24,6 +25,7 @@ function scheduleIdleCallback(callback: () => void) {
 export default function GlobalRoutePrefetch() {
   const router = useRouter();
   const pathname = usePathname();
+  const language = getLanguageFromPathname(pathname);
 
   useEffect(() => {
     let cancelled = false;
@@ -46,7 +48,7 @@ export default function GlobalRoutePrefetch() {
     };
 
     const warmStaticRoutes = () => {
-      STATIC_ROUTES.forEach(prefetchRoute);
+      STATIC_ROUTES.map((route) => localizedPath(language, route)).forEach(prefetchRoute);
     };
 
     const runPrefetch = async () => {
@@ -72,7 +74,7 @@ export default function GlobalRoutePrefetch() {
             return;
           }
 
-          prefetchRoute(route);
+          prefetchRoute(localizedPath(language, route));
           await new Promise<void>((resolve) => window.setTimeout(resolve, 35));
         }
       } catch {
@@ -87,7 +89,7 @@ export default function GlobalRoutePrefetch() {
       cancelled = true;
       cancelIdle();
     };
-  }, [pathname, router]);
+  }, [language, pathname, router]);
 
   return null;
 }

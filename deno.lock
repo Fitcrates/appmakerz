@@ -51,6 +51,7 @@
         "npm:react@^19.2.4",
         "npm:resend@^6.12.2",
         "npm:sanity@^5.19.0",
+        "npm:styled-components@^6.4.1",
         "npm:swiper@^12.1.2",
         "npm:tailwind-merge@^3.5.0",
         "npm:tailwindcss-animate@^1.0.7",

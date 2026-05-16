@@ -1,19 +1,34 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BlogIndexClient from '@/components/next/BlogIndexClient';
 import { getPosts } from '@/lib/sanity.server';
-import { getRequestLanguage } from '@/lib/request-language';
+import { absoluteUrl } from '@/lib/site';
 import { getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
-import { absoluteUrl } from '@/lib/site';
+import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
 import { translations } from '@/translations/translations';
+
+interface LocalizedBlogPageProps {
+  params: Promise<{ lang: string }>;
+}
 
 export const revalidate = 3600;
 export const dynamic = 'force-static';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const language = await getRequestLanguage();
+export function generateStaticParams() {
+  return SUPPORTED_LANGUAGES.map((lang) => ({ lang }));
+}
+
+export async function generateMetadata({ params }: LocalizedBlogPageProps): Promise<Metadata> {
+  const { lang } = await params;
+
+  if (!isLanguage(lang)) {
+    notFound();
+  }
+
+  const language = lang as Language;
   const t = translations[language].blog;
   const canonical = absoluteUrl(localizedPath(language, '/blog'));
 
@@ -33,12 +48,20 @@ export async function generateMetadata(): Promise<Metadata> {
       url: canonical,
       title: t.title,
       description: t.subtitle,
+      locale: language === 'pl' ? 'pl_PL' : 'en_US',
+      alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
     },
   };
 }
 
-export default async function BlogPage() {
-  const language = await getRequestLanguage();
+export default async function LocalizedBlogPage({ params }: LocalizedBlogPageProps) {
+  const { lang } = await params;
+
+  if (!isLanguage(lang)) {
+    notFound();
+  }
+
+  const language = lang as Language;
   const t = translations[language].blog;
   const posts = await getPosts();
 

@@ -9,15 +9,28 @@ import FaqAccordionList from '@/components/next/FaqAccordionList';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import ChatWidget from '@/components/next/ChatWidget';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
-import { getServiceLanding, urlFor } from '@/lib/sanity.server';
+import { getServiceLanding, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import SpotlightText from '@/components/new/SpotlightText';
 import { getRequestLanguage } from '@/lib/request-language';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
+import { localizedPath } from '@/lib/i18n-routing';
 
 interface ServiceLandingPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const { serviceLandings } = await getSitemapEntries();
+
+  return serviceLandings.map((service) => ({
+    slug: service.slug,
+  }));
 }
 
 export async function generateMetadata({ params }: ServiceLandingPageProps): Promise<Metadata> {
@@ -28,7 +41,7 @@ export async function generateMetadata({ params }: ServiceLandingPageProps): Pro
   if (!landing?._id) {
     return {
       title: language === 'pl' ? 'Usługa' : 'Service',
-      alternates: { canonical: absoluteUrl('/') },
+      alternates: { canonical: absoluteUrl(localizedPath(language, '/')) },
     };
   }
 
@@ -36,7 +49,8 @@ export async function generateMetadata({ params }: ServiceLandingPageProps): Pro
   const intro = getLocalizedText(landing.intro, language);
   const metaTitle = getLocalizedText(landing.seo?.metaTitle, language, title);
   const metaDescription = getLocalizedText(landing.seo?.metaDescription, language, intro);
-  const canonical = landing.seo?.canonicalUrl || absoluteUrl(`/uslugi/${landing.slug.current}`);
+  const path = `/uslugi/${landing.slug.current}`;
+  const canonical = absoluteUrl(localizedPath(language, path));
   const ogImage = landing.seo?.ogImage
     ? urlFor(landing.seo.ogImage).width(1200).height(630).fit('crop').auto('format').url()
     : landing.heroImage
@@ -47,7 +61,14 @@ export async function generateMetadata({ params }: ServiceLandingPageProps): Pro
     title: metaTitle,
     description: metaDescription,
     keywords: landing.seo?.keywords,
-    alternates: { canonical },
+    alternates: {
+      canonical,
+      languages: {
+        en: absoluteUrl(localizedPath('en', path)),
+        pl: absoluteUrl(localizedPath('pl', path)),
+        'x-default': absoluteUrl(localizedPath('pl', path)),
+      },
+    },
     robots: landing.seo?.noIndex ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: {
       type: 'website',
@@ -90,19 +111,19 @@ export default async function ServiceLandingPage({ params }: ServiceLandingPageP
         '@type': 'ListItem',
         position: 1,
         name: language === 'pl' ? 'Strona główna' : 'Home',
-        item: absoluteUrl('/'),
+        item: absoluteUrl(localizedPath(language, '/')),
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: language === 'pl' ? 'Usługi' : 'Services',
-        item: absoluteUrl('/'),
+        item: absoluteUrl(localizedPath(language, '/#services')),
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: title,
-        item: absoluteUrl(`/uslugi/${landing.slug.current}`),
+        item: absoluteUrl(localizedPath(language, `/uslugi/${landing.slug.current}`)),
       },
     ],
   };

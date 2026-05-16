@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowUp, Mail, ArrowRight, Check } from 'lucide-react';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import { useLanguage } from '../../context/LanguageContext';
+import { localizedPath } from '../../lib/i18n-routing';
 import { translations } from '../../translations/translations';
 import { trackContactClick } from '../../utils/gtm';
 
@@ -69,7 +70,10 @@ const FooterNew: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language].footer;
   const navT = translations[language].nav;
-  const footerNavItems = getFooterNavItems(navT);
+  const footerNavItems = getFooterNavItems(navT).map((item) => ({
+    ...item,
+    href: localizedPath(language, item.href),
+  }));
 
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -196,7 +200,7 @@ const FooterNew: React.FC = () => {
         <div className="py-16 lg:py-24 border-t border-white/10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
             <div>
-              <PrefetchLink href="/#hero" className="inline-block mb-8">
+              <PrefetchLink href={localizedPath(language, '/#hero')} className="inline-block mb-8">
                 <div className="flex items-center gap-2">
                   <span className="text-3xl font-light font-oxanium text-white">
                     App<span className="text-teal-300">Crates</span>
@@ -254,7 +258,7 @@ const FooterNew: React.FC = () => {
                     </a>
                   </li>
                   <li>
-                    <PrefetchLink href="/blog" className="text-white/60  hover:text-teal-300 transition-colors">
+                    <PrefetchLink href={localizedPath(language, '/blog')} className="text-white/60  hover:text-teal-300 transition-colors">
                       {t.links.blog}
                     </PrefetchLink>
                   </li>
@@ -270,13 +274,13 @@ const FooterNew: React.FC = () => {
           </p>
 
           <div className="flex items-center gap-8">
-            <PrefetchLink href="/faq" className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
+            <PrefetchLink href={localizedPath(language, '/faq')} className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
               FAQ
             </PrefetchLink>
-            <PrefetchLink href="/privacy-policy" className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
+            <PrefetchLink href={localizedPath(language, '/privacy-policy')} className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
               {t.legal.privacy}
             </PrefetchLink>
-            <PrefetchLink href="/unsubscribe" className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
+            <PrefetchLink href={localizedPath(language, '/unsubscribe')} className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
               {t.legal.unsubscribe}
             </PrefetchLink>
 

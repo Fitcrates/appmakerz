@@ -16,7 +16,6 @@
   for = "/sitemap.xml"
   [headers.values]
     Content-Type = "application/xml"
-    X-Robots-Tag = "noindex"
     Cache-Control = "public, max-age=3600"
 
 [[headers]]

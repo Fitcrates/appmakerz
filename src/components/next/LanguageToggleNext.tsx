@@ -4,13 +4,13 @@ import { useTransition } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from '@/context/LanguageContext';
 import type { Language } from '@/lib/language';
+import { getAlternateLanguagePath } from '@/lib/i18n-routing';
 
 export default function LanguageToggleNext() {
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
   const { language, setLanguage } = useLanguage();
-  const isHomePage = pathname === '/';
 
   const handleChange = (nextLanguage: Language) => {
     if (nextLanguage === language) {
@@ -18,12 +18,10 @@ export default function LanguageToggleNext() {
     }
 
     setLanguage(nextLanguage);
-    if (isHomePage) {
-      return;
-    }
 
     startTransition(() => {
-      router.refresh();
+      const hash = typeof window !== 'undefined' ? window.location.hash : '';
+      router.push(getAlternateLanguagePath(`${pathname || '/'}${hash}`, nextLanguage), { scroll: false });
     });
   };
 

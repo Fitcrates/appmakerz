@@ -29,6 +29,13 @@ export const metadata: Metadata = {
   },
   manifest: '/media/site.webmanifest',
   robots: 'index, follow',
+  alternates: {
+    languages: {
+      en: '/en',
+      pl: '/pl',
+      'x-default': '/pl',
+    },
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -95,6 +102,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               ad_personalization: 'denied',
               wait_for_update: 500
             });
+          `}
+        </Script>
+        <Script id="html-lang-bootstrap" strategy="beforeInteractive">
+          {`
+            (function () {
+              var firstSegment = window.location.pathname.split('/').filter(Boolean)[0];
+              if (firstSegment === 'en' || firstSegment === 'pl') {
+                document.documentElement.lang = firstSegment;
+              }
+            })();
           `}
         </Script>
         {googleTagId ? (

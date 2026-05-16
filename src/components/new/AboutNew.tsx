@@ -5,6 +5,7 @@ import PrefetchLink from '@/components/next/PrefetchLink';
 import SpotlightText from './SpotlightText';
 import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
+import { localizedPath } from '../../lib/i18n-routing';
 import { translations } from '../../translations/translations';
 
 const BurnRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string }> = ({ src, alt, ariaLabel }) => {
@@ -124,7 +125,7 @@ const AboutNew: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.55 }}
               className="mb-16"
             >
-              <PrefetchLink href="/about-me" className="group inline-flex items-center gap-4" aria-label="Go to About Me page">
+              <PrefetchLink href={localizedPath(language, '/about-me')} className="group inline-flex items-center gap-4" aria-label="Go to About Me page">
                 <span className="text-white  group-hover:text-teal-300 transition-colors font-oxanium">
                   {language === 'pl' ? 'Poznaj mnie' : 'Get to know me'}
                 </span>

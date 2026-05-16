@@ -4,11 +4,15 @@ import HomePageClient from '@/components/next/HomePageClient';
 import { getFeaturedProjects } from '@/lib/sanity.server';
 import type { Project } from '@/types/sanity.types';
 import { absoluteUrl } from '@/lib/site';
+import { localizedPath } from '@/lib/i18n-routing';
+import { translations } from '@/translations/translations';
 
-const url = absoluteUrl('/');
-const title = 'AppCrates | AI Apps, Medusa.js eCommerce, Next.js Migrations & Platforms';
-const description =
-  'Building custom AI applications, integrating RAG for business. Developing headless Medusa.js eCommerce and marketplaces, landing pages, WCAG and GDPR audits, and migrating legacy apps to modern Next.js and TanStack.';
+const url = absoluteUrl(localizedPath('pl', '/'));
+const title = translations.pl.hero.seoHeading;
+const description = translations.pl.hero.subtitle;
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title,
@@ -40,9 +44,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: url,
     languages: {
-      en: `${url}?lang=en`,
-      pl: `${url}?lang=pl`,
-      'x-default': url,
+      en: absoluteUrl(localizedPath('en', '/')),
+      pl: absoluteUrl(localizedPath('pl', '/')),
+      'x-default': absoluteUrl(localizedPath('pl', '/')),
     },
   },
   openGraph: {

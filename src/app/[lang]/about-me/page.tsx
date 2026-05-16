@@ -1,0 +1,170 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { PortableText } from '@portabletext/react';
+import SpotlightText from '@/components/new/SpotlightText';
+import ChatWidget from '@/components/next/ChatWidget';
+import NextHeader from '@/components/next/NextHeader';
+import NextFooter from '@/components/next/NextFooter';
+import BurnSpotlightText from '@/components/new/BurnSpotlightText';
+import PrefetchLink from '@/components/next/PrefetchLink';
+import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
+import { getAboutMe, urlFor } from '@/lib/sanity.server';
+import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
+import { absoluteUrl } from '@/lib/site';
+import { localizedPath } from '@/lib/i18n-routing';
+import { isLanguage, type Language } from '@/lib/language';
+
+interface LocalizedAboutMePageProps {
+  params: Promise<{ lang: string }>;
+}
+
+export const revalidate = 3600;
+export const dynamic = 'force-static';
+
+export async function generateMetadata({ params }: LocalizedAboutMePageProps): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLanguage(lang)) notFound();
+
+  const language = lang as Language;
+  const about = await getAboutMe('about-me');
+  const fallbackTitle = language === 'pl' ? 'O mnie' : 'About me';
+
+  if (!about?._id) {
+    return { title: fallbackTitle, alternates: { canonical: absoluteUrl(localizedPath(language, '/about-me')) } };
+  }
+
+  const title = getLocalizedText(about.title, language, fallbackTitle);
+  const intro = getLocalizedText(about.intro, language);
+  const seoTitle = getLocalizedText(about.seo?.metaTitle, language, title);
+  const seoDescription = getLocalizedText(about.seo?.metaDescription, language, intro);
+  const canonical = absoluteUrl(localizedPath(language, '/about-me'));
+  const ogImageUrl = about.seo?.ogImage
+    ? urlFor(about.seo.ogImage).width(1200).height(630).fit('crop').auto('format').url()
+    : about.heroImage
+      ? urlFor(about.heroImage).width(1200).height(630).fit('crop').auto('format').url()
+      : undefined;
+
+  return {
+    title: seoTitle,
+    description: seoDescription,
+    keywords: about.seo?.keywords,
+    alternates: {
+      canonical,
+      languages: {
+        en: absoluteUrl(localizedPath('en', '/about-me')),
+        pl: absoluteUrl(localizedPath('pl', '/about-me')),
+        'x-default': absoluteUrl(localizedPath('pl', '/about-me')),
+      },
+    },
+    robots: about.seo?.noIndex ? { index: false, follow: false } : { index: true, follow: true },
+    openGraph: {
+      type: 'profile',
+      url: canonical,
+      title: seoTitle,
+      description: seoDescription,
+      images: ogImageUrl ? [{ url: ogImageUrl }] : undefined,
+      locale: language === 'pl' ? 'pl_PL' : 'en_US',
+      alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
+    },
+  };
+}
+
+export default async function LocalizedAboutMePage({ params }: LocalizedAboutMePageProps) {
+  const { lang } = await params;
+  if (!isLanguage(lang)) notFound();
+
+  const language = lang as Language;
+  const about = await getAboutMe('about-me');
+
+  if (!about?._id) {
+    notFound();
+  }
+
+  const title = getLocalizedText(about.title, language, language === 'pl' ? 'O mnie' : 'About me');
+  const intro = getLocalizedText(about.intro, language);
+  const story = getLocalizedArray<any>(about.story, language);
+  const highlights = getLocalizedArray<string>(about.highlights, language);
+  const ctaProjects = getLocalizedText(about.ctaProjects, language, language === 'pl' ? 'Zobacz projekty' : 'View projects');
+  const ctaContact = getLocalizedText(about.ctaContact, language, language === 'pl' ? 'Skontaktuj się' : 'Get in touch');
+  const heroImageUrl = about.heroImage ? urlFor(about.heroImage).width(1800).auto('format').url() : '';
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Arkadiusz Wawrzyniak',
+    url: absoluteUrl(localizedPath(language, '/about-me')),
+    image: heroImageUrl || undefined,
+    jobTitle: 'Fullstack Developer',
+    description: intro || undefined,
+  };
+
+  return (
+    <div className="min-h-screen bg-indigo-950">
+      <NextHeader />
+      <main className="min-h-screen bg-indigo-950 pt-24 pb-24">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-20">
+          <div className="grid lg:grid-cols-2 gap-2 lg:gap-16 items-center">
+            <div className="order-2 lg:order-2">
+              <BurnSpotlightText as="h1" className="text-5xl sm:text-6xl lg:text-8xl font-light text-white leading-tight" glowSize={200} baseDelay={200}>
+                {title}
+              </BurnSpotlightText>
+              {intro ? <SpotlightText text={intro} className="text-white/40 font-light text-lg max-w-xl mt-8 leading-relaxed" glowSize={200} /> : null}
+              <div className="flex flex-col sm:flex-row gap-4 mt-10">
+                <PrefetchLink href={localizedPath(language, '/#projects')} className="group relative px-10 py-5 bg-teal-300 text-indigo-950 font-normal overflow-hidden transition-all duration-500 min-w-[230px] text-center">
+                  <span className="relative z-10">{ctaProjects}</span>
+                  <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                </PrefetchLink>
+                <PrefetchLink href={localizedPath(language, '/#contact')} className="group px-10 py-5 border border-white/20 text-white font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center">
+                  <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">{ctaContact}</span>
+                  <div className="absolute inset-0 bg-teal-300 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                </PrefetchLink>
+              </div>
+            </div>
+            <div className="order-1 lg:order-1 flex justify-center lg:justify-start">
+              <img src="/media/AppcratesLogo.webp" alt="AppCrates Logo" className="w-40 lg:w-full max-w-sm lg:max-w-md object-contain" />
+            </div>
+          </div>
+        </section>
+
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="border-t border-white/10 pt-16 grid lg:grid-cols-5 gap-10 lg:gap-16 items-start">
+            {heroImageUrl ? (
+              <div className="lg:col-span-2 lg:sticky lg:top-28">
+                <div className="relative w-full max-w-xs mx-auto lg:max-w-none aspect-[3/4] overflow-hidden">
+                  <img src={heroImageUrl} alt={about.heroImage?.alt || title} className="w-full h-full object-cover object-top" loading="eager" decoding="async" />
+                  <div className="absolute inset-0 border border-white/10 pointer-events-none" />
+                </div>
+              </div>
+            ) : null}
+            <div className={heroImageUrl ? 'lg:col-span-3 space-y-8' : 'lg:col-span-5 space-y-8'}>
+              {highlights.length ? (
+                <div>
+                  <h2 className="text-xs tracking-[0.3em] uppercase text-white/30 mb-8">{language === 'pl' ? 'Specjalizacje' : 'Specializations'}</h2>
+                  <div className="space-y-0">
+                    {highlights.map((item, index) => (
+                      <div key={`${item}-${index}`} className="flex items-center gap-6 py-4 border-b border-white/5">
+                        <span className="text-[10px] tracking-[0.2em] text-teal-300/30 tabular-nums notranslate">{String(index + 1).padStart(2, '0')}</span>
+                        <span className="text-white/50 font-light text-[15px]">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              {story.length ? (
+                <div>
+                  <h2 className="text-xs tracking-[0.3em] uppercase text-white/30 mb-6">{language === 'pl' ? 'Kim jestem' : 'Who am I'}</h2>
+                  <div className="prose prose-invert prose-lg max-w-none font-light prose-p:text-white/60 prose-p:leading-relaxed">
+                    <PortableText value={story} components={portableTextComponentsServer} />
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </section>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      </main>
+      <NextFooter />
+      <ChatWidget />
+    </div>
+  );
+}

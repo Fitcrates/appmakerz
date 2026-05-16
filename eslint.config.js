@@ -24,5 +24,17 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
     },
+  },
+  {
+    files: [
+      'src/app/**/page.{ts,tsx}',
+      'src/app/**/layout.{ts,tsx}',
+      'src/app/**/route.{ts,tsx}',
+      'src/app/sitemap.ts',
+      'src/app/robots.ts',
+    ],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
   }
 );

@@ -13,6 +13,7 @@ import CrackImage from "./CrackImage";
 import SpotlightText from "./SpotlightText";
 import BurnSpotlightText from "./BurnSpotlightText";
 import { useLanguage } from "../../context/LanguageContext";
+import { localizedPath } from "../../lib/i18n-routing";
 import { translations } from "../../translations/translations";
 
 interface Service {
@@ -54,7 +55,8 @@ const getServices = (
 const ServiceItem: React.FC<{
   service: Service;
   index: number;
-}> = ({ service, index }) => {
+  language: 'en' | 'pl';
+}> = ({ service, index, language }) => {
   const itemRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(itemRef, {
     once: true,
@@ -70,7 +72,7 @@ const ServiceItem: React.FC<{
       className="group relative py-10 border-b border-white/10 hover:border-white/20 transition-colors"
     >
       <PrefetchLink
-        href={service.href}
+        href={localizedPath(language, service.href)}
         className="block focus:outline-none focus:ring-2 focus:ring-teal-300/40 rounded"
       >
         <div className="flex items-start gap-6">
@@ -177,6 +179,7 @@ const ServicesNew: React.FC = () => {
                   key={service.number}
                   service={service}
                   index={index}
+                  language={language}
                 />
               ))}
             </div>

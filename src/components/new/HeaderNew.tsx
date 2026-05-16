@@ -8,6 +8,7 @@ import PrefetchLink from '@/components/next/PrefetchLink';
 import { useRouteTransition } from '@/components/next/RouteTransitionProvider';
 import LanguageToggleNext from '../next/LanguageToggleNext';
 import { useLanguage } from '../../context/LanguageContext';
+import { localizedPath } from '../../lib/i18n-routing';
 import { translations } from '../../translations/translations';
 
 const getNavItems = (t: typeof translations.en.nav) => [
@@ -62,8 +63,14 @@ const HeaderNew: React.FC = () => {
   const { beginNavigation } = useRouteTransition();
   const { language } = useLanguage();
   const t = translations[language].nav;
-  const navItems = getNavItems(t);
-  const serviceLandingLinks = getServiceLandingLinks(language);
+  const navItems = getNavItems(t).map((item) => ({
+    ...item,
+    href: localizedPath(language, item.href),
+  }));
+  const serviceLandingLinks = getServiceLandingLinks(language).map((item) => ({
+    ...item,
+    href: localizedPath(language, item.href),
+  }));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,14 +109,16 @@ const HeaderNew: React.FC = () => {
   const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
     closeMobileMenu();
 
-    if (!href.startsWith('/#')) {
+    const url = new URL(href, 'https://appcrates.local');
+    if (!url.hash) {
       return;
     }
 
     event.preventDefault();
-    const targetId = href.replace('/#', '');
+    const targetId = url.hash.slice(1);
+    const homePath = localizedPath(language, '/');
 
-    if (pathname !== '/') {
+    if (pathname !== homePath) {
       beginNavigation(href, () => {
         router.push(href);
       });
@@ -134,7 +143,7 @@ const HeaderNew: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <PrefetchLink href="/" className="relative z-10 block">
+            <PrefetchLink href={localizedPath(language, '/')} className="relative z-10 block">
               <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-1">
 
                 <span className="text-xl  font-light text-white">

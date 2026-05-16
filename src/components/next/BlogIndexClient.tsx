@@ -6,6 +6,7 @@ import PrefetchLink from '@/components/next/PrefetchLink';
 import { useLanguage } from '@/context/LanguageContext';
 import { urlFor } from '@/lib/sanity.image';
 import { getLocalizedText } from '@/lib/localize';
+import { localizedPath } from '@/lib/i18n-routing';
 import { translations } from '@/translations/translations';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 
@@ -94,7 +95,7 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
             const imageUrl = post.mainImage ? urlFor(post.mainImage).width(400).height(300).url() : '';
 
             return (
-              <PrefetchLink key={post._id} href={`/blog/${post.slug.current}`} className="group block">
+              <PrefetchLink key={post._id} href={localizedPath(language, `/blog/${post.slug.current}`)} className="group block">
                 <div className="relative overflow-hidden border border-white/10 hover:border-teal-300/30 transition-all duration-500">
                   <div className="flex flex-col md:flex-row md:h-[250px]">
                     {imageUrl ? (

@@ -74,7 +74,7 @@ export const translations = {
           homebudget: {
           title: "AI Home Budget",
           category: "AI app",
-          description: "Aplikacja do śledzenia budżetu wykorzystująca AI. Automatyczne czytanie rachunków i dodawanie do kategorii i wydatków. Analizy, prognozy i porady AI"
+          description: "Home budget tracking app utilizing AI. Automatic reading of bills and adding them to categories and expenses. Analyses, forecasts and AI advice"
 
         },
         spaWebsite: {

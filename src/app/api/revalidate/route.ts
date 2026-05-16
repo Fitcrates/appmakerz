@@ -1,8 +1,17 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
+import { SUPPORTED_LANGUAGES } from '@/lib/language';
+import { localizedPath } from '@/lib/i18n-routing';
 
 const SECRET = process.env.SANITY_WEBHOOK_SECRET;
+
+function revalidateLocalizedPath(path: string) {
+  revalidatePath(path);
+  SUPPORTED_LANGUAGES.forEach((language) => {
+    revalidatePath(localizedPath(language, path));
+  });
+}
 
 function isValidSanitySignature(signatureHeader: string, body: string, secret: string): boolean {
   const parts = signatureHeader.split(',');
@@ -45,24 +54,23 @@ export async function POST(request: NextRequest) {
     if (docType === 'post') {
       revalidateTag('posts');
       revalidateTag('blog');
-      revalidatePath('/blog');
+      revalidateLocalizedPath('/blog');
       if (json.slug?.current) {
-        revalidatePath(`/blog/${json.slug.current}`);
+        revalidateLocalizedPath(`/blog/${json.slug.current}`);
       }
     } else if (docType === 'project') {
       revalidateTag('projects');
-      revalidatePath('/project');
       if (json.slug?.current) {
-        revalidatePath(`/project/${json.slug.current}`);
+        revalidateLocalizedPath(`/project/${json.slug.current}`);
       }
     } else if (docType === 'serviceLanding') {
       revalidateTag('service-landings');
       if (json.slug?.current) {
-        revalidatePath(`/uslugi/${json.slug.current}`);
+        revalidateLocalizedPath(`/uslugi/${json.slug.current}`);
       }
     } else if (docType === 'aboutMe') {
       revalidateTag('about-me');
-      revalidatePath('/about-me');
+      revalidateLocalizedPath('/about-me');
     }
 
     revalidateTag('sitemap');
