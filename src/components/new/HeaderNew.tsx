@@ -57,7 +57,9 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
 const HeaderNew: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isServicesMenuOpen, setIsServicesMenuOpen] = useState(false);
   const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
+  const servicesMenuCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const { beginNavigation } = useRouteTransition();
@@ -83,7 +85,16 @@ const HeaderNew: React.FC = () => {
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setIsServicesMenuOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    return () => {
+      if (servicesMenuCloseTimerRef.current) {
+        clearTimeout(servicesMenuCloseTimerRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
@@ -104,6 +115,26 @@ const HeaderNew: React.FC = () => {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
     mobileMenuButtonRef.current?.blur();
+  };
+
+  const openServicesMenu = () => {
+    if (servicesMenuCloseTimerRef.current) {
+      clearTimeout(servicesMenuCloseTimerRef.current);
+      servicesMenuCloseTimerRef.current = null;
+    }
+
+    setIsServicesMenuOpen(true);
+  };
+
+  const scheduleServicesMenuClose = () => {
+    if (servicesMenuCloseTimerRef.current) {
+      clearTimeout(servicesMenuCloseTimerRef.current);
+    }
+
+    servicesMenuCloseTimerRef.current = setTimeout(() => {
+      setIsServicesMenuOpen(false);
+      servicesMenuCloseTimerRef.current = null;
+    }, 180);
   };
 
   const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -166,37 +197,59 @@ const HeaderNew: React.FC = () => {
                 </PrefetchLink>
               ))}
 
-              <div className="relative group">
+              <div
+                className="relative"
+                onMouseEnter={openServicesMenu}
+                onMouseLeave={scheduleServicesMenuClose}
+                onFocus={openServicesMenu}
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                    scheduleServicesMenuClose();
+                  }
+                }}
+              >
                 <button
                   type="button"
                   className="inline-flex items-center gap-2 text-white/70  font-light text-sm hover:text-white transition-colors focus:outline-none focus:text-teal-300"
                   aria-haspopup="true"
+                  aria-expanded={isServicesMenuOpen}
                   aria-label={t.services}
                 >
                   <span>{t.services}</span>
-                  <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isServicesMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                <div className="pointer-events-none group-hover:pointer-events-auto opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 absolute right-0 top-full pt-4 z-50">
-                  <div className="w-[540px] border border-white/10 bg-indigo-950 shadow-2xl rounded-xl p-2 grid grid-cols-2 gap-1">
+                <div
+                  className={`fixed left-0 right-0 top-20 z-50 transition-all duration-200 ${
+                    isServicesMenuOpen
+                      ? 'pointer-events-auto opacity-100 translate-y-0'
+                      : 'pointer-events-none opacity-0 -translate-y-1'
+                  }`}
+                  onMouseEnter={openServicesMenu}
+                  onMouseLeave={scheduleServicesMenuClose}
+                >
+                  <div className="border-y border-white/10 bg-indigo-950 shadow-2xl backdrop-blur-xl">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 grid grid-cols-4 gap-3">
                     {serviceLandingLinks.map((item) => {
                       const Icon = item.icon;
                       return (
                         <PrefetchLink
                           key={item.href}
                           href={item.href}
-                          className="flex items-start gap-4 p-4 rounded-lg hover:bg-white/[0.05] transition-all duration-200 group"
+                          onClick={() => setIsServicesMenuOpen(false)}
+                          className="group/service-card flex min-w-0 items-start gap-4 rounded-lg border border-white/10 bg-indigo-950/[0.9] p-4 hover:border-teal-300/30 hover:bg-white/[0.06] transition-all duration-200"
                         >
-                          <div className="w-10 h-10 rounded-lg bg-teal-300/10 border border-teal-300/20 flex items-center justify-center flex-shrink-0 group-hover:bg-teal-300/20 group-hover:border-teal-300/30 transition-colors">
+                          <div className="w-10 h-10 rounded-lg bg-teal-300/10 border border-teal-300/20 flex items-center justify-center flex-shrink-0 group-hover/service-card:bg-teal-300/20 group-hover/service-card:border-teal-300/30 transition-colors">
                             <Icon className="w-5 h-5 text-teal-300" />
                           </div>
-                          <div>
-                            <p className="text-sm  font-medium text-white group-hover:text-teal-300 transition-colors">{item.label}</p>
-                            <p className="text-xs  text-white mt-1 leading-relaxed">{item.description}</p>
+                          <div className="min-w-0">
+                            <p className="text-sm  font-medium text-white group-hover/service-card:text-teal-300 transition-colors">{item.label}</p>
+                            <p className="text-xs  text-white/70 mt-1 leading-relaxed">{item.description}</p>
                           </div>
                         </PrefetchLink>
                       );
                     })}
+                    </div>
                   </div>
                 </div>
               </div>

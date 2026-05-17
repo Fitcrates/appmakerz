@@ -5,6 +5,7 @@ import { DEFAULT_LANGUAGE } from '@/lib/language';
 import { siteUrl } from '@/lib/site';
 import CookieConsentNew from '@/components/new/CookieConsentNew';
 import ScrollBlurOverlay from '@/components/new/ScrollBlurOverlay';
+import CursorAura from '@/components/next/CursorAura';
 import './globals.css';
 
 export const viewport: Viewport = {
@@ -135,6 +136,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {children}
           <CookieConsentNew />
           <ScrollBlurOverlay />
+          <CursorAura />
         </NextProviders>
       </body>
     </html>

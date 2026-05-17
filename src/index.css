@@ -50,15 +50,53 @@ html, body {
 }
 
 * {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="-11.5 -10.23174 23 20.46348" width="24" height="24"><circle cx="0" cy="0" r="2.05" fill="%235eead4"/><g stroke="%235eead4" stroke-width="1" fill="none"><ellipse rx="11" ry="4.2"/><ellipse rx="11" ry="4.2" transform="rotate(60)"/><ellipse rx="11" ry="4.2" transform="rotate(120)"/></g></svg>') 12 12, auto !important;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="%235eead4"/></svg>') 12 12, auto !important;
 }
 
 a, button, [role="button"], input, select, textarea, a *, button *, [role="button"] * {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="-11.5 -10.23174 23 20.46348" width="24" height="24"><circle cx="0" cy="0" r="2.05" fill="%232dd4bf"/><g stroke="%232dd4bf" stroke-width="1.5" fill="none"><ellipse rx="11" ry="4.2"/><ellipse rx="11" ry="4.2" transform="rotate(60)"/><ellipse rx="11" ry="4.2" transform="rotate(120)"/></g></svg>') 12 12, pointer !important;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1" fill="transparent"/></svg>') 12 12, pointer !important;
 }
 
 *, *::before, *::after {
   box-sizing: inherit;
+}
+
+.cursor-aura {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 26px;
+  height: 26px;
+  border: 1px solid rgb(94 234 212 / 0.95);
+  border-radius: 9999px;
+  background: rgb(94 234 212 / 0.04);
+  backdrop-filter: blur(3px) saturate(1.6);
+  -webkit-backdrop-filter: blur(3px) saturate(1.6);
+  box-shadow:
+    inset 0 0 10px rgb(94 234 212 / 0.45),
+    0 0 14px rgb(94 234 212 / 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(-999px, -999px, 0) translate(-50%, -50%);
+  transition:
+    opacity 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+  z-index: 2147483647;
+}
+
+.cursor-aura--visible {
+  opacity: 0;
+}
+
+.cursor-aura--active {
+  opacity: 1;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor-aura {
+    display: none;
+  }
 }
 
 .fixed-bg {
