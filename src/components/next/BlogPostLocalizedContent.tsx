@@ -3,7 +3,9 @@
 import Image from 'next/image';
 import { PortableText } from '@portabletext/react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import BlogLatestPostsSidebar from '@/components/next/BlogLatestPostsSidebar';
 import BlogPostViewTracker from '@/components/next/BlogPostViewTracker';
+import BlogShareSidebar from '@/components/next/BlogShareSidebar';
 import FaqAccordionList from '@/components/next/FaqAccordionList';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import PrefetchLink from '@/components/next/PrefetchLink';
@@ -17,10 +19,9 @@ import { translations } from '@/translations/translations';
 interface BlogPostLocalizedContentProps {
   post: any;
   posts: any[];
-  popularPosts: any[];
 }
 
-export default function BlogPostLocalizedContent({ post, posts, popularPosts }: BlogPostLocalizedContentProps) {
+export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocalizedContentProps) {
   const { language } = useLanguage();
   const t = translations[language].blog;
 
@@ -33,7 +34,6 @@ export default function BlogPostLocalizedContent({ post, posts, popularPosts }: 
   const currentIndex = allPostsSorted.findIndex((item) => item._id === post._id);
   const previousPost = currentIndex > 0 ? allPostsSorted[currentIndex - 1] : null;
   const nextPost = currentIndex < allPostsSorted.length - 1 ? allPostsSorted[currentIndex + 1] : null;
-  const popularLabel = language === 'pl' ? 'Popularne wpisy' : 'Popular Posts';
 
   return (
     <>
@@ -56,7 +56,8 @@ export default function BlogPostLocalizedContent({ post, posts, popularPosts }: 
           </div>
         ) : null}
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 sm:px-6 lg:px-8 xl:grid-cols-[4.5rem_minmax(0,48rem)_17.5rem] xl:items-start xl:gap-12">
+          <div className="min-w-0 xl:col-start-2">
           <div className="flex items-center gap-2 text-sm text-white/40  mb-8 overflow-hidden">
             <PrefetchLink href={localizedPath(language, '/')} className="hover:text-teal-300 transition-colors">{translations[language].navigation.home}</PrefetchLink>
             <span>/</span>
@@ -94,6 +95,14 @@ export default function BlogPostLocalizedContent({ post, posts, popularPosts }: 
             </div>
           </div>
 
+          <div className=" -mt-4">
+            <BlogShareSidebar language={language} title={title} variant="mobile" />
+          </div>
+          </div>
+
+          <BlogShareSidebar language={language} title={title} />
+
+          <div id="blog-content-start" className="min-w-0 xl:col-start-2 xl:row-start-2">
           <article className="blog-content">
             <PortableText value={body} components={portableTextComponentsClient} />
           </article>
@@ -159,41 +168,9 @@ export default function BlogPostLocalizedContent({ post, posts, popularPosts }: 
               </PrefetchLink>
             ) : null}
           </div>
-        </div>
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
-          <div className="border-t border-white/10 pt-16">
-            <h3 className="text-lg font-light text-white  mb-6">{popularLabel}</h3>
-            <div className="space-y-4">
-              {popularPosts.map((popularPost) => {
-                const popularTitle = getLocalizedText(popularPost.title, language);
-                const imageUrl = popularPost.mainImage ? urlFor(popularPost.mainImage).width(64).height(64).url() : '';
-                return (
-                  <PrefetchLink
-                    key={popularPost._id}
-                    href={localizedPath(language, `/blog/${popularPost.slug.current}`)}
-                    className="flex items-center gap-4 group p-3 -mx-3 border border-transparent hover:border-white/10 transition-all duration-300"
-                  >
-                    {imageUrl ? (
-                      <Image
-                        src={imageUrl}
-                        alt={popularTitle}
-                        width={64}
-                        height={64}
-                        className="w-16 h-16 object-cover flex-shrink-0"
-                      />
-                    ) : null}
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-sm text-white  group-hover:text-teal-300 transition-colors font-oxanium duration-200 line-clamp-2">{popularTitle}</h4>
-                      <p className="text-xs text-white/30  mt-1">
-                        {popularPost.viewCount || 0} {t.views} - {new Date(popularPost.publishedAt).toLocaleDateString(language === 'pl' ? 'pl-PL' : 'en-US')}
-                      </p>
-                    </div>
-                  </PrefetchLink>
-                );
-              })}
-            </div>
           </div>
+
+          <BlogLatestPostsSidebar currentPostId={post._id} language={language} posts={posts} />
         </div>
       </main>
     </>
