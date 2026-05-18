@@ -28,6 +28,9 @@ export async function generateMetadata({ params }: LocalizedFaqPageProps): Promi
   return {
     title: content.title,
     description: content.subtitle,
+    keywords: language === 'pl'
+      ? ['faq', 'często zadawane pytania', 'web development', 'appcrates']
+      : ['faq', 'frequently asked questions', 'web development', 'appcrates'],
     alternates: {
       canonical,
       languages: {

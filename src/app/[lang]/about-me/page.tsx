@@ -139,12 +139,19 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
             <div className={heroImageUrl ? 'lg:col-span-3 space-y-8' : 'lg:col-span-5 space-y-8'}>
               {highlights.length ? (
                 <div>
-                  <h2 className="text-xs tracking-[0.3em] uppercase text-white/30 mb-8">{language === 'pl' ? 'Specjalizacje' : 'Specializations'}</h2>
+                  <SpotlightText as="h2" className="text-xs tracking-[0.3em] uppercase text-white/30 mb-8">
+                    {language === 'pl' ? 'Specjalizacje' : 'Specializations'}
+                  </SpotlightText>
                   <div className="space-y-0">
                     {highlights.map((item, index) => (
-                      <div key={`${item}-${index}`} className="flex items-center gap-6 py-4 border-b border-white/5">
-                        <span className="text-[10px] tracking-[0.2em] text-teal-300/30 tabular-nums notranslate">{String(index + 1).padStart(2, '0')}</span>
-                        <span className="text-white/50 font-light text-[15px]">{item}</span>
+                      <div key={`${item}-${index}`} className="group flex items-center gap-6 py-4 border-b border-white/5 hover:border-teal-300/20 transition-all duration-500 hover:pl-2">
+                        <span className="text-[10px] tracking-[0.2em] text-teal-300/30 tabular-nums group-hover:text-teal-300/70 transition-colors duration-500 notranslate">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <span className="text-white/50 font-light text-[15px] group-hover:text-white/80 transition-colors duration-500">
+                          {item}
+                        </span>
+                        <div className="flex-1 h-px bg-gradient-to-r from-white/5 to-transparent group-hover:from-teal-300/10 transition-colors duration-500" />
                       </div>
                     ))}
                   </div>
@@ -152,12 +159,36 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
               ) : null}
               {story.length ? (
                 <div>
-                  <h2 className="text-xs tracking-[0.3em] uppercase text-white/30 mb-6">{language === 'pl' ? 'Kim jestem' : 'Who am I'}</h2>
+                  <SpotlightText as="h2" className="text-xs tracking-[0.3em] uppercase text-white/30 mb-6">
+                    {language === 'pl' ? 'Kim jestem' : 'Who am I'}
+                  </SpotlightText>
                   <div className="prose prose-invert prose-lg max-w-none font-light prose-p:text-white/60 prose-p:leading-relaxed">
                     <PortableText value={story} components={portableTextComponentsServer} />
                   </div>
                 </div>
               ) : null}
+
+              <div className="border-t border-white/10 pt-10 mt-10">
+                <div className="flex flex-col sm:flex-row gap-6 sm:items-center justify-between">
+                  <SpotlightText
+                    as="p"
+                    className="text-xs tracking-[0.3em] uppercase text-white/30 mb-6"
+                  >
+                    {language === 'pl'
+                      ? 'Zainteresowany współpracą?'
+                      : 'Interested in working together?'}
+                  </SpotlightText>
+                  <PrefetchLink
+                    href={localizedPath(language, '/#contact')}
+                    className="group px-10 py-5 border border-white/20 text-white font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                  >
+                    <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
+                      {language === 'pl' ? 'Napisz do mnie' : 'Get in touch'}
+                    </span>
+                    <div className="absolute inset-0 bg-teal-300 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                  </PrefetchLink>
+                </div>
+              </div>
             </div>
           </div>
         </section>

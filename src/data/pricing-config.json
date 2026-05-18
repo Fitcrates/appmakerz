@@ -1,0 +1,234 @@
+{
+  "services": {
+    "website": {
+      "label": "Strona internetowa / landing page",
+      "steps": ["base", "cms", "features", "deadline"],
+      "base": {
+        "simple_landing": { "label": "Prosta strona ofertowa", "min": 1200, "max": 2500 },
+        "template": { "label": "Szybszy start na gotowym układzie", "min": 1800, "max": 3500 },
+        "custom": { "label": "Indywidualny projekt od zera", "min": 3500, "max": 7000 },
+        "have_design": { "label": "Mam gotowy projekt graficzny", "min": 1800, "max": 4000 }
+      },
+      "cms": {
+        "none": { "label": "Bez panelu edycji treści", "min": 0, "max": 0 },
+        "sanity_form": { "label": "Panel do edycji treści", "min": 900, "max": 2000 },
+        "sanity_visual": { "label": "Wygodniejsza edycja z podglądem", "min": 1800, "max": 3500 }
+      },
+      "features": {
+        "extra_pages": { "label": "Dodatkowe podstrony", "min": 300, "max": 800 },
+        "blog": { "label": "Blog / aktualności", "min": 700, "max": 1500 },
+        "contact_form": { "label": "Formularz kontaktowy", "min": 300, "max": 700 },
+        "newsletter": { "label": "Zbieranie adresów email", "min": 400, "max": 900 },
+        "i18n": { "label": "Więcej niż jeden język", "min": 1000, "max": 2500 },
+        "animations": { "label": "Animacje i efekt premium", "min": 600, "max": 1800 },
+        "seo_setup": { "label": "Podstawowa optymalizacja pod Google", "min": 500, "max": 1200 },
+        "analytics": { "label": "Statystyki odwiedzin", "min": 300, "max": 800 },
+        "cookie_banner": { "label": "Baner cookies / zgody", "min": 300, "max": 800 },
+        "performance": { "label": "Przyspieszenie strony", "min": 500, "max": 1500 }
+      }
+    },
+
+   "ecommerce": {
+  "label": "Sklep internetowy",
+  "steps": ["base", "cms", "features", "deadline"],
+  "base": {
+    "medusa_basic": {
+      "label": "Kompletny sklep internetowy na Medusa.js",
+      "min": 6000,
+      "max": 18000
+    }
+  },
+  "cms": {
+    "none": {
+      "label": "Bez panelu do treści marketingowych",
+      "min": 0,
+      "max": 0
+    },
+    "sanity_form": {
+      "label": "Panel do edycji treści sklepu",
+      "min": 1500,
+      "max": 3500
+    },
+    "sanity_visual": {
+      "label": "Wygodniejsza edycja z podglądem",
+      "min": 2500,
+      "max": 5000
+    }
+  },
+  "features": {
+    "inpost_integration": {
+      "label": "Integracja z InPost / paczkomatami",
+      "min": 2500,
+      "max": 6000
+    },
+    "courier_integration": {
+      "label": "Integracja z kurierem lub brokerem dostaw",
+      "min": 2500,
+      "max": 7000
+    },
+    "advanced_shipping_rules": {
+      "label": "Bardziej rozbudowane zasady dostawy",
+      "min": 1500,
+      "max": 4000
+    },
+    "advanced_product_filters": {
+      "label": "Rozbudowane filtrowanie produktów",
+      "min": 1500,
+      "max": 4000
+    },
+    "advanced_search": {
+      "label": "Lepsza wyszukiwarka produktów",
+      "min": 2000,
+      "max": 6000
+    },
+    "custom_checkout": {
+      "label": "Dostosowany proces zakupu",
+      "min": 2500,
+      "max": 7000
+    },
+    "custom_product_page": {
+      "label": "Indywidualna karta produktu",
+      "min": 1500,
+      "max": 4500
+    },
+    "product_recommendations": {
+      "label": "Polecane i podobne produkty",
+      "min": 1000,
+      "max": 3000
+    },
+    "wishlist": {
+      "label": "Lista ulubionych produktów",
+      "min": 1200,
+      "max": 3500
+    },
+    "customer_account_extended": {
+      "label": "Rozbudowane konto klienta",
+      "min": 2000,
+      "max": 5000
+    },
+    "email_templates_custom": {
+      "label": "Dostosowane wiadomości email",
+      "min": 1000,
+      "max": 3000
+    },
+    "invoice_integration": {
+      "label": "Integracja z fakturami lub księgowością",
+      "min": 2500,
+      "max": 7000
+    },
+    "erp_integration": {
+      "label": "Integracja z magazynem lub systemem sprzedaży",
+      "min": 4000,
+      "max": 12000
+    },
+    "loyalty_program": {
+      "label": "Program lojalnościowy",
+      "min": 3000,
+      "max": 8000
+    },
+    "subscriptions": {
+      "label": "Produkty cykliczne lub subskrypcje",
+      "min": 4000,
+      "max": 12000
+    },
+    "b2b_pricing": {
+      "label": "Ceny dla klientów firmowych",
+      "min": 3000,
+      "max": 9000
+    },
+    "multi_region": {
+      "label": "Sprzedaż na kilka rynków",
+      "min": 3000,
+      "max": 9000
+    },
+    "i18n": {
+      "label": "Więcej niż jeden język",
+      "min": 1800,
+      "max": 5000
+    }
+  }
+},
+
+    "marketplace": {
+      "label": "Platforma marketplace",
+      "steps": ["base", "features", "deadline"],
+      "base": {
+        "medusa_marketplace": { "label": "Podstawa marketplace", "min": 18000, "max": 35000 }
+      },
+      "features": {
+        "vendor_accounts": { "label": "Konta sprzedawców", "min": 2500, "max": 6000 },
+        "vendor_onboarding": { "label": "Zgłoszenia i weryfikacja sprzedawców", "min": 3000, "max": 7000 },
+        "vendor_dash": { "label": "Panel dla sprzedawców", "min": 4000, "max": 9000 },
+        "product_approval": { "label": "Zatwierdzanie produktów przez admina", "min": 1500, "max": 3500 },
+        "orders_split": { "label": "Zamówienia od wielu sprzedawców", "min": 3500, "max": 9000 },
+        "stripe_connect": { "label": "Rozliczenia ze sprzedawcami", "min": 5000, "max": 12000 },
+        "commissions": { "label": "Prowizje platformy", "min": 2000, "max": 5000 },
+        "payouts": { "label": "Wypłaty dla sprzedawców", "min": 3000, "max": 8000 },
+        "ratings": { "label": "Oceny sprzedawców", "min": 1500, "max": 3500 },
+        "disputes": { "label": "Obsługa reklamacji i sporów", "min": 2500, "max": 7000 },
+        "notifications": { "label": "Powiadomienia dla klientów i sprzedawców", "min": 1500, "max": 3500 },
+        "advanced_search": { "label": "Lepsza wyszukiwarka produktów", "min": 2000, "max": 6000 },
+        "i18n": { "label": "Więcej niż jeden język", "min": 2500, "max": 6000 }
+      }
+    },
+
+    "ai": {
+      "label": "Wdrożenie AI w firmie",
+      "steps": ["features", "deadline"],
+      "base": {},
+      "features": {
+        "chatbot_basic": { "label": "Chatbot odpowiadający na pytania", "min": 2000, "max": 4500 },
+        "chatbot_rag": { "label": "Chatbot z wiedzą z dokumentów firmy", "min": 4000, "max": 9000 },
+        "ai_search": { "label": "Wyszukiwanie informacji w dokumentach", "min": 3000, "max": 8000 },
+        "ai_cms": { "label": "AI pomagające tworzyć treści", "min": 2500, "max": 6000 },
+        "ai_support": { "label": "Automatyczna obsługa klienta", "min": 4000, "max": 10000 },
+        "ai_workflow": { "label": "Automatyzacja procesu w firmie", "min": 5000, "max": 12000 },
+        "ai_integration": { "label": "Połączenie AI z Twoimi systemami", "min": 3000, "max": 9000 }
+      }
+    },
+
+    "saas": {
+      "label": "Aplikacja webowa / SaaS",
+      "steps": ["saas_questions"],
+      "noPrice": true,
+      "ctaLabel": "Umów bezpłatną konsultację",
+      "base": {},
+      "features": {
+        "user_accounts": { "label": "Konta użytkowników", "min": 0, "max": 0 },
+        "dashboard": { "label": "Panel użytkownika", "min": 0, "max": 0 },
+        "admin_panel": { "label": "Panel administracyjny", "min": 0, "max": 0 },
+        "payments": { "label": "Płatności lub abonament", "min": 0, "max": 0 },
+        "integrations": { "label": "Połączenia z innymi narzędziami", "min": 0, "max": 0 },
+        "data_management": { "label": "Zarządzanie danymi w aplikacji", "min": 0, "max": 0 },
+        "have_design": { "label": "Mam projekt lub makietę", "min": 0, "max": 0 }
+      }
+    }
+  },
+
+  "multipliers": {
+    "deadline": {
+      "website": {
+        "relaxed": { "label": "Elastyczny termin (2–4 tyg.)", "value": 1 },
+        "standard": { "label": "Standardowo (1–2 tyg.)", "value": 1.15 },
+        "fast": { "label": "Szybko (kilka dni)", "value": 1.4 }
+      },
+      "ecommerce": {
+        "relaxed": { "label": "Elastyczny termin (10–14 tyg.)", "value": 1 },
+        "standard": { "label": "Standardowo (6–10 tyg.)", "value": 1.15 },
+        "fast": { "label": "Szybko (4–6 tyg.)", "value": 1.4 }
+      },
+      "marketplace": {
+        "relaxed": { "label": "Elastyczny termin (5–8 miesięcy)", "value": 1 },
+        "standard": { "label": "Standardowo (3–5 miesięcy)", "value": 1.15 },
+        "fast": { "label": "Szybko (2–3 miesiące)", "value": 1.45 }
+      },
+      "ai": {
+        "relaxed": { "label": "Elastyczny termin (6–10 tyg.)", "value": 1 },
+        "standard": { "label": "Standardowo (3–6 tyg.)", "value": 1.15 },
+        "fast": { "label": "Szybko (1–3 tyg.)", "value": 1.4 }
+      }
+    }
+  },
+
+  "disclaimer": "To orientacyjna wycena na podstawie typowych projektów. Finalny zakres, cena i termin zależą od szczegółów, integracji, treści oraz wymagań biznesowych."
+}

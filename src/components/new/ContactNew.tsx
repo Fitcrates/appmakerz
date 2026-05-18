@@ -3,6 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
 import PrefetchLink from '@/components/next/PrefetchLink';
+import { localizedPath } from '@/lib/i18n-routing';
 import { useEmailForm } from '../../hooks/useEmailForm';
 import BurnSpotlightText from './BurnSpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
@@ -14,7 +15,7 @@ const ContactNew: React.FC = () => {
   const hasTrackedViewRef = useRef(false);
   const hasTrackedStartRef = useRef(false);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
-  const { formData, isSubmitting, isSuccess, handleSubmit, handleChange, handleBudgetChange } = useEmailForm();
+  const { formData, isSubmitting, isSuccess, handleSubmit, handleChange } = useEmailForm();
   const { language } = useLanguage();
   const t = translations[language].contact;
 
@@ -124,7 +125,6 @@ const ContactNew: React.FC = () => {
                 </span>
               </div>
 
-
             </motion.div>
           </div>
 
@@ -136,27 +136,13 @@ const ContactNew: React.FC = () => {
           >
             <form onSubmit={handleSubmit} className="space-y-8">
               <div>
-                <label htmlFor="contact-budget" className="block text-xs text-teal-300  tracking-widest uppercase mb-3">
-                  {language === 'pl' ? 'Szacowany budżet (PLN)' : 'Estimated budget (PLN)'}
-                </label>
-                <div className="flex items-center gap-4 py-4 border-b border-white/20">
-                  <input
-                    type="range"
-                    id="contact-budget"
-                    name="budget"
-                    min="1000"
-                    max="100000"
-                    step="1000"
-                    value={formData.budget}
-                    onChange={(e) => handleBudgetChange(Number(e.target.value))}
-                    onFocus={handleFieldFocus}
-                    disabled={isSubmitting}
-                    className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-teal-300 hover:accent-teal-200 transition-all focus:outline-none focus:ring-2 focus:ring-teal-300/50"
-                  />
-                  <span className="text-white  text-lg min-w-[120px] text-right">
-                    {formData.budget.toLocaleString('pl-PL')} +
-                  </span>
-                </div>
+                <PrefetchLink
+                  href={localizedPath(language, '/kalkulator')}
+                  className="inline-flex items-center gap-3 rounded-full border border-teal-300/30 px-5 py-3 text-sm font-medium text-teal-200 transition-colors hover:border-teal-300 hover:bg-teal-300 hover:text-indigo-950"
+                >
+                  {language === 'pl' ? 'Oblicz orientacyjną wycenę' : 'Estimate your project'}
+                  <ArrowUpRight className="h-4 w-4" />
+                </PrefetchLink>
               </div>
 
               <div>

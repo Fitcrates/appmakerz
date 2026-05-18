@@ -36,6 +36,9 @@ export async function generateMetadata({ params }: LocalizedHomePageProps): Prom
   return {
     title,
     description,
+    keywords: language === 'pl'
+      ? ['strony internetowe landing page', 'platformy internetowe', 'aplikacje ai', 'web platforms', 'implementacja ai w firmach', 'rag', 'retrieval-augmented generation', 'sklepy ecommerce medusa js', 'sklepy internetowe medusa js', 'sklepy internetowe', 'marketplace ecommerce medusa js', 'audyty wcag', 'audyty gdpr', 'migracje na next.js', 'migracje na tanstack', 'headless commerce', 'frontend migrations', 'Medusa JS developer', 'AI integration', 'WCAG compliance', 'AppCrates']
+      : ['landing pages', 'web platforms', 'ai applications', 'ai implementation business', 'rag', 'retrieval-augmented generation', 'ecommerce stores medusa js', 'online stores medusa js', 'online shops', 'marketplace ecommerce medusa js', 'wcag audits', 'gdpr audits', 'next.js migrations', 'tanstack migrations', 'headless commerce', 'frontend migrations', 'Medusa JS developer', 'AI integration', 'WCAG compliance', 'AppCrates'],
     alternates: {
       canonical,
       languages: {

@@ -189,6 +189,56 @@ export const translations = {
       },
     },
 
+    calculator: {
+      meta: {
+        title: "Project pricing calculator | AppCrates",
+        description: "Estimate the budget for a website, store, marketplace, AI implementation or web app and send an inquiry with a clear project summary.",
+      },
+      page: {
+        backHome: "Back to home",
+        label: "[ Pricing calculator ]",
+        heading: "Estimate your project before we talk",
+        subtitle: "Answer a few simple questions. You will see an estimated budget range and send me a summary, so our first conversation starts with specifics.",
+      },
+      stepLabel: "Step",
+      progressLabel: "Pricing calculator",
+      selectedProject: "Selected project",
+      noPriceHint: "Individual estimate after consultation",
+      optionPricePrefix: "Estimated add-on range",
+      noCost: "No extra cost",
+      multiplier: "Timeline impact",
+      titles: {
+        service: "What do you want to build?",
+        base: "How should we start?",
+        cms: "Do you want to edit content yourself?",
+        features: "What else should be included?",
+        deadline: "How soon do you need it?",
+        saas_questions: "What should the application include?",
+        result: "Summary and inquiry",
+      },
+      result: {
+        label: "Estimated budget",
+        noPriceTitle: "This type of project needs a short consultation",
+        formTitle: "Send this summary to me",
+      },
+      form: {
+        name: "Name",
+        email: "Email",
+        phone: "Phone, optional",
+        message: "Message, optional",
+        submit: "Send inquiry",
+        sending: "Sending...",
+        success: "Thank you. Your inquiry has been sent.",
+        error: "Could not send the inquiry.",
+      },
+      buttons: {
+        next: "Next",
+        back: "Back",
+        clear: "Clear",
+        reset: "Estimate another project",
+      },
+    },
+
     // Footer (FooterNew)
     footer: {
       newsletter: {
@@ -491,6 +541,56 @@ export const translations = {
           title: "Wiadomość wysłana!",
           message: "Dziękuję za kontakt. Odezwę się wkrótce.",
         },
+      },
+    },
+
+    calculator: {
+      meta: {
+        title: "Kalkulator wyceny projektu | AppCrates",
+        description: "Oszacuj budżet strony, sklepu, marketplace, wdrożenia AI albo aplikacji webowej i wyślij zapytanie z czytelnym podsumowaniem.",
+      },
+      page: {
+        backHome: "Wróć na stronę główną",
+        label: "[ Kalkulator wyceny ]",
+        heading: "Oszacuj projekt zanim porozmawiamy",
+        subtitle: "Odpowiedz na kilka prostych pytań. Zobaczysz orientacyjny zakres budżetu i wyślesz mi podsumowanie, dzięki czemu pierwsza rozmowa zacznie się od konkretów.",
+      },
+      stepLabel: "Krok",
+      progressLabel: "Kalkulator wyceny",
+      selectedProject: "Wybrany projekt",
+      noPriceHint: "Wycena indywidualna po konsultacji",
+      optionPricePrefix: "Orientacyjny zakres dodatku",
+      noCost: "Bez dopłaty",
+      multiplier: "Wpływ na termin",
+      titles: {
+        service: "Co chcesz zbudować?",
+        base: "Od czego zaczynamy?",
+        cms: "Czy chcesz samodzielnie edytować treści?",
+        features: "Co jeszcze ma się znaleźć w projekcie?",
+        deadline: "Jak szybko projekt ma być gotowy?",
+        saas_questions: "Co powinna zawierać aplikacja?",
+        result: "Podsumowanie i zapytanie",
+      },
+      result: {
+        label: "Orientacyjny budżet",
+        noPriceTitle: "Ten typ projektu wymaga krótkiej konsultacji",
+        formTitle: "Wyślij mi to podsumowanie",
+      },
+      form: {
+        name: "Imię",
+        email: "Email",
+        phone: "Telefon opcjonalnie",
+        message: "Wiadomość opcjonalnie",
+        submit: "Wyślij zapytanie",
+        sending: "Wysyłanie...",
+        success: "Dziękuję. Zapytanie zostało wysłane.",
+        error: "Nie udało się wysłać zapytania.",
+      },
+      buttons: {
+        next: "Dalej",
+        back: "Wstecz",
+        clear: "Wyczyść",
+        reset: "Policz inny projekt",
       },
     },
 

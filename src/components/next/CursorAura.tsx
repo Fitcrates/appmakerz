@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 
 const INTERACTIVE_SELECTOR = 'a, button, [role="button"], input, select, textarea, summary, label';
+const TEXT_INPUT_SELECTOR = 'input, textarea, select';
 
 export default function CursorAura() {
   const auraRef = useRef<HTMLDivElement | null>(null);
@@ -27,7 +28,9 @@ export default function CursorAura() {
       y = event.clientY;
 
       const target = event.target instanceof Element ? event.target : null;
-      aura.classList.toggle('cursor-aura--active', Boolean(target?.closest(INTERACTIVE_SELECTOR)));
+      const isInteractive = Boolean(target?.closest(INTERACTIVE_SELECTOR));
+      aura.classList.toggle('cursor-aura--active', isInteractive);
+      aura.classList.toggle('cursor-aura--text', isInteractive && Boolean(target?.closest(TEXT_INPUT_SELECTOR)));
 
       if (frameId === null) {
         frameId = requestAnimationFrame(moveAura);
@@ -35,7 +38,7 @@ export default function CursorAura() {
     };
 
     const handlePointerLeave = () => {
-      aura.classList.remove('cursor-aura--visible', 'cursor-aura--active');
+      aura.classList.remove('cursor-aura--visible', 'cursor-aura--active', 'cursor-aura--text');
     };
 
     const handlePointerEnter = () => {

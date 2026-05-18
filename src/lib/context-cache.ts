@@ -1,21 +1,23 @@
 import 'server-only';
 
-import { buildAIContext } from '@/lib/ai-context';
+import { buildAIContextIndex, selectAIContext } from '@/lib/ai-context';
 import type { Language } from '@/lib/language';
 
 const TTL_MS = 1000 * 60 * 60;
 
-const cache: Partial<Record<Language, { value: string; expiresAt: number }>> = {};
+type CachedContextIndex = Awaited<ReturnType<typeof buildAIContextIndex>>;
 
-export async function getCachedAIContext(language: Language = 'pl'): Promise<string> {
+const cache: Partial<Record<Language, { value: CachedContextIndex; expiresAt: number }>> = {};
+
+export async function getCachedAIContext(language: Language = 'pl', query: string = ''): Promise<string> {
   const now = Date.now();
   const current = cache[language];
 
   if (current && current.expiresAt > now) {
-    return current.value;
+    return selectAIContext(current.value, query, language);
   }
 
-  const value = await buildAIContext(language);
+  const value = await buildAIContextIndex(language);
   cache[language] = { value, expiresAt: now + TTL_MS };
-  return value;
+  return selectAIContext(value, query, language);
 }

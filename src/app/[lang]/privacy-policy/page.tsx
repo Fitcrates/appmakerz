@@ -27,6 +27,9 @@ export async function generateMetadata({ params }: LocalizedPrivacyPolicyPagePro
   return {
     title: content.title,
     description: content.sections[0]?.paragraphs[0],
+    keywords: language === 'pl'
+      ? ['polityka prywatności', 'rodo', 'gdpr', 'appcrates']
+      : ['privacy policy', 'gdpr', 'appcrates'],
     alternates: {
       canonical,
       languages: {
