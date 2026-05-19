@@ -171,7 +171,7 @@ function mapSanityToLocal(projects: SanityProject[], lang: 'en' | 'pl'): Project
     id: p._id || String(index),
     title: p.title[lang] || p.title.en || '',
     category: p.category?.[lang] || p.category?.en || '',
-    description: p.description[lang] || p.description.en || '',
+    description: p.homepageDescription?.[lang] || p.homepageDescription?.en || p.description[lang] || p.description.en || '',
     image: p.mainImage ? urlFor(p.mainImage).url() : '',
     slug: p.slug.current,
     year: p.year || new Date(p.publishedAt).getFullYear().toString(),

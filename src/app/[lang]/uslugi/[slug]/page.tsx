@@ -10,6 +10,8 @@ import PrefetchLink from '@/components/next/PrefetchLink';
 import ChatWidget from '@/components/next/ChatWidget';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import SpotlightText from '@/components/new/SpotlightText';
+import ServiceDeliverablesNew from '@/components/new/ServiceDeliverablesNew';
+import ServiceProcessNew from '@/components/new/ServiceProcessNew';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getServiceLanding, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
@@ -196,7 +198,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                 {stats.map((stat: { value: string; label: string }, index: number) => (
                   <div
                     key={`stat-${index}`}
-                    className={`py-8 lg:py-10 px-6 ${index > 0 ? 'border-l border-white/10' : ''}`}
+                    className={`py-8 lg:py-10 px-6 ${index > 0 ? ' md:border-x border-white/10' : ''}`}
                   >
                     <p className="text-3xl sm:text-4xl font-light font-oxanium text-teal-300 notranslate">
                       {stat.value}
@@ -233,7 +235,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                 {problems.map((item: string, index: number) => (
                   <div
                     key={`prob-${index}`}
-                    className="group relative bg-indigo-950 p-8 sm:p-10 hover:bg-white/[0.03] transition-all duration-700"
+                    className="group relative bg-indigo-950 pt-4 pb-4 sm:p-8  hover:bg-white/[0.03] transition-all duration-700"
                   >
                     {/* Animated corner accents */}
                     <div className="absolute top-0 left-0 w-0 h-px bg-red-400/60 group-hover:w-16 transition-all duration-500" />
@@ -270,40 +272,11 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
         ) : null}
 
         {deliverables.length > 0 ? (
-          <section className="py-20 lg:py-24 border-t border-white/10">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 lg:gap-20">
-              <div>
-                <span className="text-xs tracking-[0.3em] uppercase text-white/30">{language === 'pl' ? 'W pakiecie' : "What's included"}</span>
-                <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-white">{language === 'pl' ? 'Co dostajesz' : 'What you get'}</h2>
-              </div>
-              <div>
-                {deliverables.map((item, index) => (
-                  <div key={`${item}-${index}`} className="flex items-start gap-4 py-5 border-b border-white/10">
-                    <div className="w-6 h-6 rounded-full bg-teal-300/10 border border-teal-300/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3.5 h-3.5 text-teal-300" />
-                    </div>
-                    <p className="text-white/70 font-light font-plex leading-relaxed">{item}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
+          <ServiceDeliverablesNew deliverables={deliverables} language={language} />
         ) : null}
 
         {processSteps.length > 0 ? (
-          <section className="py-20 lg:py-24 border-t border-white/10">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-white mb-12">{language === 'pl' ? 'Proces współpracy' : 'Process'}</h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {processSteps.map((step, index) => (
-                  <div key={`${step}-${index}`} className="p-6 sm:p-8 rounded-2xl bg-white/[0.03] border border-white/10 h-full">
-                    <span className="text-teal-300 text-xs notranslate">{String(index + 1).padStart(2, '0')}</span>
-                    <p className="text-white/75 font-light font-plex leading-relaxed mt-4">{step}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
+          <ServiceProcessNew processSteps={processSteps} language={language} />
         ) : null}
 
         {richContent.length > 0 ? (

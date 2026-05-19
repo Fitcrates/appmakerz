@@ -53,6 +53,11 @@ export interface Project {
     en: string;
     pl: string;
   };
+  homepageDescription?: {
+    en?: string;
+    pl?: string;
+  };
+  homepageOrder?: number;
   category?: {
     en: string;
     pl: string;

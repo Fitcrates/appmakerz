@@ -404,24 +404,56 @@ export default function ChatWidget() {
       <button
         type="button"
         onClick={() => setIsOpen((value) => !value)}
-        className={`relative flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-indigo-950 text-indigo-950 shadow-lg shadow-teal-950/40 transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 ${isOpen ? 'hidden sm:flex' : 'flex'}`}
+        className={`relative flex h-14 w-14 items-center justify-center rounded-full bg-indigo-950 text-indigo-950 shadow-lg shadow-teal-950/40 transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 ${isOpen ? 'hidden sm:flex' : 'flex'}`}
         aria-label={isOpen ? copy.closeChat : copy.openChat}
       >
         {isOpen ? (
           <X className="h-6 w-6 text-teal-300" />
         ) : (
           <>
-            <Image
-              src="/media/AppcratesLogoSmaller.webp"
-              alt=""
-              width={44}
-              height={44}
-              className="h-11 w-11 rounded-full object-contain"
-              aria-hidden="true"
+            <div className="relative">
+              <Image
+                src="/media/AppcratesLogoSmaller.webp"
+                alt=""
+                width={44}
+                height={44}
+                className="h-11 w-11 rounded-full object-contain"
+                aria-hidden="true"
+              />
+              <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full border border-indigo-950 bg-teal-300 text-indigo-950 shadow-md shadow-teal-950/30">
+                <MessageCircle className="h-4 w-4" />
+              </span>
+            </div>
+
+            {/* Electric border — outside the button */}
+            <span
+              className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-teal-300/70 animate-[electricPulse_2s_ease-in-out_infinite]"
+              style={{ filter: 'url(#electric-turbulence)' }}
             />
-            <span className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full border border-indigo-950 bg-teal-300 text-indigo-950 shadow-md shadow-teal-950/30">
-              <MessageCircle className="h-4 w-4" />
-            </span>
+            <span className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-teal-300/30" style={{ filter: 'blur(4px)' }} />
+            <span className="pointer-events-none absolute -inset-6 rounded-full bg-teal-300/10 blur-2xl animate-[electricGlow_3s_ease-in-out_infinite]" />
+
+            <svg width="0" height="0" className="absolute" aria-hidden="true">
+              <defs>
+                <filter id="electric-turbulence" x="-50%" y="-50%" width="200%" height="200%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="5" result="noise">
+                    <animate attributeName="baseFrequency" values="0.015;0.035;0.015" dur="2.5s" repeatCount="indefinite" />
+                  </feTurbulence>
+                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" />
+                </filter>
+              </defs>
+            </svg>
+
+            <style>{`
+              @keyframes electricGlow {
+                0%, 100% { opacity: 0.25; transform: scale(1); }
+                50% { opacity: 0.6; transform: scale(1.06); }
+              }
+              @keyframes electricPulse {
+                0%, 100% { opacity: 0.6; transform: scale(1); }
+                50% { opacity: 1; transform: scale(1.03); }
+              }
+            `}</style>
           </>
         )}
       </button>

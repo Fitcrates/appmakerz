@@ -323,6 +323,7 @@ export const translations = {
       liveDemo: "Live Demo",
       sourceCode: "Source Code",
       blogPost: "Blog Post",
+      contactCta: "Contact me ",
     },
 
     // Newsletter Modal
@@ -683,6 +684,7 @@ export const translations = {
       liveDemo: "Demo na żywo",
       sourceCode: "Kod źródłowy",
       blogPost: "Post na blogu",
+      contactCta: "Skontaktuj się",
     },
 
     // Newsletter Modal

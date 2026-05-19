@@ -198,6 +198,17 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
           <article className="prose prose-lg prose-invert max-w-none prose-headings:font-light prose-headings:text-white prose-h1:text-teal-300 prose-h2:text-teal-300 prose-h3:text-white prose-h4:text-white prose-p:text-white/60 prose-p:leading-relaxed prose-a:text-teal-300 prose-a:no-underline hover:prose-a:text-teal-200 prose-strong:text-white prose-strong:font-medium prose-li:text-white/60 prose-li:marker:text-teal-300 prose-ul:text-white/60 prose-ol:text-white/60 prose-code:text-teal-300 prose-code:bg-white/5 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-white/5 prose-pre:border prose-pre:border-white/10 prose-blockquote:border-l-teal-300 prose-blockquote:text-white/50 prose-img:rounded-lg prose-img:border prose-img:border-white/10">
             {body.length ? <PortableText value={body} components={portableTextComponentsServer} /> : <p>{description}</p>}
           </article>
+
+          <div className="mt-16 flex justify-center">
+            <a
+              href={localizedPath(language, '/#contact')}
+              className="group relative min-w-[230px] overflow-hidden bg-teal-300 px-10 py-5 text-center font-normal text-indigo-950 transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+              aria-label={t.contactCta}
+            >
+              <span className="relative z-10">{t.contactCta}</span>
+              <div className="absolute inset-0 -translate-x-full bg-white transition-transform duration-500 group-hover:translate-x-0" />
+            </a>
+          </div>
         </section>
       </main>
 

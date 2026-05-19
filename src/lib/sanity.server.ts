@@ -248,11 +248,13 @@ export async function getProjects() {
 export async function getFeaturedProjects() {
   return fetchSanity<any[]>(
     `
-    *[_type == "project" && featured == true && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc) {
+    *[_type == "project" && featured == true && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(coalesce(homepageOrder, 9999) asc, publishedAt desc) {
       _id,
       title,
       slug,
       description,
+      homepageDescription,
+      homepageOrder,
       category,
       year,
       mainImage,
