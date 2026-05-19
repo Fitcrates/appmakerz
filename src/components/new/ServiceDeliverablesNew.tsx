@@ -51,7 +51,8 @@ export default function ServiceDeliverablesNew({ deliverables, language }: Servi
                 </SpotlightText>
 
                 <div className="hidden sm:block">
-                  <div className="w-10 h-px bg-white/20 group-hover:bg-teal-300/50 group-hover:w-20 transition-all duration-500" />
+
+
                 </div>
               </motion.div>
             ))}
