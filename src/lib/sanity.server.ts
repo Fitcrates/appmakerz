@@ -251,6 +251,7 @@ export async function getFeaturedProjects() {
     *[_type == "project" && featured == true && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(coalesce(homepageOrder, 9999) asc, publishedAt desc) {
       _id,
       title,
+      homepageTitle,
       slug,
       description,
       homepageDescription,

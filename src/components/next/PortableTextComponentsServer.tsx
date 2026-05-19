@@ -100,5 +100,9 @@ export const portableTextComponentsServer: PortableTextComponents = {
 
       return <PortableTextCodeBlock code={value.code} language={value.language} />;
     },
+    gallery: ({ value }) => {
+      const PortableTextGallery = require('./PortableTextGallery').default;
+      return <PortableTextGallery value={value} />;
+    },
   },
 };

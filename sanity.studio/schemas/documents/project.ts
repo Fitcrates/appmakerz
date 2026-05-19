@@ -131,7 +131,6 @@ export default {
       type: 'object',
       group: 'content',
       description: 'Short description used only in the Selected Projects section on the homepage',
-      hidden: ({document}: any) => document?.featured !== true,
       fields: [
         {
           name: 'en',
@@ -150,12 +149,30 @@ export default {
       ],
     },
     {
+      name: 'homepageTitle',
+      title: 'Homepage Title',
+      type: 'object',
+      group: 'content',
+      description: 'Title used only in the Selected Projects section on the homepage',
+      fields: [
+        {
+          name: 'en',
+          title: 'English Homepage Title',
+          type: 'string',
+        },
+        {
+          name: 'pl',
+          title: 'Polish Homepage Title',
+          type: 'string',
+        },
+      ],
+    },
+    {
       name: 'homepageOrder',
       title: 'Homepage Order',
       type: 'number',
       group: 'content',
       description: 'Lower numbers appear first in the Selected Projects section',
-      hidden: ({document}: any) => document?.featured !== true,
       validation: (Rule: any) => Rule.integer().min(0),
     },
     {
@@ -236,6 +253,7 @@ export default {
                 ]
               }
             },
+            { type: 'gallery' },
             {
               type: 'image',
               options: {
@@ -315,6 +333,7 @@ export default {
                 ]
               }
             },
+            { type: 'gallery' },
             {
               type: 'image',
               options: {
