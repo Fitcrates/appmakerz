@@ -50,6 +50,7 @@ export const translations = {
       heading: "Selected Projects",
       viewAction: "View",
       cta: "Want to work together?",
+      clickToZoom: "Click to zoom",
       items: {
         artovnia: {
           title: "Artovnia E-Commerce",
@@ -411,6 +412,7 @@ export const translations = {
       heading: "Wybrane Projekty",
       viewAction: "Zobacz",
       cta: "Chcesz współpracować?",
+      clickToZoom: "Kliknij, aby powiększyć",
       items: {
         artovnia: {
           title: "Artovnia E-Commerce",
