@@ -4,6 +4,7 @@ import { visionTool } from '@sanity/vision';
 import { codeInput } from '@sanity/code-input';
 import { assist } from '@sanity/assist';
 import { schemaTypes } from './sanity.studio/schemas';
+import { media } from 'sanity-plugin-media';
 
 export const config = defineConfig({
   name: 'default',
@@ -14,7 +15,7 @@ export const config = defineConfig({
   
   basePath: '/studio',
 
-  plugins: [structureTool(), visionTool(), codeInput(), assist()],
+  plugins: [structureTool(), visionTool(), codeInput(), assist(), media()],
 
   schema: {
     types: schemaTypes,

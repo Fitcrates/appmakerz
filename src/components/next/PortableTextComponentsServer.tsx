@@ -83,8 +83,10 @@ export const portableTextComponentsServer: PortableTextComponents = {
       return (
         <figure className="relative w-full my-10">
           <img
-            src={urlFor(value).auto('format').fit('max').url()}
+            src={urlFor(value).width(1400).auto('format').quality(80).fit('max').url()}
             alt={value.alt || ''}
+            width={1400}
+            height={1050}
             className="w-full h-auto border border-white/10"
             loading="lazy"
             decoding="async"
