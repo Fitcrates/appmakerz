@@ -7,6 +7,8 @@ import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import PrefetchLink from '@/components/next/PrefetchLink';
+import ElectricLogo from '@/components/next/ElectricLogo';
+import ElectricLogoMobile from '@/components/next/ElectricLogoMobile';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getAboutMe, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
@@ -121,7 +123,20 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
               </div>
             </div>
             <div className="order-1 lg:order-1 flex justify-center lg:justify-start">
-              <img src="/media/AppcratesLogo.webp" alt="AppCrates Logo" className="w-40 lg:w-full max-w-sm lg:max-w-md object-contain" />
+              <div className="hidden lg:block">
+                <ElectricLogo
+                  src="/media/AppcratesLogo.webp"
+                  alt="AppCrates Logo"
+                  className="w-40 lg:w-80 xl:w-96"
+                />
+              </div>
+              <div className="lg:hidden">
+                <ElectricLogoMobile
+                  src="/media/AppcratesLogo.webp"
+                  alt="AppCrates Logo"
+                  className="w-40"
+                />
+              </div>
             </div>
           </div>
         </section>
