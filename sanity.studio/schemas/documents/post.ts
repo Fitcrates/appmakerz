@@ -185,6 +185,7 @@ export default {
                 ]
               }
             },
+            { type: 'gallery' },
             {
               type: 'image',
               options: {
@@ -263,6 +264,7 @@ export default {
                 ]
               }
             },
+            { type: 'gallery' },
             {
               type: 'image',
               options: {
