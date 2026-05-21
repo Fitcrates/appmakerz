@@ -78,7 +78,7 @@ const HeroNew: React.FC = () => {
         >
           <BurnSpotlightText
             as="div"
-            className="text-3xl sm:text-7xl lg:text-[120px] [@media(max-height:800px)]:lg:text-[80px] [@media(max-height:700px)]:lg:text-[64px] font-light font-oxanium tracking-normal leading-[1.2]"
+            className="text-4xl sm:text-7xl lg:text-[120px] [@media(max-height:800px)]:lg:text-[80px] [@media(max-height:700px)]:lg:text-[64px] font-light font-oxanium tracking-normal leading-[1.2]"
             glowSize={200}
             baseDelay={500}
             charDelay={40}

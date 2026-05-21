@@ -296,7 +296,7 @@ export default function ChatWidget() {
 
   return (
     // MOBILE: bottom-20 żeby nie wchodzić pod navbar; SM+: bottom-6
-    <div className="fixed bottom-3 right-2 z-50 sm:bottom-8 sm:right-8">
+    <div className="fixed bottom-3 right-3 z-50 sm:bottom-8 sm:right-8">
       {isOpen ? (
         // MOBILE: chat zajmuje pełną szerokość z małymi marginesami i nie wychodzi poza ekran w pionie
         <div className="mb-4 flex h-[min(520px,calc(100dvh-10rem))] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-3xl border border-white/10 bg-indigo-950/95 shadow-2xl shadow-teal-950/40 backdrop-blur-xl">
@@ -431,11 +431,11 @@ export default function ChatWidget() {
               style={{ filter: 'url(#electric-turbulence)' }}
             />
             <span className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-teal-300/30" style={{ filter: 'blur(4px)' }} />
-            <span className="pointer-events-none absolute -inset-6 rounded-full bg-teal-300/10 blur-2xl animate-[electricGlow_3s_ease-in-out_infinite]" />
+            <span className="pointer-events-none absolute -inset-2 sm:-inset-6 rounded-full bg-teal-300/10 blur-xl sm:blur-2xl animate-[electricGlow_3s_ease-in-out_infinite]" />
 
-            <svg width="0" height="0" className="absolute" aria-hidden="true">
+            <svg width="0" height="0" className="absolute top-0 left-0 pointer-events-none" aria-hidden="true" style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
               <defs>
-                <filter id="electric-turbulence" x="-50%" y="-50%" width="200%" height="200%">
+                <filter id="electric-turbulence" x="-10%" y="-10%" width="120%" height="120%">
                   <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="5" result="noise">
                     <animate attributeName="baseFrequency" values="0.015;0.035;0.015" dur="2.5s" repeatCount="indefinite" />
                   </feTurbulence>
@@ -444,16 +444,6 @@ export default function ChatWidget() {
               </defs>
             </svg>
 
-            <style>{`
-              @keyframes electricGlow {
-                0%, 100% { opacity: 0.25; transform: scale(1); }
-                50% { opacity: 0.6; transform: scale(1.06); }
-              }
-              @keyframes electricPulse {
-                0%, 100% { opacity: 0.6; transform: scale(1); }
-                50% { opacity: 1; transform: scale(1.03); }
-              }
-            `}</style>
           </>
         )}
       </button>
