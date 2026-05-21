@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import Image from 'next/image';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import SpotlightText from './SpotlightText';
 import BurnSpotlightText from './BurnSpotlightText';
@@ -13,17 +14,13 @@ const BurnRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string }
     <div className="relative w-full h-full overflow-hidden" role="img" aria-label={ariaLabel || alt}>
       <div className="absolute inset-0 burn-reveal-cycle">
         <div className="absolute inset-0 burn-reveal-image" aria-hidden="true">
-          <picture>
-            <source media="(max-width: 768px)" srcSet="/media/o_mnie.webp" />
-            <img
-              src={src}
-              alt={alt}
-              className="absolute inset-0 w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
-              sizes="(max-width: 768px) 92vw, (max-width: 1024px) 80vw, 50vw"
-            />
-          </picture>
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 92vw, (max-width: 1024px) 80vw, 50vw"
+          />
         </div>
 
         <div className="absolute left-0 right-0 h-8 -translate-y-1/2 pointer-events-none z-10 burn-reveal-line" aria-hidden="true" />

@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
+import Image from "next/image";
 import SpotlightText from "./SpotlightText";
 import BurnSpotlightText from "./BurnSpotlightText";
 import HeroPulsePath from "./HeroPulsePath";
@@ -32,19 +33,16 @@ const HeroNew: React.FC = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-indigo-950"
     >
       <div className="absolute inset-0 z-0" aria-hidden="true">
-        <picture>
-          <source media="(max-width: 768px)" srcSet="/media/herotest.png" />
-          <img
-            src="/media/herotest.png"
-            alt=""
-            role="presentation"
-            className="w-full h-full object-cover opacity-30"
-            fetchPriority="high"
-            decoding="async"
-            sizes="100vw"
-          />
-        </picture>
-        <div className="absolute inset-0 bg-indigo-950/70" />
+        <Image
+          src="/media/herotest.webp"
+          alt=""
+          role="presentation"
+          fill
+          priority
+          className="object-cover opacity-30"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-indigo-950/80" />
       </div>
 
       <div

@@ -3,6 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
+import Image from 'next/image';
 import BurnSpotlightText from './BurnSpotlightText';
 import SpotlightText from './SpotlightText';
 import { useLanguage } from '../../context/LanguageContext';
@@ -247,12 +248,12 @@ const SolutionsNew: React.FC = () => {
               <div className="solutions-scene__right relative  ">
                 {solutions.map((solution) => (
                   <div key={`panel-${solution.number}`} className="solutions-scene__image-panel h-[100svh] relative overflow-hidden">
-                    <img
+                    <Image
                       src={solution.mobileImage}
                       alt={solution.title}
-                      className="solutions-scene__image w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
+                      fill
+                      className="solutions-scene__image object-cover"
+                      sizes="50vw"
                     />
                     <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-r from-indigo-950 via-indigo-950/65 to-transparent pointer-events-none z-[1]" />
                     <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-l from-indigo-950 via-transparent to-transparent pointer-events-none z-[2]" />
@@ -295,12 +296,12 @@ const SolutionsNew: React.FC = () => {
                     itemType="https://schema.org/Service"
                   >
                     <div className="absolute inset-0 w-full h-full z-0">
-                      <img
+                      <Image
                         src={solution.mobileImage}
                         alt={solution.title}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/75 to-transparent z-[1] pointer-events-none" />
                       <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-transparent to-transparent z-[1] pointer-events-none" />
