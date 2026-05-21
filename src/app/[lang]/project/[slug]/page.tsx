@@ -143,7 +143,7 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
         {heroImageUrl ? (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 lg:mb-16">
             <div className="relative h-[38vh] sm:h-[44vh] lg:h-[50vh] overflow-hidden border border-white/10">
-              <Image src={heroImageUrl} alt={title} fill priority sizes="(max-width: 768px) 100vw, 1200px" className="object-cover" />
+              <Image src={heroImageUrl} alt={title} unoptimized fill priority sizes="(max-width: 768px) 100vw, 1200px" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/70 via-indigo-950/20 to-transparent pointer-events-none" />
             </div>
           </div>

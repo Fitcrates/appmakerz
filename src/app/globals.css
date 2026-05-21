@@ -158,23 +158,6 @@
   min-height: 100%;
 }
 
-/* ─── Transition Columns ─── */
-
-.route-transition-blocks {
-  overflow: hidden;
-}
-
-.route-transition-block {
-  left: var(--rt-col-left);
-  top: 0;
-  width: var(--rt-col-width);
-  height: 100%;
-  background: var(--route-transition-bg);
-  transform: translate3d(0, 100%, 0);
-  transition: transform var(--route-transition-duration) var(--route-transition-ease) var(--rt-col-delay);
-  will-change: transform;
-}
-
 /* Snapshot visibility per phase */
 .route-transition-overlay--pre-cover .route-transition-snapshot-shell,
 .route-transition-overlay--cover .route-transition-snapshot-shell,
@@ -196,29 +179,14 @@
   transition-delay: 40ms;
 }
 
-/* Pre-cover: columns at initial hidden position (below viewport) */
-.route-transition-overlay--pre-cover .route-transition-block {
-  transform: translate3d(0, 100%, 0);
-}
 
-/* Cover + Hold: columns slide into viewport */
-.route-transition-overlay--cover .route-transition-block,
-.route-transition-overlay--hold .route-transition-block {
-  transform: translate3d(0, 0, 0);
-}
-
-/* Reveal: columns continue sliding upward to exit */
-.route-transition-overlay--reveal .route-transition-block {
-  transform: translate3d(0, -100%, 0);
-}
 
 @media (prefers-reduced-motion: reduce) {
   .route-transition-live,
   .route-transition-live[data-route-transition-phase='hold'],
   .route-transition-live[data-route-transition-phase='cover'],
   .route-transition-live[data-route-transition-phase='reveal'],
-  .route-transition-snapshot,
-  .route-transition-block {
+  .route-transition-snapshot {
     filter: none !important;
     transform: none !important;
     transition-duration: 0.01ms !important;

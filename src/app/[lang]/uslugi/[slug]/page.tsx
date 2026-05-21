@@ -148,7 +148,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
         <section className="relative min-h-[60vh] lg:min-h-[75vh] flex items-end overflow-hidden">
           {heroImageUrl ? (
             <div className="absolute inset-0 z-0">
-              <Image src={heroImageUrl} alt="" fill priority sizes="100vw" className="object-cover opacity-25" aria-hidden="true" />
+              <Image src={heroImageUrl} alt="" unoptimized fill priority sizes="100vw" className="object-cover opacity-25" aria-hidden="true" />
               <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/95 via-indigo-950/60 to-indigo-950/40" />
             </div>
           ) : (

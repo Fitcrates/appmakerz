@@ -40,6 +40,11 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
 [[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
@@ -63,6 +68,3 @@
 [[edge_functions]]
   path = "/api/ai-generate"
   function = "ai-generate"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"

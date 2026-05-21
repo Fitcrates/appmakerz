@@ -22,12 +22,31 @@ const RouteTransitionContext = createContext<
   RouteTransitionContextValue | undefined
 >(undefined);
 
+// --- Konfiguracja Timingu Przejścia ---
+// PRE_COVER_DELAY_MS: Krótkie opóźnienie przed startem animacji (pozwala przeglądarce przygotować klatkę)
 const PRE_COVER_DELAY_MS = 50;
-const COVER_DURATION_MS = 830;
-const NAVIGATE_DELAY_MS = 420;
-const REVEAL_START_DELAY_MS = 0;
-const REVEAL_DURATION_MS = 830;
-const FAILSAFE_MS = 3500;
+
+// COVER_DURATION_MS: Czas rozlewania się tła (fade-in błyskawicy).
+// Zwiększ, aby błyskawica rozlewała się wolniej.
+// UWAGA: Musi być zsynchronizowane z COVER_ANIM_MS w NoiseTransitionCanvas.tsx!
+const COVER_DURATION_MS = 1400;
+
+// NAVIGATE_DELAY_MS: Moment podjęcia właściwej nawigacji (zmiany URL).
+// Ustawione na to samo co COVER_DURATION_MS, by odbyło się to przy w pełni zakrytym ekranie.
+// Możesz to zmniejszyć, aby szybciej rozpocząć ładowanie nowej strony w tle.
+const NAVIGATE_DELAY_MS = 200;
+
+// REVEAL_START_DELAY_MS: Minimalny czas, przez który ekran ma pozostać w pełni zakryty
+// zanim zacznie się odsłanianie nowej strony. Zwiększ, by utrzymać pełne tło dłużej.
+const REVEAL_START_DELAY_MS = 20;
+
+// REVEAL_DURATION_MS: Czas zanikania tła (fade-out).
+// Zwiększ, aby ekran odkrywał nową stronę wolniej.
+// UWAGA: Musi być zsynchronizowane z REVEAL_ANIM_MS w NoiseTransitionCanvas.tsx!
+const REVEAL_DURATION_MS = 1400;
+
+// FAILSAFE_MS: Czas po jakim tło zniknie awaryjnie, jeśli nowa strona z jakiegoś powodu się zawiesi.
+const FAILSAFE_MS = 5000;
 
 export default function RouteTransitionProvider({
   children,
@@ -178,10 +197,7 @@ export default function RouteTransitionProvider({
 
   useEffect(() => {
     if (!isNavigatingRef.current) return;
-    if (
-      pathname === navigationOriginRef.current ||
-      !navigateTriggeredRef.current
-    ) {
+    if (pathname === navigationOriginRef.current) {
       return;
     }
 
@@ -266,12 +282,6 @@ export default function RouteTransitionProvider({
             navigateTimerRef.current = window.setTimeout(() => {
               if (activeNavigationId.current !== navigationId) return;
               navigateTriggeredRef.current = true;
-              phaseRef.current = 'hold';
-              setPhase('hold');
-              if (coverTimerRef.current !== null) {
-                window.clearTimeout(coverTimerRef.current);
-                coverTimerRef.current = null;
-              }
               pendingNavigationRef.current?.();
               pendingNavigationRef.current = null;
             }, NAVIGATE_DELAY_MS);
@@ -281,6 +291,15 @@ export default function RouteTransitionProvider({
               if (phaseRef.current === 'cover') {
                 phaseRef.current = 'hold';
                 setPhase('hold');
+
+                if (incomingReadyRef.current) {
+                  if (revealStartTimerRef.current !== null) {
+                    window.clearTimeout(revealStartTimerRef.current);
+                  }
+                  revealStartTimerRef.current = window.setTimeout(() => {
+                    startReveal(navigationId);
+                  }, REVEAL_START_DELAY_MS);
+                }
               }
             }, COVER_DURATION_MS);
           }, PRE_COVER_DELAY_MS);
