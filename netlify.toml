@@ -68,3 +68,6 @@
 [[edge_functions]]
   path = "/api/ai-generate"
   function = "ai-generate"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
