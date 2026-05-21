@@ -214,15 +214,16 @@ const ServicesNew: React.FC = () => {
               <motion.div
                 ref={imageRef}
                 style={{ y: imageY, willChange: "transform" }}
-                className="relative w-full aspect-[4/5]"
+                className="relative w-full aspect-[3/4]"
               >
                 <CrackImage
-                  src="/media/services.webp"
+                  src="/media/servicesgreek.webp"
                   alt="Modern web development workspace showcasing professional services"
                   className="w-full h-full"
                   gridSize={4}
                   cycleInterval={5000}
                   transitionDuration={1.5}
+                  bleed={0.05}
                 />
 
                 <div

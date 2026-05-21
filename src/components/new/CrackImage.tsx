@@ -8,6 +8,7 @@ interface CrackImageProps {
   gridSize?: number;
   cycleInterval?: number;
   transitionDuration?: number;
+  bleed?: number;
 }
 
 interface TileOffset {
@@ -23,6 +24,7 @@ const CrackImage: React.FC<CrackImageProps> = ({
   gridSize = 4,
   cycleInterval = 4000,
   transitionDuration = 1.5,
+  bleed = 0.05,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -37,10 +39,13 @@ const CrackImage: React.FC<CrackImageProps> = ({
     const newOffsets: TileOffset[] = [];
     for (let i = 0; i < totalTiles; i++) {
       newOffsets.push({
-        imageX: (Math.random() - 0.5) * 100 * intensity, // -50 to 50 px image shift
-        imageY: (Math.random() - 0.5) * 100 * intensity,
-        scale: 0.85 + Math.random() * 0.3, // 0.85 to 1.15 scale
-        rotation: (Math.random() - 0.5) * 6, // -3 to 3 degrees
+        // Shuffling shifts from -1.0 to 1.0
+        imageX: (Math.random() - 0.5) * 2.5 * intensity,
+        imageY: (Math.random() - 0.5) * 2.5 * intensity,
+        // Premium zoom/lens magnification to safely cover borders during high shifts
+        scale: 1.18 + Math.random() * 0.20 * intensity,
+        // Rotations between -5 and 5 degrees
+        rotation: (Math.random() - 0.5) * 15 * intensity,
       });
     }
     return newOffsets;
@@ -50,7 +55,7 @@ const CrackImage: React.FC<CrackImageProps> = ({
   useEffect(() => {
     setOffsets(generateOffsets(1));
     setOffsets2(generateOffsets(0.7));
-  }, [totalTiles]);
+  }, [totalTiles, bleed]);
 
   // Update dimensions
   useEffect(() => {
@@ -118,18 +123,18 @@ const CrackImage: React.FC<CrackImageProps> = ({
   }, [gridSize, tileWidth, tileHeight]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={`relative overflow-hidden ${className}`}
     >
       {/* Background placeholder */}
       <div className="absolute inset-0 bg-indigo-900/20" />
-      
+
       {/* Tiles with glass-like warping - tiles stay fixed, image shifts within */}
       {tiles.map((tile) => {
         const offset = getCurrentOffset(tile.id);
         const isWarped = animationPhase !== 0;
-        
+
         return (
           <div
             key={tile.id}
@@ -145,18 +150,19 @@ const CrackImage: React.FC<CrackImageProps> = ({
             <motion.div
               className="absolute"
               style={{
-                width: dimensions.width * 1.3, // Larger to allow shifting without gaps
-                height: dimensions.height * 1.3,
-                left: -tile.x - dimensions.width * 0.15,
-                top: -tile.y - dimensions.height * 0.15,
+                width: dimensions.width * (1 + 2 * bleed),
+                height: dimensions.height * (1 + 2 * bleed),
+                left: -tile.x - dimensions.width * bleed,
+                top: -tile.y - dimensions.height * bleed,
                 backgroundImage: `url(${src})`,
                 backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                backgroundPosition: 'center center',
+                transformOrigin: `${tile.x + dimensions.width * bleed + tileWidth / 2}px ${tile.y + dimensions.height * bleed + tileHeight / 2}px`,
               }}
               initial={false}
               animate={{
-                x: offset.imageX,
-                y: offset.imageY,
+                x: offset.imageX * dimensions.width * 0.08,
+                y: offset.imageY * dimensions.height * 0.08,
                 scale: offset.scale,
                 rotate: offset.rotation,
               }}
@@ -165,7 +171,7 @@ const CrackImage: React.FC<CrackImageProps> = ({
                 ease: [0.25, 0.1, 0.25, 1],
               }}
             />
-            
+
             {/* Chromatic aberration effect when warped */}
             <motion.div
               className="absolute inset-0 pointer-events-none mix-blend-screen"
@@ -184,7 +190,7 @@ const CrackImage: React.FC<CrackImageProps> = ({
       })}
 
       {/* Grid lines overlay */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `

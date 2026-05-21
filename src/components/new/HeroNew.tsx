@@ -33,9 +33,9 @@ const HeroNew: React.FC = () => {
     >
       <div className="absolute inset-0 z-0" aria-hidden="true">
         <picture>
-          <source media="(max-width: 768px)" srcSet="/media/hero2new.webp" />
+          <source media="(max-width: 768px)" srcSet="/media/herotest.png" />
           <img
-            src="/media/hero2new.webp"
+            src="/media/herotest.png"
             alt=""
             role="presentation"
             className="w-full h-full object-cover opacity-30"

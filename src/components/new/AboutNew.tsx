@@ -14,7 +14,7 @@ const BurnRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string }
       <div className="absolute inset-0 burn-reveal-cycle">
         <div className="absolute inset-0 burn-reveal-image" aria-hidden="true">
           <picture>
-            <source media="(max-width: 768px)" srcSet="/media/newAbout.webp" />
+            <source media="(max-width: 768px)" srcSet="/media/o_mnie.webp" />
             <img
               src={src}
               alt={alt}
@@ -81,7 +81,7 @@ const AboutNew: React.FC = () => {
           >
             <div className="absolute inset-0 overflow-hidden">
               <BurnRevealImage
-                src="/media/newAbout.webp"
+                src="/media/o_mnie.webp"
                 alt="Portrait of Arkadiusz Wawrzyniak, fullstack developer"
                 ariaLabel="Professional portrait showing the developer at work"
               />
