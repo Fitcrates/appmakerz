@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { PortableText } from '@portabletext/react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import BlogLatestPostsSidebar from '@/components/next/BlogLatestPostsSidebar';
 import BlogPostViewTracker from '@/components/next/BlogPostViewTracker';
 import BlogShareSidebar from '@/components/next/BlogShareSidebar';
@@ -34,6 +34,7 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
   const currentIndex = allPostsSorted.findIndex((item) => item._id === post._id);
   const previousPost = currentIndex > 0 ? allPostsSorted[currentIndex - 1] : null;
   const nextPost = currentIndex < allPostsSorted.length - 1 ? allPostsSorted[currentIndex + 1] : null;
+  const relatedServices = Array.isArray(post.relatedServices) ? post.relatedServices : [];
 
   return (
     <>
@@ -110,6 +111,43 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
               <PortableText value={body} components={portableTextComponentsClient} />
             </article>
 
+            {relatedServices.length > 0 ? (
+              <section className="mt-16 border border-white/10 p-6 xl:hidden">
+                <p className="text-xs uppercase tracking-[0.18em] text-teal-300/80">
+                  {language === 'pl' ? 'Powiązane usługi' : 'Related services'}
+                </p>
+                <h2 className="mt-3 font-oxanium text-2xl font-light leading-tight text-white">
+                  {language === 'pl' ? 'Zobacz jak to wygląda w praktyce' : 'See how this works in practice'}
+                </h2>
+                <div className="mt-6 divide-y divide-white/10">
+                  {relatedServices.slice(0, 3).map((service) => {
+                    const serviceTitle = getLocalizedText(service.title, language);
+                    const serviceIntro = getLocalizedText(service.intro, language);
+
+                    return (
+                      <PrefetchLink
+                        key={service._id}
+                        href={localizedPath(language, `/uslugi/${service.slug.current}`)}
+                        className="group flex items-start justify-between gap-4 py-5 first:pt-0 last:pb-0"
+                      >
+                        <span className="min-w-0">
+                          <span className="block font-oxanium text-base leading-snug text-white/80 transition-colors group-hover:text-teal-300">
+                            {serviceTitle}
+                          </span>
+                          {serviceIntro ? (
+                            <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-white/40">
+                              {serviceIntro}
+                            </span>
+                          ) : null}
+                        </span>
+                        <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-white/30 transition-colors group-hover:text-teal-300" />
+                      </PrefetchLink>
+                    );
+                  })}
+                </div>
+              </section>
+            ) : null}
+
             {faq.length > 0 ? (
               <section className="mt-16 pt-16 border-t border-white/10">
                 <div className="mb-10">
@@ -173,7 +211,7 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
             </div>
           </div>
 
-          <BlogLatestPostsSidebar currentPostId={post._id} language={language} posts={posts} />
+          <BlogLatestPostsSidebar currentPostId={post._id} language={language} posts={posts} relatedServices={relatedServices} />
         </div>
       </main>
     </>

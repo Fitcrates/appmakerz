@@ -136,6 +136,7 @@ export interface Post {
   };
   viewCount?: number;
   tags?: string[];
+  relatedServices?: ServiceLanding[];
 }
 
 export interface LocalizedText {

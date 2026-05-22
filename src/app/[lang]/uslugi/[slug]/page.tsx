@@ -398,12 +398,12 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="mb-12 flex flex-col items-center justify-center text-center lg:mb-16">
                 <SpotlightText as="h2" className="mt-6 max-w-3xl text-center text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-white leading-tight">
-                  {language === 'pl' ? 'Zobacz realizacje i wiedzę związaną z tą usługą' : 'Related projects and knowledge about this service'}
+                  {language === 'pl' ? 'Jeśli chcesz zobaczyć jak to wygląda w praktyce' : 'If you want to see how this looks in practice'}
                 </SpotlightText>
                 <SpotlightText as="p" className="mt-5 max-w-2xl text-center text-white/50 font-light leading-relaxed">
                   {language === 'pl'
-                    ? 'Informacje, które naturalnie uzupełniają tę usługę: inne zakresy prac, realizacje i wpisy rozwijające temat.'
-                    : 'Information that naturally extends this service: other scopes of work, realizations, and articles that go deeper.'}
+                    ? 'Jeśli jesteś na tym etapie, to prawdopodobnie zastanawiasz się jak to działa w praktyce albo czy ma sens w Twoim przypadku. Poniżej masz konkretne przykłady i tematy, które rozwijają ten kierunek.'
+                    : 'If you are at this stage, you are probably wondering how this works in practice or whether it makes sense for you. Below you will find concrete examples and topics that expand on this direction.'}
                 </SpotlightText>
               </div>
 
@@ -413,6 +413,9 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                     <SpotlightText as="h3" className="font-oxanium text-xl font-light text-white">
                       {language === 'pl' ? 'Pozostałe usługi' : 'Other services'}
                     </SpotlightText>
+                    <p className="mt-2 text-sm font-light leading-relaxed text-white/40">
+                      {language === 'pl' ? 'Powiązane obszary' : 'Related areas'}
+                    </p>
                     <div className="mt-6 divide-y divide-white/10">
                       {otherServices.map((service) => {
                         const serviceTitle = getLocalizedText(service.title, language);
@@ -447,6 +450,9 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                     <SpotlightText as="h3" className="font-oxanium text-xl font-light text-white">
                       {language === 'pl' ? 'Powiązane projekty' : 'Related projects'}
                     </SpotlightText>
+                    <p className="mt-2 text-sm font-light leading-relaxed text-white/40">
+                      {language === 'pl' ? 'Realne wdrożenia' : 'Real implementations'}
+                    </p>
                     <div className="mt-6 space-y-5">
                       {relatedProjects.map((project) => {
                         const projectTitle = getLocalizedText(project.title, language);
@@ -494,6 +500,9 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                     <SpotlightText as="h3" className="font-oxanium text-xl font-light text-white">
                       {language === 'pl' ? 'Powiązane wpisy' : 'Related articles'}
                     </SpotlightText>
+                    <p className="mt-2 text-sm font-light leading-relaxed text-white/40">
+                      {language === 'pl' ? 'Tematy, które rozwijam' : 'Topics I expand on'}
+                    </p>
                     <div className="mt-6 space-y-5">
                       {relatedPosts.map((post) => {
                         const postTitle = getLocalizedText(post.title, language);

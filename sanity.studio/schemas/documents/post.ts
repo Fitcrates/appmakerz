@@ -101,6 +101,14 @@ export default {
       description: 'Add relevant tags for categorization and internal linking',
     },
     {
+      name: 'relatedServices',
+      title: 'Related services',
+      type: 'array',
+      group: 'content',
+      description: 'Optional service links shown beside or below the blog post.',
+      of: [{ type: 'reference', to: [{ type: 'serviceLanding' }] }],
+    },
+    {
       name: 'publishedAt',
       title: 'Published at',
       type: 'datetime',

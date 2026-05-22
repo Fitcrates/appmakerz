@@ -145,6 +145,13 @@ export async function getPosts() {
       },
       viewCount,
       tags,
+      relatedServices[]->{
+        _id,
+        title { en, pl },
+        slug,
+        intro { en, pl },
+        serviceType
+      },
       seo {
         metaTitle { en, pl },
         metaDescription { en, pl },
@@ -180,6 +187,13 @@ export async function getPost(slug: string) {
         title { en, pl }
       },
       tags,
+      relatedServices[]->{
+        _id,
+        title { en, pl },
+        slug,
+        intro { en, pl },
+        serviceType
+      },
       seo {
         metaTitle { en, pl },
         metaDescription { en, pl },
