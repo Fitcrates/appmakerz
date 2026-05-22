@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import HomePageClient from '@/components/next/HomePageClient';
-import { getFeaturedProjects } from '@/lib/sanity.server';
+import { getFeaturedProjects, getPosts } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
 import { translations } from '@/translations/translations';
-import type { Project } from '@/types/sanity.types';
+import type { Post, Project } from '@/types/sanity.types';
 
 interface LocalizedHomePageProps {
   params: Promise<{ lang: string }>;
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: LocalizedHomePageProps): Prom
   const t = translations[language];
   const path = localizedPath(language, '/');
   const canonical = absoluteUrl(path);
-  const title = t.hero.seoHeading;
+  const title = t.hero.metaTitle;
   const description = t.hero.subtitle;
 
   return {
@@ -81,11 +81,15 @@ export default async function LocalizedHomePage({ params }: LocalizedHomePagePro
   }
 
   let featuredProjects: Project[] = [];
+  let latestPosts: Post[] = [];
   try {
-    featuredProjects = await getFeaturedProjects();
+    [featuredProjects, latestPosts] = await Promise.all([
+      getFeaturedProjects(),
+      getPosts(),
+    ]);
   } catch {
-    // Fallback to empty array; ProjectsNew will use hardcoded projects.
+    // Fallback to empty arrays; client sections handle missing Sanity content.
   }
 
-  return <HomePageClient projects={featuredProjects} />;
+  return <HomePageClient projects={featuredProjects} posts={latestPosts.slice(0, 3)} />;
 }

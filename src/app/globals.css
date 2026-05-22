@@ -7,6 +7,36 @@
   --route-transition-ease: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
+.spotlight-text-single {
+  position: relative;
+  display: inline-block;
+  transition:
+    color 200ms ease,
+    text-shadow 200ms ease,
+    filter 200ms ease;
+}
+
+.spotlight-text-single::after {
+  content: attr(data-spotlight-text);
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  white-space: pre-wrap;
+  color: transparent;
+  background: var(--spotlight-color, #5eead4);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-mask-image: var(--spotlight-mask);
+  mask-image: var(--spotlight-mask);
+  opacity: 1;
+}
+
+.spotlight-text-single:hover {
+  text-shadow: none;
+}
+
 @keyframes route-stripes-loading {
   0%,
   100% {
@@ -202,4 +232,3 @@
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.03); }
 }
-

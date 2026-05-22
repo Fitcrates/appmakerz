@@ -31,12 +31,27 @@ const MID_OPACITY = 0.8;
 const MID_POSITION = 60;
 // ============================================
 
+function extractTextContent(node: React.ReactNode): string {
+  if (typeof node === 'string' || typeof node === 'number') {
+    return String(node);
+  }
+
+  if (Array.isArray(node)) {
+    return node.map(extractTextContent).join('');
+  }
+
+  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
+    return extractTextContent(node.props.children);
+  }
+
+  return '';
+}
+
 const SpotlightText: React.FC<SpotlightTextProps> = ({ 
   children, 
   text,
   className = '', 
   baseClassName = '',
-  glowClassName = '',
   as: Component = 'span',
   glowSize = 120,
   glowColor = GLOW_COLOR
@@ -60,9 +75,35 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
   // Build the mask gradient using configuration values (offset by 24px to match the -inset-6 wrapper)
   const maskGradient = `radial-gradient(circle ${glowSize}px at calc(${mousePos.x}px + 24px) calc(${mousePos.y}px + 24px), rgba(0,0,0,${CENTER_OPACITY}) 0%, rgba(0,0,0,${MID_OPACITY}) ${MID_POSITION}%, rgba(0,0,0,0) 100%)`;
   const content = text ?? children;
+  const spotlightText = typeof text === 'string' ? text : extractTextContent(content);
+  const glowStyle = {
+    '--spotlight-mask': maskGradient,
+    '--spotlight-color': glowColor,
+    '--spotlight-blur': `${Math.max(10, Math.round(glowSize * 0.18))}px`,
+  } as React.CSSProperties;
 
   if (content === undefined || content === null) {
     return null;
+  }
+
+  if (text === undefined && Component === 'span' && React.isValidElement<{ className?: string; style?: React.CSSProperties }>(children)) {
+    const child = children;
+
+    return (
+      <span
+        ref={containerRef}
+        className="relative cursor-default inline-block"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{ isolation: 'isolate' }}
+      >
+        {React.cloneElement(child, {
+          className: `spotlight-text-single ${className} ${baseClassName} ${child.props.className ?? ''}`,
+          style: { ...child.props.style, ...glowStyle },
+          'data-spotlight-text': spotlightText,
+        } as any)}
+      </span>
+    );
   }
 
   // For span elements, use inline-block to ensure proper positioning
@@ -75,31 +116,13 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
       style={{ isolation: 'isolate' }}
     >
       {/* Base text - adjust opacity here (text-white/90 = 90% white) */}
-      <Component className={`text-white/90 ${className} ${baseClassName}`}>
+      <Component
+        className={`text-white/90 spotlight-text-single ${className} ${baseClassName}`}
+        style={glowStyle}
+        data-spotlight-text={spotlightText}
+      >
         {content}
       </Component>
-      
-      {/* Expanded Mask Wrapper to prevent clipping descenders/swashes */}
-      <span 
-        className="absolute -inset-6 p-6 pointer-events-none select-none z-20 block"
-        style={{
-          WebkitMaskImage: maskGradient,
-          maskImage: maskGradient,
-        }}
-        aria-hidden="true"
-      >
-        <Component 
-          className={`${className} ${glowClassName}`}
-          style={{
-            color: glowColor,
-            textRendering: 'inherit',
-            WebkitFontSmoothing: 'inherit',
-            MozOsxFontSmoothing: 'inherit',
-          }}
-        >
-          {content}
-        </Component>
-      </span>
     </span>
   );
 };

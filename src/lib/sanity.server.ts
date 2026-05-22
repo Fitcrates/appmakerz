@@ -221,8 +221,12 @@ export async function getProjects() {
     *[_type == "project" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc) {
       _id,
       title,
+      homepageTitle,
       slug,
       description,
+      homepageDescription,
+      category,
+      year,
       mainImage,
       body,
       technologies,
@@ -327,6 +331,39 @@ export async function getServiceLanding(slug: string) {
       ctaLabel { en, pl },
       ctaSecondaryLabel { en, pl },
       stats { en, pl },
+      relatedServices[]->{
+        _id,
+        title { en, pl },
+        slug,
+        intro { en, pl },
+        serviceType,
+        city
+      },
+      relatedProjects[]->{
+        _id,
+        title,
+        homepageTitle,
+        slug,
+        description,
+        homepageDescription,
+        category,
+        year,
+        mainImage,
+        technologies,
+        publishedAt
+      },
+      relatedPosts[]->{
+        _id,
+        title { en, pl },
+        slug,
+        mainImage,
+        publishedAt,
+        excerpt { en, pl },
+        categories[]->{
+          title { en, pl }
+        },
+        tags
+      },
       seo {
         metaTitle { en, pl },
         metaDescription { en, pl },
@@ -352,6 +389,8 @@ export async function getServiceLandings() {
       slug,
       intro { en, pl },
       heroImage,
+      serviceType,
+      city,
       seo {
         metaTitle { en, pl },
         metaDescription { en, pl },

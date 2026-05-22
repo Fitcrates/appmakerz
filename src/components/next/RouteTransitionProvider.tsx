@@ -334,9 +334,11 @@ export default function RouteTransitionProvider({
 export function useRouteTransition() {
   const ctx = useContext(RouteTransitionContext);
   if (!ctx) {
-    throw new Error(
-      'useRouteTransition must be used within RouteTransitionProvider',
-    );
+    return {
+      beginNavigation: () => {},
+      endNavigation: () => {},
+      isNavigating: false,
+    };
   }
   return ctx;
 }

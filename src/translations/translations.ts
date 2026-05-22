@@ -20,7 +20,8 @@ export const translations = {
     hero: {
       label: "Fullstack Web Developer",
       heading: "ELECTRIFY\nYOUR BUSINESS\nONLINE",
-      seoHeading: "Fullstack Web Developer — React & Next.js Applications, Websites and e-commerce shops and marketplaces | AppCrates",
+      metaTitle: "React & Next.js websites, apps, shops and marketplaces",
+      seoHeading: "Fullstack Web Developer for React, Next.js, AI applications, websites, shops and marketplaces",
       subtitle: "I build online shops, landing pages, and AI-powered apps that grow your business. Complete solutions from start to finish.",
       cta: {
         viewWork: "VIEW MORE",
@@ -166,7 +167,7 @@ export const translations = {
 
     // Contact Section (ContactNew)
     contact: {
-      label: "[ 05 — Contact ]",
+      label: "[ 06 — Contact ]",
       heading: "Let's work together",
       info: {
         email: { label: "Email", value: "appcratesdev@gmail.com" },
@@ -192,7 +193,7 @@ export const translations = {
 
     calculator: {
       meta: {
-        title: "Project pricing calculator | AppCrates",
+        title: "Project pricing calculator",
         description: "Estimate the budget for a website, store, marketplace, AI implementation or web app and send an inquiry with a clear project summary.",
       },
       page: {
@@ -273,6 +274,12 @@ export const translations = {
     blog: {
       title: "Blog",
       subtitle: "Thoughts, tutorials, and insights",
+      latestSection: {
+        label: "[ 05 — Blog ]",
+        heading: "Latest from the blog",
+        subtitle: "Fresh notes on web development, AI, e-commerce and the decisions behind modern digital products.",
+        cta: "View all posts",
+      },
       search: "Search posts...",
       categories: "Categories",
       all: "All",
@@ -382,7 +389,8 @@ export const translations = {
     hero: {
       label: "Fullstack Web Developer",
       heading: "ELEKTRYZUJ\nSWÓJ BIZNES\nW SIECI",
-      seoHeading: "Fullstack Web Developer — Strony, aplikacje, sklepy i marketplace w React & Next.js | AppCrates",
+      metaTitle: "Strony, aplikacje, sklepy i marketplace w React & Next.js",
+      seoHeading: "Fullstack Web Developer tworzący strony, aplikacje AI, sklepy i marketplace w React oraz Next.js",
       subtitle: "Tworzę sklepy internetowe, landing page i aplikacje AI, które rozwijają Twój biznes. Kompleksowe rozwiązania od początku do końca.",
       cta: {
         viewWork: "ZOBACZ WIĘCEJ",
@@ -528,7 +536,7 @@ export const translations = {
 
     // Contact Section (ContactNew)
     contact: {
-      label: "[ 05 — Kontakt ]",
+      label: "[ 06 — Kontakt ]",
       heading: "Pracujmy razem",
       info: {
         email: { label: "Email", value: "appcratesdev@gmail.com" },
@@ -554,7 +562,7 @@ export const translations = {
 
     calculator: {
       meta: {
-        title: "Kalkulator wyceny projektu | AppCrates",
+        title: "Kalkulator wyceny projektu",
         description: "Oszacuj budżet strony, sklepu, marketplace, wdrożenia AI albo aplikacji webowej i wyślij zapytanie z czytelnym podsumowaniem.",
       },
       page: {
@@ -635,6 +643,12 @@ export const translations = {
     blog: {
       title: "Blog",
       subtitle: "Przemyślenia, tutoriale i spostrzeżenia",
+      latestSection: {
+        label: "[ 05 — Blog ]",
+        heading: "Najnowsze wpisy z bloga",
+        subtitle: "Świeże notatki o web developmencie, AI, e-commerce i decyzjach stojących za nowoczesnymi produktami cyfrowymi.",
+        cta: "Zobacz wszystkie wpisy",
+      },
       search: "Szukaj wpisów...",
       categories: "Kategorie",
       all: "Wszystkie",

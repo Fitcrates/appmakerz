@@ -7,6 +7,7 @@ export default {
   type: 'document',
   groups: [
     { name: 'content', title: 'Content', default: true },
+    { name: 'links', title: 'Internal Links' },
     { name: 'seo', title: 'SEO' },
     { name: 'meta', title: 'Metadata' },
   ],
@@ -363,6 +364,47 @@ export default {
           validation: (Rule: any) => Rule.max(4),
         },
       ],
+    },
+    {
+      name: 'relatedServices',
+      title: 'Related / Other Services',
+      type: 'array',
+      group: 'links',
+      description: 'Optional manual service links shown in the internal linking section. Leave empty to use automatic fallback.',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'serviceLanding' }],
+          options: {
+            filter: ({ document }: any) => ({
+              filter: '!(_id in [$id, $draftId])',
+              params: {
+                id: document?._id?.replace(/^drafts\./, ''),
+                draftId: `drafts.${document?._id?.replace(/^drafts\./, '')}`,
+              },
+            }),
+          },
+        },
+      ],
+      validation: (Rule: any) => Rule.max(8),
+    },
+    {
+      name: 'relatedProjects',
+      title: 'Related Projects',
+      type: 'array',
+      group: 'links',
+      description: 'Optional manual project links shown in the internal linking section. Leave empty to use automatic fallback.',
+      of: [{ type: 'reference', to: [{ type: 'project' }] }],
+      validation: (Rule: any) => Rule.max(3),
+    },
+    {
+      name: 'relatedPosts',
+      title: 'Related Blog Posts',
+      type: 'array',
+      group: 'links',
+      description: 'Optional manual blog links shown in the internal linking section. Leave empty to use automatic fallback.',
+      of: [{ type: 'reference', to: [{ type: 'post' }] }],
+      validation: (Rule: any) => Rule.max(3),
     },
     {
       name: 'seo',

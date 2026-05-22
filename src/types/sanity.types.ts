@@ -125,7 +125,7 @@ export interface Post {
   mainImage: SanityImage;
   publishedAt: string;
   author: Author;
-  categories: string[];
+  categories?: Array<string | { title?: LocalizedText }>;
   body: any[] | {
     en: any[];
     pl: any[];
@@ -135,6 +135,7 @@ export interface Post {
     pl: string;
   };
   viewCount?: number;
+  tags?: string[];
 }
 
 export interface LocalizedText {
@@ -183,6 +184,9 @@ export interface ServiceLanding {
     en?: Array<{ value: string; label: string }>;
     pl?: Array<{ value: string; label: string }>;
   };
+  relatedServices?: ServiceLanding[];
+  relatedProjects?: Project[];
+  relatedPosts?: Post[];
   seo?: {
     metaTitle?: LocalizedText;
     metaDescription?: LocalizedText;

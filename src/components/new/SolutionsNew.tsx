@@ -65,10 +65,23 @@ const SolutionsNew: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language].solutions;
   const solutions = getSolutions(t);
+  const [isMobileLayout, setIsMobileLayout] = useState(false);
   const [mobileProgress, setMobileProgress] = useState(0);
   const [mobilePinState, setMobilePinState] = useState<'before' | 'during' | 'after'>('before');
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const updateLayout = () => setIsMobileLayout(mediaQuery.matches);
+
+    updateLayout();
+    mediaQuery.addEventListener('change', updateLayout);
+
+    return () => mediaQuery.removeEventListener('change', updateLayout);
+  }, []);
+
   useLayoutEffect(() => {
+    if (isMobileLayout) return;
+
     const scene = sceneRef.current;
     if (!scene) return;
 
@@ -119,9 +132,15 @@ const SolutionsNew: React.FC = () => {
     }, sceneRef);
 
     return () => ctx.revert();
-  }, [solutions.length]);
+  }, [isMobileLayout, solutions.length]);
 
   useEffect(() => {
+    if (!isMobileLayout) {
+      setMobileProgress(0);
+      setMobilePinState('before');
+      return;
+    }
+
     let frameId = 0;
 
     const updateMobileScene = () => {
@@ -173,7 +192,7 @@ const SolutionsNew: React.FC = () => {
       window.removeEventListener('scroll', requestUpdate);
       window.removeEventListener('resize', requestUpdate);
     };
-  }, [solutions.length]);
+  }, [isMobileLayout, solutions.length]);
 
   return (
     <section
@@ -218,114 +237,114 @@ const SolutionsNew: React.FC = () => {
       {/* Scene - constrained to max-w-7xl */}
       <div className="w-full md:max-w-7xl md:mx-auto md:px-6 lg:px-8">
         <div ref={sceneRef} className="solutions-scene relative" id="process">
-          {/* DESKTOP VIEW */}
-          <div className="solutions-scene__desktop hidden md:block">
-            <div className="solutions-scene__sticky-wrap grid grid-cols-2 min-h-[100svh] bg-indigo-950 rounded-lg overflow-hidden">
-              <div className="solutions-scene__left h-[100svh] flex flex-col justify-center px-8 lg:px-12 z-10 bg-indigo-950">
-                {solutions.map((solution, i) => (
-                  <article
-                    key={solution.number}
-                    className={`solutions-scene__step absolute top-1/2 -translate-y-1/2 left-8 right-10 lg:left-12 lg:right-14 opacity-0 transition-opacity duration-500 ease-out ${i === 0 ? 'is-active opacity-100' : ''}`}
-                    itemScope
-                    itemType="https://schema.org/Service"
-                  >
-                    <span className="notranslate text-[0.65rem] font-medium tracking-[0.2em] uppercase text-teal-300 mb-5 block" aria-hidden="true">
-                      {solution.number}
-                    </span>
-                    <h3 className="text-white text-[clamp(2.5rem,5vw,4.5rem)]  font-light tracking-[-0.03em] leading-[1.05] font-oxanium uppercase mb-5">
-                      {solution.title}
-                    </h3>
-                    <p className="text-white/45  text-sm italic mb-4" itemProp="name">
-                      {solution.problem}
-                    </p>
-                    <p className=" font-light text-[clamp(0.95rem,1.1vw,1.1rem)] leading-[1.9] text-white/80 max-w-[420px]" itemProp="description">
-                      {solution.description}
-                    </p>
-                  </article>
-                ))}
-              </div>
+          {!isMobileLayout ? (
+            <div className="solutions-scene__desktop hidden md:block">
+              <div className="solutions-scene__sticky-wrap grid grid-cols-2 min-h-[100svh] bg-indigo-950 rounded-lg overflow-hidden">
+                <div className="solutions-scene__left h-[100svh] flex flex-col justify-center px-8 lg:px-12 z-10 bg-indigo-950">
+                  {solutions.map((solution, i) => (
+                    <article
+                      key={solution.number}
+                      className={`solutions-scene__step absolute top-1/2 -translate-y-1/2 left-8 right-10 lg:left-12 lg:right-14 opacity-0 transition-opacity duration-500 ease-out ${i === 0 ? 'is-active opacity-100' : ''}`}
+                      itemScope
+                      itemType="https://schema.org/Service"
+                    >
+                      <span className="notranslate text-[0.65rem] font-medium tracking-[0.2em] uppercase text-teal-300 mb-5 block" aria-hidden="true">
+                        {solution.number}
+                      </span>
+                      <h3 className="text-white text-[clamp(2.5rem,5vw,4.5rem)]  font-light tracking-[-0.03em] leading-[1.05] font-oxanium uppercase mb-5">
+                        {solution.title}
+                      </h3>
+                      <p className="text-white/45  text-sm italic mb-4" itemProp="name">
+                        {solution.problem}
+                      </p>
+                      <p className=" font-light text-[clamp(0.95rem,1.1vw,1.1rem)] leading-[1.9] text-white/80 max-w-[420px]" itemProp="description">
+                        {solution.description}
+                      </p>
+                    </article>
+                  ))}
+                </div>
 
-              <div className="solutions-scene__right relative  ">
-                {solutions.map((solution) => (
-                  <div key={`panel-${solution.number}`} className="solutions-scene__image-panel h-[100svh] relative overflow-hidden">
-                    <Image
-                      src={solution.mobileImage}
-                      alt={solution.title}
-                      fill
-                      className="solutions-scene__image object-cover"
-                      sizes="50vw"
-                    />
-                    <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-r from-indigo-950 via-indigo-950/65 to-transparent pointer-events-none z-[1]" />
-                    <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-l from-indigo-950 via-transparent to-transparent pointer-events-none z-[2]" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* MOBILE STACKING CARDS VIEW */}
-          <div
-            ref={mobileSceneRef}
-            className="solutions-scene__mobile md:hidden block relative"
-            style={{ height: `${solutions.length * 100}svh` }}
-          >
-            <div
-              className="left-0 right-0 h-[100svh] overflow-hidden"
-              style={{
-                position: mobilePinState === 'during' ? 'fixed' : 'absolute',
-                top: mobilePinState === 'after' ? 'auto' : 0,
-                bottom: mobilePinState === 'after' ? 0 : 'auto',
-              }}
-            >
-              {solutions.map((solution, i) => {
-                const sceneProgress = mobileProgress * Math.max(1, solutions.length - 1);
-                const revealProgress = i === 0
-                  ? 1
-                  : Math.max(0, Math.min(1, sceneProgress - (i - 1)));
-                const translateY = i === 0 ? 0 : (1 - revealProgress) * 100;
-
-                return (
-                  <article
-                    key={`mobile-${solution.number}`}
-                    className="solutions-scene__mobile-card absolute inset-0 overflow-hidden will-change-transform shadow-[0_-10px_40px_rgba(0,0,0,0.6)] transition-transform duration-200 ease-out"
-                    style={{
-                      zIndex: i + 1,
-                      transform: `translateY(${translateY}%)`,
-                    }}
-                    itemScope
-                    itemType="https://schema.org/Service"
-                  >
-                    <div className="absolute inset-0 w-full h-full z-0">
+                <div className="solutions-scene__right relative  ">
+                  {solutions.map((solution) => (
+                    <div key={`panel-${solution.number}`} className="solutions-scene__image-panel h-[100svh] relative overflow-hidden">
                       <Image
                         src={solution.mobileImage}
                         alt={solution.title}
                         fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="solutions-scene__image object-cover"
+                        sizes="50vw"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/75 to-transparent z-[1] pointer-events-none" />
-                      <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-transparent to-transparent z-[1] pointer-events-none" />
+                      <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-r from-indigo-950 via-indigo-950/65 to-transparent pointer-events-none z-[1]" />
+                      <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-l from-indigo-950 via-transparent to-transparent pointer-events-none z-[2]" />
                     </div>
-
-                    <div className="absolute bottom-0 left-0 w-full px-4 sm:px-6 pb-[clamp(4rem,12vh,8rem)] z-[2]">
-                      <span className="notranslate text-[0.65rem] font-medium tracking-[0.2em] uppercase text-teal-300 mb-4 block" aria-hidden="true">
-                        {solution.number}
-                      </span>
-                      <h3 className="text-white text-[clamp(1.8rem,7.5vw,2.2rem)]  font-light tracking-[-0.02em] leading-[1.05] uppercase mb-4">
-                        {solution.title}
-                      </h3>
-                      <p className="text-white/50  text-[0.85rem] italic mb-3" itemProp="name">
-                        {solution.problem}
-                      </p>
-                      <p className=" font-light text-[0.95rem] leading-[1.75] text-white/90 mb-0 max-w-[42ch]" itemProp="description">
-                        {solution.description}
-                      </p>
-                    </div>
-                  </article>
-                );
-              })}
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div
+              ref={mobileSceneRef}
+              className="solutions-scene__mobile relative"
+              style={{ height: `${solutions.length * 100}svh` }}
+            >
+              <div
+                className="left-0 right-0 h-[100svh] overflow-hidden"
+                style={{
+                  position: mobilePinState === 'during' ? 'fixed' : 'absolute',
+                  top: mobilePinState === 'after' ? 'auto' : 0,
+                  bottom: mobilePinState === 'after' ? 0 : 'auto',
+                }}
+              >
+                {solutions.map((solution, i) => {
+                  const sceneProgress = mobileProgress * Math.max(1, solutions.length - 1);
+                  const revealProgress = i === 0
+                    ? 1
+                    : Math.max(0, Math.min(1, sceneProgress - (i - 1)));
+                  const translateY = i === 0 ? 0 : (1 - revealProgress) * 100;
+
+                  return (
+                    <article
+                      key={`mobile-${solution.number}`}
+                      className="solutions-scene__mobile-card absolute inset-0 overflow-hidden will-change-transform shadow-[0_-10px_40px_rgba(0,0,0,0.6)] transition-transform duration-200 ease-out"
+                      style={{
+                        zIndex: i + 1,
+                        transform: `translateY(${translateY}%)`,
+                      }}
+                      itemScope
+                      itemType="https://schema.org/Service"
+                    >
+                      <div className="absolute inset-0 w-full h-full z-0">
+                        <Image
+                          src={solution.mobileImage}
+                          alt={solution.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/75 to-transparent z-[1] pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-transparent to-transparent z-[1] pointer-events-none" />
+                      </div>
+
+                      <div className="absolute bottom-0 left-0 w-full px-4 sm:px-6 pb-[clamp(4rem,12vh,8rem)] z-[2]">
+                        <span className="notranslate text-[0.65rem] font-medium tracking-[0.2em] uppercase text-teal-300 mb-4 block" aria-hidden="true">
+                          {solution.number}
+                        </span>
+                        <h3 className="text-white text-[clamp(1.8rem,7.5vw,2.2rem)]  font-light tracking-[-0.02em] leading-[1.05] uppercase mb-4">
+                          {solution.title}
+                        </h3>
+                        <p className="text-white/50  text-[0.85rem] italic mb-3" itemProp="name">
+                          {solution.problem}
+                        </p>
+                        <p className=" font-light text-[0.95rem] leading-[1.75] text-white/90 mb-0 max-w-[42ch]" itemProp="description">
+                          {solution.description}
+                        </p>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -353,23 +372,6 @@ const SolutionsNew: React.FC = () => {
           </a>
         </motion.div>
 
-        {/* SEO-friendly structured data summary */}
-        <div className="sr-only">
-          <h2>Web Development Services - Hire a Developer</h2>
-          <p>
-            Professional fullstack developer offering landing page development,
-            e-commerce solutions, marketplace platforms, custom web applications,
-            and SEO-optimized development services. Looking for a developer to build
-            your landing page, online shop, or web application? Contact me today.
-          </p>
-          <ul>
-            <li>Landing page developer - high-converting websites for lead generation</li>
-            <li>E-commerce developer - online shops and stores with secure payments</li>
-            <li>Marketplace developer - multi-vendor platforms and SaaS solutions</li>
-            <li>Web application developer - custom software and business tools</li>
-            <li>SEO developer - search engine optimized websites that rank</li>
-          </ul>
-        </div>
       </div>
 
       {/* Horizontal line accent - like AboutNew */}

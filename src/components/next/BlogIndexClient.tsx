@@ -9,8 +9,7 @@ import { getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
 import { translations } from '@/translations/translations';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
-import ElectricLogo from '@/components/next/ElectricLogo';
-import ElectricLogoMobile from '@/components/next/ElectricLogoMobile';
+import ResponsiveElectricLogo from '@/components/next/ResponsiveElectricLogo';
 
 interface BlogIndexClientProps {
   posts: any[];
@@ -78,20 +77,12 @@ export default function BlogIndexClient({ posts, title, subtitle }: BlogIndexCli
         </div>
 
         <div className="order-1 lg:order-1 flex justify-center lg:justify-start">
-          <div className="hidden lg:block">
-            <ElectricLogo
-              src="/media/AppcratesLogo.webp"
-              alt="AppCrates Logo"
-              className="w-40 lg:w-80 xl:w-96"
-            />
-          </div>
-          <div className="lg:hidden">
-            <ElectricLogoMobile
-              src="/media/AppcratesLogo.webp"
-              alt="AppCrates Logo"
-              className="w-40"
-            />
-          </div>
+          <ResponsiveElectricLogo
+            src="/media/AppcratesLogo.webp"
+            alt="AppCrates Logo"
+            desktopClassName="w-40 lg:w-80 xl:w-96"
+            mobileClassName="w-40"
+          />
         </div>
       </div>
 

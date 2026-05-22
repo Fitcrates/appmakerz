@@ -79,18 +79,17 @@ const BurnChar: React.FC<{
               ? "opacity-100 text-teal-300 blur-[1px]"
               : "opacity-100 text-white/90 blur-0"
         }`}
+        style={
+          state === "burning"
+            ? { textShadow: `0 0 12px ${GLOW_COLOR}, 0 0 24px ${GLOW_COLOR}` }
+            : undefined
+        }
       >
         {char}
       </span>
 
       {state === "burning" && (
         <>
-          <span className="absolute inset-0 text-teal-300 blur-md animate-pulse z-0">
-            {char}
-          </span>
-          <span className="absolute inset-0 text-teal-400 blur-lg opacity-80 z-0">
-            {char}
-          </span>
           <span className="absolute -top-1 left-1/2 w-1 h-1 bg-teal-300 rounded-full animate-ping" />
           <span
             className="absolute -bottom-1 left-1/4 w-0.5 h-0.5 bg-white rounded-full animate-ping"
@@ -166,6 +165,13 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
   }, []);
 
   const maskGradient = `radial-gradient(circle ${glowSize}px at calc(${mousePos.x}px + 24px) calc(${mousePos.y}px + 24px), rgba(0,0,0,${CENTER_OPACITY}) 0%, rgba(0,0,0,${MID_OPACITY}) ${MID_POSITION}%, rgba(0,0,0,0) 100%)`;
+  const glowStyle = burnComplete
+    ? ({
+        '--spotlight-mask': maskGradient,
+        '--spotlight-color': GLOW_COLOR,
+        '--spotlight-blur': `${Math.max(10, Math.round(glowSize * 0.18))}px`,
+      } as React.CSSProperties)
+    : undefined;
 
   if (!hasMounted) {
     return (
@@ -179,22 +185,6 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
     );
   }
 
-  // Render characters with proper structure for both base and glow layers
-  // Must match BurnChar structure exactly for alignment
-  const renderChars = () => {
-    return textContent.split("").map((char: string, i: number) => {
-      if (char === " ") return <span key={i}> </span>;
-      if (char === "\n") return <br key={i} />;
-      return (
-        <span key={i} className="relative inline">
-          <span className="relative" style={{ color: GLOW_COLOR }}>
-            {char}
-          </span>
-        </span>
-      );
-    });
-  };
-
   return (
     <div
       ref={containerRef}
@@ -204,7 +194,11 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
       style={{ isolation: "isolate", overflowWrap: "break-word" }}
     >
       {/* Base text layer - character by character burn animation */}
-      <Component className={`${className}`}>
+      <Component
+        className={`${burnComplete ? "spotlight-text-single" : ""} ${className}`}
+        style={glowStyle}
+        data-spotlight-text={burnComplete ? textContent : undefined}
+      >
         {textContent.split("").map((char: string, i: number) => (
           <BurnChar
             key={i}
@@ -217,22 +211,6 @@ const BurnSpotlightText: React.FC<BurnSpotlightTextProps> = ({
           />
         ))}
       </Component>
-
-      {/* Expanded Mask Wrapper to prevent clipping descenders/swashes */}
-      {burnComplete && (
-        <span
-          className="absolute -inset-6 p-6 pointer-events-none select-none z-20 block"
-          style={{
-            WebkitMaskImage: maskGradient,
-            maskImage: maskGradient,
-          }}
-          aria-hidden="true"
-        >
-          <Component className={className}>
-            {renderChars()}
-          </Component>
-        </span>
-      )}
     </div>
   );
 };

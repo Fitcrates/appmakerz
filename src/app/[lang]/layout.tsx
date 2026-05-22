@@ -1,5 +1,8 @@
 import { notFound } from 'next/navigation';
 import NextProviders from '@/components/next/NextProviders';
+import CookieConsentNew from '@/components/new/CookieConsentNew';
+import ScrollBlurOverlay from '@/components/new/ScrollBlurOverlay';
+import CursorAura from '@/components/next/CursorAura';
 import { SUPPORTED_LANGUAGES, isLanguage, type Language } from '@/lib/language';
 
 interface LanguageLayoutProps {
@@ -18,5 +21,12 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
     notFound();
   }
 
-  return <NextProviders initialLanguage={lang as Language}>{children}</NextProviders>;
+  return (
+    <NextProviders initialLanguage={lang as Language}>
+      {children}
+      <CookieConsentNew />
+      <ScrollBlurOverlay />
+      <CursorAura />
+    </NextProviders>
+  );
 }
