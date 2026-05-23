@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import PrefetchLink from '@/components/next/PrefetchLink';
@@ -17,28 +17,48 @@ interface BlogLatestPostsSidebarProps {
   relatedServices?: any[];
 }
 
+type SidebarPosition = 'relative' | 'fixed' | 'bottom';
+
+const SIDEBAR_TOP_OFFSET = 112;
+
 export default function BlogLatestPostsSidebar({ currentPostId, language, posts, relatedServices = [] }: BlogLatestPostsSidebarProps) {
-  const [isFixed, setIsFixed] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState<SidebarPosition>('relative');
   const latestPosts = [...posts]
     .filter((item) => item._id !== currentPostId)
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
     .slice(0, 6);
 
   useEffect(() => {
-    const updateFixedState = () => {
+    const updateSidebarPosition = () => {
       const marker = document.getElementById('blog-content-start');
-      if (!marker) return;
+      const sidebar = sidebarRef.current;
 
-      setIsFixed(marker.getBoundingClientRect().top <= 112);
+      if (!marker || !sidebar) return;
+
+      const markerRect = marker.getBoundingClientRect();
+      const sidebarHeight = sidebar.offsetHeight;
+
+      if (markerRect.top > SIDEBAR_TOP_OFFSET) {
+        setPosition('relative');
+        return;
+      }
+
+      if (markerRect.bottom <= SIDEBAR_TOP_OFFSET + sidebarHeight) {
+        setPosition('bottom');
+        return;
+      }
+
+      setPosition('fixed');
     };
 
-    updateFixedState();
-    window.addEventListener('scroll', updateFixedState, { passive: true });
-    window.addEventListener('resize', updateFixedState);
+    updateSidebarPosition();
+    window.addEventListener('scroll', updateSidebarPosition, { passive: true });
+    window.addEventListener('resize', updateSidebarPosition);
 
     return () => {
-      window.removeEventListener('scroll', updateFixedState);
-      window.removeEventListener('resize', updateFixedState);
+      window.removeEventListener('scroll', updateSidebarPosition);
+      window.removeEventListener('resize', updateSidebarPosition);
     };
   }, []);
 
@@ -46,9 +66,15 @@ export default function BlogLatestPostsSidebar({ currentPostId, language, posts,
     return null;
   }
 
+  const sidebarPositionClass = {
+    relative: 'relative',
+    fixed: 'fixed right-[max(2rem,calc(50%_-_38rem))] top-28 z-30 w-[17.5rem]',
+    bottom: 'absolute bottom-0 right-0 w-[17.5rem]',
+  }[position];
+
   return (
-    <aside className="hidden xl:col-start-3 xl:row-start-2 xl:block">
-      <div className={`${isFixed ? 'fixed right-[max(2rem,calc(50%_-_38rem))] top-28 z-30 w-[17.5rem]' : 'relative'} max-h-[calc(100vh-8rem)] overflow-y-auto pr-1`}>
+    <aside className="relative hidden xl:col-start-3 xl:row-start-2 xl:block xl:self-stretch">
+      <div ref={sidebarRef} className={`${sidebarPositionClass} max-h-[calc(100vh-8rem)] overflow-y-auto pr-1`}>
         {relatedServices.length > 0 ? (
           <div className="mb-10 border border-white/10 p-5">
             <p className="text-xs uppercase tracking-[0.18em] text-teal-300/80">
