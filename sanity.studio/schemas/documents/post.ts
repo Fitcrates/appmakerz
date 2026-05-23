@@ -115,6 +115,22 @@ export default {
       group: 'meta',
     },
     {
+      name: 'featured',
+      title: 'Featured post',
+      type: 'boolean',
+      group: 'meta',
+      description: 'Promote this post in the blog sidebar. Keep the public selection to about 6 posts.',
+      initialValue: false,
+    },
+    {
+      name: 'featuredOrder',
+      title: 'Featured order',
+      type: 'number',
+      group: 'meta',
+      description: 'Lower numbers appear first in the promoted posts sidebar.',
+      hidden: ({ document }: any) => document?.featured !== true,
+    },
+    {
       name: 'viewCount',
       title: 'View Count',
       type: 'number',
@@ -458,6 +474,14 @@ export default {
       title: 'Most Viewed',
       name: 'viewCountDesc',
       by: [{ field: 'viewCount', direction: 'desc' }],
+    },
+    {
+      title: 'Featured order',
+      name: 'featuredOrderAsc',
+      by: [
+        { field: 'featuredOrder', direction: 'asc' },
+        { field: 'publishedAt', direction: 'desc' },
+      ],
     },
   ],
   preview: {

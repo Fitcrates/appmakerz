@@ -39,9 +39,9 @@ export const translations = {
         p2: "You get a partner who understands your business goals. I handle everything: design, development, content management systems you can update yourself, and ongoing support. No technical knowledge needed on your end.",
       },
       stats: {
-        years: { value: "2+", label: "Years" },
-        projects: { value: "10+", label: "Projects" },
-        dedication: { value: "100%", label: "Dedication" },
+        years: { value: "80%", label: "Less manual work" },
+        projects: { value: "100%", label: "Headless" },
+        dedication: { value: "0", label: "Templates" },
       },
     },
 
@@ -408,9 +408,9 @@ export const translations = {
         p2: "Zyskujesz partnera, który rozumie cele Twojego biznesu. Zajmuję się wszystkim: projektem, programowaniem, systemami zarządzania treścią które możesz sam aktualizować, oraz stałym wsparciem. Nie potrzebujesz wiedzy technicznej.",
       },
       stats: {
-        years: { value: "2+", label: "Lata" },
-        projects: { value: "10+", label: "Projektów" },
-        dedication: { value: "100%", label: "Zaangażowania" },
+        years: { value: "80%", label: "Mniej pracy ręcznej" },
+        projects: { value: "100%", label: "Headless" },
+        dedication: { value: "0", label: "Szablonów" },
       },
     },
 

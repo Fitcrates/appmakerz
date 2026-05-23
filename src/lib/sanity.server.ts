@@ -139,6 +139,8 @@ export async function getPosts() {
       },
       publishedAt,
       excerpt { en, pl },
+      featured,
+      featuredOrder,
       author->{
         name,
         image
@@ -182,6 +184,8 @@ export async function getPost(slug: string) {
       body { en, pl },
       faq { en, pl },
       excerpt { en, pl },
+      featured,
+      featuredOrder,
       viewCount,
       categories[]->{
         title { en, pl }
@@ -205,6 +209,30 @@ export async function getPost(slug: string) {
     }`,
     { slug },
     ['post', slug]
+  );
+}
+
+export async function getFeaturedPosts() {
+  return fetchSanity<any[]>(
+    `
+    *[_type == "post" && featured == true && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(coalesce(featuredOrder, 9999) asc, publishedAt desc) [0...6] {
+      _id,
+      title { en, pl },
+      slug,
+      mainImage,
+      publishedAt,
+      excerpt { en, pl },
+      featured,
+      featuredOrder,
+      viewCount,
+      categories[]->{
+        title { en, pl }
+      },
+      tags
+    }
+  `,
+    {},
+    ['posts', 'featured-posts']
   );
 }
 

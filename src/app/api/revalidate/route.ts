@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
     if (docType === 'post') {
       revalidateTag('posts');
       revalidateTag('blog');
+      revalidateTag('featured-posts');
       revalidateTag('post'); // Clear individual post fetch cache
       if (json.slug?.current) {
         revalidateTag(json.slug.current);

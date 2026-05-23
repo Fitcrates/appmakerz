@@ -124,6 +124,8 @@ export interface Post {
   slug: { current: string };
   mainImage: SanityImage;
   publishedAt: string;
+  featured?: boolean;
+  featuredOrder?: number;
   author: Author;
   categories?: Array<string | { title?: LocalizedText }>;
   body: any[] | {
