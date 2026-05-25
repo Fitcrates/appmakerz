@@ -8,18 +8,18 @@ Use the linked pages below as the main source of truth for company positioning, 
 
 ## Primary Pages
 
-- [Homepage](https://appcrates.pl/): Main overview of services, positioning, and calls to action.
-- [About Me](https://appcrates.pl/about-me): Founder background, working style, and collaboration approach.
-- [FAQ](https://appcrates.pl/faq): Common questions about scope, process, timelines, and technical capabilities.
-- [Blog](https://appcrates.pl/blog): Public article index for tutorials, case studies, and technical writing.
-- [Privacy Policy](https://appcrates.pl/privacy-policy): Privacy and data-handling information.
+- [Homepage](https://appcrates.pl/pl): Main overview of services, positioning, and calls to action.
+- [About Me](https://appcrates.pl/pl/about-me): Founder background, working style, and collaboration approach.
+- [FAQ](https://appcrates.pl/pl/faq): Common questions about scope, process, timelines, and technical capabilities.
+- [Blog](https://appcrates.pl/pl/blog): Public article index for tutorials, case studies, and technical writing.
+- [Privacy Policy](https://appcrates.pl/pl/privacy-policy): Privacy and data-handling information.
 
 ## Services
 
-- [Professional Website Development](https://appcrates.pl/uslugi/professional-website-development): Service page for business websites and landing pages.
-- [AI Automation & RPA Solutions](https://appcrates.pl/uslugi/ai-automation-rpa-solutions): Service page for AI workflows, automation, and integrations.
-- [E-commerce Shops](https://appcrates.pl/uslugi/e-commerce-shops-medusa-js): Service page for online stores and commerce systems.
-- [Custom Web Applications](https://appcrates.pl/uslugi/custom-web-applications): Service page for SaaS platforms, internal tools, dashboards, and custom business apps.
+- [Professional Website Development](https://appcrates.pl/pl/uslugi/professional-website-development): Service page for business websites and landing pages.
+- [AI Automation & RPA Solutions](https://appcrates.pl/pl/uslugi/ai-automation-rpa-solutions): Service page for AI workflows, automation, and integrations.
+- [E-commerce Shops](https://appcrates.pl/pl/uslugi/e-commerce-shops-medusa-js): Service page for online stores and commerce systems.
+- [Custom Web Applications](https://appcrates.pl/pl/uslugi/custom-web-applications): Service page for SaaS platforms, internal tools, dashboards, and custom business apps.
 
 ## Content Hints
 
@@ -29,6 +29,6 @@ Use the linked pages below as the main source of truth for company positioning, 
 
 ## Optional
 
-- [Contact Section](https://appcrates.pl/#contact): Best entry point for lead generation or direct project inquiries.
-- [Projects Section](https://appcrates.pl/#projects): High-level portfolio summary visible on the homepage.
-- [Solutions Section](https://appcrates.pl/#systems): Positioning for landing pages, e-commerce, marketplaces, web applications, and SEO-oriented builds.
+- [Contact Section](https://appcrates.pl/pl#contact): Best entry point for lead generation or direct project inquiries.
+- [Projects Section](https://appcrates.pl/pl#projects): High-level portfolio summary visible on the homepage.
+- [Solutions Section](https://appcrates.pl/pl#systems): Positioning for landing pages, e-commerce, marketplaces, web applications, and SEO-oriented builds.

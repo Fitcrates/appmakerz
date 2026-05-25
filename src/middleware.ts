@@ -7,6 +7,7 @@ const LEGACY_PUBLIC_PATHS = [
   '/about-me',
   '/blog',
   '/faq',
+  '/kalkulator',
   '/privacy-policy',
   '/project',
   '/unsubscribe',
@@ -50,5 +51,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/about-me/:path*', '/blog/:path*', '/faq/:path*', '/privacy-policy/:path*', '/project/:path*', '/unsubscribe/:path*', '/uslugi/:path*', '/api/chat/:path*'],
+  matcher: ['/', '/about-me/:path*', '/blog/:path*', '/faq/:path*', '/kalkulator/:path*', '/privacy-policy/:path*', '/project/:path*', '/unsubscribe/:path*', '/uslugi/:path*', '/api/chat/:path*'],
 };

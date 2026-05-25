@@ -19,6 +19,7 @@ import { translations } from "../../translations/translations";
 interface Service {
   number: string;
   title: string;
+  punchline?: string;
   description: string;
   href: string;
 }
@@ -27,27 +28,31 @@ const getServices = (
   t: typeof translations.en.services
 ): Service[] => [
     {
-      number: t.items.webDev.number,
-      title: t.items.webDev.title,
-      description: t.items.webDev.description,
+      number: t.items.websites.number,
+      title: t.items.websites.title,
+      punchline: t.items.websites.punchline,
+      description: t.items.websites.description,
       href: "/uslugi/e-commerce-shops-medusa-js",
-    },
-    {
-      number: t.items.backend.number,
-      title: t.items.backend.title,
-      description: t.items.backend.description,
-      href: "/uslugi/professional-website-development",
     },
     {
       number: t.items.ecommerce.number,
       title: t.items.ecommerce.title,
+      punchline: t.items.ecommerce.punchline,
       description: t.items.ecommerce.description,
+      href: "/uslugi/professional-website-development",
+    },
+    {
+      number: t.items.ai.number,
+      title: t.items.ai.title,
+      punchline: t.items.ai.punchline,
+      description: t.items.ai.description,
       href: "/uslugi/ai-automation-rpa-solutions",
     },
     {
-      number: t.items.responsive.number,
-      title: t.items.responsive.title,
-      description: t.items.responsive.description,
+      number: t.items.apps.number,
+      title: t.items.apps.title,
+      punchline: t.items.apps.punchline,
+      description: t.items.apps.description,
       href: "/uslugi/custom-web-applications",
     },
   ];
@@ -83,11 +88,17 @@ const ServiceItem: React.FC<{
           <div className="flex-1">
             <SpotlightText
               as="h3"
-              className="text-2xl sm:text-3xl  mb-3 font-oxanium font-light "
+              className="text-2xl sm:text-3xl mb-1 font-oxanium font-light"
               glowSize={100}
             >
               {service.title}
             </SpotlightText>
+
+            {service.punchline && (
+              <p className="text-sm text-teal-300/80 mb-3 font-oxanium tracking-wide italic">
+                {service.punchline}
+              </p>
+            )}
 
             <SpotlightText
               as="p"

@@ -8,6 +8,14 @@ import { absoluteUrl } from '@/lib/site';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
+import {
+  createSneakPeekDescription,
+  DEFAULT_SOCIAL_IMAGE,
+  extractPortableText,
+  getSanitySocialImageUrl,
+  SOCIAL_IMAGE_HEIGHT,
+  SOCIAL_IMAGE_WIDTH,
+} from '@/lib/seo';
 import { translations } from '@/translations/translations';
 
 interface LocalizedBlogPostPageProps {
@@ -48,19 +56,22 @@ export async function generateMetadata({ params }: LocalizedBlogPostPageProps): 
 
   const title = getLocalizedText(post.title, language);
   const excerpt = getLocalizedText(post.excerpt, language);
+  const bodyPreview = extractPortableText(getLocalizedArray(post.body, language));
   const metaTitle = getLocalizedText(post.seo?.metaTitle, language, title);
-  const metaDescription = getLocalizedText(post.seo?.metaDescription, language, excerpt);
+  const seoDescription = getLocalizedText(post.seo?.metaDescription, language);
+  const metaDescription = createSneakPeekDescription(seoDescription, excerpt, bodyPreview);
   const path = `/blog/${post.slug.current}`;
-  const canonical = absoluteUrl(localizedPath(language, path));
+  const canonical = post.seo?.canonicalUrl || absoluteUrl(localizedPath(language, path));
   const ogImage = post.seo?.ogImage
-    ? urlFor(post.seo.ogImage).width(1200).height(630).fit('crop').auto('format').url()
+    ? getSanitySocialImageUrl(post.seo.ogImage)
     : post.mainImage
-      ? urlFor(post.mainImage).width(1200).height(630).fit('crop').auto('format').url()
-      : undefined;
+      ? getSanitySocialImageUrl(post.mainImage)
+      : DEFAULT_SOCIAL_IMAGE;
+  const imageAlt = metaTitle || title;
 
   return {
     title: metaTitle,
-    description: metaDescription,
+    description: metaDescription || undefined,
     keywords: post.seo?.keywords,
     alternates: {
       canonical,
@@ -76,15 +87,23 @@ export async function generateMetadata({ params }: LocalizedBlogPostPageProps): 
       url: canonical,
       title: metaTitle,
       description: metaDescription,
-      images: ogImage ? [{ url: ogImage }] : undefined,
+      siteName: 'AppCrates',
+      images: [{
+        url: ogImage,
+        width: SOCIAL_IMAGE_WIDTH,
+        height: SOCIAL_IMAGE_HEIGHT,
+        alt: imageAlt,
+      }],
       locale: language === 'pl' ? 'pl_PL' : 'en_US',
       alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
+      publishedTime: post.publishedAt,
+      modifiedTime: post._updatedAt || post.publishedAt,
     },
     twitter: {
       card: 'summary_large_image',
       title: metaTitle,
       description: metaDescription,
-      images: ogImage ? [ogImage] : undefined,
+      images: ogImage ? [{ url: ogImage, alt: imageAlt }] : undefined,
     },
   };
 }
@@ -104,8 +123,11 @@ export default async function LocalizedBlogPostPage({ params }: LocalizedBlogPos
   }
 
   const title = getLocalizedText(post.title, language);
+  const excerpt = getLocalizedText(post.excerpt, language);
+  const bodyPreview = extractPortableText(getLocalizedArray(post.body, language));
+  const description = createSneakPeekDescription(excerpt, bodyPreview);
   const faq = getLocalizedArray<{ question: string; answer: string }>(post.faq, language);
-  const heroImageUrl = post.mainImage ? urlFor(post.mainImage).width(1200).height(630).auto('format').fit('crop').url() : '';
+  const heroImageUrl = post.mainImage ? getSanitySocialImageUrl(post.mainImage) : '';
   const authorImageUrl = post.author?.image ? urlFor(post.author.image).width(80).height(80).auto('format').url() : '';
   const path = `/blog/${post.slug.current}`;
 
@@ -113,7 +135,7 @@ export default async function LocalizedBlogPostPage({ params }: LocalizedBlogPos
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: title,
-    description: getLocalizedText(post.excerpt, language),
+    description,
     image: heroImageUrl,
     datePublished: post.publishedAt,
     dateModified: post._updatedAt || post.publishedAt,

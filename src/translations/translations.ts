@@ -22,12 +22,46 @@ export const translations = {
       heading: "ELECTRIFY\nYOUR BUSINESS\nONLINE",
       metaTitle: "React & Next.js websites, apps, shops and marketplaces",
       seoHeading: "Fullstack Web Developer for React, Next.js, AI applications, websites, shops and marketplaces",
-      subtitle: "I build online shops, landing pages, and AI-powered apps that grow your business. Complete solutions from start to finish.",
+      subtitle: "Not every technology makes sense. I only build systems that actually work. Modern websites, online stores and AI tools that help businesses sell and grow.",
+      punchline: "Your business. Your rules. Your system.",
       cta: {
         viewWork: "VIEW MORE",
-        getInTouch: "GET IN TOUCH",
+        getInTouch: "START TO GROW",
       },
       scroll: "Scroll",
+    },
+
+    heroV2: {
+      eyebrow: "Websites • Online stores • Business AI",
+      seoHeading: "Modern websites, online stores and AI tools that help businesses sell and grow",
+      headingPrefix: "I build modern",
+      headingHighlight: "websites and online stores",
+      headingSuffix: "that help your business grow",
+      subtitle: "You get a fast website, a scalable store or a practical AI solution built around your offer, customers and sales process. From idea and design to launch, integrations and further growth.",
+      cta: {
+        primary: "View projects",
+        secondary: "Let's talk",
+      },
+      benefits: [
+        { title: "Launch faster", description: "Clear scope, modern delivery" },
+        { title: "Ready to grow", description: "A site or store that scales" },
+        { title: "Useful AI", description: "Automation where it saves time" },
+        { title: "You own it", description: "No hidden lock-in" },
+      ],
+      stack: {
+        title: "What this means for you",
+        items: [
+          { title: "STORES & MARKETPLACES", description: "Full control, zero SaaS platform limitations." },
+          { title: "AI AUTOMATION", description: "AI integrations that save time and increase profits." },
+          { title: "WEBSITES THAT SELL", description: "Fast, optimized, and built for conversion." },
+          { title: "CUSTOM-TAILORED SYSTEMS", description: "Exactly what your business needs." },
+        ],
+      },
+      proof: {
+        label: "Built for",
+        items: ["E-commerce", "Service businesses", "B2B platforms", "AI workflows"],
+      },
+      scroll: "Scroll down",
     },
 
     // About Section (AboutNew)
@@ -73,7 +107,7 @@ export const translations = {
           category: "3d Web Design",
           description: "Interactive Three.js car experience with custom-built physics, sound system, dynamic lighting, and cinematic presentation.",
         },
-          homebudget: {
+        homebudget: {
           title: "AI Home Budget",
           category: "AI app",
           description: "Home budget tracking app utilizing AI. Automatic reading of bills and adding them to categories and expenses. Analyses, forecasts and AI advice"
@@ -99,29 +133,37 @@ export const translations = {
 
     // Services Section (ServicesNew)
     services: {
-      label: "[ 03 — Services ]",
-      heading: "What I Do",
-      cta: "Let's discuss your project",
+      label: "[ 02 — Services ]",
+      heading: "What I can build for you",
+      cta: "Consult Your Project",
       items: {
-        webDev: {
+        websites: {
           number: "01",
-          title: "E-Commerce Shops & Marketplaces",
-          description: "Complete online stores where you can sell your products. Secure payment processing, inventory tracking, and everything you need to run your business online. Multi-vendor marketplaces supported.",
-        },
-        backend: {
-          number: "02",
-          title: "Landing Pages You Control",
-          description: "High-converting landing pages with easy content management. Update text, images, and offers yourself without calling a developer. Perfect for marketing campaigns and product launches.",
+          title: "Websites",
+          punchline: "A site that brings in clients — not just looks good.",
+          description: "Modern business websites and landing pages on Next.js: lightning-fast load times, solid SEO and high conversion — ready for traffic from day one.",
+          href: "/services/professional-website-development",
         },
         ecommerce: {
-          number: "03",
-          title: "AI-Powered Applications",
-          description: "Smart apps that automate your business workflows. From AI chatbots to automated data processing — solutions that save you time and money.",
+          number: "02",
+          title: "Headless e-commerce & marketplace",
+          punchline: "Full control over your store — no commissions, no growth ceiling.",
+          description: "B2C, B2B and B2B2C sales platforms and marketplaces on Medusa.js: open-source, flexible integrations and lower operational costs than standard SaaS solutions.",
+          href: "/services/ecommerce-development",
         },
-        responsive: {
+        ai: {
+          number: "03",
+          title: "AI integrations & automation",
+          punchline: "Less repetitive work, more time for what actually matters.",
+          description: "AI chatbots, RAG assistants, process automations and integrations with business data — solutions that genuinely lighten the load and speed up customer handling.",
+          href: "/services/ai-integrations",
+        },
+        apps: {
           number: "04",
-          title: "Complete A-Z Solutions",
-          description: "Full-service support from initial concept to launch and beyond. Works perfectly on phones, tablets, and computers. I handle everything so you can focus on your business.",
+          title: "Custom web applications",
+          punchline: "A system built around your business, not the other way around.",
+          description: "Web apps, B2B dashboards, MVPs and SaaS platforms built around real business logic — with clean architecture and room to scale.",
+          href: "/services/custom-web-applications",
         },
       },
     },
@@ -129,38 +171,38 @@ export const translations = {
     // Solutions Section (SolutionsNew)
     solutions: {
       label: "[ 04 — Solutions ]",
-      heading: "How Can I Help?",
-      cta: "Let's discuss your project",
+      heading: "How can I help?",
+      cta: "Let's talk about your project",
       items: {
         landing: {
           number: "01",
-          title: "Landing Pages",
-          problem: "Need a high-converting page?",
-          description: "Custom landing pages designed for maximum conversions — with sub-2s load times, SEO-friendly markup, responsive design, and seamless lead capture forms. Perfect for product launches, SaaS signups, and marketing campaigns. Built with Next.js for optimal performance.",
+          title: "Landing Pages & Business Websites",
+          problem: "Getting traffic, but not enough inquiries?",
+          description: "Conversion- and SEO-focused landing pages on Next.js — fast loading, responsive, modern design, high conversion rates and excellent scalability.",
         },
         ecommerce: {
           number: "02",
-          title: "E-Commerce & Online Shops",
-          problem: "Want to sell online?",
-          description: "Secure, scalable e-commerce solutions with Stripe integration, real-time inventory management, product filtering, and conversion-optimized checkout flows. Whether you're launching a small shop or scaling to thousands of products — stores that sell.",
+          title: "E-Commerce Stores",
+          problem: "Your platform starting to hold you back?",
+          description: "Headless stores on Medusa.js — full control over checkout, integrations and margins. Lower operational costs and no artificial limits as you grow.",
         },
         marketplace: {
           number: "03",
-          title: "Marketplaces & Platforms",
-          problem: "Building a multi-vendor platform?",
-          description: "Scalable marketplace platforms with user authentication, Stripe Connect payment integration, and admin dashboards for complete control. Built with Next.js and Node.js.",
+          title: "Marketplaces & Multi-Vendor Platforms",
+          problem: "Looking to build a platform for multiple sellers?",
+          description: "Marketplaces with custom commission logic, payments and vendor account management — tailored to your business model from the first line of code.",
         },
         webApps: {
           number: "04",
-          title: "Web Applications",
-          problem: "Need custom software?",
-          description: "Custom web applications built with React, Next.js, and Node.js. Real-time features via WebSockets, intuitive UI/UX, role-based authentication, and admin dashboards — solving complex business problems with clean, maintainable code.",
+          title: "Custom Web Applications",
+          problem: "No off-the-shelf tool fits your workflow?",
+          description: "Web applications and internal systems on Next.js — built around real business logic, with architecture that grows alongside your company.",
         },
         seo: {
           number: "05",
-          title: "SEO-Optimized Sites",
-          problem: "Not ranking on Google?",
-          description: "Websites built with SEO best practices: semantic HTML, fast performance, proper meta tags, and structured data for better search rankings.",
+          title: "SEO-Optimised Websites",
+          problem: "Competitors ranking higher, despite your offer being better?",
+          description: "Next.js sites with technical SEO built in from the ground up: fast loading, proper semantics, Core Web Vitals and structure that both users and Google understand.",
         },
       },
     },
@@ -387,16 +429,50 @@ export const translations = {
 
     // Hero Section (HeroNew)
     hero: {
-      label: "Fullstack Web Developer",
+      label: "Next.js + Medusa.js Developer",
       heading: "ELEKTRYZUJ\nSWÓJ BIZNES\nW SIECI",
       metaTitle: "Strony, aplikacje, sklepy i marketplace w React & Next.js",
       seoHeading: "Fullstack Web Developer tworzący strony, aplikacje AI, sklepy i marketplace w React oraz Next.js",
-      subtitle: "Tworzę sklepy internetowe, landing page i aplikacje AI, które rozwijają Twój biznes. Kompleksowe rozwiązania od początku do końca.",
+      subtitle: "Nie każda technologia ma sens. Buduję tylko te systemy, które naprawdę działają. Nowoczesne strony internetowe, sklepy online i narzędzia AI, które pomagają firmom sprzedawać i rosnąć.",
+      punchline: "Twój biznes. Twoje zasady. Twój system.",
       cta: {
         viewWork: "ZOBACZ WIĘCEJ",
-        getInTouch: "SKONTAKTUJ SIĘ",
+        getInTouch: "ZACZNIJ ROZWÓJ",
       },
       scroll: "Przewiń",
+    },
+
+    heroV2: {
+      eyebrow: "Strony internetowe • Sklepy online • AI dla firm",
+      seoHeading: "Nowoczesne strony internetowe, sklepy online i narzędzia AI, które pomagają firmom sprzedawać i rosnąć",
+      headingPrefix: "Tworzę nowoczesne",
+      headingHighlight: "strony i sklepy internetowe",
+      headingSuffix: "które pomagają rozwijać biznes",
+      subtitle: "Dostajesz szybką stronę, skalowalny sklep albo praktyczne rozwiązanie AI zbudowane wokół Twojej oferty, klientów i procesu sprzedaży. Od pomysłu i projektu po wdrożenie, integracje i dalszy rozwój.",
+      cta: {
+        primary: "ZOBACZ REALIZACJE",
+        secondary: "ZACZNIJ ROZWÓJ",
+      },
+      benefits: [
+        { title: "Szybszy start", description: "Jasny zakres i sprawne wdrożenie" },
+        { title: "Gotowe na wzrost", description: "Strona albo sklep, który skaluje się z firmą" },
+        { title: "AI w praktyce", description: "Automatyzacje tam, gdzie oszczędzają czas" },
+        { title: "Pełna kontrola", description: "Bez ukrytych kosztów i zamknięcia w platformie" },
+      ],
+      stack: {
+        title: "Co to oznacza dla Ciebie",
+        items: [
+          { title: "SKLEPY I MARKETPLACE", description: "Pełna kontrola, zero ograniczeń platform SaaS." },
+          { title: "AUTOMATYZACJA Z AI", description: "Integracje AI, które oszczędzają czas i zwiększają zyski." },
+          { title: "STRONY, KTÓRE SPRZEDAJĄ", description: "Szybkie, zoptymalizowane i tworzone pod konwersję." },
+          { title: "SYSTEMY SZYTE NA MIARĘ", description: "Dokładnie takie, jakich potrzebuje Twój biznes." },
+        ],
+      },
+      proof: {
+        label: "Tworzę dla",
+        items: ["E-commerce", "Firm usługowych", "Platform B2B", "Procesów AI"],
+      },
+      scroll: "Przewiń w dół",
     },
 
     // About Section (AboutNew)
@@ -466,31 +542,40 @@ export const translations = {
       },
     },
 
+
     // Services Section (ServicesNew)
     services: {
       label: "[ 02 — Usługi ]",
-      heading: "Co robię",
-      cta: "Porozmawiajmy o Twoim projekcie",
+      heading: "Co mogę dla Ciebie zbudować",
+      cta: "Skonsultuj Swój Projekt",
       items: {
-        webDev: {
+        websites: {
           number: "01",
-          title: "Sklepy Internetowe i Marketplace",
-          description: "Kompletne sklepy online, gdzie możesz sprzedawać swoje produkty. Bezpieczne płatności, śledzenie stanów magazynowych i wszystko czego potrzebujesz do prowadzenia biznesu online. Obsługa platform multi-vendor.",
-        },
-        backend: {
-          number: "02",
-          title: "Landing Page Które Kontrolujesz",
-          description: "Strony konwertujące z łatwym zarządzaniem treścią. Aktualizuj teksty, zdjęcia i oferty sam, bez dzwonienia do programisty. Idealne na kampanie marketingowe i premiery produktów.",
+          title: "Strony internetowe",
+          punchline: "Strona, która przyciąga klientów — nie tylko wygląda.",
+          description: "Nowoczesne strony firmowe i landing page na Next.js: błyskawiczne ładowanie, solidne SEO i wysoka konwersja — gotowe na ruch od pierwszego dnia.",
+          href: "/uslugi/professional-website-development",
         },
         ecommerce: {
-          number: "03",
-          title: "Aplikacje Wykorzystujące AI",
-          description: "Inteligentne aplikacje automatyzujące procesy w Twojej firmie. Od chatbotów AI po automatyczne przetwarzanie danych — rozwiązania oszczędzające Twój czas i pieniądze.",
+          number: "02",
+          title: "Headless e-commerce i marketplace",
+          punchline: "Sklep z pełną kontrolą — bez prowizji, bez sufitu wzrostu.",
+          description: "Platformy sprzedażowe B2B, B2C i marketplace'y B2B2C na Medusa.js: open-source, elastyczne integracje i niższe koszty operacyjne niż standardowe rozwiązania SaaS. ",
+          href: "/uslugi/ecommerce-development",
         },
-        responsive: {
+        ai: {
+          number: "03",
+          title: "Wdrożenia AI i automatyzacje",
+          punchline: "Mniej powtarzalnej pracy, więcej czasu na to, co ważne.",
+          description: "Chatboty AI, asystenci RAG, automatyzacje procesów i integracje z danymi firmowymi — rozwiązania, które realnie odciążają zespół i przyspieszają obsługę klientów.",
+          href: "/uslugi/ai-integrations",
+        },
+        apps: {
           number: "04",
-          title: "Kompleksowe Rozwiązania A-Z",
-          description: "Pełne wsparcie od początkowej koncepcji przez uruchomienie aż po dalszą obsługę. Działa perfekcyjnie na telefonach, tabletach i komputerach. Zajmuję się wszystkim, abyś mógł skupić się na biznesie.",
+          title: "Dedykowane aplikacje webowe",
+          punchline: "System dopasowany do Twojej firmy, nie firma dopasowana do systemu.",
+          description: "Aplikacje webowe, panele B2B, MVP i platformy SaaS budowane pod konkretną logikę biznesową — z czystą architekturą i przestrzenią do skalowania.",
+          href: "/uslugi/custom-web-applications",
         },
       },
     },
@@ -503,33 +588,33 @@ export const translations = {
       items: {
         landing: {
           number: "01",
-          title: "Strony Landing Page",
-          problem: "Potrzebujesz strony konwertującej?",
-          description: "Niestandardowe strony landing zaprojektowane dla maksymalnych konwersji — z czasem ładowania poniżej 2s, znacznikami przyjaznymi SEO, responsywnym designem i płynnymi formularzami pozyskiwania leadów. Idealne do premier produktów, rejestracji SaaS i kampanii marketingowych. Zbudowane z Next.js dla optymalnej wydajności.",
+          title: "Strony Landing Page i Firmowe",
+          problem: "Masz ruch, ale mało zapytań?",
+          description: "Landing page na Next.js zoptymalizowany pod konwersję i SEO — szybkie ładowanie, responsywne, nowoczesny design, wysoka konwersja, doskonała skalowalność. ",
         },
         ecommerce: {
           number: "02",
-          title: "E-Commerce i Sklepy Online",
-          problem: "Chcesz sprzedawać online?",
-          description: "Bezpieczne, skalowalne rozwiązania e-commerce z integracją Stripe, zarządzaniem magazynem w czasie rzeczywistym, filtrowaniem produktów i procesami zakupowymi zoptymalizowanymi pod konwersje. Czy uruchamiasz mały sklep czy skalujesz do tysięcy produktów — sklepy, które sprzedają.",
+          title: "Sklepy E-Commerce",
+          problem: "Platforma zaczyna ograniczać Twój rozwój?",
+          description: "Sklepy headless na Medusa.js — pełna kontrola nad checkoutem, integracjami i marżą. Niższe koszty operacyjne i brak sztucznych ograniczeń w miarę wzrostu.",
         },
         marketplace: {
           number: "03",
-          title: "Marketplace i Platformy",
-          problem: "Budujesz platformę multi-vendor?",
-          description: "Skalowalne platformy marketplace z uwierzytelnianiem użytkowników, integracją płatności Stripe Connect i panelami administracyjnymi dla pełnej kontroli. Zbudowane z Next.js i Node.js.",
+          title: "Marketplace i Platformy Multi-Vendor",
+          problem: "Chcesz zbudować platformę dla wielu sprzedawców?",
+          description: "Marketplace'y z własną logiką prowizji, płatności i zarządzania kontami sprzedawców — dopasowane do modelu biznesowego od pierwszej linii kodu.",
         },
         webApps: {
           number: "04",
-          title: "Aplikacje Webowe",
-          problem: "Potrzebujesz niestandardowego oprogramowania?",
-          description: "Niestandardowe aplikacje webowe zbudowane z React, Next.js i Node.js. Funkcje czasu rzeczywistego przez WebSockets, intuicyjny UI/UX, uwierzytelnianie oparte na rolach i panele administracyjne — rozwiązywanie złożonych problemów biznesowych z czystym, łatwym w utrzymaniu kodem.",
+          title: "Dedykowane Aplikacje Webowe",
+          problem: "Żadne gotowe narzędzie nie pasuje do Twojego procesu?",
+          description: "Aplikacje webowe i systemy wewnętrzne na Next.js — budowane pod realną logikę biznesową, z architekturą, która rośnie razem z firmą.",
         },
         seo: {
           number: "05",
-          title: "Strony Zoptymalizowane SEO",
-          problem: "Nie pozycjonujesz się w Google?",
-          description: "Strony zbudowane zgodnie z najlepszymi praktykami SEO: semantyczny HTML, szybka wydajność, odpowiednie meta tagi i dane strukturalne dla lepszych pozycji w wyszukiwarkach.",
+          title: "Strony Zoptymalizowane pod SEO",
+          problem: "Konkurencja jest wyżej w Google, choć Twoja oferta jest lepsza?",
+          description: "Strony na Next.js z technicznym SEO od podstaw: szybkie ładowanie, poprawna semantyka, Core Web Vitals i struktura zrozumiała zarówno dla użytkowników, jak i dla Google.",
         },
       },
     },

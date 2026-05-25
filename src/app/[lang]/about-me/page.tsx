@@ -14,6 +14,12 @@ import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, type Language } from '@/lib/language';
+import {
+  DEFAULT_SOCIAL_IMAGE,
+  getSanitySocialImageUrl,
+  SOCIAL_IMAGE_HEIGHT,
+  SOCIAL_IMAGE_WIDTH,
+} from '@/lib/seo';
 
 interface LocalizedAboutMePageProps {
   params: Promise<{ lang: string }>;
@@ -38,12 +44,12 @@ export async function generateMetadata({ params }: LocalizedAboutMePageProps): P
   const intro = getLocalizedText(about.intro, language);
   const seoTitle = getLocalizedText(about.seo?.metaTitle, language, title);
   const seoDescription = getLocalizedText(about.seo?.metaDescription, language, intro);
-  const canonical = absoluteUrl(localizedPath(language, '/about-me'));
+  const canonical = about.seo?.canonicalUrl || absoluteUrl(localizedPath(language, '/about-me'));
   const ogImageUrl = about.seo?.ogImage
-    ? urlFor(about.seo.ogImage).width(1200).height(630).fit('crop').auto('format').url()
+    ? getSanitySocialImageUrl(about.seo.ogImage)
     : about.heroImage
-      ? urlFor(about.heroImage).width(1200).height(630).fit('crop').auto('format').url()
-      : undefined;
+      ? getSanitySocialImageUrl(about.heroImage)
+      : DEFAULT_SOCIAL_IMAGE;
 
   return {
     title: seoTitle,
@@ -63,9 +69,21 @@ export async function generateMetadata({ params }: LocalizedAboutMePageProps): P
       url: canonical,
       title: seoTitle,
       description: seoDescription,
-      images: ogImageUrl ? [{ url: ogImageUrl }] : undefined,
+      siteName: 'AppCrates',
+      images: [{
+        url: ogImageUrl,
+        width: SOCIAL_IMAGE_WIDTH,
+        height: SOCIAL_IMAGE_HEIGHT,
+        alt: seoTitle,
+      }],
       locale: language === 'pl' ? 'pl_PL' : 'en_US',
       alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoTitle,
+      description: seoDescription,
+      images: [{ url: ogImageUrl, alt: seoTitle }],
     },
   };
 }

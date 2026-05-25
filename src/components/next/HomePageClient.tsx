@@ -6,6 +6,7 @@ import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import ChatWidget from '@/components/next/ChatWidget';
 import HeroNew from '@/components/new/HeroNew';
+import HeroNewv2 from '@/components/new/HeroNewv2';
 import type { Post, Project } from '@/types/sanity.types';
 
 const TechStackNew = dynamic(() => import('@/components/new/TechStackNew'));
@@ -56,7 +57,7 @@ export default function HomePageClient({ projects, posts }: HomePageClientProps)
     <div className="bg-indigo-950 min-h-screen">
       <NextHeader />
       <main>
-        <HeroNew />
+        <HeroNewv2 />
         <TechStackNew />
         <AboutNew />
         <ServicesNew />

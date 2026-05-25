@@ -9,6 +9,7 @@ export const revalidate = 3600;
 const staticPages = [
   { path: '/', changeFrequency: 'weekly' as const, priority: 1 },
   { path: '/blog', changeFrequency: 'daily' as const, priority: 0.9 },
+  { path: '/kalkulator', changeFrequency: 'monthly' as const, priority: 0.7 },
   { path: '/faq', changeFrequency: 'monthly' as const, priority: 0.6 },
   { path: '/about-me', changeFrequency: 'monthly' as const, priority: 0.6 },
   { path: '/privacy-policy', changeFrequency: 'yearly' as const, priority: 0.3 },
@@ -36,17 +37,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticPages.flatMap((page) => localizedEntries(page.path, page)),
     ...posts.flatMap((post) => localizedEntries(`/blog/${post.slug}`, {
-      lastModified: post._updatedAt || post.publishedAt || new Date().toISOString(),
+      lastModified: post._updatedAt || post.publishedAt,
       changeFrequency: 'monthly',
       priority: 0.7,
     })),
     ...projects.flatMap((project) => localizedEntries(`/project/${project.slug}`, {
-      lastModified: project._updatedAt || project.publishedAt || new Date().toISOString(),
+      lastModified: project._updatedAt || project.publishedAt,
       changeFrequency: 'monthly',
       priority: 0.7,
     })),
     ...serviceLandings.flatMap((service) => localizedEntries(`/uslugi/${service.slug}`, {
-      lastModified: service._updatedAt || new Date().toISOString(),
+      lastModified: service._updatedAt,
       changeFrequency: 'monthly',
       priority: 0.8,
     })),

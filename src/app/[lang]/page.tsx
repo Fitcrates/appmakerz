@@ -5,6 +5,7 @@ import { getFeaturedProjects, getPosts } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
+import { DEFAULT_SOCIAL_IMAGE, SOCIAL_IMAGE_HEIGHT, SOCIAL_IMAGE_WIDTH } from '@/lib/seo';
 import { translations } from '@/translations/translations';
 import type { Post, Project } from '@/types/sanity.types';
 
@@ -57,9 +58,10 @@ export async function generateMetadata({ params }: LocalizedHomePageProps): Prom
       alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
       images: [
         {
-          url: absoluteUrl('/media/default-og-image.png'),
-          width: 1200,
-          height: 630,
+          url: DEFAULT_SOCIAL_IMAGE,
+          width: SOCIAL_IMAGE_WIDTH,
+          height: SOCIAL_IMAGE_HEIGHT,
+          alt: title,
           type: 'image/png',
         },
       ],
@@ -68,7 +70,7 @@ export async function generateMetadata({ params }: LocalizedHomePageProps): Prom
       card: 'summary_large_image',
       title,
       description,
-      images: [absoluteUrl('/media/default-og-image.png')],
+      images: [{ url: DEFAULT_SOCIAL_IMAGE, alt: title }],
     },
   };
 }

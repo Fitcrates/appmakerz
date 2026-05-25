@@ -131,6 +131,7 @@ export async function getPosts() {
     `
     *[_type == "post" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc) {
       _id,
+      _updatedAt,
       title { en, pl },
       slug,
       mainImage,
@@ -173,6 +174,7 @@ export async function getPost(slug: string) {
   return fetchSanity<any>(
     `*[_type == "post" && slug.current == $slug][0]{
       _id,
+      _updatedAt,
       title { en, pl },
       slug,
       author->{

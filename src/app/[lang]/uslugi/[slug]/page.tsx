@@ -18,6 +18,12 @@ import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
+import {
+  DEFAULT_SOCIAL_IMAGE,
+  getSanitySocialImageUrl,
+  SOCIAL_IMAGE_HEIGHT,
+  SOCIAL_IMAGE_WIDTH,
+} from '@/lib/seo';
 import type { Post, Project, ServiceLanding } from '@/types/sanity.types';
 
 interface LocalizedServiceLandingPageProps {
@@ -93,12 +99,12 @@ export async function generateMetadata({ params }: LocalizedServiceLandingPagePr
   const metaTitle = getLocalizedText(landing.seo?.metaTitle, language, title);
   const metaDescription = getLocalizedText(landing.seo?.metaDescription, language, intro);
   const path = `/uslugi/${landing.slug.current}`;
-  const canonical = absoluteUrl(localizedPath(language, path));
+  const canonical = landing.seo?.canonicalUrl || absoluteUrl(localizedPath(language, path));
   const ogImage = landing.seo?.ogImage
-    ? urlFor(landing.seo.ogImage).width(1200).height(630).fit('crop').auto('format').url()
+    ? getSanitySocialImageUrl(landing.seo.ogImage)
     : landing.heroImage
-      ? urlFor(landing.heroImage).width(1200).height(630).fit('crop').auto('format').url()
-      : undefined;
+      ? getSanitySocialImageUrl(landing.heroImage)
+      : DEFAULT_SOCIAL_IMAGE;
 
   return {
     title: metaTitle,
@@ -118,9 +124,21 @@ export async function generateMetadata({ params }: LocalizedServiceLandingPagePr
       url: canonical,
       title: metaTitle,
       description: metaDescription,
-      images: ogImage ? [{ url: ogImage }] : undefined,
+      siteName: 'AppCrates',
+      images: [{
+        url: ogImage,
+        width: SOCIAL_IMAGE_WIDTH,
+        height: SOCIAL_IMAGE_HEIGHT,
+        alt: metaTitle,
+      }],
       locale: language === 'pl' ? 'pl_PL' : 'en_US',
       alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: metaTitle,
+      description: metaDescription,
+      images: [{ url: ogImage, alt: metaTitle }],
     },
   };
 }
