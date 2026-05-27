@@ -6,7 +6,21 @@ import { localizedPath } from '@/lib/i18n-routing';
 
 const SECRET = process.env.SANITY_WEBHOOK_SECRET;
 
-// We no longer need revalidateLocalizedPath as revalidatePath('/[lang]/...', 'page') handles all languages natively.
+function getSlugValue(slug: unknown): string | null {
+  if (typeof slug === 'string') return slug;
+  if (slug && typeof slug === 'object' && 'current' in slug) {
+    const current = (slug as { current?: unknown }).current;
+    return typeof current === 'string' ? current : null;
+  }
+
+  return null;
+}
+
+function revalidateLocalizedPath(path: string) {
+  for (const language of SUPPORTED_LANGUAGES) {
+    revalidatePath(localizedPath(language, path));
+  }
+}
 
 function isValidSanitySignature(signatureHeader: string, body: string, secret: string): boolean {
   const parts = signatureHeader.split(',');
@@ -45,40 +59,57 @@ export async function POST(request: NextRequest) {
   try {
     const json = JSON.parse(body);
     const docType = json._type as string;
+    const slug = getSlugValue(json.slug);
 
     if (docType === 'post') {
       revalidateTag('posts');
       revalidateTag('blog');
       revalidateTag('featured-posts');
       revalidateTag('post'); // Clear individual post fetch cache
-      if (json.slug?.current) {
-        revalidateTag(json.slug.current);
+      if (slug) {
+        revalidateTag(slug);
       }
       
-      // Target the exact Next.js App Router static segments
-      revalidatePath('/[lang]', 'page'); // Homepage has popular posts
+      // Revalidate both route patterns and the concrete localized URLs users request.
+      revalidatePath('/[lang]', 'page');
       revalidatePath('/[lang]/blog', 'page');
       revalidatePath('/[lang]/blog/[slug]', 'page');
+      revalidateLocalizedPath('/');
+      revalidateLocalizedPath('/blog');
+      if (slug) {
+        revalidateLocalizedPath(`/blog/${slug}`);
+      }
 
     } else if (docType === 'project') {
       revalidateTag('projects');
       revalidateTag('project'); // Clear individual project fetch cache
-      if (json.slug?.current) {
-        revalidateTag(json.slug.current);
+      if (slug) {
+        revalidateTag(slug);
       }
       
       revalidatePath('/[lang]', 'page'); // Homepage has featured projects
       revalidatePath('/[lang]/project/[slug]', 'page');
+      revalidateLocalizedPath('/');
+      if (slug) {
+        revalidateLocalizedPath(`/project/${slug}`);
+      }
 
     } else if (docType === 'serviceLanding') {
       revalidateTag('service-landings');
       revalidateTag('service-landing');
+      if (slug) {
+        revalidateTag(slug);
+      }
       
       revalidatePath('/[lang]/uslugi/[slug]', 'page');
+      if (slug) {
+        revalidateLocalizedPath(`/uslugi/${slug}`);
+      }
 
     } else if (docType === 'aboutMe') {
       revalidateTag('about-me');
       revalidatePath('/[lang]/about-me', 'page');
+      revalidateLocalizedPath('/about-me');
     }
 
     revalidateTag('sitemap');
@@ -88,6 +119,7 @@ export async function POST(request: NextRequest) {
       revalidated: true,
       now: Date.now(),
       docType,
+      slug,
     });
   } catch {
     return NextResponse.json(
