@@ -18,6 +18,7 @@ import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
+import { getImageAlt } from '@/lib/image-alt';
 import {
   DEFAULT_SOCIAL_IMAGE,
   getSanitySocialImageUrl,
@@ -105,6 +106,7 @@ export async function generateMetadata({ params }: LocalizedServiceLandingPagePr
     : landing.heroImage
       ? getSanitySocialImageUrl(landing.heroImage)
       : DEFAULT_SOCIAL_IMAGE;
+  const imageAlt = getImageAlt(landing.seo?.ogImage || landing.heroImage, metaTitle);
 
   return {
     title: metaTitle,
@@ -129,7 +131,7 @@ export async function generateMetadata({ params }: LocalizedServiceLandingPagePr
         url: ogImage,
         width: SOCIAL_IMAGE_WIDTH,
         height: SOCIAL_IMAGE_HEIGHT,
-        alt: metaTitle,
+        alt: imageAlt,
       }],
       locale: language === 'pl' ? 'pl_PL' : 'en_US',
       alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
@@ -138,7 +140,7 @@ export async function generateMetadata({ params }: LocalizedServiceLandingPagePr
       card: 'summary_large_image',
       title: metaTitle,
       description: metaDescription,
-      images: [{ url: ogImage, alt: metaTitle }],
+      images: [{ url: ogImage, alt: imageAlt }],
     },
   };
 }
@@ -256,7 +258,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
         <section className="relative min-h-[60vh] lg:min-h-[75vh] flex items-end overflow-hidden">
           {heroImageUrl ? (
             <div className="absolute inset-0 z-0">
-              <Image src={heroImageUrl} alt="" unoptimized fill priority sizes="100vw" className="object-cover opacity-25" aria-hidden="true" />
+              <Image src={heroImageUrl} alt={getImageAlt(landing.heroImage, title)} unoptimized fill priority sizes="100vw" className="object-cover opacity-25" aria-hidden="true" />
               <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/95 via-indigo-950/60 to-indigo-950/40" />
             </div>
           ) : (

@@ -5,7 +5,9 @@ import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { urlFor } from '@/lib/sanity.image';
+import { getImageAlt } from '@/lib/image-alt';
 import { motion, AnimatePresence } from 'framer-motion';
+import type { Transition } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 import { translations } from '../../translations/translations';
 
@@ -48,7 +50,7 @@ const slideVariants = {
   }),
 };
 
-const slideTransition = {
+const slideTransition: Transition = {
   x: { type: 'spring', stiffness: 300, damping: 30 },
   opacity: { duration: 0.25 },
   scale: { duration: 0.3 },
@@ -79,6 +81,10 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
   const lang = (params?.lang as 'en' | 'pl') || 'pl';
 
   const clickToZoomText = translations[lang]?.projects?.clickToZoom || (lang === 'pl' ? 'Kliknij, aby powiększyć' : 'Click to zoom');
+  const galleryImageAlt = (image: GalleryImage, index: number, context: string) => getImageAlt(
+    image,
+    image.caption || `${context} ${index + 1}`,
+  );
 
   /* ---- Carousel state ---- */
   const [activeIndex, setActiveIndex] = useState(0);
@@ -325,7 +331,7 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
               >
                 <Image
                   src={urlFor(images[activeIndex]).width(1200).auto('format').quality(80).url()}
-                  alt={images[activeIndex].alt || 'Gallery image'}
+                  alt={galleryImageAlt(images[activeIndex], activeIndex, 'Gallery image')}
                   fill
                   className={`object-cover ${zoom ? 'cursor-pointer' : ''}`}
                   onClick={() => openLightbox(activeIndex)}
@@ -416,7 +422,7 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
           >
             <Image
               src={aspectRatio === 'auto' ? urlFor(img).width(1200).auto('format').quality(80).url() : urlFor(img).width(1200).auto('format').quality(80).url()}
-              alt={img.alt || 'Gallery image'}
+              alt={galleryImageAlt(img, idx, 'Gallery image')}
               fill={aspectRatio !== 'auto'}
               width={aspectRatio === 'auto' ? 1200 : undefined}
               height={aspectRatio === 'auto' ? 900 : undefined}
@@ -535,7 +541,7 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
                   >
                     <Image
                       src={urlFor(images[selectedImageIndex]).width(1920).auto('format').quality(90).url()}
-                      alt={images[selectedImageIndex].alt || 'Zoomed gallery image'}
+                      alt={galleryImageAlt(images[selectedImageIndex], selectedImageIndex, 'Zoomed gallery image')}
                       fill
                       className="object-contain pointer-events-none"
                       priority
@@ -580,7 +586,7 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
                       >
                         <Image
                           src={urlFor(img).width(120).height(120).auto('format').quality(60).fit('crop').url()}
-                          alt={img.alt || `Thumbnail ${idx + 1}`}
+                          alt={galleryImageAlt(img, idx, 'Gallery thumbnail')}
                           fill
                           className="object-cover"
                           sizes="64px"

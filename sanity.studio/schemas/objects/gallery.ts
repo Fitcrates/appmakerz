@@ -18,6 +18,7 @@ export default {
               name: 'alt',
               type: 'string',
               title: 'Alternative text',
+              validation: (Rule: any) => Rule.required().warning('Add alt text for accessibility and image search.'),
             },
             {
               name: 'caption',

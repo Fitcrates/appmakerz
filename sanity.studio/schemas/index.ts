@@ -8,6 +8,7 @@ import gallery from './objects/gallery';
 import pages from './documents/pages';
 import serviceLanding from './documents/serviceLanding';
 import aboutMe from './documents/aboutMe';
+import category from './documents/category';
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // Documents
@@ -18,6 +19,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   pages,
   serviceLanding,
   aboutMe,
+  category,
   // Objects
   blockContent,
   gallery,

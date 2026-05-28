@@ -137,7 +137,7 @@ export default {
       type: 'image',
       group: 'content',
       options: { hotspot: true },
-      fields: [{ name: 'alt', title: 'Alt text', type: 'string' }],
+      fields: [{ name: 'alt', title: 'Alt text', type: 'string', validation: (Rule: any) => Rule.required().warning('Add alt text for accessibility and image search.') }],
     },
     {
       name: 'problems',
@@ -267,13 +267,27 @@ export default {
           name: 'en',
           title: 'English Content',
           type: 'array',
-          of: [{ type: 'block' }, { type: 'image', options: { hotspot: true } }],
+          of: [
+            { type: 'block' },
+            {
+              type: 'image',
+              options: { hotspot: true },
+              fields: [{ name: 'alt', title: 'Alt text', type: 'string', validation: (Rule: any) => Rule.required().warning('Add alt text for accessibility and image search.') }],
+            },
+          ],
         },
         {
           name: 'pl',
           title: 'Polish Content',
           type: 'array',
-          of: [{ type: 'block' }, { type: 'image', options: { hotspot: true } }],
+          of: [
+            { type: 'block' },
+            {
+              type: 'image',
+              options: { hotspot: true },
+              fields: [{ name: 'alt', title: 'Alt text', type: 'string', validation: (Rule: any) => Rule.required().warning('Add alt text for accessibility and image search.') }],
+            },
+          ],
         },
       ],
     },
@@ -474,7 +488,7 @@ export default {
           },
         },
         { name: 'canonicalUrl', title: 'Canonical URL', type: 'url' },
-        { name: 'ogImage', title: 'Open Graph Image', type: 'image', options: { hotspot: true } },
+        { name: 'ogImage', title: 'Open Graph Image', type: 'image', options: { hotspot: true }, fields: [{ name: 'alt', title: 'Alt text', type: 'string' }] },
         { name: 'noIndex', title: 'Noindex', type: 'boolean', initialValue: false },
       ],
     },

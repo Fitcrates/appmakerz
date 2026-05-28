@@ -67,6 +67,7 @@ export default {
           title: 'Alt Text',
           type: 'string',
           description: 'Descriptive alt text for accessibility and SEO',
+          validation: (Rule: any) => Rule.required().warning('Add alt text for accessibility and image search.'),
         },
       ],
     },
@@ -75,18 +76,8 @@ export default {
       title: 'Categories',
       type: 'array',
       group: 'content',
-      of: [
-        {
-          type: 'string',
-          options: {
-            list: [
-              { title: 'Dev', value: 'Dev' },
-              { title: 'No-code', value: 'No-code' },
-              { title: 'Wellness', value: 'Wellness' },
-            ],
-          },
-        },
-      ],
+      description: 'Main content buckets used for blog filtering and internal linking.',
+      of: [{ type: 'reference', to: [{ type: 'category' }] }],
     },
     {
       name: 'tags',
@@ -221,6 +212,7 @@ export default {
                   title: 'Alt Text',
                   type: 'string',
                   description: 'Required for accessibility and SEO',
+                  validation: (Rule: any) => Rule.required().warning('Add alt text for accessibility and image search.'),
                 },
                 {
                   name: 'caption',
@@ -300,6 +292,7 @@ export default {
                   title: 'Alt Text',
                   type: 'string',
                   description: 'Required for accessibility and SEO',
+                  validation: (Rule: any) => Rule.required().warning('Add alt text for accessibility and image search.'),
                 },
                 {
                   name: 'caption',
@@ -453,6 +446,7 @@ export default {
           type: 'image',
           description: 'Custom image for social media sharing. Defaults to main image if empty. Recommended: 1200×630px.',
           options: { hotspot: true },
+          fields: [{ name: 'alt', title: 'Alt text', type: 'string' }],
         },
         {
           name: 'noIndex',

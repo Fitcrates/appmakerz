@@ -8,6 +8,7 @@ import { absoluteUrl } from '@/lib/site';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
+import { getImageAlt } from '@/lib/image-alt';
 import {
   createSneakPeekDescription,
   DEFAULT_SOCIAL_IMAGE,
@@ -67,7 +68,7 @@ export async function generateMetadata({ params }: LocalizedBlogPostPageProps): 
     : post.mainImage
       ? getSanitySocialImageUrl(post.mainImage)
       : DEFAULT_SOCIAL_IMAGE;
-  const imageAlt = metaTitle || title;
+  const imageAlt = getImageAlt(post.seo?.ogImage || post.mainImage, metaTitle || title);
 
   return {
     title: metaTitle,

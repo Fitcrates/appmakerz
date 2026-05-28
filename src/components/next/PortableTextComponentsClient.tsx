@@ -2,6 +2,7 @@
 
 import type { PortableTextComponents } from '@portabletext/react';
 import { urlFor } from '@/lib/sanity.image';
+import { getImageAlt } from '@/lib/image-alt';
 import PortableTextCodeBlock from '@/components/next/PortableTextCodeBlock';
 import PortableTextGallery from '@/components/next/PortableTextGallery';
 import styles from '@/components/next/PortableTextCodeBlock.module.css';
@@ -76,7 +77,7 @@ export const portableTextComponentsClient: PortableTextComponents = {
         <figure className="relative w-full my-10">
           <img
             src={urlFor(value).width(1400).auto('format').quality(80).fit('max').url()}
-            alt={value.alt || ''}
+            alt={getImageAlt(value, value.caption || 'Article image')}
             width={1400}
             height={1050}
             className="w-full h-auto border border-white/10"

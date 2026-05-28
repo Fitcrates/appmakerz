@@ -14,6 +14,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
 import { urlFor } from '@/lib/sanity.image';
+import { getImageAlt } from '@/lib/image-alt';
 import { translations } from '@/translations/translations';
 
 interface BlogPostLocalizedContentProps {
@@ -46,7 +47,7 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
             <div className="relative h-[38vh] sm:h-[44vh] lg:h-[50vh] overflow-hidden">
               <Image
                 src={heroImageUrl}
-                alt={title}
+                alt={getImageAlt(post.mainImage, title)}
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 1200px"
@@ -77,7 +78,7 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
               {authorImageUrl ? (
                 <Image
                   src={authorImageUrl}
-                  alt={post.author?.name || ''}
+                  alt={post.author?.name || 'Post author'}
                   width={80}
                   height={80}
                   className="w-14 h-14 rounded-full object-cover"

@@ -8,6 +8,7 @@ import { privacyPolicyContent } from '@/content/privacy-policy';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, type Language } from '@/lib/language';
+import { DEFAULT_SOCIAL_IMAGE, SOCIAL_IMAGE_HEIGHT, SOCIAL_IMAGE_WIDTH } from '@/lib/seo';
 
 interface LocalizedPrivacyPolicyPageProps {
   params: Promise<{ lang: string }>;
@@ -23,10 +24,11 @@ export async function generateMetadata({ params }: LocalizedPrivacyPolicyPagePro
   const language = lang as Language;
   const content = privacyPolicyContent[language];
   const canonical = absoluteUrl(localizedPath(language, '/privacy-policy'));
+  const description = content.sections[0]?.paragraphs[0];
 
   return {
     title: content.title,
-    description: content.sections[0]?.paragraphs[0],
+    description,
     keywords: language === 'pl'
       ? ['polityka prywatności', 'rodo', 'gdpr', 'appcrates']
       : ['privacy policy', 'gdpr', 'appcrates'],
@@ -38,7 +40,29 @@ export async function generateMetadata({ params }: LocalizedPrivacyPolicyPagePro
         'x-default': absoluteUrl(localizedPath('pl', '/privacy-policy')),
       },
     },
-    openGraph: { type: 'website', url: canonical, title: content.title, description: content.sections[0]?.paragraphs[0] },
+    robots: { index: true, follow: true },
+    openGraph: {
+      type: 'website',
+      url: canonical,
+      title: content.title,
+      description,
+      siteName: 'AppCrates',
+      images: [{
+        url: DEFAULT_SOCIAL_IMAGE,
+        width: SOCIAL_IMAGE_WIDTH,
+        height: SOCIAL_IMAGE_HEIGHT,
+        alt: content.title,
+        type: 'image/png',
+      }],
+      locale: language === 'pl' ? 'pl_PL' : 'en_US',
+      alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: content.title,
+      description,
+      images: [{ url: DEFAULT_SOCIAL_IMAGE, alt: content.title }],
+    },
   };
 }
 

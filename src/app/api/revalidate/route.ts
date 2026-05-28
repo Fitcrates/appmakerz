@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { SUPPORTED_LANGUAGES } from '@/lib/language';
 import { localizedPath } from '@/lib/i18n-routing';
+import { absoluteUrl } from '@/lib/site';
+import { submitIndexNow } from '@/lib/indexnow';
 
 const SECRET = process.env.SANITY_WEBHOOK_SECRET;
 
@@ -20,6 +22,10 @@ function revalidateLocalizedPath(path: string) {
   for (const language of SUPPORTED_LANGUAGES) {
     revalidatePath(localizedPath(language, path));
   }
+}
+
+function localizedAbsoluteUrls(path: string) {
+  return SUPPORTED_LANGUAGES.map((language) => absoluteUrl(localizedPath(language, path)));
 }
 
 function isValidSanitySignature(signatureHeader: string, body: string, secret: string): boolean {
@@ -60,6 +66,7 @@ export async function POST(request: NextRequest) {
     const json = JSON.parse(body);
     const docType = json._type as string;
     const slug = getSlugValue(json.slug);
+    const indexNowUrls = new Set<string>();
 
     if (docType === 'post') {
       revalidateTag('posts');
@@ -76,8 +83,11 @@ export async function POST(request: NextRequest) {
       revalidatePath('/[lang]/blog/[slug]', 'page');
       revalidateLocalizedPath('/');
       revalidateLocalizedPath('/blog');
+      localizedAbsoluteUrls('/').forEach((url) => indexNowUrls.add(url));
+      localizedAbsoluteUrls('/blog').forEach((url) => indexNowUrls.add(url));
       if (slug) {
         revalidateLocalizedPath(`/blog/${slug}`);
+        localizedAbsoluteUrls(`/blog/${slug}`).forEach((url) => indexNowUrls.add(url));
       }
 
     } else if (docType === 'project') {
@@ -90,8 +100,10 @@ export async function POST(request: NextRequest) {
       revalidatePath('/[lang]', 'page'); // Homepage has featured projects
       revalidatePath('/[lang]/project/[slug]', 'page');
       revalidateLocalizedPath('/');
+      localizedAbsoluteUrls('/').forEach((url) => indexNowUrls.add(url));
       if (slug) {
         revalidateLocalizedPath(`/project/${slug}`);
+        localizedAbsoluteUrls(`/project/${slug}`).forEach((url) => indexNowUrls.add(url));
       }
 
     } else if (docType === 'serviceLanding') {
@@ -104,22 +116,35 @@ export async function POST(request: NextRequest) {
       revalidatePath('/[lang]/uslugi/[slug]', 'page');
       if (slug) {
         revalidateLocalizedPath(`/uslugi/${slug}`);
+        localizedAbsoluteUrls(`/uslugi/${slug}`).forEach((url) => indexNowUrls.add(url));
       }
 
     } else if (docType === 'aboutMe') {
       revalidateTag('about-me');
       revalidatePath('/[lang]/about-me', 'page');
       revalidateLocalizedPath('/about-me');
+      localizedAbsoluteUrls('/about-me').forEach((url) => indexNowUrls.add(url));
+    } else if (docType === 'category') {
+      revalidateTag('post-categories');
+      revalidateTag('posts');
+      revalidateTag('blog');
+      revalidateTag('featured-posts');
+      revalidatePath('/[lang]/blog', 'page');
+      revalidateLocalizedPath('/blog');
+      localizedAbsoluteUrls('/blog').forEach((url) => indexNowUrls.add(url));
     }
 
     revalidateTag('sitemap');
     revalidatePath('/sitemap.xml');
+    indexNowUrls.add(absoluteUrl('/sitemap.xml'));
+    const indexNow = await submitIndexNow(Array.from(indexNowUrls));
 
     return NextResponse.json({
       revalidated: true,
       now: Date.now(),
       docType,
       slug,
+      indexNow,
     });
   } catch {
     return NextResponse.json(

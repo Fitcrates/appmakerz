@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { DEFAULT_LANGUAGE } from '@/lib/language';
 import { siteUrl } from '@/lib/site';
+import { DEFAULT_SOCIAL_IMAGE, SOCIAL_IMAGE_HEIGHT, SOCIAL_IMAGE_WIDTH } from '@/lib/seo';
 import './globals.css';
 
 export const viewport: Viewport = {
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
     default: 'AppCrates',
     template: '%s | AppCrates',
   },
+  description: 'AppCrates builds high-performance websites, web applications, AI tools, and headless e-commerce platforms with Next.js and React.',
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -32,6 +34,21 @@ export const metadata: Metadata = {
       pl: '/pl',
       'x-default': '/pl',
     },
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'AppCrates',
+    images: [{
+      url: DEFAULT_SOCIAL_IMAGE,
+      width: SOCIAL_IMAGE_WIDTH,
+      height: SOCIAL_IMAGE_HEIGHT,
+      alt: 'AppCrates',
+      type: 'image/png',
+    }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: [{ url: DEFAULT_SOCIAL_IMAGE, alt: 'AppCrates' }],
   },
 };
 

@@ -78,7 +78,7 @@ const HeroNewv2: React.FC = () => {
       <div className="absolute inset-0 z-0" aria-hidden="true">
         <Image
           src="/media/herotest.webp"
-          alt=""
+          alt="Abstract AppCrates hero background"
           role="presentation"
           fill
           priority

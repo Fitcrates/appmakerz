@@ -9,6 +9,7 @@ import { faqContent } from '@/content/faq';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, type Language } from '@/lib/language';
+import { DEFAULT_SOCIAL_IMAGE, SOCIAL_IMAGE_HEIGHT, SOCIAL_IMAGE_WIDTH } from '@/lib/seo';
 
 interface LocalizedFaqPageProps {
   params: Promise<{ lang: string }>;
@@ -39,7 +40,29 @@ export async function generateMetadata({ params }: LocalizedFaqPageProps): Promi
         'x-default': absoluteUrl(localizedPath('pl', '/faq')),
       },
     },
-    openGraph: { type: 'website', url: canonical, title: content.title, description: content.subtitle },
+    robots: { index: true, follow: true },
+    openGraph: {
+      type: 'website',
+      url: canonical,
+      title: content.title,
+      description: content.subtitle,
+      siteName: 'AppCrates',
+      images: [{
+        url: DEFAULT_SOCIAL_IMAGE,
+        width: SOCIAL_IMAGE_WIDTH,
+        height: SOCIAL_IMAGE_HEIGHT,
+        alt: content.title,
+        type: 'image/png',
+      }],
+      locale: language === 'pl' ? 'pl_PL' : 'en_US',
+      alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: content.title,
+      description: content.subtitle,
+      images: [{ url: DEFAULT_SOCIAL_IMAGE, alt: content.title }],
+    },
   };
 }
 

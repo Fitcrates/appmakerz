@@ -127,7 +127,7 @@ export interface Post {
   featured?: boolean;
   featuredOrder?: number;
   author: Author;
-  categories?: Array<string | { title?: LocalizedText }>;
+  categories?: Array<string | Category>;
   body: any[] | {
     en: any[];
     pl: any[];
@@ -139,6 +139,15 @@ export interface Post {
   viewCount?: number;
   tags?: string[];
   relatedServices?: ServiceLanding[];
+}
+
+export interface Category {
+  _id: string;
+  title?: LocalizedText;
+  slug?: { current?: string };
+  description?: LocalizedText;
+  color?: string;
+  order?: number;
 }
 
 export interface LocalizedText {

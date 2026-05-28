@@ -2,11 +2,13 @@
 
 import { useMemo, useState } from 'react';
 import { ArrowUpRight, Search } from 'lucide-react';
+import { motion } from 'framer-motion';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import { useLanguage } from '@/context/LanguageContext';
 import { urlFor } from '@/lib/sanity.image';
 import { getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
+import type { Language } from '@/lib/language';
 import { translations } from '@/translations/translations';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import ResponsiveElectricLogo from '@/components/next/ResponsiveElectricLogo';
@@ -14,29 +16,49 @@ import ResponsiveElectricLogo from '@/components/next/ResponsiveElectricLogo';
 interface BlogIndexClientProps {
   posts: any[];
   featuredPosts?: any[];
+  categories?: any[];
   title: string;
   subtitle: string;
 }
 
-export default function BlogIndexClient({ posts, featuredPosts = [], title, subtitle }: BlogIndexClientProps) {
+function getCategorySlug(category: any): string {
+  if (typeof category === 'string') return category.toLowerCase();
+  return category?.slug?.current || '';
+}
+
+function getCategoryLabel(category: any, language: Language): string {
+  if (typeof category === 'string') return category;
+  return getLocalizedText(category?.title, language);
+}
+
+export default function BlogIndexClient({ posts, featuredPosts = [], categories = [], title, subtitle }: BlogIndexClientProps) {
   const { language } = useLanguage();
   const t = translations[language].blog;
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
+  const allCategoriesLabel = language === 'pl' ? 'Wszystkie' : 'All';
 
   const filteredPosts = useMemo(() => {
     const normalizedQuery = searchQuery.toLowerCase().trim();
 
-    if (!normalizedQuery) {
-      return posts;
-    }
-
     return posts.filter((post) => {
       const title = getLocalizedText(post.title, language);
-      return title.toLowerCase().includes(normalizedQuery);
+      const excerpt = getLocalizedText(post.excerpt, language);
+      const tags = Array.isArray(post.tags) ? post.tags.join(' ') : '';
+      const postCategories = Array.isArray(post.categories) ? post.categories : [];
+      const categoryLabels = postCategories
+        .map((category: any) => getCategoryLabel(category, language))
+        .join(' ');
+      const matchesSearch = !normalizedQuery
+        || `${title} ${excerpt} ${tags} ${categoryLabels}`.toLowerCase().includes(normalizedQuery);
+      const matchesCategory = !selectedCategory
+        || postCategories.some((category: any) => getCategorySlug(category) === selectedCategory);
+
+      return matchesSearch && matchesCategory;
     });
-  }, [language, posts, searchQuery]);
+  }, [language, posts, searchQuery, selectedCategory]);
 
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const paginatedPosts = filteredPosts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
@@ -45,7 +67,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], title, subt
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 mb-16 lg:mb-24 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 mb-12 lg:mb-16 items-center">
         <div className="order-2 lg:order-2">
 
 
@@ -60,22 +82,8 @@ export default function BlogIndexClient({ posts, featuredPosts = [], title, subt
             </BurnSpotlightText>
           </div>
 
-          <div className="text-white/40  font-light text-lg max-w-xl mb-12">
+          <div className="text-white/40  font-light text-lg max-w-xl">
             <p>{subtitle}</p>
-          </div>
-
-          <div className="relative max-w-md">
-            <Search className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
-            <input
-              type="text"
-              placeholder={t.search || 'Search posts...'}
-              value={searchQuery}
-              onChange={(event) => {
-                setSearchQuery(event.target.value);
-                setCurrentPage(1);
-              }}
-              className="w-full bg-transparent border-b border-white/10 focus:border-teal-300 pl-8 pr-4 py-3 text-white  placeholder:text-white/30 outline-none transition-colors"
-            />
           </div>
         </div>
 
@@ -89,6 +97,78 @@ export default function BlogIndexClient({ posts, featuredPosts = [], title, subt
         </div>
       </div>
 
+      {/* FILTER BAR */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end border-b border-white/10 mb-12 gap-6 relative">
+        
+        {/* CATEGORIES TABS */}
+        <div className="flex gap-6 lg:gap-8 overflow-x-auto w-full lg:w-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          {categories.length ? (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategory('');
+                  setCurrentPage(1);
+                }}
+                className={`relative whitespace-nowrap pb-4 text-[0.75rem] lg:text-[0.8rem] tracking-[0.15em] uppercase transition-colors duration-300 ${
+                  selectedCategory === ''
+                    ? 'text-teal-300 font-medium'
+                    : 'text-white/40 hover:text-teal-300/70'
+                }`}
+              >
+                {allCategoriesLabel}
+                {selectedCategory === '' && (
+                  <motion.div layoutId="activeTab" className="absolute -bottom-[1px] left-0 w-full h-[2px] bg-teal-300 shadow-[0_0_10px_rgba(94,234,212,0.5)]" />
+                )}
+              </button>
+
+              {categories.map((category) => {
+                const slug = getCategorySlug(category);
+                const label = getLocalizedText(category.title, language);
+                if (!slug || !label) return null;
+
+                return (
+                  <button
+                    key={category._id || slug}
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategory(slug);
+                      setCurrentPage(1);
+                    }}
+                    className={`relative whitespace-nowrap pb-4 text-[0.75rem] lg:text-[0.8rem] tracking-[0.15em] uppercase transition-colors duration-300 ${
+                      selectedCategory === slug
+                        ? 'text-teal-300 font-medium'
+                        : 'text-white/40 hover:text-teal-300/70'
+                    }`}
+                  >
+                    {label}
+                    {selectedCategory === slug && (
+                      <motion.div layoutId="activeTab" className="absolute -bottom-[1px] left-0 w-full h-[2px] bg-teal-300 shadow-[0_0_10px_rgba(94,234,212,0.5)]" />
+                    )}
+                  </button>
+                );
+              })}
+            </>
+          ) : null}
+        </div>
+
+        {/* SEARCH INPUT */}
+        <div className="relative w-full lg:w-72 flex-shrink-0 group pb-4 lg:pb-3">
+          <Search className="absolute left-0 top-[35%] lg:top-[20%] -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-teal-300 transition-colors duration-300" />
+          <input
+            type="text"
+            placeholder={t.search || 'Search posts...'}
+            value={searchQuery}
+            onChange={(event) => {
+              setSearchQuery(event.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full bg-transparent pl-7 pr-2 py-1 text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300"
+          />
+          <div className="absolute -bottom-[1px] left-0 w-0 group-focus-within:w-full h-[2px] bg-teal-300 shadow-[0_0_10px_rgba(94,234,212,0.5)] transition-all duration-500 ease-out" />
+        </div>
+      </div>
+
       <div className={`grid gap-10 xl:gap-12 ${promotedPosts.length ? 'lg:grid-cols-[minmax(0,1fr)_18rem]' : ''}`}>
         <div>
           {paginatedPosts.length ? (
@@ -97,7 +177,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], title, subt
                 const postTitle = getLocalizedText(post.title, language);
                 const excerpt = getLocalizedText(post.excerpt, language);
                 const category = Array.isArray(post.categories) && post.categories.length > 0
-                  ? getLocalizedText(post.categories[0]?.title, language)
+                  ? getCategoryLabel(post.categories[0], language)
                   : '';
                 const imageUrl = post.mainImage ? urlFor(post.mainImage).width(400).height(300).url() : '';
 
@@ -121,7 +201,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], title, subt
                           <div>
                             <div className="flex items-center gap-4 mb-4 flex-wrap">
                               {category ? (
-                                <span className="text-xs px-3 py-1 bg-teal-300/10 text-teal-300  tracking-wider uppercase">
+                                <span className="text-[0.65rem] px-3 py-1 border border-teal-300/20 bg-teal-300/5 text-teal-300 tracking-[0.2em] uppercase group-hover:border-teal-300/40 group-hover:bg-teal-300/10 transition-colors duration-500">
                                   {category}
                                 </span>
                               ) : null}

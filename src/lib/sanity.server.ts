@@ -136,7 +136,11 @@ export async function getPosts() {
       slug,
       mainImage,
       categories[]->{
-        title { en, pl }
+        _id,
+        title { en, pl },
+        slug,
+        color,
+        order
       },
       publishedAt,
       excerpt { en, pl },
@@ -190,7 +194,11 @@ export async function getPost(slug: string) {
       featuredOrder,
       viewCount,
       categories[]->{
-        title { en, pl }
+        _id,
+        title { en, pl },
+        slug,
+        color,
+        order
       },
       tags,
       relatedServices[]->{
@@ -228,7 +236,11 @@ export async function getFeaturedPosts() {
       featuredOrder,
       viewCount,
       categories[]->{
-        title { en, pl }
+        _id,
+        title { en, pl },
+        slug,
+        color,
+        order
       },
       tags
     }
@@ -249,7 +261,11 @@ export async function getPopularPosts() {
       publishedAt,
       viewCount,
       categories[]->{
-        title { en, pl }
+        _id,
+        title { en, pl },
+        slug,
+        color,
+        order
       },
       tags
     }
@@ -404,7 +420,11 @@ export async function getServiceLanding(slug: string) {
         publishedAt,
         excerpt { en, pl },
         categories[]->{
-          title { en, pl }
+          _id,
+          title { en, pl },
+          slug,
+          color,
+          order
         },
         tags
       },
@@ -422,6 +442,23 @@ export async function getServiceLanding(slug: string) {
   );
 
   return normalizeServiceLandingPayload(landing);
+}
+
+export async function getPostCategories() {
+  return fetchSanity<any[]>(
+    `
+    *[_type == "category" && defined(slug.current)] | order(coalesce(order, 100) asc, title.en asc) {
+      _id,
+      title { en, pl },
+      slug,
+      description { en, pl },
+      color,
+      order
+    }
+  `,
+    {},
+    ['post-categories', 'blog']
+  );
 }
 
 export async function getServiceLandings() {

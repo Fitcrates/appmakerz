@@ -414,7 +414,7 @@ export default function ChatWidget() {
             <div className="relative">
               <Image
                 src="/media/AppcratesLogoSmaller.webp"
-                alt=""
+                alt="AppCrates assistant logo"
                 width={44}
                 height={44}
                 className="h-11 w-11 rounded-full object-contain"

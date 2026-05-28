@@ -14,6 +14,7 @@ import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
+import { getImageAlt } from '@/lib/image-alt';
 import {
   DEFAULT_SOCIAL_IMAGE,
   getSanitySocialImageUrl,
@@ -69,6 +70,7 @@ export async function generateMetadata({ params }: LocalizedProjectPageProps): P
     : project.mainImage
       ? getSanitySocialImageUrl(project.mainImage)
       : DEFAULT_SOCIAL_IMAGE;
+  const imageAlt = getImageAlt(project.seo?.ogImage || project.mainImage, metaTitle);
 
   return {
     title: metaTitle,
@@ -93,7 +95,7 @@ export async function generateMetadata({ params }: LocalizedProjectPageProps): P
         url: ogImage,
         width: SOCIAL_IMAGE_WIDTH,
         height: SOCIAL_IMAGE_HEIGHT,
-        alt: metaTitle,
+        alt: imageAlt,
       }],
       locale: language === 'pl' ? 'pl_PL' : 'en_US',
       alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
@@ -102,7 +104,7 @@ export async function generateMetadata({ params }: LocalizedProjectPageProps): P
       card: 'summary_large_image',
       title: metaTitle,
       description: metaDescription,
-      images: [{ url: ogImage, alt: metaTitle }],
+      images: [{ url: ogImage, alt: imageAlt }],
     },
   };
 }
@@ -161,7 +163,7 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
         {heroImageUrl ? (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 lg:mb-16">
             <div className="relative h-[38vh] sm:h-[44vh] lg:h-[50vh] overflow-hidden border border-white/10">
-              <Image src={heroImageUrl} alt={title} unoptimized fill priority sizes="(max-width: 768px) 100vw, 1200px" className="object-cover" />
+              <Image src={heroImageUrl} alt={getImageAlt(project.mainImage, title)} unoptimized fill priority sizes="(max-width: 768px) 100vw, 1200px" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/70 via-indigo-950/20 to-transparent pointer-events-none" />
             </div>
           </div>

@@ -106,7 +106,7 @@ const Badge = memo(({ name, logoUrl }: TechItem) => (
   >
     <img
       src={logoUrl}
-      alt=""
+      alt={`${name} logo`}
       aria-hidden="true"
       className="block h-[18px] w-[18px] object-contain"
       loading="lazy"

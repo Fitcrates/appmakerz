@@ -20,6 +20,7 @@ interface TileOffset {
 
 const CrackImage: React.FC<CrackImageProps> = ({
   src,
+  alt = '',
   className = '',
   gridSize = 4,
   cycleInterval = 4000,
@@ -126,6 +127,8 @@ const CrackImage: React.FC<CrackImageProps> = ({
     <div
       ref={containerRef}
       className={`relative overflow-hidden ${className}`}
+      role={alt ? 'img' : undefined}
+      aria-label={alt || undefined}
     >
       {/* Background placeholder */}
       <div className="absolute inset-0 bg-indigo-900/20" />

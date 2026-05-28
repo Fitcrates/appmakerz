@@ -14,6 +14,7 @@ import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, type Language } from '@/lib/language';
+import { getImageAlt } from '@/lib/image-alt';
 import {
   DEFAULT_SOCIAL_IMAGE,
   getSanitySocialImageUrl,
@@ -50,6 +51,7 @@ export async function generateMetadata({ params }: LocalizedAboutMePageProps): P
     : about.heroImage
       ? getSanitySocialImageUrl(about.heroImage)
       : DEFAULT_SOCIAL_IMAGE;
+  const imageAlt = getImageAlt(about.seo?.ogImage || about.heroImage, seoTitle);
 
   return {
     title: seoTitle,
@@ -74,7 +76,7 @@ export async function generateMetadata({ params }: LocalizedAboutMePageProps): P
         url: ogImageUrl,
         width: SOCIAL_IMAGE_WIDTH,
         height: SOCIAL_IMAGE_HEIGHT,
-        alt: seoTitle,
+        alt: imageAlt,
       }],
       locale: language === 'pl' ? 'pl_PL' : 'en_US',
       alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
@@ -83,7 +85,7 @@ export async function generateMetadata({ params }: LocalizedAboutMePageProps): P
       card: 'summary_large_image',
       title: seoTitle,
       description: seoDescription,
-      images: [{ url: ogImageUrl, alt: seoTitle }],
+      images: [{ url: ogImageUrl, alt: imageAlt }],
     },
   };
 }

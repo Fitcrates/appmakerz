@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BlogIndexClient from '@/components/next/BlogIndexClient';
-import { getFeaturedPosts, getPosts } from '@/lib/sanity.server';
+import { getFeaturedPosts, getPostCategories, getPosts } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
@@ -82,9 +82,10 @@ export default async function LocalizedBlogPage({ params }: LocalizedBlogPagePro
 
   const language = lang as Language;
   const t = translations[language].blog;
-  const [posts, featuredPosts] = await Promise.all([
+  const [posts, featuredPosts, categories] = await Promise.all([
     getPosts(),
     getFeaturedPosts(),
+    getPostCategories(),
   ]);
 
   return (
@@ -93,7 +94,13 @@ export default async function LocalizedBlogPage({ params }: LocalizedBlogPagePro
 
       <main className="pt-32 pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <BlogIndexClient posts={posts} featuredPosts={featuredPosts} title={t.title} subtitle={t.subtitle} />
+          <BlogIndexClient
+            posts={posts}
+            featuredPosts={featuredPosts}
+            categories={categories}
+            title={t.title}
+            subtitle={t.subtitle}
+          />
         </div>
       </main>
 
