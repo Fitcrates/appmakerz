@@ -21,6 +21,7 @@ type PublishPayload = {
   _type?: string;
   documentId?: string;
   isTest?: boolean;
+  slug?: string | { current?: string };
   ids?: {
     created?: string[];
     updated?: string[];
@@ -35,7 +36,7 @@ type PostRecord = {
   _rev: string;
   title?: string | { en?: string; pl?: string };
   slug?: string;
-  categories?: string[];
+  categories?: Array<string | { titleEn?: string; titlePl?: string; slug?: string }>;
   emailsSent?: boolean;
   publishedAt?: string;
   seo?: { noIndex?: boolean };
@@ -61,10 +62,10 @@ function extractPostId(payload: PublishPayload): string | undefined {
     payload.result?._id,
     payload.ids?.created?.[0],
     payload.ids?.updated?.[0],
-  ];
-  return candidates
-    .find((v): v is string => typeof v === 'string' && v.trim().length > 0)
-    ?.trim();
+  ].filter((v): v is string => typeof v === 'string' && v.trim().length > 0)
+    .map((v) => v.trim());
+
+  return candidates.find((v) => !v.startsWith('drafts.')) || candidates[0];
 }
 
 function getPostTitle(title: PostRecord['title']): string | null {
@@ -76,10 +77,51 @@ function getPostTitle(title: PostRecord['title']): string | null {
   return null; // caller decides what to do with missing title
 }
 
+function getSlugValue(slug: PublishPayload['slug']): string | undefined {
+  if (typeof slug === 'string' && slug.trim().length > 0) return slug.trim();
+  if (slug && typeof slug === 'object' && typeof slug.current === 'string') {
+    const current = slug.current.trim();
+    return current || undefined;
+  }
+  return undefined;
+}
+
 function shouldSendToSubscriber(post: PostRecord, subscriber: SubscriberRecord): boolean {
-  if (!post.categories?.length) return true;
+  const postCategories = getCategoryTokens(post.categories);
+  if (!postCategories.length) return true;
   if (!subscriber.subscribedCategories?.length) return true;
-  return post.categories.some((cat) => subscriber.subscribedCategories?.includes(cat));
+
+  const subscriberCategories = subscriber.subscribedCategories.map(normalizeCategoryToken);
+  return postCategories.some((cat) => subscriberCategories.includes(cat));
+}
+
+function normalizeCategoryToken(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function getCategoryTokens(categories: PostRecord['categories']): string[] {
+  if (!Array.isArray(categories)) return [];
+
+  return categories
+    .flatMap((category) => {
+      if (typeof category === 'string') return [category];
+      if (!category || typeof category !== 'object') return [];
+      return [category.titleEn, category.titlePl, category.slug];
+    })
+    .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+    .map(normalizeCategoryToken);
+}
+
+function getCategoryLabels(categories: PostRecord['categories']): string {
+  if (!Array.isArray(categories)) return '';
+
+  return categories
+    .map((category) => {
+      if (typeof category === 'string') return category;
+      return category?.titlePl || category?.titleEn || category?.slug || '';
+    })
+    .filter(Boolean)
+    .join(', ');
 }
 
 function buildUnsubscribeUrl(siteUrl: string, subscriber: SubscriberRecord): string {
@@ -104,7 +146,7 @@ async function sendNewsletterEmail(
 ): Promise<void> {
   const siteUrl = getSiteUrl();
   const blogUrl = `${siteUrl}/blog/${post.slug}`;
-  const categoriesStr = post.categories?.join(', ') ?? '';
+  const categoriesStr = getCategoryLabels(post.categories);
   const unsubscribeUrl = buildUnsubscribeUrl(siteUrl, subscriber);
 
   const htmlContent = getNewsletterTemplate(
@@ -168,37 +210,48 @@ export const handler: Handler = async (event) => {
 
   // 5. Resolve post ID
   const postId = extractPostId(payload);
-  if (!postId) {
-    return jsonResponse(200, { message: 'No post ID found in webhook payload. Skipping.' });
+  const payloadSlug = getSlugValue(payload.slug);
+  if (!postId && !payloadSlug) {
+    return jsonResponse(200, { message: 'No post ID or slug found in webhook payload. Skipping.' });
+  }
+
+  if (!isTestMode && postId?.startsWith('drafts.')) {
+    return jsonResponse(200, { message: 'Draft change detected. Newsletter skipped.' });
   }
 
   const client = getSanityWriteClient();
-  const publishedId = postId.replace(/^drafts\./, '');
-  const draftId = postId.startsWith('drafts.') ? postId : `drafts.${publishedId}`;
+  const publishedId = postId?.replace(/^drafts\./, '');
+  const draftId = postId ? (postId.startsWith('drafts.') ? postId : `drafts.${publishedId}`) : undefined;
 
   // 6. Fetch post from Sanity
   const post = (await client.fetch<PostRecord | null>(
-    `*[_type == "post" && _id in [$publishedId, $draftId]][0]{
+    `*[
+      _type == "post" &&
+      (
+        (defined($publishedId) && _id in [$publishedId, $draftId]) ||
+        (!defined($publishedId) && slug.current == $slug && !(_id match "drafts.*"))
+      )
+    ] | order(_id match "drafts.*" asc)[0]{
       _id, _type, _rev, title,
       "slug": slug.current,
-      categories,
+      categories[]->{
+        "titleEn": title.en,
+        "titlePl": title.pl,
+        "slug": slug.current
+      },
       emailsSent,
       publishedAt,
       "seo": { "noIndex": seo.noIndex }
     }`,
-    { publishedId, draftId },
+    { publishedId, draftId, slug: payloadSlug },
   ));
 
   if (!post) {
     // 200 — Sanity should not retry for a missing post (it won't appear on retry either)
-    return jsonResponse(200, { error: `Post not found for ID "${publishedId}". Skipping.` });
+    return jsonResponse(200, { error: `Post not found for ID "${publishedId || 'n/a'}" or slug "${payloadSlug || 'n/a'}". Skipping.` });
   }
 
   // 7. Pre-send validations — all return 200 to prevent Sanity retries
-  if (!isTestMode && post._id.startsWith('drafts.')) {
-    return jsonResponse(200, { message: 'Draft change detected. Newsletter skipped.' });
-  }
-
   if (post.seo?.noIndex) {
     return jsonResponse(200, { message: 'Post is marked noIndex. Newsletter skipped.' });
   }

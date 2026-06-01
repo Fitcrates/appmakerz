@@ -201,6 +201,7 @@ export default {
               }
             },
             { type: 'gallery' },
+            { type: 'blogTable' },
             {
               type: 'image',
               options: {
@@ -281,6 +282,7 @@ export default {
               }
             },
             { type: 'gallery' },
+            { type: 'blogTable' },
             {
               type: 'image',
               options: {

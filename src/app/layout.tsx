@@ -27,7 +27,6 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/media/site.webmanifest',
-  robots: 'index, follow',
   alternates: {
     languages: {
       en: '/en',

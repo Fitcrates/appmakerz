@@ -5,6 +5,7 @@ import { urlFor } from '@/lib/sanity.image';
 import { getImageAlt } from '@/lib/image-alt';
 import PortableTextCodeBlock from '@/components/next/PortableTextCodeBlock';
 import PortableTextGallery from '@/components/next/PortableTextGallery';
+import PortableTextBlogTable from '@/components/next/PortableTextBlogTable';
 import styles from '@/components/next/PortableTextCodeBlock.module.css';
 
 export const portableTextComponentsClient: PortableTextComponents = {
@@ -97,6 +98,9 @@ export const portableTextComponentsClient: PortableTextComponents = {
     },
     gallery: ({ value }) => {
       return <PortableTextGallery value={value} />;
+    },
+    blogTable: ({ value }) => {
+      return <PortableTextBlogTable value={value} />;
     },
   },
 };

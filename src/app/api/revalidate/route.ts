@@ -1,6 +1,6 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
-import { createHmac, timingSafeEqual } from 'crypto';
+import { isValidSignature, SIGNATURE_HEADER_NAME } from '@sanity/webhook';
 import { SUPPORTED_LANGUAGES } from '@/lib/language';
 import { localizedPath } from '@/lib/i18n-routing';
 import { absoluteUrl } from '@/lib/site';
@@ -28,22 +28,6 @@ function localizedAbsoluteUrls(path: string) {
   return SUPPORTED_LANGUAGES.map((language) => absoluteUrl(localizedPath(language, path)));
 }
 
-function isValidSanitySignature(signatureHeader: string, body: string, secret: string): boolean {
-  const parts = signatureHeader.split(',');
-  const timestamp = parts.find(p => p.trim().startsWith('t='))?.split('=')[1];
-  const signature = parts.find(p => p.trim().startsWith('v1='))?.split('=')[1];
-  if (!timestamp || !signature) return false;
-
-  const payload = `${timestamp}.${body}`;
-  const expected = createHmac('sha256', secret).update(payload).digest('hex');
-
-  try {
-    return timingSafeEqual(Buffer.from(signature, 'hex'), Buffer.from(expected, 'hex'));
-  } catch {
-    return false;
-  }
-}
-
 export async function POST(request: NextRequest) {
   if (!SECRET) {
     return NextResponse.json(
@@ -52,10 +36,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const signature = request.headers.get('sanity-webhook-signature') || '';
+  const signature = request.headers.get(SIGNATURE_HEADER_NAME) || '';
   const body = await request.text();
 
-  if (!isValidSanitySignature(signature, body, SECRET)) {
+  if (!(await isValidSignature(body, signature, SECRET))) {
     return NextResponse.json(
       { message: 'Invalid signature' },
       { status: 401 }

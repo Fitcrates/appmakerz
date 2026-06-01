@@ -4,6 +4,7 @@ import post from './documents/post';
 import author from './documents/author';
 import subscriber from './documents/subscriber';
 import blockContent from './objects/blockContent';
+import blogTable from './objects/blogTable';
 import gallery from './objects/gallery';
 import pages from './documents/pages';
 import serviceLanding from './documents/serviceLanding';
@@ -22,5 +23,6 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   category,
   // Objects
   blockContent,
+  blogTable,
   gallery,
 ];

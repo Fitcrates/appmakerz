@@ -3,6 +3,7 @@ import { urlFor } from '@/lib/sanity.server';
 import { getImageAlt } from '@/lib/image-alt';
 import PortableTextCodeBlock from '@/components/next/PortableTextCodeBlock';
 import PortableTextGallery from '@/components/next/PortableTextGallery';
+import PortableTextBlogTable from '@/components/next/PortableTextBlogTable';
 import styles from '@/components/next/PortableTextCodeBlock.module.css';
 
 export const portableTextComponentsServer: PortableTextComponents = {
@@ -95,6 +96,9 @@ export const portableTextComponentsServer: PortableTextComponents = {
     },
     gallery: ({ value }) => {
       return <PortableTextGallery value={value} />;
+    },
+    blogTable: ({ value }) => {
+      return <PortableTextBlogTable value={value} />;
     },
   },
 };
