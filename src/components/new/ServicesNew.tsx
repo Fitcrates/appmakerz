@@ -32,14 +32,21 @@ const getServices = (
       title: t.items.websites.title,
       punchline: t.items.websites.punchline,
       description: t.items.websites.description,
-      href: "/uslugi/e-commerce-shops-medusa-js",
+      href: "/uslugi/professional-website-development",
     },
     {
       number: t.items.ecommerce.number,
       title: t.items.ecommerce.title,
       punchline: t.items.ecommerce.punchline,
       description: t.items.ecommerce.description,
-      href: "/uslugi/professional-website-development",
+      href: "/uslugi/e-commerce-shops-medusa-js",
+    },
+    {
+      number: t.items.marketplace.number,
+      title: t.items.marketplace.title,
+      punchline: t.items.marketplace.punchline,
+      description: t.items.marketplace.description,
+      href: "/uslugi/marketplace-multi-vendor-medusa-js",
     },
     {
       number: t.items.ai.number,

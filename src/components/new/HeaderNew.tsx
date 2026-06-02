@@ -3,7 +3,9 @@
 import React, { useEffect, useRef, useState, type MouseEvent } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, Globe, Bot, AppWindow, ShoppingCart, type LucideIcon } from 'lucide-react';
+import { Menu, X, ChevronDown, ArrowUpRight } from 'lucide-react';
+import { PiGlobeDuotone, PiShoppingCartDuotone, PiStorefrontDuotone, PiRobotDuotone, PiBrowserDuotone } from 'react-icons/pi';
+import { IconType } from 'react-icons';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import { useRouteTransition } from '@/components/next/RouteTransitionProvider';
 import LanguageToggleNext from '../next/LanguageToggleNext';
@@ -21,36 +23,64 @@ const getNavItems = (t: typeof translations.en.nav) => [
 ];
 
 interface ServiceLink {
-  icon: LucideIcon;
+  icon: IconType;
   label: string;
   description: string;
+  longDescription: string;
   href: string;
+  image: string;
 }
 
 const getServiceLandingLinks = (language: string): ServiceLink[] => [
   {
-    icon: Globe,
+    icon: PiGlobeDuotone,
     label: language === 'pl' ? 'Strony Internetowe' : 'Websites',
     description: language === 'pl' ? 'Profesjonalne strony i landing page' : 'Professional sites & landing pages',
+    longDescription: language === 'pl'
+      ? 'Zoptymalizowane pod konwersję i SEO nowoczesne strony na Next.js. Błyskawiczne ładowanie, świetny design i gotowość na skalowanie ruchu od pierwszego dnia.'
+      : 'Conversion and SEO-optimized modern websites built on Next.js. Lightning-fast load times, exceptional design, and fully ready to scale your traffic from day one.',
     href: '/uslugi/professional-website-development',
+    image: '/media/solutions/landing.webp',
   },
   {
-    icon: Bot,
+    icon: PiShoppingCartDuotone,
+    label: language === 'pl' ? 'Sklepy internetowe' : 'Online Stores',
+    description: language === 'pl' ? 'Headless commerce na Medusa.js' : 'Headless commerce on Medusa.js',
+    longDescription: language === 'pl'
+      ? 'Zbuduj sklep bez technologicznych ograniczeń i prowizji SaaS. Pełna swoboda w projektowaniu checkoutu, zaawansowana logika produktów i doskonała wydajność dzięki architekturze headless.'
+      : 'Build a store without SaaS limitations or commissions. Enjoy total design freedom, advanced product logic, and unmatched performance through headless architecture.',
+    href: '/uslugi/e-commerce-shops-medusa-js',
+    image: '/media/solutions/ecommerceshop.webp',
+  },
+  {
+    icon: PiStorefrontDuotone,
+    label: language === 'pl' ? 'Marketplace multi-vendor' : 'Multi-vendor Marketplace',
+    description: language === 'pl' ? 'Platformy dla wielu sprzedawców' : 'Platforms for multiple vendors',
+    longDescription: language === 'pl'
+      ? 'Wdrożenia potężnych platform na Medusa.js. Niestandardowe modele prowizji, zintegrowane systemy płatności oraz panele dla dostawców dopasowane do Twojego modelu biznesowego.'
+      : 'Implementation of powerful platforms on Medusa.js. Custom commission models, integrated payment systems, and dedicated vendor dashboards tailored to your exact business model.',
+    href: '/uslugi/marketplace-multi-vendor-medusa-js',
+    image: '/media/solutions/marketplace.webp',
+  },
+  {
+    icon: PiRobotDuotone,
     label: language === 'pl' ? 'Wdrożenia AI' : 'AI Implementations',
     description: language === 'pl' ? 'Automatyzacje i integracje AI' : 'Automations & AI integrations',
+    longDescription: language === 'pl'
+      ? 'Zwiększ efektywność dzięki inteligentnym asystentom i automatyzacjom. Od chatbotów obsługi klienta po systemy RAG pracujące bezpiecznie na wewnętrznych danych Twojej firmy.'
+      : 'Boost efficiency with smart assistants and automated workflows. From customer support chatbots to custom RAG systems trained securely on your company\'s internal data.',
     href: '/uslugi/ai-automation-rpa-solutions',
+    image: '/media/solutions/SEO.webp',
   },
   {
-    icon: ShoppingCart,
-    label: language === 'pl' ? 'Sklepy E-commerce' : 'E-commerce Shops',
-    description: language === 'pl' ? 'Sklepy online i platformy sprzedazowe' : 'Online stores & sales platforms',
-    href: '/uslugi/e-commerce-shops-medusa-js',
-  },
-  {
-    icon: AppWindow,
+    icon: PiBrowserDuotone,
     label: language === 'pl' ? 'Dedykowane aplikacje webowe' : 'Custom Web Apps & SaaS',
     description: language === 'pl' ? 'Aplikacje webowe i SaaS' : 'Custom web apps & SaaS',
+    longDescription: language === 'pl'
+      ? 'Szyte na miarę systemy wewnętrzne, platformy SaaS i panele B2B. Czysta architektura (Next.js) i interfejsy zaprojektowane pod kątem najlepszych doświadczeń użytkownika.'
+      : 'Tailor-made internal systems, SaaS platforms, and B2B dashboards. Clean architecture (Next.js) and intuitive interfaces designed for the best user experience.',
     href: '/uslugi/custom-web-applications',
+    image: '/media/solutions/webapps.webp',
   },
 ];
 
@@ -58,8 +88,10 @@ const HeaderNew: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesMenuOpen, setIsServicesMenuOpen] = useState(false);
+  const [activeServiceHoverIndex, setActiveServiceHoverIndex] = useState(0);
   const mobileMenuButtonRef = useRef<HTMLButtonElement | null>(null);
   const servicesMenuCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const router = useRouter();
   const { beginNavigation } = useRouteTransition();
@@ -92,6 +124,9 @@ const HeaderNew: React.FC = () => {
     return () => {
       if (servicesMenuCloseTimerRef.current) {
         clearTimeout(servicesMenuCloseTimerRef.current);
+      }
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
       }
     };
   }, []);
@@ -166,10 +201,19 @@ const HeaderNew: React.FC = () => {
     window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
   };
 
+  const handleMouseEnterService = (index: number) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    hoverTimeoutRef.current = setTimeout(() => {
+      setActiveServiceHoverIndex(index);
+    }, 120);
+  };
+
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full backdrop-blur-sm z-[100] shadow-sm transition-all duration-300 ${isScrolled ? 'bg-indigo-950/80 border-b border-white/5' : ''
+        className={`fixed top-0 left-0 w-full backdrop-blur-sm z-[100] shadow-sm transition-all duration-300 ${isScrolled ? 'bg-indigo-950/95 border-b border-white/5' : ''
           }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -220,35 +264,112 @@ const HeaderNew: React.FC = () => {
                 </button>
 
                 <div
-                  className={`fixed left-0 right-0 top-20 z-50 transition-all duration-200 ${
-                    isServicesMenuOpen
-                      ? 'pointer-events-auto opacity-100 translate-y-0'
-                      : 'pointer-events-none opacity-0 -translate-y-1'
-                  }`}
+                  className={`fixed left-0 right-0 top-20 z-50 transition-all duration-200 ${isServicesMenuOpen
+                    ? 'pointer-events-auto opacity-100 translate-y-0'
+                    : 'pointer-events-none opacity-0 -translate-y-1'
+                    }`}
                   onMouseEnter={openServicesMenu}
                   onMouseLeave={scheduleServicesMenuClose}
                 >
-                  <div className="border-y border-white/10 bg-indigo-950 shadow-2xl backdrop-blur-xl">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 grid grid-cols-4 gap-3">
-                    {serviceLandingLinks.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <PrefetchLink
-                          key={item.href}
-                          href={item.href}
-                          onClick={() => setIsServicesMenuOpen(false)}
-                          className="group/service-card flex min-w-0 items-start gap-4 rounded-lg border border-white/10 bg-indigo-950/[0.9] p-4 hover:border-teal-300/30 hover:bg-white/[0.06] transition-all duration-200"
-                        >
-                          <div className="w-10 h-10 rounded-lg bg-teal-300/10 border border-teal-300/20 flex items-center justify-center flex-shrink-0 group-hover/service-card:bg-teal-300/20 group-hover/service-card:border-teal-300/30 transition-colors">
-                            <Icon className="w-5 h-5 text-teal-300" />
+                  <div className="border-y border-white/10 bg-indigo-950 shadow-2xl backdrop-blur-2xl">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                      <div className="grid grid-cols-12 gap-8 min-h-[380px]">
+                        {/* Lewa strona - lista usług */}
+                        <div className="col-span-5 flex flex-col gap-2 border-r border-white/10 pr-6 py-2">
+                          {serviceLandingLinks.map((item, index) => {
+                            const Icon = item.icon;
+                            const isActive = index === activeServiceHoverIndex;
+                            return (
+                              <PrefetchLink
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setIsServicesMenuOpen(false)}
+                                onMouseEnter={() => handleMouseEnterService(index)}
+                                className={`group/service-card flex min-w-0 items-center gap-4 rounded-xl transition-all duration-300 p-3 ${isActive
+                                  ? 'border border-teal-300/30 bg-white/[0.04] shadow-[0_0_20px_rgba(45,212,191,0.05)]'
+                                  : 'border border-transparent hover:border-white/10 hover:bg-white/[0.02]'
+                                  }`}
+                              >
+                                <div className={`w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isActive
+                                  ? 'bg-teal-300/10 border border-teal-300/30 text-teal-300 shadow-[0_0_15px_rgba(45,212,191,0.1)]'
+                                  : 'bg-white/5 border border-white/10 text-white/60 group-hover/service-card:bg-white/10 group-hover/service-card:text-white/90'
+                                  }`}>
+                                  <Icon className="w-5 h-5" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className={`text-[15px] font-medium transition-colors duration-300 ${isActive ? 'text-teal-300' : 'text-white/90 group-hover/service-card:text-white'}`}>
+                                    {item.label}
+                                  </p>
+                                  <p className="text-xs text-white/50 mt-0.5 truncate">{item.description}</p>
+                                </div>
+                                <ArrowUpRight className={`w-4 h-4 transition-all duration-300 ${isActive
+                                  ? 'text-teal-300 opacity-100 translate-x-0'
+                                  : 'text-white/30 opacity-0 -translate-x-3 group-hover/service-card:opacity-50 group-hover/service-card:-translate-x-1'
+                                  }`} />
+                              </PrefetchLink>
+                            );
+                          })}
+                        </div>
+
+                        {/* Prawa strona - dynamiczny podgląd */}
+                        <div className="col-span-7 relative overflow-hidden rounded-2xl border border-white/5 bg-indigo-950/20 group/preview">
+                          {/* Static Overlays - optymalizacja wydajności */}
+                          <div className="absolute inset-0 bg-indigo-950/30 z-10 pointer-events-none" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/80 to-transparent z-10 pointer-events-none" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-indigo-950/90 via-indigo-950/40 to-transparent z-10 pointer-events-none" />
+
+                          {/* Pre-rendered images - zmiana tylko opacity by odciążyć przeglądarkę */}
+                          {serviceLandingLinks.map((item, idx) => (
+                            <img
+                              key={item.image}
+                              src={item.image}
+                              alt={item.label}
+                              loading={idx === 0 ? "eager" : "lazy"}
+                              className={`absolute inset-0 w-full h-full object-cover mix-blend-luminosity transition-opacity duration-500 ease-out ${activeServiceHoverIndex === idx ? 'opacity-60' : 'opacity-0'
+                                }`}
+                            />
+                          ))}
+
+                          {/* Content */}
+                          <div className="absolute inset-0 p-10 z-20 flex flex-col justify-end">
+                            <AnimatePresence mode="wait">
+                              <motion.div
+                                key={activeServiceHoverIndex}
+                                initial={{ opacity: 0, y: 15 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -15 }}
+                                transition={{ duration: 0.25, ease: "easeOut" }}
+                              >
+                                <div className="flex items-center gap-3 mb-5">
+                                  <div className="w-8 h-8 rounded-full bg-teal-300/10 border border-teal-300/30 flex items-center justify-center">
+                                    {React.createElement(serviceLandingLinks[activeServiceHoverIndex].icon, { className: 'w-4 h-4 text-teal-300' })}
+                                  </div>
+                                  <span className="text-xs tracking-[0.2em] uppercase text-teal-300 font-medium">
+                                    {language === 'pl' ? 'Odkryj usługę' : 'Explore service'}
+                                  </span>
+                                </div>
+
+                                <h3 className="text-3xl lg:text-4xl font-light text-white mb-4 drop-shadow-lg">
+                                  {serviceLandingLinks[activeServiceHoverIndex].label}
+                                </h3>
+
+                                <p className="text-white/70 text-sm leading-relaxed max-w-md mb-8">
+                                  {serviceLandingLinks[activeServiceHoverIndex].longDescription}
+                                </p>
+
+                                <PrefetchLink
+                                  href={serviceLandingLinks[activeServiceHoverIndex].href}
+                                  onClick={() => setIsServicesMenuOpen(false)}
+                                  className="inline-flex items-center gap-3 text-sm font-medium text-indigo-950 bg-teal-300 hover:bg-white px-6 py-3 transition-all duration-300 hover:scale-105 active:scale-95"
+                                >
+                                  {language === 'pl' ? 'Zobacz szczegóły' : 'View details'}
+                                  <ArrowUpRight className="w-4 h-4" />
+                                </PrefetchLink>
+                              </motion.div>
+                            </AnimatePresence>
                           </div>
-                          <div className="min-w-0">
-                            <p className="text-sm  font-medium text-white group-hover/service-card:text-teal-300 transition-colors">{item.label}</p>
-                            <p className="text-xs  text-white/70 mt-1 leading-relaxed">{item.description}</p>
-                          </div>
-                        </PrefetchLink>
-                      );
-                    })}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
