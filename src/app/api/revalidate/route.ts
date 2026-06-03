@@ -1,12 +1,12 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
-import { isValidSignature, SIGNATURE_HEADER_NAME } from '@sanity/webhook';
 import { SUPPORTED_LANGUAGES } from '@/lib/language';
 import { localizedPath } from '@/lib/i18n-routing';
 import { absoluteUrl } from '@/lib/site';
 import { submitIndexNow } from '@/lib/indexnow';
+import { isValidSanitySignature, SANITY_SIGNATURE_HEADER_NAME } from '@/lib/sanityWebhookSignature';
 
-const SECRET = process.env.SANITY_WEBHOOK_SECRET;
+export const runtime = 'nodejs';
 
 function getSlugValue(slug: unknown): string | null {
   if (typeof slug === 'string') return slug;
@@ -29,26 +29,38 @@ function localizedAbsoluteUrls(path: string) {
 }
 
 export async function POST(request: NextRequest) {
-  if (!SECRET) {
+  const secret = process.env.SANITY_WEBHOOK_SECRET;
+
+  if (!secret) {
     return NextResponse.json(
       { message: 'Sanity webhook secret not configured' },
       { status: 500 }
     );
   }
 
-  const signature = request.headers.get(SIGNATURE_HEADER_NAME) || '';
+  const signature = request.headers.get(SANITY_SIGNATURE_HEADER_NAME);
   const body = await request.text();
 
-  if (!(await isValidSignature(body, signature, SECRET))) {
+  if (!isValidSanitySignature(body, signature, secret)) {
     return NextResponse.json(
       { message: 'Invalid signature' },
       { status: 401 }
     );
   }
 
+  let json: { _type?: string; slug?: unknown };
+
   try {
-    const json = JSON.parse(body);
-    const docType = json._type as string;
+    json = JSON.parse(body);
+  } catch {
+    return NextResponse.json(
+      { message: 'Invalid body' },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const docType = json._type;
     const slug = getSlugValue(json.slug);
     const indexNowUrls = new Set<string>();
 
@@ -130,10 +142,12 @@ export async function POST(request: NextRequest) {
       slug,
       indexNow,
     });
-  } catch {
+  } catch (error) {
+    console.error('Sanity revalidation failed:', error);
+
     return NextResponse.json(
-      { message: 'Invalid body' },
-      { status: 400 }
+      { message: 'Revalidation failed' },
+      { status: 500 }
     );
   }
 }

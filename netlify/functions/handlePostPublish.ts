@@ -1,7 +1,7 @@
 import type { Handler } from '@netlify/functions';
-import { isValidSignature, SIGNATURE_HEADER_NAME } from '@sanity/webhook';
 import { Resend } from 'resend';
 import { getNewsletterTemplate } from '../../src/utils/emailTemplates';
+import { isValidSanitySignature, SANITY_SIGNATURE_HEADER_NAME } from '../../src/lib/sanityWebhookSignature';
 import {
   getSanityWriteClient,
   getSiteUrl,
@@ -171,6 +171,7 @@ async function sendNewsletterEmail(
 // ─── Handler ─────────────────────────────────────────────────────────────────
 
 export const handler: Handler = async (event) => {
+  try {
   // 1. Method guard
   if (event.httpMethod !== 'POST') {
     return jsonResponse(405, { error: 'Method not allowed.' });
@@ -182,8 +183,8 @@ export const handler: Handler = async (event) => {
   //    Skip only in local dev (SANITY_WEBHOOK_SECRET intentionally unset)
   const webhookSecret = process.env.SANITY_WEBHOOK_SECRET;
   if (webhookSecret) {
-    const signature = event.headers[SIGNATURE_HEADER_NAME] ?? '';
-    const valid = await isValidSignature(body, signature, webhookSecret);
+    const signature = event.headers[SANITY_SIGNATURE_HEADER_NAME] ?? '';
+    const valid = isValidSanitySignature(body, signature, webhookSecret);
     if (!valid) {
       console.warn('Invalid webhook signature — request rejected.');
       return jsonResponse(401, { error: 'Invalid webhook signature.' });
@@ -220,8 +221,8 @@ export const handler: Handler = async (event) => {
   }
 
   const client = getSanityWriteClient();
-  const publishedId = postId?.replace(/^drafts\./, '');
-  const draftId = postId ? (postId.startsWith('drafts.') ? postId : `drafts.${publishedId}`) : undefined;
+  const publishedId = postId ? postId.replace(/^drafts\./, '') : null;
+  const draftId = postId ? (postId.startsWith('drafts.') ? postId : `drafts.${publishedId}`) : null;
 
   // 6. Fetch post from Sanity
   const post = (await client.fetch<PostRecord | null>(
@@ -243,7 +244,7 @@ export const handler: Handler = async (event) => {
       publishedAt,
       "seo": { "noIndex": seo.noIndex }
     }`,
-    { publishedId, draftId, slug: payloadSlug },
+    { publishedId, draftId, slug: payloadSlug ?? null },
   ));
 
   if (!post) {
@@ -283,7 +284,7 @@ export const handler: Handler = async (event) => {
   );
 
   const relevantSubscribers = allSubscribers
-    .map((s) => ({ ...s, email: normalizeEmail(s.email) }))
+    .map((s) => ({ ...s, email: typeof s.email === 'string' ? normalizeEmail(s.email) : '' }))
     .filter((s) => {
       // Validate email format before even trying to send
       if (!s.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email)) {
@@ -337,4 +338,8 @@ export const handler: Handler = async (event) => {
     isTestMode,
     ...(failures.length > 0 && { failures }),
   });
+  } catch (error) {
+    console.error('handlePostPublish failed:', error);
+    return jsonResponse(500, { error: 'Post publish handler failed.' });
+  }
 };
