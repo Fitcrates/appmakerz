@@ -4,7 +4,11 @@ import { SUPPORTED_LANGUAGES } from '@/lib/language';
 import { localizedPath } from '@/lib/i18n-routing';
 import { absoluteUrl } from '@/lib/site';
 import { submitIndexNow } from '@/lib/indexnow';
-import { isValidSanitySignature, SANITY_SIGNATURE_HEADER_NAME } from '@/lib/sanityWebhookSignature';
+import {
+  getSanityWebhookSecret,
+  isValidSanitySignature,
+  SANITY_SIGNATURE_HEADER_NAME,
+} from '@/lib/sanityWebhookSignature';
 
 export const runtime = 'nodejs';
 
@@ -29,23 +33,20 @@ function localizedAbsoluteUrls(path: string) {
 }
 
 export async function POST(request: NextRequest) {
-  const secret = process.env.SANITY_WEBHOOK_SECRET;
-
-  if (!secret) {
-    return NextResponse.json(
-      { message: 'Sanity webhook secret not configured' },
-      { status: 500 }
-    );
-  }
-
-  const signature = request.headers.get(SANITY_SIGNATURE_HEADER_NAME);
   const body = await request.text();
+  const secret = getSanityWebhookSecret();
 
-  if (!isValidSanitySignature(body, signature, secret)) {
-    return NextResponse.json(
-      { message: 'Invalid signature' },
-      { status: 401 }
-    );
+  if (secret) {
+    const signature = request.headers.get(SANITY_SIGNATURE_HEADER_NAME);
+
+    if (!isValidSanitySignature(body, signature, secret)) {
+      return NextResponse.json(
+        { message: 'Invalid signature' },
+        { status: 401 }
+      );
+    }
+  } else {
+    console.warn('Sanity webhook secret not configured. Skipping signature check.');
   }
 
   let json: { _type?: string; slug?: unknown };

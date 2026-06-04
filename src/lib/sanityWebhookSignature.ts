@@ -4,6 +4,22 @@ export const SANITY_SIGNATURE_HEADER_NAME = 'sanity-webhook-signature';
 
 const SIGNATURE_HEADER_REGEX = /^t=(\d+)[, ]+v1=([^, ]+)$/;
 const MINIMUM_TIMESTAMP = 1609459200000;
+const WEBHOOK_SECRET_ENV_NAMES = [
+  'SANITY_WEBHOOK_SECRET',
+  'SANITY_REVALIDATE_SECRET',
+  'SANITY_WEBHOOK_SIGNING_SECRET',
+];
+
+export function getSanityWebhookSecret() {
+  for (const name of WEBHOOK_SECRET_ENV_NAMES) {
+    const value = process.env[name];
+    if (typeof value === 'string' && value.trim().length > 0) {
+      return value.trim();
+    }
+  }
+
+  return undefined;
+}
 
 function base64UrlDigest(value: Buffer) {
   return value

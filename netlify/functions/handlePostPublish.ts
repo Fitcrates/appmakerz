@@ -1,7 +1,11 @@
 import type { Handler } from '@netlify/functions';
 import { Resend } from 'resend';
 import { getNewsletterTemplate } from '../../src/utils/emailTemplates';
-import { isValidSanitySignature, SANITY_SIGNATURE_HEADER_NAME } from '../../src/lib/sanityWebhookSignature';
+import {
+  getSanityWebhookSecret,
+  isValidSanitySignature,
+  SANITY_SIGNATURE_HEADER_NAME,
+} from '../../src/lib/sanityWebhookSignature';
 import {
   getSanityWriteClient,
   getSiteUrl,
@@ -180,8 +184,7 @@ export const handler: Handler = async (event) => {
   const body = event.body ?? '';
 
   // 2. Webhook signature verification
-  //    Skip only in local dev (SANITY_WEBHOOK_SECRET intentionally unset)
-  const webhookSecret = process.env.SANITY_WEBHOOK_SECRET;
+  const webhookSecret = getSanityWebhookSecret();
   if (webhookSecret) {
     const signature = event.headers[SANITY_SIGNATURE_HEADER_NAME] ?? '';
     const valid = isValidSanitySignature(body, signature, webhookSecret);
@@ -222,17 +225,15 @@ export const handler: Handler = async (event) => {
 
   const client = getSanityWriteClient();
   const publishedId = postId ? postId.replace(/^drafts\./, '') : null;
-  const draftId = postId ? (postId.startsWith('drafts.') ? postId : `drafts.${publishedId}`) : null;
-
   // 6. Fetch post from Sanity
   const post = (await client.fetch<PostRecord | null>(
     `*[
       _type == "post" &&
       (
-        (defined($publishedId) && _id in [$publishedId, $draftId]) ||
-        (!defined($publishedId) && slug.current == $slug && !(_id match "drafts.*"))
+        (defined($publishedId) && _id == $publishedId) ||
+        (!defined($publishedId) && slug.current == $slug && !(_id in path("drafts.**")))
       )
-    ] | order(_id match "drafts.*" asc)[0]{
+    ][0]{
       _id, _type, _rev, title,
       "slug": slug.current,
       categories[]->{
@@ -244,7 +245,7 @@ export const handler: Handler = async (event) => {
       publishedAt,
       "seo": { "noIndex": seo.noIndex }
     }`,
-    { publishedId, draftId, slug: payloadSlug ?? null },
+    { publishedId, slug: payloadSlug ?? null },
   ));
 
   if (!post) {
