@@ -129,8 +129,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </Script>
         {googleTagId ? (
           <>
-            <Script src={`https://www.googletagmanager.com/gtag/js?id=${googleTagId}`} strategy="afterInteractive" />
-            <Script id="google-tag-config" strategy="afterInteractive">
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${googleTagId}`} strategy="lazyOnload" />
+            <Script id="google-tag-config" strategy="lazyOnload">
               {`
                 gtag('js', new Date());
                 gtag('config', '${googleTagId}', {

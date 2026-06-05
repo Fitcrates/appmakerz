@@ -17,6 +17,8 @@ import {
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const RESEND_RATE_LIMIT_DELAY_MS = 600; // Resend free tier: ~2 req/s
+const DEFAULT_NEWSLETTER_LANGUAGE = 'pl';
+const LEGACY_ALL_CATEGORY_TOKENS = ['dev', 'no-code', 'wellness'];
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -40,15 +42,23 @@ type PostRecord = {
   _rev: string;
   title?: string | { en?: string; pl?: string };
   slug?: string;
-  categories?: Array<string | { titleEn?: string; titlePl?: string; slug?: string }>;
+  categories?: CategoryTokenSource[];
   emailsSent?: boolean;
   publishedAt?: string;
   seo?: { noIndex?: boolean };
 };
 
+type CategoryTokenSource = string | {
+  _id?: string;
+  titleEn?: string;
+  titlePl?: string;
+  slug?: string;
+};
+
 type SubscriberRecord = {
   email: string;
-  subscribedCategories?: string[];
+  subscribedCategories?: CategoryTokenSource[];
+  subscribedCategoryRefs?: CategoryTokenSource[];
   unsubscribeToken?: string;
 };
 
@@ -93,27 +103,44 @@ function getSlugValue(slug: PublishPayload['slug']): string | undefined {
 function shouldSendToSubscriber(post: PostRecord, subscriber: SubscriberRecord): boolean {
   const postCategories = getCategoryTokens(post.categories);
   if (!postCategories.length) return true;
-  if (!subscriber.subscribedCategories?.length) return true;
 
-  const subscriberCategories = subscriber.subscribedCategories.map(normalizeCategoryToken);
+  const subscriberCategories = getCategoryTokens([
+    ...(subscriber.subscribedCategories ?? []),
+    ...(subscriber.subscribedCategoryRefs ?? []),
+  ]);
+  if (!subscriberCategories.length) return true;
+  if (isLegacyAllCategorySubscription(subscriberCategories)) return true;
+
   return postCategories.some((cat) => subscriberCategories.includes(cat));
 }
 
 function normalizeCategoryToken(value: string): string {
-  return value.trim().toLowerCase();
+  return value
+    .trim()
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
-function getCategoryTokens(categories: PostRecord['categories']): string[] {
+function getCategoryTokens(categories: CategoryTokenSource[] | undefined): string[] {
   if (!Array.isArray(categories)) return [];
 
-  return categories
+  const tokens = categories
     .flatMap((category) => {
       if (typeof category === 'string') return [category];
       if (!category || typeof category !== 'object') return [];
-      return [category.titleEn, category.titlePl, category.slug];
+      return [category._id, category.slug, category.titleEn, category.titlePl];
     })
     .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
     .map(normalizeCategoryToken);
+
+  return [...new Set(tokens)];
+}
+
+function isLegacyAllCategorySubscription(tokens: string[]): boolean {
+  return LEGACY_ALL_CATEGORY_TOKENS.every((token) => tokens.includes(token));
 }
 
 function getCategoryLabels(categories: PostRecord['categories']): string {
@@ -132,7 +159,7 @@ function buildUnsubscribeUrl(siteUrl: string, subscriber: SubscriberRecord): str
   const param = subscriber.unsubscribeToken
     ? `token=${encodeURIComponent(subscriber.unsubscribeToken)}`
     : `email=${encodeURIComponent(subscriber.email)}`;
-  return `${siteUrl}/unsubscribe?${param}`;
+  return `${siteUrl}/${DEFAULT_NEWSLETTER_LANGUAGE}/unsubscribe?${param}`;
 }
 
 function delay(ms: number): Promise<void> {
@@ -149,7 +176,7 @@ async function sendNewsletterEmail(
   postTitle: string,
 ): Promise<void> {
   const siteUrl = getSiteUrl();
-  const blogUrl = `${siteUrl}/blog/${post.slug}`;
+  const blogUrl = `${siteUrl}/${DEFAULT_NEWSLETTER_LANGUAGE}/blog/${post.slug}`;
   const categoriesStr = getCategoryLabels(post.categories);
   const unsubscribeUrl = buildUnsubscribeUrl(siteUrl, subscriber);
 
@@ -237,6 +264,7 @@ export const handler: Handler = async (event) => {
       _id, _type, _rev, title,
       "slug": slug.current,
       categories[]->{
+        _id,
         "titleEn": title.en,
         "titlePl": title.pl,
         "slug": slug.current
@@ -279,8 +307,16 @@ export const handler: Handler = async (event) => {
 
   // 9. Fetch and filter subscribers
   const allSubscribers = await client.fetch<SubscriberRecord[]>(
-    `*[_type == "subscriber" && isActive == true]{
-      email, subscribedCategories, unsubscribeToken
+    `*[_type == "subscriber" && (isActive == true || !defined(isActive))]{
+      email,
+      subscribedCategories,
+      "subscribedCategoryRefs": subscribedCategories[]->{
+        _id,
+        "titleEn": title.en,
+        "titlePl": title.pl,
+        "slug": slug.current
+      },
+      unsubscribeToken
     }`,
   );
 
@@ -296,7 +332,12 @@ export const handler: Handler = async (event) => {
     });
 
   if (!relevantSubscribers.length) {
-    return jsonResponse(200, { message: 'No active subscribers matched this post.', count: 0 });
+    return jsonResponse(200, {
+      message: 'No active subscribers matched this post.',
+      count: 0,
+      activeSubscriberCount: allSubscribers.length,
+      postCategoryTokens: getCategoryTokens(post.categories),
+    });
   }
 
   // 10. Mark emailsSent BEFORE sending to prevent duplicate sends on Sanity retries

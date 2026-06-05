@@ -15,9 +15,9 @@ export async function POST(request: Request) {
       ? body.categories.filter((item: unknown): item is string => typeof item === 'string' && item.trim().length > 0)
       : [];
 
-    if (!email || categories.length === 0) {
+    if (!email) {
       return NextResponse.json(
-        { success: false, message: 'Email and at least one category are required.' },
+        { success: false, message: 'Email is required.' },
         { status: 400, headers: NO_STORE_HEADERS }
       );
     }

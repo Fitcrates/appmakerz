@@ -11,18 +11,11 @@ export default {
       validation: (Rule: any) => Rule.required().email(),
     },
     {
-      name: 'subscribedCategories',  
+      name: 'subscribedCategories',
       title: 'Subscribed Categories',
       type: 'array',
-      of: [{ type: 'string' }],
-      options: {
-        list: [
-          {title: 'Dev', value: 'Dev'},
-          {title: 'No-code', value: 'No-code'},
-          {title: 'Wellness', value: 'Wellness'}
-        ]
-      },
-      validation: (Rule: any) => Rule.required(),
+      description: 'Leave empty to send all blog categories to this subscriber.',
+      of: [{ type: 'reference', to: [{ type: 'category' }] }],
     },
     {
       name: 'subscribedAt',
@@ -70,7 +63,7 @@ export default {
         : 'Unknown date';
       return {
         title: email,
-        subtitle: `${isActive ? 'Active' : 'Inactive'} • ${date} • Categories: ${subscribedCategories?.join(', ')}`,
+        subtitle: `${isActive ? 'Active' : 'Inactive'} • ${date} • Categories: ${subscribedCategories?.length || 'all'}`,
         media: () => '📧'
       };
     },

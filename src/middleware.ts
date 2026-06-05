@@ -16,7 +16,7 @@ const LEGACY_PUBLIC_PATHS = [
 
 function shouldRedirectToDefaultLanguage(pathname: string) {
   if (pathname === '/') {
-    return true;
+    return false;
   }
 
   const firstSegment = pathname.split('/').filter(Boolean)[0];

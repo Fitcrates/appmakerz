@@ -271,6 +271,7 @@ const SolutionsNew: React.FC = () => {
                         src={solution.mobileImage}
                         alt={solution.title}
                         fill
+                        quality={60}
                         className="solutions-scene__image object-cover"
                         sizes="50vw"
                       />
@@ -318,6 +319,7 @@ const SolutionsNew: React.FC = () => {
                           src={solution.mobileImage}
                           alt={solution.title}
                           fill
+                          quality={60}
                           className="object-cover"
                           sizes="(max-width: 768px) 100vw, 50vw"
                         />

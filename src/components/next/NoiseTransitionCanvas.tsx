@@ -12,11 +12,11 @@ interface NoiseTransitionCanvasProps {
 // --- Konfiguracja Timingu (Musi odpowiadać RouteTransitionProvider) ---
 // COVER_ANIM_MS: Czas trwania animacji zapełniania ekranu. 
 // Dopasuj do COVER_DURATION_MS w RouteTransitionProvider.
-const COVER_ANIM_MS = 1400;
+const COVER_ANIM_MS = 700;
 
 // REVEAL_ANIM_MS: Czas trwania animacji odsłaniania nowej strony.
 // Dopasuj do REVEAL_DURATION_MS w RouteTransitionProvider.
-const REVEAL_ANIM_MS = 1400;
+const REVEAL_ANIM_MS = 700;
 
 // EDGE_SOFTNESS: Szerokość miękkiego przejścia (rozmycia) na krawędzi błyskawicy.
 // Zwiększ by krawędzie były bardziej rozmyte, zmniejsz by były twarde i ostre.
@@ -36,7 +36,7 @@ const LIGHTNING_B = 212;
 const LIGHTNING_THRESHOLD = 90; // Pixels below this noise value will have a teal tint
 
 /* ── Canvas resolution scale (lower = faster, slightly softer edges) ── */
-const RESOLUTION_SCALE = 0.35;
+const RESOLUTION_SCALE = 0.25;
 
 /* ── Easing ── */
 function easeInOutCubic(t: number): number {

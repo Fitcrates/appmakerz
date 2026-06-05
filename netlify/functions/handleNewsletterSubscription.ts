@@ -20,10 +20,10 @@ export const handler: Handler = async (event) => {
       ? body.categories.filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
       : [];
 
-    if (!email || categories.length === 0) {
+    if (!email) {
       return jsonResponse(400, {
         success: false,
-        message: 'Email and at least one category are required.',
+        message: 'Email is required.',
       });
     }
 

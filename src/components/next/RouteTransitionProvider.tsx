@@ -29,7 +29,7 @@ const PRE_COVER_DELAY_MS = 50;
 // COVER_DURATION_MS: Czas rozlewania się tła (fade-in błyskawicy).
 // Zwiększ, aby błyskawica rozlewała się wolniej.
 // UWAGA: Musi być zsynchronizowane z COVER_ANIM_MS w NoiseTransitionCanvas.tsx!
-const COVER_DURATION_MS = 1400;
+const COVER_DURATION_MS = 700;
 
 // NAVIGATE_DELAY_MS: Moment podjęcia właściwej nawigacji (zmiany URL).
 // Ustawione na to samo co COVER_DURATION_MS, by odbyło się to przy w pełni zakrytym ekranie.
@@ -43,7 +43,7 @@ const REVEAL_START_DELAY_MS = 20;
 // REVEAL_DURATION_MS: Czas zanikania tła (fade-out).
 // Zwiększ, aby ekran odkrywał nową stronę wolniej.
 // UWAGA: Musi być zsynchronizowane z REVEAL_ANIM_MS w NoiseTransitionCanvas.tsx!
-const REVEAL_DURATION_MS = 1400;
+const REVEAL_DURATION_MS = 700;
 
 // FAILSAFE_MS: Czas po jakim tło zniknie awaryjnie, jeśli nowa strona z jakiegoś powodu się zawiesi.
 const FAILSAFE_MS = 5000;
@@ -154,25 +154,8 @@ export default function RouteTransitionProvider({
   };
 
   const captureSnapshot = () => {
-    const root = contentRef.current;
-    if (!root) return;
-
-    const clone = root.cloneNode(true) as HTMLDivElement;
-    clone.removeAttribute('data-route-transition-live');
-    clone.removeAttribute('data-route-transition-phase');
-    clone.style.removeProperty('--route-live-intensity');
-    clone.style.removeProperty('--route-live-resolve');
-    clone.querySelectorAll('[data-route-transition-live]').forEach((node) => {
-      if (node instanceof HTMLElement) {
-        node.removeAttribute('data-route-transition-live');
-        node.removeAttribute('data-route-transition-phase');
-        node.style.removeProperty('--route-live-intensity');
-        node.style.removeProperty('--route-live-resolve');
-      }
-    });
-
-    setSnapshotMarkup(clone.outerHTML);
-    setSnapshotScrollY(window.scrollY);
+    setSnapshotMarkup(null);
+    setSnapshotScrollY(0);
   };
 
   useEffect(() => {

@@ -14,11 +14,11 @@ function scheduleIdleCallback(callback: () => void) {
   }
 
   if (typeof window.requestIdleCallback === 'function') {
-    const id = window.requestIdleCallback(callback, { timeout: 2000 });
+    const id = window.requestIdleCallback(callback, { timeout: 5000 });
     return () => window.cancelIdleCallback(id);
   }
 
-  const timeoutId = globalThis.setTimeout(callback, 250);
+  const timeoutId = globalThis.setTimeout(callback, 3000);
   return () => globalThis.clearTimeout(timeoutId);
 }
 
@@ -82,8 +82,10 @@ export default function GlobalRoutePrefetch() {
       }
     };
 
-    warmStaticRoutes();
-    const cancelIdle = scheduleIdleCallback(runPrefetch);
+    const cancelIdle = scheduleIdleCallback(() => {
+      warmStaticRoutes();
+      void runPrefetch();
+    });
 
     return () => {
       cancelled = true;

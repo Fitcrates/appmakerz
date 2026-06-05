@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, type MouseEvent } from 'react';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, ArrowUpRight } from 'lucide-react';
@@ -184,7 +185,7 @@ const HeaderNew: React.FC = () => {
     const targetId = url.hash.slice(1);
     const homePath = localizedPath(language, '/');
 
-    if (pathname !== homePath) {
+    if (pathname !== '/' && pathname !== homePath) {
       beginNavigation(href, () => {
         router.push(href);
       });
@@ -319,16 +320,20 @@ const HeaderNew: React.FC = () => {
                           <div className="absolute inset-0 bg-gradient-to-r from-indigo-950/90 via-indigo-950/40 to-transparent z-10 pointer-events-none" />
 
                           {/* Pre-rendered images - zmiana tylko opacity by odciążyć przeglądarkę */}
-                          {serviceLandingLinks.map((item, idx) => (
-                            <img
-                              key={item.image}
-                              src={item.image}
-                              alt={item.label}
-                              loading={idx === 0 ? "eager" : "lazy"}
-                              className={`absolute inset-0 w-full h-full object-cover mix-blend-luminosity transition-opacity duration-500 ease-out ${activeServiceHoverIndex === idx ? 'opacity-60' : 'opacity-0'
-                                }`}
-                            />
-                          ))}
+                          {isServicesMenuOpen
+                            ? serviceLandingLinks.map((item, idx) => (
+                              <Image
+                                key={item.image}
+                                src={item.image}
+                                alt={item.label}
+                                fill
+                                quality={55}
+                                sizes="(min-width: 1024px) 58vw, 0px"
+                                className={`object-cover mix-blend-luminosity transition-opacity duration-500 ease-out ${activeServiceHoverIndex === idx ? 'opacity-60' : 'opacity-0'
+                                  }`}
+                              />
+                            ))
+                            : null}
 
                           {/* Content */}
                           <div className="absolute inset-0 p-10 z-20 flex flex-col justify-end">
