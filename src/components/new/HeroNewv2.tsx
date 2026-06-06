@@ -100,9 +100,9 @@ const HeroNewv2: React.FC = () => {
       <HeroPulsePath />
 
       {/* ── Main content ── */}
-      <div className="relative z-20 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-0 lg:min-h-screen lg:flex lg:items-center">
+      <div className="relative z-20 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-24 xl:py-0 lg:min-h-screen lg:flex lg:items-center">
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 xl:gap-16 items-center lg:items-stretch w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 xl:gap-10 2xl:gap-16 items-center lg:items-stretch w-full">
 
           {/* ── Left: Monumental Headline + Copy + CTA (from v1) ── */}
           <motion.div
@@ -116,7 +116,7 @@ const HeroNewv2: React.FC = () => {
               initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="mb-8 [@media(max-height:800px)]:mb-4"
+              className="mb-8 lg:mb-4 xl:mb-6 2xl:mb-8 [@media(max-height:800px)]:mb-4"
             >
               <span className="text-xs tracking-[0.3em] uppercase text-white/90">
                 {t.label}
@@ -125,12 +125,12 @@ const HeroNewv2: React.FC = () => {
 
             {/* Heading */}
             <div
-              className="mb-8 [@media(max-height:800px)]:mb-4"
+              className="mb-8 lg:mb-4 xl:mb-6 2xl:mb-8 [@media(max-height:800px)]:mb-4"
               aria-hidden="true"
             >
               <BurnSpotlightText
                 as="div"
-                className="text-4xl sm:text-7xl lg:text-[90px] xl:text-[110px] [@media(max-height:800px)]:lg:text-[80px] [@media(max-height:700px)]:lg:text-[64px] font-light font-oxanium tracking-normal leading-[1.1] uppercase whitespace-pre-wrap"
+                className="text-4xl sm:text-7xl lg:text-[56px] xl:text-[64px] 2xl:text-[90px] [@media(max-height:800px)]:xl:text-[56px] [@media(max-height:700px)]:xl:text-[48px] font-light font-oxanium tracking-normal leading-[1.1] uppercase whitespace-pre-wrap"
                 glowSize={200}
                 baseDelay={500}
                 charDelay={40}
@@ -145,16 +145,16 @@ const HeroNewv2: React.FC = () => {
               initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 2.35 }}
-              className="max-w-xl mb-12 [@media(max-height:800px)]:mb-8 [@media(max-height:700px)]:mb-6 flex flex-col gap-3"
+              className="max-w-xl mb-12 lg:mb-6 xl:mb-8 2xl:mb-12 [@media(max-height:800px)]:mb-6 [@media(max-height:700px)]:mb-4 flex flex-col gap-3 lg:gap-2 2xl:gap-3"
             >
               <SpotlightText
                 as="p"
-                className="text-lg sm:text-xl [@media(max-height:700px)]:text-base font-light text-white/80"
+                className="text-lg sm:text-xl lg:text-sm xl:text-base 2xl:text-xl [@media(max-height:700px)]:text-xs font-light text-white/80"
                 glowSize={100}
               >
                 {t.subtitle}
               </SpotlightText>
-              <p className="text-lg sm:text-xl [@media(max-height:700px)]:text-base font-medium text-teal-300">
+              <p className="text-lg sm:text-xl lg:text-sm xl:text-base 2xl:text-xl [@media(max-height:700px)]:text-xs font-medium text-teal-300">
                 {t.punchline}
               </p>
             </motion.div>
@@ -168,7 +168,7 @@ const HeroNewv2: React.FC = () => {
             >
               <a
                 href="#about"
-                className="group relative px-10 py-5 [@media(max-height:700px)]:py-4 bg-teal-300 text-indigo-950 font-normal overflow-hidden transition-all duration-500 min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
+                className="group relative px-10 py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 bg-teal-300 text-indigo-950 font-normal overflow-hidden transition-all duration-500 min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
                 aria-label="Find out more about me"
               >
                 <span className="relative z-10">{t.cta.viewWork}</span>
@@ -177,7 +177,7 @@ const HeroNewv2: React.FC = () => {
 
               <a
                 href="#contact"
-                className="group px-10 py-5 [@media(max-height:700px)]:py-4 border border-white/20 text-white font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
+                className="group px-10 py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 border border-white/20 text-white font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
                 aria-label="Contact me to discuss your project"
               >
                 <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
@@ -196,30 +196,30 @@ const HeroNewv2: React.FC = () => {
             transition={{ duration: 1, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-4 flex justify-start lg:justify-end mt-8 lg:mt-0 lg:h-full"
           >
-            <div className="relative w-full max-w-sm xl:max-w-md flex flex-col justify-between gap-4 h-full">
+            <div className="relative w-full max-w-sm xl:max-w-md flex flex-col justify-between gap-3 xl:gap-4 h-full">
               {tV2.stack.items.map((item, index) => {
                 const Icon = stackIcons[index];
                 return (
                   <div
                     key={item.title}
-                    className="group relative flex items-center sm:items-start gap-5 p-5 sm:p-6 rounded-2xl shadow-[0_4_20px_rgba(0,0,0,0.2)] transition-all duration-500 bg-indigo-950/20 backdrop-blur-md hover:bg-indigo-950/40 border border-white/[0.05] hover:border-teal-300/20 card-shine"
+                    className="group relative flex items-center sm:items-start gap-4 lg:gap-3 2xl:gap-5 p-4 sm:p-6 lg:p-3 xl:p-4 2xl:p-6 rounded-2xl shadow-[0_4_20px_rgba(0,0,0,0.2)] transition-all duration-500 bg-indigo-950/20 backdrop-blur-md hover:bg-indigo-950/40 border border-white/[0.05] hover:border-teal-300/20 card-shine"
                   >
                     {/* Background subtle glow on hover */}
                     <div className="absolute inset-0 bg-gradient-to-r from-teal-300/0 via-teal-300/0 to-teal-300/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                     {/* Icon container */}
-                    <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center relative border border-transparent transition-colors duration-500">
-                      <Icon className="w-8 h-8 sm:w-9 sm:h-9 relative z-10 group-hover:scale-110 transition-transform duration-500" strokeWidth={1.5} />
+                    <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 lg:w-10 lg:h-10 xl:w-12 xl:h-12 2xl:w-16 2xl:h-16 rounded-xl flex items-center justify-center relative border border-transparent transition-colors duration-500">
+                      <Icon className="w-6 h-6 sm:w-9 sm:h-9 lg:w-5 lg:h-5 xl:w-6 xl:h-6 2xl:w-9 2xl:h-9 relative z-10 group-hover:scale-110 transition-transform duration-500" strokeWidth={1.5} />
                       {/* Glowing effect behind icon */}
                       <div className="absolute inset-0 bg-teal-300/20 blur-xl rounded-full opacity-30 group-hover:opacity-100 transition-opacity duration-500" />
                     </div>
 
                     {/* Text */}
                     <div className="flex flex-col pt-0.5 relative z-10">
-                      <span className="text-[14px] sm:text-[15px] font-medium text-white/90 group-hover:text-teal-300 transition-colors duration-300 tracking-[0.05em] uppercase mb-1 font-oxanium">
+                      <span className="text-[13px] sm:text-[15px] lg:text-[12px] xl:text-[13px] 2xl:text-[15px] font-medium text-white/90 group-hover:text-teal-300 transition-colors duration-300 tracking-[0.05em] uppercase mb-0.5 xl:mb-1 font-oxanium">
                         {item.title}
                       </span>
-                      <p className="text-[13px] leading-relaxed text-white/50 group-hover:text-white/70 transition-colors duration-300">
+                      <p className="text-[12px] sm:text-[13px] lg:text-[11px] xl:text-[12px] 2xl:text-[13px] leading-relaxed lg:leading-tight xl:leading-relaxed text-white/50 group-hover:text-white/70 transition-colors duration-300">
                         {item.description}
                       </p>
                     </div>
