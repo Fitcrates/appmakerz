@@ -124,10 +124,10 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
     <div className="min-h-screen bg-indigo-950">
       <NextHeader />
       <main className="min-h-screen bg-indigo-950 pt-24 pb-24">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-20">
-          <div className="grid lg:grid-cols-2 gap-2 lg:gap-16 items-center">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-16 2xl:mb-20">
+          <div className="grid lg:grid-cols-2 gap-2 lg:gap-8 2xl:gap-16 items-center">
             <div className="order-2 lg:order-2">
-              <BurnSpotlightText as="h1" className="text-5xl sm:text-6xl lg:text-8xl font-light text-white leading-tight" glowSize={200} baseDelay={200}>
+              <BurnSpotlightText as="h1" className="text-5xl sm:text-6xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-light text-white leading-tight" glowSize={200} baseDelay={200}>
                 {title}
               </BurnSpotlightText>
               {intro ? <SpotlightText text={intro} className="text-white/40 font-light text-lg max-w-xl mt-8 leading-relaxed" glowSize={200} /> : null}
@@ -146,7 +146,7 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
               <ResponsiveElectricLogo
                 src="/media/AppcratesLogo.webp"
                 alt="AppCrates Logo"
-                desktopClassName="w-40 lg:w-80 xl:w-96"
+                desktopClassName="w-40 lg:w-64 xl:w-72 2xl:w-96"
                 mobileClassName="w-40"
               />
             </div>

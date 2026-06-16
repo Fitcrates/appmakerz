@@ -67,14 +67,14 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 mb-12 lg:mb-16 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 mb-12 lg:mb-12 2xl:mb-16 items-center">
         <div className="order-2 lg:order-2">
 
 
           <div className="mb-8">
             <BurnSpotlightText
               as="h1"
-              className="text-5xl sm:text-6xl lg:text-8xl font-light text-white font-oxanium "
+              className="text-5xl sm:text-6xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-light text-white font-oxanium "
               glowSize={200}
               baseDelay={200}
             >
@@ -91,7 +91,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
           <ResponsiveElectricLogo
             src="/media/AppcratesLogo.webp"
             alt="AppCrates Logo"
-            desktopClassName="w-40 lg:w-80 xl:w-96"
+            desktopClassName="w-40 lg:w-64 xl:w-72 2xl:w-96"
             mobileClassName="w-40"
           />
         </div>
