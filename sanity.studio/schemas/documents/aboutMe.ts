@@ -86,8 +86,34 @@ export default {
       type: 'object',
       group: 'content',
       fields: [
-        { name: 'en', title: 'English', type: 'array', of: [{ type: 'string' }] },
-        { name: 'pl', title: 'Polish', type: 'array', of: [{ type: 'string' }] },
+        {
+          name: 'en',
+          title: 'English',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'label', title: 'Label', type: 'string', description: 'e.g. Service name (e.g. Upwork)' },
+                { name: 'url', title: 'URL', type: 'string', description: 'Link to service' },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'pl',
+          title: 'Polish',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'label', title: 'Label', type: 'string', description: 'np. nazwa usługi (np. Upwork)' },
+                { name: 'url', title: 'URL', type: 'string', description: 'Link do usługi' },
+              ],
+            },
+          ],
+        },
       ],
     },
     {

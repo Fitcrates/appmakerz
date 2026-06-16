@@ -205,7 +205,7 @@ const FooterNew: React.FC = () => {
                   <span className="text-3xl font-light font-oxanium text-white">
                     App<span className="text-teal-300">Crates</span>
                   </span>
-                  <img src="/media/favicon-32x32.png" alt="AppCrates Logo" className="w-10 h-10 object-contain hidden md:block" />
+                  <img src="/media/AppcratesLogoSmaller.webp" alt="AppCrates Logo" className="w-10 h-10 object-contain hidden md:block" />
                 </div>
               </PrefetchLink>
               <p className="text-white/40  font-light max-w-md text-lg leading-relaxed">{t.brand.description}</p>

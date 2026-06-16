@@ -12,6 +12,7 @@ import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import SpotlightText from '@/components/new/SpotlightText';
 import ServiceDeliverablesNew from '@/components/new/ServiceDeliverablesNew';
 import ServiceProcessNew from '@/components/new/ServiceProcessNew';
+import HeroPulsePath from '@/components/new/HeroPulsePath';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getPosts, getProjects, getServiceLanding, getServiceLandings, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
@@ -264,6 +265,8 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
           ) : (
             <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/30 to-indigo-950" />
           )}
+
+          <HeroPulsePath />
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-24 mt-20 w-full">
             <span className="text-xs tracking-[0.3em] uppercase text-teal-300/80 font-plex">{eyebrow}</span>

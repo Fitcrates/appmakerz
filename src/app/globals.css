@@ -297,3 +297,92 @@
   pointer-events: none;
   z-index: 20;
 }
+
+.about-hero-img {
+  filter: url("#aboutHeroDistortion");
+}
+
+.about-hero-rgb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 15;
+  mix-blend-mode: screen;
+  animation: aboutHeroRgbPulse 6s infinite;
+}
+
+.about-hero-rgb-red {
+  filter: sepia(1) saturate(50) hue-rotate(-45deg);
+}
+
+.about-hero-rgb-cyan {
+  filter: sepia(1) saturate(90) hue-rotate(140deg);
+  animation-name: aboutHeroRgbPulseReverse;
+}
+
+@keyframes aboutHeroRgbPulse {
+
+  0%,
+  66%,
+  84%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+
+  70% {
+    opacity: 0.45;
+    transform: translate3d(10px, -4px, 0);
+  }
+
+  74% {
+    opacity: 0.3;
+    transform: translate3d(-6px, 3px, 0);
+  }
+
+  78% {
+    opacity: 0.15;
+    transform: translate3d(3px, 0, 0);
+  }
+}
+
+@keyframes aboutHeroRgbPulseReverse {
+
+  0%,
+  66%,
+  84%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+
+  70% {
+    opacity: 0.35;
+    transform: translate3d(-10px, 4px, 0);
+  }
+
+  74% {
+    opacity: 0.25;
+    transform: translate3d(6px, -3px, 0);
+  }
+
+  78% {
+    opacity: 0.12;
+    transform: translate3d(-3px, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-hero-img {
+    filter: none;
+  }
+
+  .about-hero-rgb {
+    display: none;
+  }
+}

@@ -8,6 +8,7 @@ import NextFooter from '@/components/next/NextFooter';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import ResponsiveElectricLogo from '@/components/next/ResponsiveElectricLogo';
+import AboutHeroDistortedImage from '@/components/next/AboutHeroDistortedImage';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getAboutMe, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
@@ -104,7 +105,7 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
   const title = getLocalizedText(about.title, language, language === 'pl' ? 'O mnie' : 'About me');
   const intro = getLocalizedText(about.intro, language);
   const story = getLocalizedArray<any>(about.story, language);
-  const highlights = getLocalizedArray<string>(about.highlights, language);
+  const highlights = getLocalizedArray<{ _key?: string; label?: string; url?: string } | string>(about.highlights, language);
   const ctaProjects = getLocalizedText(about.ctaProjects, language, language === 'pl' ? 'Zobacz projekty' : 'View projects');
   const ctaContact = getLocalizedText(about.ctaContact, language, language === 'pl' ? 'Skontaktuj się' : 'Get in touch');
   const heroImageUrl = about.heroImage ? urlFor(about.heroImage).width(1800).auto('format').url() : '';
@@ -156,36 +157,44 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
           <div className="border-t border-white/10 pt-16 grid lg:grid-cols-5 gap-10 lg:gap-16 items-start">
             {heroImageUrl ? (
               <div className="lg:col-span-2 lg:sticky lg:top-28">
-                <div className="relative w-full max-w-xs mx-auto lg:max-w-none aspect-[3/4] overflow-hidden">
-                  <img src={heroImageUrl} alt={about.heroImage?.alt || title} className="w-full h-full object-cover object-top" loading="eager" decoding="async" />
-                  <div className="absolute inset-0 border border-white/10 pointer-events-none" />
-                </div>
+                <AboutHeroDistortedImage src={heroImageUrl} alt={about.heroImage?.alt || title} />
               </div>
             ) : null}
             <div className={heroImageUrl ? 'lg:col-span-3 space-y-8' : 'lg:col-span-5 space-y-8'}>
               {highlights.length ? (
                 <div>
-                  <SpotlightText as="h2" className="text-xs tracking-[0.3em] uppercase text-white/30 mb-8">
+                  <SpotlightText as="h2" className="text-xl font-light  font-oxanium text-white/30 mb-8">
                     {language === 'pl' ? 'Specjalizacje' : 'Specializations'}
                   </SpotlightText>
                   <div className="space-y-0">
-                    {highlights.map((item, index) => (
-                      <div key={`${item}-${index}`} className="group flex items-center gap-6 py-4 border-b border-white/5 hover:border-teal-300/20 transition-all duration-500 hover:pl-2">
-                        <span className="text-[10px] tracking-[0.2em] text-teal-300/30 tabular-nums group-hover:text-teal-300/70 transition-colors duration-500 notranslate">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        <span className="text-white/50 font-light text-[15px] group-hover:text-white/80 transition-colors duration-500">
-                          {item}
-                        </span>
-                        <div className="flex-1 h-px bg-gradient-to-r from-white/5 to-transparent group-hover:from-teal-300/10 transition-colors duration-500" />
-                      </div>
-                    ))}
+                    {highlights.map((item, index) => {
+                      const label = typeof item === 'string' ? item : item?.label || '';
+                      const url = typeof item === 'object' ? item?.url : undefined;
+                      const key = typeof item === 'object' && item?._key ? item._key : `${label}-${index}`;
+                      return (
+                        <div key={key} className="group flex items-center gap-6 py-4 border-b border-white/5 hover:border-teal-300/20 transition-all duration-500 hover:pl-2">
+                          <span className="text-[10px] tracking-[0.2em] text-teal-300/30 tabular-nums group-hover:text-teal-300/70 transition-colors duration-500 notranslate">
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                          {url ? (
+                            <a href={url} target={url.startsWith('http') ? '_blank' : undefined} rel={url.startsWith('http') ? 'noopener noreferrer' : undefined} className="text-white/50 font-light text-[15px] group-hover:text-white/80 transition-colors duration-500 hover:underline">
+                              {label}
+                            </a>
+                          ) : (
+                            <span className="text-white/50 font-light text-[15px] group-hover:text-white/80 transition-colors duration-500">
+                              {label}
+                            </span>
+                          )}
+                          <div className="flex-1 h-px bg-gradient-to-r from-white/5 to-transparent group-hover:from-teal-300/10 transition-colors duration-500" />
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               ) : null}
               {story.length ? (
                 <div>
-                  <SpotlightText as="h2" className="text-xs tracking-[0.3em] uppercase text-white/30 mb-6">
+                  <SpotlightText as="h2" className="text-xl font-light  font-oxanium text-white/30 mb-6">
                     {language === 'pl' ? 'Kim jestem' : 'Who am I'}
                   </SpotlightText>
                   <div className="prose prose-invert prose-lg max-w-none font-light prose-p:text-white/60 prose-p:leading-relaxed">
@@ -198,7 +207,7 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
                 <div className="flex flex-col sm:flex-row gap-6 sm:items-center justify-between">
                   <SpotlightText
                     as="p"
-                    className="text-xs tracking-[0.3em] uppercase text-white/30 mb-6"
+                    className="text-xl font-light  font-oxanium text-white/30 mb-6"
                   >
                     {language === 'pl'
                       ? 'Zainteresowany współpracą?'
