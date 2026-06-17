@@ -40,8 +40,14 @@ function extractTextContent(node: React.ReactNode): string {
     return node.map(extractTextContent).join('');
   }
 
-  if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
-    return extractTextContent(node.props.children);
+  if (React.isValidElement<{ children?: React.ReactNode; className?: string }>(node)) {
+    if (node.type === 'br') {
+      return '\n';
+    }
+
+    const className = node.props.className ?? '';
+    const startsNewLine = className.split(/\s+/).includes('block');
+    return `${startsNewLine ? '\n' : ''}${extractTextContent(node.props.children)}`;
   }
 
   return '';
@@ -56,12 +62,17 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
   glowSize = 120,
   glowColor = GLOW_COLOR
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
+    const spotlightElement =
+      containerRef.current.classList.contains('spotlight-text-single')
+        ? containerRef.current
+        : containerRef.current.querySelector<HTMLElement>('.spotlight-text-single');
+    const rect = (spotlightElement || containerRef.current).getBoundingClientRect();
+
     setMousePos({
       x: e.clientX - rect.left,
       y: e.clientY - rect.top
@@ -72,8 +83,7 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
     setMousePos({ x: -1000, y: -1000 });
   }, []);
 
-  // Build the mask gradient using configuration values (offset by 24px to match the -inset-6 wrapper)
-  const maskGradient = `radial-gradient(circle ${glowSize}px at calc(${mousePos.x}px + 24px) calc(${mousePos.y}px + 24px), rgba(0,0,0,${CENTER_OPACITY}) 0%, rgba(0,0,0,${MID_OPACITY}) ${MID_POSITION}%, rgba(0,0,0,0) 100%)`;
+  const maskGradient = `radial-gradient(circle ${glowSize}px at ${mousePos.x}px ${mousePos.y}px, rgba(0,0,0,${CENTER_OPACITY}) 0%, rgba(0,0,0,${MID_OPACITY}) ${MID_POSITION}%, rgba(0,0,0,0) 100%)`;
   const content = text ?? children;
   const spotlightText = typeof text === 'string' ? text : extractTextContent(content);
   const glowStyle = {
@@ -91,7 +101,7 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
 
     return (
       <span
-        ref={containerRef}
+        ref={containerRef as React.RefObject<HTMLSpanElement>}
         className="relative cursor-default inline-block"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -106,24 +116,40 @@ const SpotlightText: React.FC<SpotlightTextProps> = ({
     );
   }
 
-  // For span elements, use inline-block to ensure proper positioning
+  const element = (
+    <Component
+      className={`text-white/90 spotlight-text-single ${className} ${baseClassName}`}
+      style={glowStyle}
+      data-spotlight-text={spotlightText}
+    >
+      {content}
+    </Component>
+  );
+
+  if (Component === 'span') {
+    return (
+      <span
+        ref={containerRef as React.RefObject<HTMLSpanElement>}
+        className="relative cursor-default inline-block"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{ isolation: 'isolate' }}
+      >
+        {element}
+      </span>
+    );
+  }
+
   return (
-    <span 
-      ref={containerRef}
-      className="relative cursor-default inline-block"
+    <div
+      ref={containerRef as React.RefObject<HTMLDivElement>}
+      className="relative block cursor-default"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ isolation: 'isolate' }}
     >
-      {/* Base text - adjust opacity here (text-white/90 = 90% white) */}
-      <Component
-        className={`text-white/90 spotlight-text-single ${className} ${baseClassName}`}
-        style={glowStyle}
-        data-spotlight-text={spotlightText}
-      >
-        {content}
-      </Component>
-    </span>
+      {element}
+    </div>
   );
 };
 

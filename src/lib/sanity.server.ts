@@ -12,7 +12,7 @@ if (!projectId || !dataset) {
 const client = createClient({
   projectId,
   dataset,
-  useCdn: false,
+  useCdn: true,
   apiVersion: '2024-02-20',
 });
 
@@ -498,6 +498,50 @@ export async function getAboutMe(slug: string = 'about-me') {
       eyebrow { en, pl },
       intro { en, pl },
       heroImage,
+      hero {
+        eyebrow { en, pl },
+        title { en, pl },
+        accent { en, pl },
+        subtitle { en, pl },
+        question { en, pl },
+        portrait,
+        mindLabels { en, pl }
+      },
+      founderStatement {
+        headline { en, pl },
+        accent { en, pl },
+        paragraphs { en, pl }
+      },
+      principlesSection {
+        eyebrow { en, pl },
+        title { en, pl },
+        accent { en, pl },
+        cards { en, pl }
+      },
+      processSection {
+        eyebrow { en, pl },
+        title { en, pl },
+        accent { en, pl },
+        steps { en, pl }
+      },
+      beyondCodeSection {
+        eyebrow { en, pl },
+        title { en, pl },
+        accent { en, pl },
+        cards { en, pl }
+      },
+      ctaSection {
+        headlineLines { en, pl },
+        accent { en, pl },
+        highlights { en, pl },
+        primaryButton { en, pl },
+        secondaryButton { en, pl }
+      },
+      backgrounds {
+        hero,
+        process,
+        beyondCode
+      },
       story { en, pl },
       highlights { en, pl },
       ctaProjects { en, pl },

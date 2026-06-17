@@ -1,15 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { PortableText } from '@portabletext/react';
-import SpotlightText from '@/components/new/SpotlightText';
 import ChatWidget from '@/components/next/ChatWidget';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
-import BurnSpotlightText from '@/components/new/BurnSpotlightText';
-import PrefetchLink from '@/components/next/PrefetchLink';
-import ResponsiveElectricLogo from '@/components/next/ResponsiveElectricLogo';
-import AboutHeroDistortedImage from '@/components/next/AboutHeroDistortedImage';
-import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
+import CyberPhilosophyLayout, { type CyberPhilosophyContent } from '@/components/new/CyberPhilosophyLayout';
+import type { PhilosophyProcessStep } from '@/components/new/PhilosophyProcess';
 import { getAboutMe, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
@@ -25,6 +20,37 @@ import {
 
 interface LocalizedAboutMePageProps {
   params: Promise<{ lang: string }>;
+}
+
+type LocalizedSanityCard = {
+  _key?: string;
+  title?: string;
+  description?: string;
+  image?: any;
+};
+
+function getSanityImageUrl(image: any, width: number = 1800): string | undefined {
+  return image ? urlFor(image).width(width).auto('format').url() : undefined;
+}
+
+function getLocalizedCards(value: unknown, language: Language) {
+  return getLocalizedArray<LocalizedSanityCard>(value, language)
+    .map((card) => ({
+      title: card.title || '',
+      desc: card.description || '',
+    }))
+    .filter((card) => card.title || card.desc);
+}
+
+function getLocalizedImageCards(value: unknown, language: Language) {
+  return getLocalizedArray<LocalizedSanityCard>(value, language)
+    .map((card) => ({
+      title: card.title || '',
+      desc: card.description || '',
+      img: getSanityImageUrl(card.image, 900),
+      alt: card.image ? getImageAlt(card.image, card.title || '') : undefined,
+    }))
+    .filter((card) => card.title || card.desc);
 }
 
 export const revalidate = 3600;
@@ -73,12 +99,14 @@ export async function generateMetadata({ params }: LocalizedAboutMePageProps): P
       title: seoTitle,
       description: seoDescription,
       siteName: 'AppCrates',
-      images: [{
-        url: ogImageUrl,
-        width: SOCIAL_IMAGE_WIDTH,
-        height: SOCIAL_IMAGE_HEIGHT,
-        alt: imageAlt,
-      }],
+      images: [
+        {
+          url: ogImageUrl,
+          width: SOCIAL_IMAGE_WIDTH,
+          height: SOCIAL_IMAGE_HEIGHT,
+          alt: imageAlt,
+        },
+      ],
       locale: language === 'pl' ? 'pl_PL' : 'en_US',
       alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
     },
@@ -102,13 +130,62 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
     notFound();
   }
 
-  const title = getLocalizedText(about.title, language, language === 'pl' ? 'O mnie' : 'About me');
   const intro = getLocalizedText(about.intro, language);
-  const story = getLocalizedArray<any>(about.story, language);
-  const highlights = getLocalizedArray<{ _key?: string; label?: string; url?: string } | string>(about.highlights, language);
-  const ctaProjects = getLocalizedText(about.ctaProjects, language, language === 'pl' ? 'Zobacz projekty' : 'View projects');
-  const ctaContact = getLocalizedText(about.ctaContact, language, language === 'pl' ? 'Skontaktuj się' : 'Get in touch');
+  const highlights = getLocalizedArray<{ _key?: string; label?: string; url?: string } | string>(
+    about.highlights,
+    language,
+  );
   const heroImageUrl = about.heroImage ? urlFor(about.heroImage).width(1800).auto('format').url() : '';
+  const content: CyberPhilosophyContent = {
+    hero: {
+      eyebrow: getLocalizedText(about.hero?.eyebrow, language),
+      title: getLocalizedText(about.hero?.title, language),
+      accent: getLocalizedText(about.hero?.accent, language),
+      subtitle: getLocalizedText(about.hero?.subtitle, language),
+      question: getLocalizedText(about.hero?.question, language),
+      portrait: getSanityImageUrl(about.hero?.portrait, 900),
+      portraitAlt: about.hero?.portrait ? getImageAlt(about.hero.portrait, 'Arkadiusz Wawrzyniak') : undefined,
+      mindLabels: getLocalizedArray<string>(about.hero?.mindLabels, language),
+    },
+    founderStatement: {
+      headline: getLocalizedText(about.founderStatement?.headline, language),
+      accent: getLocalizedText(about.founderStatement?.accent, language),
+      paragraphs: getLocalizedArray<string>(about.founderStatement?.paragraphs, language),
+    },
+    principlesSection: {
+      eyebrow: getLocalizedText(about.principlesSection?.eyebrow, language),
+      title: getLocalizedText(about.principlesSection?.title, language),
+      accent: getLocalizedText(about.principlesSection?.accent, language),
+      cards: getLocalizedCards(about.principlesSection?.cards, language),
+    },
+    processSection: {
+      eyebrow: getLocalizedText(about.processSection?.eyebrow, language),
+      title: getLocalizedText(about.processSection?.title, language),
+      accent: getLocalizedText(about.processSection?.accent, language),
+      steps: getLocalizedArray<PhilosophyProcessStep>(about.processSection?.steps, language),
+    },
+    beyondCodeSection: {
+      eyebrow: getLocalizedText(about.beyondCodeSection?.eyebrow, language),
+      title: getLocalizedText(about.beyondCodeSection?.title, language),
+      accent: getLocalizedText(about.beyondCodeSection?.accent, language),
+      cards: getLocalizedImageCards(about.beyondCodeSection?.cards, language),
+    },
+    ctaSection: {
+      headlineLines: getLocalizedArray<string>(about.ctaSection?.headlineLines, language),
+      accent: getLocalizedText(about.ctaSection?.accent, language),
+      highlights: getLocalizedArray<{ _key?: string; label?: string; url?: string } | string>(
+        about.ctaSection?.highlights,
+        language,
+      ),
+      primaryButton: getLocalizedText(about.ctaSection?.primaryButton, language),
+      secondaryButton: getLocalizedText(about.ctaSection?.secondaryButton, language),
+    },
+    backgrounds: {
+      hero: getSanityImageUrl(about.backgrounds?.hero, 1800),
+      process: getSanityImageUrl(about.backgrounds?.process, 1800),
+      beyondCode: getSanityImageUrl(about.backgrounds?.beyondCode, 1800),
+    },
+  };
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -123,113 +200,13 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
   return (
     <div className="min-h-screen bg-indigo-950">
       <NextHeader />
-      <main className="min-h-screen bg-indigo-950 pt-24 pb-24">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-16 2xl:mb-20">
-          <div className="grid lg:grid-cols-2 gap-2 lg:gap-8 2xl:gap-16 items-center">
-            <div className="order-2 lg:order-2">
-              <BurnSpotlightText as="h1" className="text-5xl sm:text-6xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-light text-white leading-tight" glowSize={200} baseDelay={200}>
-                {title}
-              </BurnSpotlightText>
-              {intro ? <SpotlightText text={intro} className="text-white/40 font-light text-lg max-w-xl mt-8 leading-relaxed" glowSize={200} /> : null}
-              <div className="flex flex-col sm:flex-row gap-4 mt-10">
-                <PrefetchLink href={localizedPath(language, '/#projects')} className="group relative px-10 py-5 bg-teal-300 text-indigo-950 font-normal overflow-hidden transition-all duration-500 min-w-[230px] text-center">
-                  <span className="relative z-10">{ctaProjects}</span>
-                  <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-                </PrefetchLink>
-                <PrefetchLink href={localizedPath(language, '/#contact')} className="group px-10 py-5 border border-white/20 text-white font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center">
-                  <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">{ctaContact}</span>
-                  <div className="absolute inset-0 bg-teal-300 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-                </PrefetchLink>
-              </div>
-            </div>
-            <div className="order-1 lg:order-1 flex justify-center lg:justify-start">
-              <ResponsiveElectricLogo
-                src="/media/AppcratesLogo.webp"
-                alt="AppCrates Logo"
-                desktopClassName="w-40 lg:w-64 xl:w-72 2xl:w-96"
-                mobileClassName="w-40"
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="border-t border-white/10 pt-16 grid lg:grid-cols-5 gap-10 lg:gap-16 items-start">
-            {heroImageUrl ? (
-              <div className="lg:col-span-2 lg:sticky lg:top-28">
-                <AboutHeroDistortedImage src={heroImageUrl} alt={about.heroImage?.alt || title} />
-              </div>
-            ) : null}
-            <div className={heroImageUrl ? 'lg:col-span-3 space-y-8' : 'lg:col-span-5 space-y-8'}>
-              {highlights.length ? (
-                <div>
-                  <SpotlightText as="h2" className="text-xl font-light  font-oxanium text-white/30 mb-8">
-                    {language === 'pl' ? 'Specjalizacje' : 'Specializations'}
-                  </SpotlightText>
-                  <div className="space-y-0">
-                    {highlights.map((item, index) => {
-                      const label = typeof item === 'string' ? item : item?.label || '';
-                      const url = typeof item === 'object' ? item?.url : undefined;
-                      const key = typeof item === 'object' && item?._key ? item._key : `${label}-${index}`;
-                      return (
-                        <div key={key} className="group flex items-center gap-6 py-4 border-b border-white/5 hover:border-teal-300/20 transition-all duration-500 hover:pl-2">
-                          <span className="text-[10px] tracking-[0.2em] text-teal-300/30 tabular-nums group-hover:text-teal-300/70 transition-colors duration-500 notranslate">
-                            {String(index + 1).padStart(2, '0')}
-                          </span>
-                          {url ? (
-                            <a href={url} target={url.startsWith('http') ? '_blank' : undefined} rel={url.startsWith('http') ? 'noopener noreferrer' : undefined} className="text-white/50 font-light text-[15px] group-hover:text-white/80 transition-colors duration-500 hover:underline">
-                              {label}
-                            </a>
-                          ) : (
-                            <span className="text-white/50 font-light text-[15px] group-hover:text-white/80 transition-colors duration-500">
-                              {label}
-                            </span>
-                          )}
-                          <div className="flex-1 h-px bg-gradient-to-r from-white/5 to-transparent group-hover:from-teal-300/10 transition-colors duration-500" />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : null}
-              {story.length ? (
-                <div>
-                  <SpotlightText as="h2" className="text-xl font-light  font-oxanium text-white/30 mb-6">
-                    {language === 'pl' ? 'Kim jestem' : 'Who am I'}
-                  </SpotlightText>
-                  <div className="prose prose-invert prose-lg max-w-none font-light prose-p:text-white/60 prose-p:leading-relaxed">
-                    <PortableText value={story} components={portableTextComponentsServer} />
-                  </div>
-                </div>
-              ) : null}
-
-              <div className="border-t border-white/10 pt-10 mt-10">
-                <div className="flex flex-col sm:flex-row gap-6 sm:items-center justify-between">
-                  <SpotlightText
-                    as="p"
-                    className="text-xl font-light  font-oxanium text-white/30 mb-6"
-                  >
-                    {language === 'pl'
-                      ? 'Zainteresowany współpracą?'
-                      : 'Interested in working together?'}
-                  </SpotlightText>
-                  <PrefetchLink
-                    href={localizedPath(language, '/#contact')}
-                    className="group px-10 py-5 border border-white/20 text-white font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
-                  >
-                    <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
-                      {language === 'pl' ? 'Napisz do mnie' : 'Get in touch'}
-                    </span>
-                    <div className="absolute inset-0 bg-teal-300 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-                  </PrefetchLink>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+      <main className="-mb-px min-h-screen bg-indigo-950">
+        <CyberPhilosophyLayout language={language} highlights={highlights} content={content} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </main>
-      <NextFooter />
+      <div className="relative z-10 bg-indigo-950">
+        <NextFooter />
+      </div>
       <ChatWidget />
     </div>
   );

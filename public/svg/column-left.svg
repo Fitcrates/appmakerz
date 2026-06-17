@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 1000" fill="none">
+  <g stroke="#57F2E3" stroke-width="2.4" fill="none" opacity="0.62">
+    <!-- Capital (Top) -->
+    <path d="M10,10 L190,10 L190,30 L170,30 L170,50 L30,50 L30,30 L10,30 Z" />
+    <!-- Flutes (Vertical lines) -->
+    <line x1="40" y1="50" x2="40" y2="950" />
+    <line x1="70" y1="50" x2="70" y2="950" />
+    <line x1="100" y1="50" x2="100" y2="950" />
+    <line x1="130" y1="50" x2="130" y2="950" />
+    <line x1="160" y1="50" x2="160" y2="950" />
+    <!-- Base (Bottom) -->
+    <path d="M30,950 L170,950 L170,970 L190,970 L190,990 L10,990 L10,970 L30,970 Z" />
+    
+    <!-- Circuit details inside flutes -->
+    <path d="M40,200 L55,215 L55,250 L40,265" />
+    <circle cx="55" cy="250" r="2" />
+    
+    <path d="M130,400 L145,385 L145,350 L130,335" />
+    <circle cx="145" cy="350" r="2" />
+    
+    <path d="M100,600 L85,615 L85,680 L100,695" />
+    <circle cx="85" cy="615" r="2" />
+    <circle cx="85" cy="680" r="2" />
+    
+    <path d="M70,800 L85,785 L85,750 L70,735" />
+    <circle cx="85" cy="750" r="2" />
+    
+    <!-- Connecting cross lines mimicking breaks -->
+    <line x1="40" y1="150" x2="70" y2="150" stroke-dasharray="4 4" />
+    <line x1="130" y1="500" x2="160" y2="500" stroke-dasharray="4 4" />
+    <line x1="70" y1="850" x2="100" y2="850" stroke-dasharray="4 4" />
+  </g>
+</svg>
