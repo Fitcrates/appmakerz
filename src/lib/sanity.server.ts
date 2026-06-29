@@ -43,7 +43,7 @@ function asPortableTextBlocks(value: unknown): any[] {
 
   const normalizeBlock = (block: any) => {
     if (!block || typeof block !== 'object') return null;
-    if (block._type === 'image') return block;
+    if (typeof block._type === 'string' && block._type !== 'block') return block;
 
     const style = typeof block.style === 'string' ? block.style : 'normal';
     const rawChildren = Array.isArray(block.children) ? block.children : [];
