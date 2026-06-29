@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import Script from 'next/script';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import PrefetchLink from '@/components/next/PrefetchLink';
@@ -98,7 +99,7 @@ export default async function LocalizedFaqPage({ params }: LocalizedFaqPageProps
           </div>
           <FaqPageClient content={content} />
         </div>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        <Script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       </main>
       <NextFooter />
       <ChatWidget />

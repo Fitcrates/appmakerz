@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import Script from 'next/script';
 import ChatWidget from '@/components/next/ChatWidget';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
@@ -202,7 +203,7 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
       <NextHeader />
       <main className="-mb-px min-h-screen bg-indigo-950">
         <CyberPhilosophyLayout language={language} highlights={highlights} content={content} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <Script id="person-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </main>
       <div className="relative z-10 bg-indigo-950">
         <NextFooter />

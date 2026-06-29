@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import Script from 'next/script';
 import { PortableText } from '@portabletext/react';
 import { ArrowUpRight } from 'lucide-react';
 import NextHeader from '@/components/next/NextHeader';
@@ -250,6 +251,22 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
       acceptedAnswer: { '@type': 'Answer', text: item.answer },
     })),
   } : null;
+
+  const serviceSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: title,
+    description: getLocalizedText(landing.seo?.metaDescription, language, intro),
+    provider: {
+      '@type': 'Organization',
+      name: 'AppCrates',
+      url: absoluteUrl(localizedPath(language, '/')),
+    },
+    url: absoluteUrl(localizedPath(language, path)),
+    ...(heroImageUrl ? { image: heroImageUrl } : {}),
+    ...(landing.serviceType ? { serviceType: landing.serviceType } : {}),
+    ...(landing.city ? { areaServed: { '@type': 'City', name: landing.city } } : {}),
+  };
 
   return (
     <>
@@ -587,8 +604,9 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
 
       <NextFooter />
       <ChatWidget />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      {faqSchema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}
+      <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="service-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      {faqSchema ? <Script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}
     </>
   );
 }

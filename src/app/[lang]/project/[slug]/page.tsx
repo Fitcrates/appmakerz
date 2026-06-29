@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import Script from 'next/script';
 import { PortableText } from '@portabletext/react';
 import { ArrowLeft, ArrowUpRight, Feather, Github, Globe } from 'lucide-react';
 import NextHeader from '@/components/next/NextHeader';
@@ -234,7 +235,7 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
 
       <NextFooter />
       <ChatWidget />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
     </>
   );
 }
