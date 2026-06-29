@@ -228,7 +228,7 @@ const ContactNew: React.FC = () => {
 
                 <p className="text-xs text-white/20 ">
                   {t.form.privacy.text}{' '}
-                  <PrefetchLink href="/privacy-policy" className="text-white/40 hover:text-teal-300 transition-colors">
+                  <PrefetchLink href="/privacy-policy" className="text-white/70 hover:text-teal-300 transition-colors">
                     {t.form.privacy.link}
                   </PrefetchLink>
                 </p>

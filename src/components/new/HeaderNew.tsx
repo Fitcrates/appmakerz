@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, ArrowUpRight } from 'lucide-react';
 import { PiGlobeDuotone, PiShoppingCartDuotone, PiStorefrontDuotone, PiRobotDuotone, PiBrowserDuotone } from 'react-icons/pi';
+import { SiShopify } from 'react-icons/si';
 import { IconType } from 'react-icons';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import { useRouteTransition } from '@/components/next/RouteTransitionProvider';
@@ -33,6 +34,16 @@ interface ServiceLink {
 }
 
 const getServiceLandingLinks = (language: string): ServiceLink[] => [
+  {
+    icon: SiShopify,
+    label: language === 'pl' ? 'Sklepy Shopify' : 'Shopify Stores',
+    description: language === 'pl' ? 'Od prostych sklepów po custom storefronty' : 'From simple stores to custom storefronts',
+    longDescription: language === 'pl'
+      ? 'Projektuję i wdrażam sklepy Shopify dopasowane do etapu rozwoju biznesu — od sprawnego startu na gotowym motywie po w pełni customowe storefronty headless na Next.js lub TanStack.'
+      : 'I design and build Shopify stores matched to your stage of growth — from a focused launch on a proven theme to fully custom headless storefronts built with Next.js or TanStack.',
+    href: '/uslugi/shopify-development',
+    image: '/media/solutions/ecommerceshop.webp',
+  },
   {
     icon: PiGlobeDuotone,
     label: language === 'pl' ? 'Strony Internetowe' : 'Websites',
@@ -235,7 +246,7 @@ const HeaderNew: React.FC = () => {
                   key={item.label}
                   href={item.href}
                   onClick={(event) => handleNavClick(event, item.href)}
-                  className="relative text-white/70  font-light text-sm hover:text-white transition-colors group focus:outline-none focus:text-teal-300"
+                  className="relative text-white/90  font-light text-sm hover:text-white transition-colors group focus:outline-none focus:text-teal-300"
                 >
                   {item.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-px bg-teal-300 group-hover:w-full transition-all duration-300" />
@@ -255,7 +266,7 @@ const HeaderNew: React.FC = () => {
               >
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 text-white/70  font-light text-sm hover:text-white transition-colors focus:outline-none focus:text-teal-300"
+                  className="inline-flex items-center gap-2 text-white/90  font-light text-sm hover:text-white transition-colors focus:outline-none focus:text-teal-300"
                   aria-haspopup="true"
                   aria-expanded={isServicesMenuOpen}
                   aria-label={t.services}
@@ -323,7 +334,7 @@ const HeaderNew: React.FC = () => {
                           {isServicesMenuOpen
                             ? serviceLandingLinks.map((item, idx) => (
                               <Image
-                                key={item.image}
+                                key={item.href}
                                 src={item.image}
                                 alt={item.label}
                                 fill
@@ -358,7 +369,7 @@ const HeaderNew: React.FC = () => {
                                   {serviceLandingLinks[activeServiceHoverIndex].label}
                                 </h3>
 
-                                <p className="text-white/70 text-sm leading-relaxed max-w-md mb-8">
+                                <p className="text-white/90 text-sm leading-relaxed max-w-md mb-8">
                                   {serviceLandingLinks[activeServiceHoverIndex].longDescription}
                                 </p>
 

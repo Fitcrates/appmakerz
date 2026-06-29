@@ -152,7 +152,7 @@ const FooterNew: React.FC = () => {
               <Mail className="w-5 h-5 text-teal-300" />
             </div>
             <h3 className="text-2xl sm:text-3xl font-light text-white mb-3">{t.newsletter.title}</h3>
-            <p className="text-white/40  mb-8">{t.newsletter.description}</p>
+            <p className="text-white/70  mb-8">{t.newsletter.description}</p>
 
             {isSubscribed ? (
               <motion.div
@@ -208,7 +208,7 @@ const FooterNew: React.FC = () => {
                   <img src="/media/AppcratesLogoSmaller.webp" alt="AppCrates Logo" className="w-10 h-10 object-contain hidden md:block" />
                 </div>
               </PrefetchLink>
-              <p className="text-white/40  font-light max-w-md text-lg leading-relaxed">{t.brand.description}</p>
+              <p className="text-white/70  font-light max-w-md text-lg leading-relaxed">{t.brand.description}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-8">

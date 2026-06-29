@@ -122,7 +122,7 @@ const ProjectRow = memo<{ project: Project; index: number; language: 'en' | 'pl'
               <h3 className="text-2xl sm:text-3xl font-oxanium font-light  text-white group-hover:text-teal-300 transition-colors duration-300">
                 {project.title}
               </h3>
-              <p className="text-sm  mt-1 text-white/40 italic">
+              <p className="text-sm  mt-1 text-white/70 italic">
                 {project.category} - {project.year}
               </p>
             </div>

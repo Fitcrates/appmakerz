@@ -59,7 +59,7 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
         ) : null}
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-4 sm:px-6 lg:px-8 xl:grid-cols-[4.5rem_minmax(0,48rem)_17.5rem] xl:items-start xl:gap-12">
           <div className="min-w-0 xl:col-start-2">
-            <div className="flex items-center gap-2 text-sm text-white/40  mb-8 overflow-hidden">
+            <div className="flex items-center gap-2 text-sm text-white/70  mb-8 overflow-hidden">
               <PrefetchLink href={localizedPath(language, '/')} className="hover:text-teal-300 transition-colors">{translations[language].navigation.home}</PrefetchLink>
               <span>/</span>
               <PrefetchLink href={localizedPath(language, '/blog')} className="hover:text-teal-300 transition-colors">{translations[language].navigation.blog}</PrefetchLink>
@@ -86,7 +86,7 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
               ) : null}
               <div>
                 <p className="text-white ">{post.author?.name}</p>
-                <p className="text-white/40 text-sm ">
+                <p className="text-white/70 text-sm ">
                   {new Date(post.publishedAt).toLocaleDateString(language === 'pl' ? 'pl-PL' : 'en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -136,7 +136,7 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
                             {serviceTitle}
                           </span>
                           {serviceIntro ? (
-                            <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-white/40">
+                            <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-white/70">
                               {serviceIntro}
                             </span>
                           ) : null}

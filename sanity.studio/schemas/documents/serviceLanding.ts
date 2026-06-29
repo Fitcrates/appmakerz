@@ -62,6 +62,7 @@ export default {
       options: {
         list: [
           { title: 'Website Development', value: 'website-development' },
+          { title: 'Shopify Development', value: 'shopify-development' },
           { title: 'E-commerce Development', value: 'ecommerce-development' },
           { title: 'Automation & Backend', value: 'automation-backend' },
           { title: 'WCAG Accessibility', value: 'wcag-accessibility' },
@@ -269,6 +270,7 @@ export default {
           type: 'array',
           of: [
             { type: 'block' },
+            { type: 'blogTable' },
             {
               type: 'image',
               options: { hotspot: true },
@@ -282,6 +284,7 @@ export default {
           type: 'array',
           of: [
             { type: 'block' },
+            { type: 'blogTable' },
             {
               type: 'image',
               options: { hotspot: true },

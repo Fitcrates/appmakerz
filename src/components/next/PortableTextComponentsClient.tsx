@@ -85,7 +85,7 @@ export const portableTextComponentsClient: PortableTextComponents = {
             loading="lazy"
             decoding="async"
           />
-          {value.caption ? <figcaption className="text-center text-sm text-white/40  mt-4">{value.caption}</figcaption> : null}
+          {value.caption ? <figcaption className="text-center text-sm text-white/70  mt-4">{value.caption}</figcaption> : null}
         </figure>
       );
     },

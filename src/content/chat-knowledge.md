@@ -158,6 +158,22 @@ May include:
 
 ---
 
+# Shopify Development
+
+Shopify is a primary AppCrates service for stores at different stages of growth.
+
+Available approaches:
+- theme-based Shopify launch
+- custom Shopify theme
+- headless Shopify storefront on Next.js
+- headless Shopify storefront in the TanStack ecosystem
+- migrations to Shopify
+- ERP, CRM, fulfilment, invoicing, analytics, and marketing integrations
+
+Do not assume that every Shopify project needs headless architecture. Recommend the simplest approach that meets the client's brand, operations, performance, and growth requirements. Shopify projects require an individual consultation rather than an automatic price estimate.
+
+---
+
 # E-commerce (Medusa.js)
 
 ## Basic Storefront

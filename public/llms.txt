@@ -16,9 +16,11 @@ Use the linked pages below as the main source of truth for company positioning, 
 
 ## Services
 
+- [Shopify Development](https://appcrates.pl/pl/uslugi/shopify-development): Shopify stores from focused theme-based launches to custom headless storefronts on Next.js or TanStack.
 - [Professional Website Development](https://appcrates.pl/pl/uslugi/professional-website-development): Service page for business websites and landing pages.
 - [AI Automation & RPA Solutions](https://appcrates.pl/pl/uslugi/ai-automation-rpa-solutions): Service page for AI workflows, automation, and integrations.
 - [E-commerce Shops](https://appcrates.pl/pl/uslugi/e-commerce-shops-medusa-js): Service page for online stores and commerce systems.
+- [Multi-vendor Marketplace Development](https://appcrates.pl/pl/uslugi/marketplace-multi-vendor-medusa-js): Service page for marketplace platforms, vendor workflows, commissions, and payments.
 - [Custom Web Applications](https://appcrates.pl/pl/uslugi/custom-web-applications): Service page for SaaS platforms, internal tools, dashboards, and custom business apps.
 
 ## Content Hints

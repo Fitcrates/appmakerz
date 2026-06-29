@@ -1,8 +1,10 @@
 import { Globe, ShoppingCart, Store, Bot, Settings } from 'lucide-react';
+import { SiShopify } from 'react-icons/si';
 import type { PricingConfig } from '@/lib/calculator/types';
 import type { PricingCopy } from '@/data/pricing-copy';
 
 const serviceIcons: Record<string, React.ReactNode> = {
+  shopify: <SiShopify className="h-8 w-8 text-teal-300" />,
   website: <Globe className="h-8 w-8 text-teal-300" />,
   ecommerce: <ShoppingCart className="h-8 w-8 text-teal-300" />,
   marketplace: <Store className="h-8 w-8 text-teal-300" />,

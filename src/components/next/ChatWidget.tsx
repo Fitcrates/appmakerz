@@ -70,8 +70,10 @@ export default function ChatWidget() {
       .map((msg) => msg.content.toLowerCase())
       .join(' ');
 
-    const serviceKey = userTexts.includes('sklep') || userTexts.includes('ecommerce') || userTexts.includes('e-commerce')
-      ? 'ecommerce'
+    const serviceKey = userTexts.includes('shopify')
+      ? 'shopify'
+      : userTexts.includes('sklep') || userTexts.includes('ecommerce') || userTexts.includes('e-commerce')
+        ? 'ecommerce'
       : userTexts.includes('marketplace')
         ? 'marketplace'
         : userTexts.includes('ai') || userTexts.includes('chatbot')
@@ -124,7 +126,7 @@ export default function ChatWidget() {
 
     const hasConcreteParams = detectedBase !== undefined || detectedCms !== undefined || detectedFeatures.length > 0;
 
-    if (hasConcreteParams) {
+    if (hasConcreteParams || serviceKey === 'shopify') {
       const prefill = {
         service: serviceKey,
         base: detectedBase,

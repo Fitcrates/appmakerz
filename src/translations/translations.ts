@@ -137,36 +137,43 @@ export const translations = {
       heading: "What I can build for you",
       cta: "Consult Your Project",
       items: {
-        websites: {
+        shopify: {
           number: "01",
+          title: "Shopify stores & custom storefronts",
+          punchline: "Launch quickly today — without limiting tomorrow's growth.",
+          description: "Shopify stores for every stage of growth: from focused theme-based launches to custom headless storefronts built with Next.js or TanStack, tailored integrations and conversion-focused UX.",
+          href: "/services/shopify-development",
+        },
+        websites: {
+          number: "02",
           title: "Websites",
           punchline: "A site that brings in clients — not just looks good.",
           description: "Modern business websites and landing pages on Next.js: lightning-fast load times, solid SEO and high conversion — ready for traffic from day one.",
           href: "/services/professional-website-development",
         },
         ecommerce: {
-          number: "02",
+          number: "03",
           title: "Headless e-commerce stores",
           punchline: "Full control over your store — no commissions, no growth ceiling.",
           description: "B2C and B2B online stores on Medusa.js: open-source commerce, flexible checkout, product logic and integrations without the limits of closed SaaS platforms.",
           href: "/services/e-commerce-shops-medusa-js",
         },
         marketplace: {
-          number: "03",
+          number: "04",
           title: "Multi-vendor marketplaces",
           punchline: "A platform for many sellers, built around your business model.",
           description: "Marketplace platforms on Medusa.js with vendor accounts, commission logic, custom payments and operational flows designed for scalable multi-vendor commerce.",
           href: "/services/marketplace-multi-vendor-medusa-js",
         },
         ai: {
-          number: "04",
+          number: "05",
           title: "AI integrations & automation",
           punchline: "Less repetitive work, more time for what actually matters.",
           description: "AI chatbots, RAG assistants, process automations and integrations with business data — solutions that genuinely lighten the load and speed up customer handling.",
           href: "/services/ai-integrations",
         },
         apps: {
-          number: "05",
+          number: "06",
           title: "Custom web applications",
           punchline: "A system built around your business, not the other way around.",
           description: "Web apps, B2B dashboards, MVPs and SaaS platforms built around real business logic — with clean architecture and room to scale.",
@@ -189,9 +196,9 @@ export const translations = {
         },
         ecommerce: {
           number: "02",
-          title: "E-Commerce Stores",
+          title: "Shopify & Custom E-Commerce Stores",
           problem: "Your platform starting to hold you back?",
-          description: "Headless stores on Medusa.js — full control over checkout, integrations and margins. Lower operational costs and no artificial limits as you grow.",
+          description: "Shopify stores from fast theme-based launches to custom headless storefronts on Next.js or TanStack — plus Medusa.js when your commerce logic needs full open-source control.",
         },
         marketplace: {
           number: "03",
@@ -556,36 +563,43 @@ export const translations = {
       heading: "Co mogę dla Ciebie zbudować",
       cta: "Skonsultuj Swój Projekt",
       items: {
-        websites: {
+        shopify: {
           number: "01",
+          title: "Sklepy Shopify i custom storefronty",
+          punchline: "Szybki start dziś — bez ograniczania jutrzejszego wzrostu.",
+          description: "Sklepy Shopify na każdy etap rozwoju: od sprawnych wdrożeń na motywie po customowe storefronty headless na Next.js lub TanStack, dedykowane integracje i UX nastawiony na konwersję.",
+          href: "/uslugi/shopify-development",
+        },
+        websites: {
+          number: "02",
           title: "Strony internetowe",
           punchline: "Strona, która przyciąga klientów — nie tylko wygląda.",
           description: "Nowoczesne strony firmowe i landing page na Next.js: błyskawiczne ładowanie, solidne SEO i wysoka konwersja — gotowe na ruch od pierwszego dnia.",
           href: "/uslugi/professional-website-development",
         },
         ecommerce: {
-          number: "02",
+          number: "03",
           title: "Sklepy headless e-commerce",
           punchline: "Sklep z pełną kontrolą — bez prowizji, bez sufitu wzrostu.",
           description: "Sklepy B2C i B2B na Medusa.js: open-source commerce, elastyczny checkout, logika produktów i integracje bez ograniczeń zamkniętych platform SaaS.",
           href: "/uslugi/e-commerce-shops-medusa-js",
         },
         marketplace: {
-          number: "03",
+          number: "04",
           title: "Marketplace multi-vendor",
           punchline: "Platforma dla wielu sprzedawców, zbudowana pod Twój model biznesowy.",
           description: "Platformy marketplace na Medusa.js z kontami sprzedawców, logiką prowizji, płatnościami i procesami operacyjnymi dla skalowalnej sprzedaży multi-vendor.",
           href: "/uslugi/marketplace-multi-vendor-medusa-js",
         },
         ai: {
-          number: "04",
+          number: "05",
           title: "Wdrożenia AI i automatyzacje",
           punchline: "Mniej powtarzalnej pracy, więcej czasu na to, co ważne.",
           description: "Chatboty AI, asystenci RAG, automatyzacje procesów i integracje z danymi firmowymi — rozwiązania, które realnie odciążają zespół i przyspieszają obsługę klientów.",
           href: "/uslugi/ai-integrations",
         },
         apps: {
-          number: "05",
+          number: "06",
           title: "Dedykowane aplikacje webowe",
           punchline: "System dopasowany do Twojej firmy, nie firma dopasowana do systemu.",
           description: "Aplikacje webowe, panele B2B, MVP i platformy SaaS budowane pod konkretną logikę biznesową — z czystą architekturą i przestrzenią do skalowania.",
@@ -608,9 +622,9 @@ export const translations = {
         },
         ecommerce: {
           number: "02",
-          title: "Sklepy E-Commerce",
+          title: "Sklepy Shopify i custom e-commerce",
           problem: "Platforma zaczyna ograniczać Twój rozwój?",
-          description: "Sklepy headless na Medusa.js — pełna kontrola nad checkoutem, integracjami i marżą. Niższe koszty operacyjne i brak sztucznych ograniczeń w miarę wzrostu.",
+          description: "Sklepy Shopify od szybkiego startu na motywie po custom headless na Next.js lub TanStack — oraz Medusa.js, gdy logika commerce wymaga pełnej kontroli open-source.",
         },
         marketplace: {
           number: "03",

@@ -28,6 +28,13 @@ const getServices = (
   t: typeof translations.en.services
 ): Service[] => [
     {
+      number: t.items.shopify.number,
+      title: t.items.shopify.title,
+      punchline: t.items.shopify.punchline,
+      description: t.items.shopify.description,
+      href: "/uslugi/shopify-development",
+    },
+    {
       number: t.items.websites.number,
       title: t.items.websites.title,
       punchline: t.items.websites.punchline,

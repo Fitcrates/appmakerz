@@ -1,5 +1,13 @@
 {
   "services": {
+    "shopify": {
+      "label": "Sklep Shopify",
+      "steps": [],
+      "noPrice": true,
+      "ctaLabel": "Umów konsultację Shopify",
+      "base": {},
+      "features": {}
+    },
     "website": {
       "label": "Strona internetowa / landing page",
       "steps": ["base", "cms", "features", "deadline"],

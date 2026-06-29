@@ -78,13 +78,13 @@ export default async function LocalizedPrivacyPolicyPage({ params }: LocalizedPr
       <NextHeader />
       <main className="pt-32 pb-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PrefetchLink href={localizedPath(language, '/')} className="inline-flex items-center text-white/40 hover:text-teal-300 transition-colors mb-12 group">
+          <PrefetchLink href={localizedPath(language, '/')} className="inline-flex items-center text-white/70 hover:text-teal-300 transition-colors mb-12 group">
             <span className=" text-sm">{content.backToHome}</span>
           </PrefetchLink>
           <div className="mb-16">
             <span className="text-xs text-white/30 tracking-widest uppercase">{content.legalLabel}</span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl text-white font-oxanium font-light mb-4 mt-6">{content.title}</h1>
-            <p className="text-white/40">{content.lastUpdated}</p>
+            <p className="text-white/70">{content.lastUpdated}</p>
           </div>
           <div className="space-y-12">
             {content.sections.map((section) => (

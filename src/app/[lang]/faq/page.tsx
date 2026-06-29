@@ -88,7 +88,7 @@ export default async function LocalizedFaqPage({ params }: LocalizedFaqPageProps
       <NextHeader />
       <main className="pt-32 pb-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PrefetchLink href={localizedPath(language, '/')} className="inline-flex items-center text-white/40 hover:text-teal-300 transition-colors mb-12 group">
+          <PrefetchLink href={localizedPath(language, '/')} className="inline-flex items-center text-white/70 hover:text-teal-300 transition-colors mb-12 group">
             <span className=" text-sm">{content.backToHome}</span>
           </PrefetchLink>
           <div className="mb-16">

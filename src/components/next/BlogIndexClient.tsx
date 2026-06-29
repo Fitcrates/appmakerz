@@ -82,7 +82,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
             </BurnSpotlightText>
           </div>
 
-          <div className="text-white/40  font-light text-lg max-w-xl">
+          <div className="text-white/70  font-light text-lg max-w-xl">
             <p>{subtitle}</p>
           </div>
         </div>
@@ -113,7 +113,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
                 className={`relative whitespace-nowrap pb-4 text-[0.75rem] lg:text-[0.8rem] tracking-[0.15em] uppercase transition-colors duration-300 ${
                   selectedCategory === ''
                     ? 'text-teal-300 font-medium'
-                    : 'text-white/40 hover:text-teal-300/70'
+                    : 'text-white/70 hover:text-teal-300/70'
                 }`}
               >
                 {allCategoriesLabel}
@@ -138,7 +138,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
                     className={`relative whitespace-nowrap pb-4 text-[0.75rem] lg:text-[0.8rem] tracking-[0.15em] uppercase transition-colors duration-300 ${
                       selectedCategory === slug
                         ? 'text-teal-300 font-medium'
-                        : 'text-white/40 hover:text-teal-300/70'
+                        : 'text-white/70 hover:text-teal-300/70'
                     }`}
                   >
                     {label}
@@ -218,7 +218,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
                               {postTitle}
                             </h2>
 
-                            <p className="text-white/40  font-light text-sm leading-relaxed line-clamp-3">
+                            <p className="text-white/70  font-light text-sm leading-relaxed line-clamp-3">
                               {excerpt}
                             </p>
                           </div>
@@ -238,7 +238,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
             </div>
           ) : (
             <div className="text-center py-16">
-              <p className="text-white/40 ">{t.noPosts}</p>
+              <p className="text-white/70 ">{t.noPosts}</p>
             </div>
           )}
 

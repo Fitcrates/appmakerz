@@ -459,7 +459,7 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
 
         {/* Caption below the gallery telling the user they can click to zoom */}
         {zoom && images.length > 0 && (
-          <div className="w-full text-center mt-[-10px] mb-8 text-xs sm:text-sm text-white/40 flex items-center justify-center gap-1.5 font-light">
+          <div className="w-full text-center mt-[-10px] mb-8 text-xs sm:text-sm text-white/70 flex items-center justify-center gap-1.5 font-light">
             <ZoomIn className="w-3.5 h-3.5" />
             <span>{clickToZoomText}</span>
           </div>

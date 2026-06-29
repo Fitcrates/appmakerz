@@ -8,6 +8,7 @@ export default {
   type: 'document',
   groups: [
     { name: 'content', title: 'Content', default: true },
+    { name: 'links', title: 'Internal Links' },
     { name: 'seo', title: 'SEO' },
     { name: 'meta', title: 'Metadata' },
   ],
@@ -93,11 +94,12 @@ export default {
     },
     {
       name: 'relatedServices',
-      title: 'Related services',
+      title: 'Related services (up to 3)',
       type: 'array',
-      group: 'content',
-      description: 'Optional service links shown beside or below the blog post.',
+      group: 'links',
+      description: 'Add every service discussed in the article. Comparison posts can link both sides, for example Shopify and Medusa.js. The selected services are shown below the post and in the sidebar.',
       of: [{ type: 'reference', to: [{ type: 'serviceLanding' }] }],
+      validation: (Rule: any) => Rule.unique().max(3),
     },
     {
       name: 'publishedAt',

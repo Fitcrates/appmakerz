@@ -436,7 +436,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                     <SpotlightText as="h3" className="font-oxanium text-xl font-light text-white">
                       {language === 'pl' ? 'Pozostałe usługi' : 'Other services'}
                     </SpotlightText>
-                    <p className="mt-2 text-sm font-light leading-relaxed text-white/40">
+                    <p className="mt-2 text-sm font-light leading-relaxed text-white/70">
                       {language === 'pl' ? 'Powiązane obszary' : 'Related areas'}
                     </p>
                     <div className="mt-6 divide-y divide-white/10">
@@ -455,7 +455,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                                 {serviceTitle}
                               </span>
                               {serviceIntro ? (
-                                <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-white/40">
+                                <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-white/70">
                                   {serviceIntro}
                                 </span>
                               ) : null}
@@ -473,7 +473,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                     <SpotlightText as="h3" className="font-oxanium text-xl font-light text-white">
                       {language === 'pl' ? 'Powiązane projekty' : 'Related projects'}
                     </SpotlightText>
-                    <p className="mt-2 text-sm font-light leading-relaxed text-white/40">
+                    <p className="mt-2 text-sm font-light leading-relaxed text-white/70">
                       {language === 'pl' ? 'Realne wdrożenia' : 'Real implementations'}
                     </p>
                     <div className="mt-6 space-y-5">
@@ -506,7 +506,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                                 {projectTitle}
                               </span>
                               {projectDescription ? (
-                                <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-white/40">
+                                <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-white/70">
                                   {projectDescription}
                                 </span>
                               ) : null}
@@ -523,7 +523,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                     <SpotlightText as="h3" className="font-oxanium text-xl font-light text-white">
                       {language === 'pl' ? 'Powiązane wpisy' : 'Related articles'}
                     </SpotlightText>
-                    <p className="mt-2 text-sm font-light leading-relaxed text-white/40">
+                    <p className="mt-2 text-sm font-light leading-relaxed text-white/70">
                       {language === 'pl' ? 'Tematy, które rozwijam' : 'Topics I expand on'}
                     </p>
                     <div className="mt-6 space-y-5">
@@ -541,7 +541,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                               {postTitle}
                             </span>
                             {postExcerpt ? (
-                              <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-white/40">
+                              <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-white/70">
                                 {postExcerpt}
                               </span>
                             ) : null}

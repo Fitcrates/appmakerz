@@ -17,6 +17,11 @@ export type PricingCopy = {
 export const pricingCopy: Record<Language, PricingCopy> = {
   pl: {
     services: {
+      shopify: {
+        label: 'Sklep Shopify',
+        description:
+          'Od szybkiego wdrożenia na motywie po customowy storefront headless na Next.js lub TanStack. Zakres i architekturę dobieramy podczas konsultacji.',
+      },
       website: {
         label: 'Strona internetowa / landing page',
         description:
@@ -431,6 +436,11 @@ export const pricingCopy: Record<Language, PricingCopy> = {
 
   en: {
     services: {
+      shopify: {
+        label: 'Shopify store',
+        description:
+          'From a fast theme-based launch to a custom headless storefront on Next.js or TanStack. We choose the scope and architecture during a consultation.',
+      },
       website: {
         label: 'Website / landing page',
         description:
