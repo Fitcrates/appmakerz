@@ -171,11 +171,12 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
         ) : null}
 
         <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <PrefetchLink href={localizedPath(language, '/#projects')} className="inline-flex items-center text-white/60 hover:text-teal-300 transition-colors group">
-              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-              <span className=" text-sm">{t.backToProjects}</span>
-            </PrefetchLink>
+          <div className="flex items-center gap-2 text-sm text-white/70 mb-8 overflow-hidden font-plex">
+            <PrefetchLink href={localizedPath(language, '/')} className="hover:text-teal-300 transition-colors">{translations[language].navigation.home}</PrefetchLink>
+            <span className="text-white/30">/</span>
+            <PrefetchLink href={localizedPath(language, '/#projects')} className="hover:text-teal-300 transition-colors">{language === 'pl' ? 'Projekty' : 'Projects'}</PrefetchLink>
+            <span className="text-white/30">/</span>
+            <span className="text-white/60 truncate max-w-[250px] sm:max-w-none">{title}</span>
           </div>
 
           <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white  leading-tight mb-8">

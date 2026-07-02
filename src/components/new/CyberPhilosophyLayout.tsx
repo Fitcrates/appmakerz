@@ -68,12 +68,12 @@ export interface CyberPhilosophyContent {
 }
 
 const mindLabels = [
-  { label: 'Philosophy', className: 'left-[12%] top-[18%] md:left-[17%] md:top-[24%]' },
-  { label: 'Technology', className: 'right-[12%] top-[18%] md:right-[17%] md:top-[24%]' },
-  { label: 'Psychology', className: 'left-[5%] top-[50%] md:left-[10%] md:top-[50%]' },
-  { label: 'Management', className: 'right-[5%] top-[50%] md:right-[10%] md:top-[50%]' },
-  { label: 'Curiosity', className: 'left-[16%] bottom-[10%] md:left-[21%] md:bottom-[18%]' },
-  { label: 'Performance', className: 'right-[16%] bottom-[10%] md:right-[21%] md:bottom-[18%]' },
+  { label: 'Philosophy', className: 'left-[8%] top-[18%] md:left-[15%] md:top-[22%] items-start' },
+  { label: 'Technology', className: 'right-[8%] top-[18%] md:right-[15%] md:top-[22%] text-right items-end' },
+  { label: 'Psychology', className: 'left-[4%] top-[50%] md:left-[8%] md:top-[50%] -translate-y-1/2 items-start' },
+  { label: 'Management', className: 'right-[4%] top-[50%] md:right-[8%] md:top-[50%] -translate-y-1/2 text-right items-end' },
+  { label: 'Curiosity', className: 'left-[8%] bottom-[18%] md:left-[15%] md:bottom-[22%] items-start' },
+  { label: 'Performance', className: 'right-[8%] bottom-[18%] md:right-[15%] md:bottom-[22%] text-right items-end' },
 ];
 
 const principles: PhilosophyCard[] = [
@@ -222,10 +222,31 @@ function MindMap({ labels, portrait, portraitAlt }: { labels?: string[]; portrai
 
   return (
     <div className="cyber-reveal relative mx-auto mt-8 flex w-full max-w-6xl flex-col items-center justify-center gap-8 sm:mt-10 md:min-h-[480px]">
-      <div className="absolute left-1/2 top-1/2 hidden h-px w-[58%] -translate-x-1/2 bg-gradient-to-r from-transparent via-teal-300/25 to-transparent md:block" />
-      <div className="absolute left-1/2 top-1/2 hidden h-[58%] w-px -translate-y-1/2 bg-gradient-to-b from-transparent via-teal-300/20 to-transparent md:block" />
-      <div className="absolute left-1/2 top-1/2 hidden h-px w-[48%] -translate-x-1/2 rotate-[35deg] bg-gradient-to-r from-transparent via-teal-300/20 to-transparent md:block" />
-      <div className="absolute left-1/2 top-1/2 hidden h-px w-[48%] -translate-x-1/2 -rotate-[35deg] bg-gradient-to-r from-transparent via-teal-300/20 to-transparent md:block" />
+      <svg className="absolute inset-0 z-0 hidden h-full w-full md:block" style={{ pointerEvents: 'none' }}>
+        <defs>
+          <linearGradient id="mindmap-grad-h" x1="12%" y1="50%" x2="88%" y2="50%" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="rgba(94,234,212,0)" />
+            <stop offset="15%" stopColor="rgba(94,234,212,0.3)" />
+            <stop offset="85%" stopColor="rgba(94,234,212,0.3)" />
+            <stop offset="100%" stopColor="rgba(94,234,212,0)" />
+          </linearGradient>
+          <linearGradient id="mindmap-grad-d1" x1="18%" y1="26%" x2="82%" y2="74%" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="rgba(94,234,212,0)" />
+            <stop offset="20%" stopColor="rgba(94,234,212,0.25)" />
+            <stop offset="80%" stopColor="rgba(94,234,212,0.25)" />
+            <stop offset="100%" stopColor="rgba(94,234,212,0)" />
+          </linearGradient>
+          <linearGradient id="mindmap-grad-d2" x1="18%" y1="74%" x2="82%" y2="26%" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stopColor="rgba(94,234,212,0)" />
+            <stop offset="20%" stopColor="rgba(94,234,212,0.25)" />
+            <stop offset="80%" stopColor="rgba(94,234,212,0.25)" />
+            <stop offset="100%" stopColor="rgba(94,234,212,0)" />
+          </linearGradient>
+        </defs>
+        <line x1="12%" y1="50%" x2="88%" y2="50%" stroke="url(#mindmap-grad-h)" strokeWidth="1" />
+        <line x1="18%" y1="26%" x2="82%" y2="74%" stroke="url(#mindmap-grad-d1)" strokeWidth="1" />
+        <line x1="18%" y1="74%" x2="82%" y2="26%" stroke="url(#mindmap-grad-d2)" strokeWidth="1" />
+      </svg>
 
       <div className="relative z-20 h-44 w-44 rounded-full border border-teal-300/75 bg-indigo-950 p-2 shadow-[0_0_82px_rgba(94,234,212,0.34)] sm:h-52 sm:w-52 md:h-60 md:w-60">
         <div className="absolute inset-[-9px] rounded-full border border-teal-300/35 shadow-[0_0_34px_rgba(94,234,212,0.22)]" />
@@ -246,7 +267,7 @@ function MindMap({ labels, portrait, portraitAlt }: { labels?: string[]; portrai
       {items.map((item) => (
         <div
           key={item.label}
-          className={`absolute z-10 hidden font-plex text-[11px] uppercase tracking-[0.28em] text-teal-200/80 transition-colors hover:text-teal-200 md:block ${item.className}`}
+          className={`absolute z-10 hidden font-plex text-[11px] uppercase tracking-[0.28em] text-teal-200/80 transition-colors hover:text-teal-200 md:flex md:flex-col ${item.className}`}
         >
           <span className="mb-2 block h-px w-8 bg-teal-300/40" />
           <SpotlightText as="span" className="text-teal-200/80" glowSize={80}>

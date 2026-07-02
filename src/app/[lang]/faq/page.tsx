@@ -89,9 +89,11 @@ export default async function LocalizedFaqPage({ params }: LocalizedFaqPageProps
       <NextHeader />
       <main className="pt-32 pb-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PrefetchLink href={localizedPath(language, '/')} className="inline-flex items-center text-white/70 hover:text-teal-300 transition-colors mb-12 group">
-            <span className=" text-sm">{content.backToHome}</span>
-          </PrefetchLink>
+          <div className="flex items-center gap-2 text-sm text-white/70 mb-12 overflow-hidden font-plex">
+            <PrefetchLink href={localizedPath(language, '/')} className="hover:text-teal-300 transition-colors">{content.backToHome}</PrefetchLink>
+            <span className="text-white/30">/</span>
+            <span className="text-white/60 truncate max-w-[250px] sm:max-w-none">FAQ</span>
+          </div>
           <div className="mb-16">
             <span className="text-xs text-white/30 tracking-widest uppercase">{content.knowledgeBase}</span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white mb-4 mt-6">{content.title}</h1>

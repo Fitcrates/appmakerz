@@ -286,6 +286,13 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
           <HeroPulsePath />
 
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-24 mt-20 w-full">
+            <div className="flex items-center gap-2 text-sm text-white/70 mb-8 overflow-hidden font-plex">
+              <PrefetchLink href={localizedPath(language, '/')} className="hover:text-teal-300 transition-colors">{language === 'pl' ? 'Strona główna' : 'Home'}</PrefetchLink>
+              <span className="text-white/30">/</span>
+              <PrefetchLink href={localizedPath(language, '/#services')} className="hover:text-teal-300 transition-colors">{language === 'pl' ? 'Usługi' : 'Services'}</PrefetchLink>
+              <span className="text-white/30">/</span>
+              <span className="text-white/60 truncate max-w-[250px] sm:max-w-none">{title}</span>
+            </div>
             <span className="text-xs tracking-[0.3em] uppercase text-teal-300/80 font-plex">{eyebrow}</span>
             <div className="max-w-4xl">
               <BurnSpotlightText as="h1" className="text-4xl sm:text-5xl lg:text-7xl font-light font-oxanium text-white leading-tight" glowSize={200} baseDelay={200} charDelay={25}>
