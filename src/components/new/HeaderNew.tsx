@@ -276,16 +276,19 @@ const HeaderNew: React.FC = () => {
                 </button>
 
                 <div
-                  className={`fixed left-0 right-0 top-20 z-50 transition-all duration-200 ${isServicesMenuOpen
+                  className={`fixed inset-x-0 top-20 z-50 flex justify-center transition-all duration-300 ease-out ${isServicesMenuOpen
                     ? 'pointer-events-auto opacity-100 translate-y-0'
-                    : 'pointer-events-none opacity-0 -translate-y-1'
+                    : 'pointer-events-none opacity-0 -translate-y-3'
                     }`}
                   onMouseEnter={openServicesMenu}
                   onMouseLeave={scheduleServicesMenuClose}
                 >
-                  <div className="border-y border-white/10 bg-indigo-950 shadow-2xl backdrop-blur-2xl">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                      <div className="grid grid-cols-12 gap-8 min-h-[380px]">
+                  {/* Zewnętrzna ramka */}
+                  <div className="w-full max-w-6xl mx-4 mt-2 rounded-[24px] border border-white/20 bg-indigo-950/40 p-2 shadow-[0_24px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
+                    {/* Wewnętrzna ramka */}
+                    <div className="rounded-[18px] border border-white/10 bg-indigo-950 overflow-hidden">
+                      <div className="p-8">
+                        <div className="grid grid-cols-12 gap-8 min-h-[380px]">
                         {/* Lewa strona - lista usług */}
                         <div className="col-span-5 flex flex-col gap-2 border-r border-white/10 pr-6 py-2">
                           {serviceLandingLinks.map((item, index) => {
@@ -386,6 +389,7 @@ const HeaderNew: React.FC = () => {
                           </div>
                         </div>
                       </div>
+                    </div>
                     </div>
                   </div>
                 </div>
