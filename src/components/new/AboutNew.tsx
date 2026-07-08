@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
@@ -9,36 +9,212 @@ import { useLanguage } from '../../context/LanguageContext';
 import { localizedPath } from '../../lib/i18n-routing';
 import { translations } from '../../translations/translations';
 
-const BurnRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string }> = ({ src, alt, ariaLabel }) => {
+const NoiseRevealImage: React.FC<{ src: string; alt: string; ariaLabel?: string; revealed: boolean }> = ({ src, alt, ariaLabel, revealed }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const noiseRef = useRef<Uint8Array | null>(null);
+  const dimRef = useRef({ w: 0, h: 0 });
+  const imgDataRef = useRef<ImageData | null>(null);
+  const rafRef = useRef(0);
+  const animStartRef = useRef(0);
+  const prevRevealedRef = useRef(revealed);
+  const noiseMinMaxRef = useRef({ min: 0, max: 255 });
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // Fixed resolution that fits the container aspect ratio roughly (4:5)
+    const w = 400;
+    const h = 500;
+
+    dimRef.current = { w, h };
+
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      if (ctx) imgDataRef.current = ctx.createImageData(w, h);
+    }
+
+    const img = new window.Image();
+    img.src = '/media/texture2.png';
+    img.onload = () => {
+      const offCanvas = document.createElement('canvas');
+      offCanvas.width = w;
+      offCanvas.height = h;
+      const offCtx = offCanvas.getContext('2d');
+      if (!offCtx) return;
+
+      offCtx.drawImage(img, 0, 0, w, h);
+      const data = offCtx.getImageData(0, 0, w, h).data;
+      const out = new Uint8Array(w * h);
+
+      const cx = w / 2;
+      const cy = h / 2;
+      const maxDist = Math.sqrt(cx * cx + cy * cy);
+      const noiseWeight = 0.65;
+
+      let minNoise = 255;
+      let maxNoise = 0;
+
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const idx = y * w + x;
+          const r = data[idx * 4];
+          const g = data[idx * 4 + 1];
+          const b = data[idx * 4 + 2];
+
+          const lum = 255 - (0.299 * r + 0.587 * g + 0.114 * b);
+
+          const dx = x - cx;
+          const dy = y - cy;
+          const dist = (Math.sqrt(dx * dx + dy * dy) / maxDist) * 255;
+
+          const v = lum * noiseWeight + dist * (1 - noiseWeight);
+          const val = Math.min(255, Math.max(0, v | 0));
+          out[idx] = val;
+
+          if (val < minNoise) minNoise = val;
+          if (val > maxNoise) maxNoise = val;
+        }
+      }
+      noiseMinMaxRef.current = { min: minNoise, max: maxNoise };
+      noiseRef.current = out;
+      setIsLoaded(true);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    if (revealed && !prevRevealedRef.current) {
+      animStartRef.current = performance.now();
+    }
+    prevRevealedRef.current = revealed;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let active = true;
+    const EDGE_SOFTNESS = 30;
+
+    // indigo-950 matching
+    const BG_R = 30; const BG_G = 27; const BG_B = 75;
+    const LIGHTNING_R = 94; const LIGHTNING_G = 234; const LIGHTNING_B = 212;
+    const LIGHTNING_THRESHOLD = 90;
+
+    const render = () => {
+      if (!active) return;
+
+      const noise = noiseRef.current;
+      const imageData = imgDataRef.current;
+      if (!noise || !imageData) {
+        rafRef.current = requestAnimationFrame(render);
+        return;
+      }
+
+      let cover = 1;
+
+      if (revealed) {
+        const ANIM_DUR = 3000; // dłuższy czas pojawiania/znikania (2.5s)
+        const HOLD_REVEALED = 4000; // przytrzymanie na widocznym zdjęciu (4s)
+        const CYCLE_MS = ANIM_DUR * 2 + HOLD_REVEALED; // całkowity cykl = 9s
+        const elapsed = performance.now() - animStartRef.current;
+        const cycleTime = elapsed % CYCLE_MS;
+
+        // Używamy kierunkowych funkcji kwadratowych, aby zlikwidować "pustkę" przy pełnym zakryciu.
+        // Dzięki temu uderzenie w cover=1 jest szybkie, a odbicie natychmiastowe.
+        if (cycleTime < ANIM_DUR) {
+          // Pojawianie się (cover 1 -> 0): szybki start, łagodne zakończenie
+          const t = cycleTime / ANIM_DUR;
+          cover = Math.pow(1 - t, 2);
+        } else if (cycleTime < ANIM_DUR + HOLD_REVEALED) {
+          cover = 0;
+        } else {
+          // Znikanie (cover 0 -> 1): łagodny start, gwałtowne zakończenie (szybkie uderzenie w 1)
+          const t = (cycleTime - (ANIM_DUR + HOLD_REVEALED)) / ANIM_DUR;
+          cover = Math.pow(t, 2);
+        }
+      } else {
+        cover = 1;
+      }
+
+      if (cover === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      } else {
+        const { min, max } = noiseMinMaxRef.current;
+        const threshold = (min - EDGE_SOFTNESS) + cover * (max - min + EDGE_SOFTNESS * 2);
+        const px = imageData.data;
+
+        for (let i = 0, pi = 0; i < noise.length; i++, pi += 4) {
+          const nVal = noise[i];
+          const diff = threshold - nVal;
+
+          if (diff > -EDGE_SOFTNESS) {
+            let r = BG_R, g = BG_G, b = BG_B;
+
+            if (nVal < LIGHTNING_THRESHOLD) {
+              const t = nVal / LIGHTNING_THRESHOLD;
+              const lr = LIGHTNING_R + (BG_R - LIGHTNING_R) * t;
+              const lg = LIGHTNING_G + (BG_G - LIGHTNING_G) * t;
+              const lb = LIGHTNING_B + (BG_B - LIGHTNING_B) * t;
+
+              const GLOW_WIDTH = 120;
+              const edgeDist = Math.max(0, diff - EDGE_SOFTNESS);
+              const fade = Math.min(1, edgeDist / GLOW_WIDTH);
+
+              r = lr + (BG_R - lr) * fade;
+              g = lg + (BG_G - lg) * fade;
+              b = lb + (BG_B - lb) * fade;
+            }
+
+            if (diff >= EDGE_SOFTNESS) {
+              px[pi] = r; px[pi + 1] = g; px[pi + 2] = b; px[pi + 3] = 255;
+            } else {
+              const a = ((diff + EDGE_SOFTNESS) / (EDGE_SOFTNESS * 2)) * 255;
+              px[pi] = r; px[pi + 1] = g; px[pi + 2] = b; px[pi + 3] = a | 0;
+            }
+          } else {
+            px[pi + 3] = 0;
+          }
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+      }
+
+      if (!revealed) {
+        return;
+      }
+
+      rafRef.current = requestAnimationFrame(render);
+    };
+
+    rafRef.current = requestAnimationFrame(render);
+
+    return () => {
+      active = false;
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, [revealed, isLoaded]);
+
   return (
-    <div className="relative w-full h-full overflow-hidden" role="img" aria-label={ariaLabel || alt}>
-      <div className="absolute inset-0 burn-reveal-cycle">
-        <div className="absolute inset-0 burn-reveal-image" aria-hidden="true">
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 92vw, (max-width: 1024px) 80vw, 50vw"
-          />
-        </div>
-
-        <div className="absolute left-0 right-0 h-8 -translate-y-1/2 pointer-events-none z-10 burn-reveal-line" aria-hidden="true" />
-
-        {[...Array(5)].map((_, index) => (
-          <div
-            key={index}
-            className="absolute w-1 h-1 bg-teal-300 rounded-full pointer-events-none z-10 burn-reveal-spark"
-            style={{
-              left: `${15 + index * 18}%`,
-              ['--spark-delay' as string]: `${index * 0.06}s`,
-            }}
-            aria-hidden="true"
-          />
-        ))}
-
-        <div className="absolute inset-0 bg-indigo-950 pointer-events-none burn-reveal-overlay" aria-hidden="true" />
-      </div>
+    <div ref={containerRef} className="relative w-full h-full overflow-hidden" role="img" aria-label={ariaLabel || alt}>
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="object-cover"
+        sizes="(max-width: 768px) 92vw, (max-width: 1024px) 80vw, 50vw"
+      />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full pointer-events-none z-10"
+        style={{ imageRendering: 'auto' }}
+      />
     </div>
   );
 };
@@ -47,6 +223,7 @@ const AboutNew: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: '-100px' });
+  const imageInView = useInView(imageRef, { margin: '-10% 0px -10% 0px' });
   const { language } = useLanguage();
   const t = translations[language].about;
 
@@ -77,10 +254,11 @@ const AboutNew: React.FC = () => {
             className="relative aspect-[4/5] lg:sticky lg:top-32"
           >
             <div className="absolute inset-0 overflow-hidden">
-              <BurnRevealImage
+              <NoiseRevealImage
                 src="/media/o_mnie.webp"
                 alt="Portrait of Arkadiusz Wawrzyniak, fullstack developer"
                 ariaLabel="Professional portrait showing the developer at work"
+                revealed={imageInView}
               />
             </div>
 
