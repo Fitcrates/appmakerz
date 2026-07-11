@@ -15,6 +15,7 @@ import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
 import { urlFor } from '@/lib/sanity.image';
 import { getImageAlt } from '@/lib/image-alt';
+import { extractPortableText } from '@/lib/seo';
 import { translations } from '@/translations/translations';
 
 interface BlogPostLocalizedContentProps {
@@ -31,6 +32,19 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
   const faq = getLocalizedArray<{ question: string; answer: string }>(post.faq, language);
   const heroImageUrl = post.mainImage ? urlFor(post.mainImage).width(1200).height(630).auto('format').fit('crop').url() : '';
   const authorImageUrl = post.author?.image ? urlFor(post.author.image).width(80).height(80).auto('format').url() : '';
+  
+  const bodyText = extractPortableText(body);
+  const wordCount = bodyText.trim().split(/\s+/).length;
+  const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+  const toc = body
+    .filter((block: any) => block._type === 'block' && block.style === 'h2')
+    .map((block: any) => {
+      const text = Array.isArray(block.children) ? block.children.map((c: any) => c.text).join('') : '';
+      const id = text.toLowerCase().replace(/[^a-ząćęłńóśźż0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      return { text, id };
+    })
+    .filter((item: any) => item.text);
   const allPostsSorted = [...posts].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
   const currentIndex = allPostsSorted.findIndex((item) => item._id === post._id);
   const previousPost = currentIndex > 0 ? allPostsSorted[currentIndex - 1] : null;
@@ -93,12 +107,48 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
                     day: 'numeric',
                   })}
                   {post.viewCount ? ` - ${post.viewCount} ${t.views}` : ''}
+                  {` - ${readingTime} min ${language === 'pl' ? 'czytania' : 'read'}`}
                 </p>
               </div>
             </div>
 
+            {relatedServices.length > 0 ? (
+              <div className="mb-12">
+                <p className="flex items-baseline gap-1.5 text-xs uppercase tracking-[0.18em] text-teal-300/80">
+                  <span className="text-teal-300/50">/</span>
+                  {language === 'pl' ? 'Powiązane usługi' : 'Related services'}
+                </p>
+                <div>
+                  {relatedServices.slice(0, 3).map((service) => {
+                    const serviceTitle = getLocalizedText(service.title, language);
+                    const serviceIntro = getLocalizedText(service.intro, language);
 
-
+                    return (
+                      <PrefetchLink
+                        key={service._id}
+                        href={localizedPath(language, `/uslugi/${service.slug.current}`)}
+                        className="group relative block border-b border-white/10 py-5"
+                      >
+                        <span className="flex items-start justify-between gap-4">
+                          <span className="min-w-0 transition-transform duration-300 group-hover:translate-x-1.5">
+                            <span className="block font-oxanium text-base leading-snug text-white/80 transition-colors duration-300 group-hover:text-teal-300">
+                              {serviceTitle}
+                            </span>
+                            {serviceIntro ? (
+                              <span className="mt-2 line-clamp-2 block text-sm font-light leading-relaxed text-white/50 transition-colors duration-300 group-hover:text-white/70">
+                                {serviceIntro}
+                              </span>
+                            ) : null}
+                          </span>
+                          <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-white/30 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-teal-300" />
+                        </span>
+                        <span className="absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-teal-300 shadow-[0_0_10px_rgba(94,234,212,0.5)] transition-transform duration-500 ease-out group-hover:scale-x-100" />
+                      </PrefetchLink>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
 
             <div className=" -mt-4">
               <BlogShareSidebar language={language} title={title} variant="mobile" />
@@ -112,43 +162,6 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
               <PortableText value={body} components={portableTextComponentsClient} />
             </article>
 
-            {relatedServices.length > 0 ? (
-              <section className="mt-16 border border-white/10 p-6 xl:hidden">
-                <p className="text-xs uppercase tracking-[0.18em] text-teal-300/80">
-                  {language === 'pl' ? 'Powiązane usługi' : 'Related services'}
-                </p>
-                <h2 className="mt-3 font-oxanium text-2xl font-light leading-tight text-white">
-                  {language === 'pl' ? 'Zobacz jak to wygląda w praktyce' : 'See how this works in practice'}
-                </h2>
-                <div className="mt-6 divide-y divide-white/10">
-                  {relatedServices.slice(0, 3).map((service) => {
-                    const serviceTitle = getLocalizedText(service.title, language);
-                    const serviceIntro = getLocalizedText(service.intro, language);
-
-                    return (
-                      <PrefetchLink
-                        key={service._id}
-                        href={localizedPath(language, `/uslugi/${service.slug.current}`)}
-                        className="group flex items-start justify-between gap-4 py-5 first:pt-0 last:pb-0"
-                      >
-                        <span className="min-w-0">
-                          <span className="block font-oxanium text-base leading-snug text-white/80 transition-colors group-hover:text-teal-300">
-                            {serviceTitle}
-                          </span>
-                          {serviceIntro ? (
-                            <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-white/70">
-                              {serviceIntro}
-                            </span>
-                          ) : null}
-                        </span>
-                        <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-white/30 transition-colors group-hover:text-teal-300" />
-                      </PrefetchLink>
-                    );
-                  })}
-                </div>
-              </section>
-            ) : null}
-
             {faq.length > 0 ? (
               <section className="mt-16 pt-16 border-t border-white/10">
                 <div className="mb-10">
@@ -161,29 +174,7 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
               </section>
             ) : null}
 
-            {post.author ? (
-              <div className="mt-16 p-8 border border-white/10">
-                <div className="flex items-center gap-6">
-                  {authorImageUrl ? (
-                    <Image
-                      src={authorImageUrl}
-                      alt={post.author.name}
-                      width={80}
-                      height={80}
-                      className="w-20 h-20 rounded-full object-cover shrink-0"
-                    />
-                  ) : (
-                    <div className="w-20 h-20 rounded-full bg-white/10 text-white/70 flex items-center justify-center  text-2xl shrink-0">
-                      {(post.author?.name || '?').charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                  <div>
-                    <p className="text-xs text-white/30  tracking-widest uppercase mb-1">{t.post?.author || 'AUTHOR'}</p>
-                    <h3 className="text-xl text-white ">{post.author.name}</h3>
-                  </div>
-                </div>
-              </div>
-            ) : null}
+            {/* author removed */}
 
             <div className="mt-16 pt-16 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-8 overflow-hidden">
               {previousPost ? (
@@ -212,7 +203,7 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
             </div>
           </div>
 
-          <BlogLatestPostsSidebar currentPostId={post._id} language={language} posts={posts} relatedServices={relatedServices} />
+          <BlogLatestPostsSidebar currentPostId={post._id} language={language} posts={posts} toc={toc} />
         </div>
       </main>
     </>

@@ -15,11 +15,15 @@ export const portableTextComponentsClient: PortableTextComponents = {
         {children}
       </h1>
     ),
-    h2: ({ children }) => (
-      <h2 className="text-3xl lg:text-4xl font-light font-oxanium text-white mt-10 mb-5">
-        {children}
-      </h2>
-    ),
+    h2: ({ children, value }: any) => {
+      const text = Array.isArray(value?.children) ? value.children.map((c: any) => c.text).join('') : '';
+      const id = text.toLowerCase().replace(/[^a-ząćęłńóśźż0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      return (
+        <h2 id={id || undefined} className="text-3xl lg:text-4xl font-light font-oxanium text-white mt-10 mb-5 scroll-mt-32">
+          {children}
+        </h2>
+      );
+    },
     h3: ({ children }) => (
       <h3 className="text-2xl lg:text-3xl font-light font-plex text-white mt-8 mb-4">
         {children}

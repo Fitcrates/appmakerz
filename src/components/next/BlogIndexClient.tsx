@@ -2,13 +2,13 @@
 
 import { useMemo, useState } from 'react';
 import { ArrowUpRight, Search } from 'lucide-react';
-import { motion } from 'framer-motion';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import { useLanguage } from '@/context/LanguageContext';
 import { urlFor } from '@/lib/sanity.image';
-import { getLocalizedText } from '@/lib/localize';
+import { getLocalizedText, getLocalizedArray } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
 import type { Language } from '@/lib/language';
+import { extractPortableText } from '@/lib/seo';
 import { translations } from '@/translations/translations';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import ResponsiveElectricLogo from '@/components/next/ResponsiveElectricLogo';
@@ -60,6 +60,18 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
     });
   }, [language, posts, searchQuery, selectedCategory]);
 
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    posts.forEach((post) => {
+      const postCategories = Array.isArray(post.categories) ? post.categories : [];
+      postCategories.forEach((category: any) => {
+        const slug = getCategorySlug(category);
+        if (slug) counts[slug] = (counts[slug] || 0) + 1;
+      });
+    });
+    return counts;
+  }, [posts]);
+
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const paginatedPosts = filteredPosts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage);
   const promotedPosts = featuredPosts.slice(0, 6);
@@ -98,53 +110,49 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
       </div>
 
       {/* FILTER BAR */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end border-b border-white/10 mb-12 gap-6 relative">
-        
-        {/* CATEGORIES TABS */}
-        <div className="flex gap-6 lg:gap-8 overflow-x-auto w-full lg:w-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+
+        {/* CATEGORY FILTERS */}
+        <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
           {categories.length ? (
             <>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedCategory('');
-                  setCurrentPage(1);
-                }}
-                className={`relative whitespace-nowrap pb-4 text-[0.75rem] lg:text-[0.8rem] tracking-[0.15em] uppercase transition-colors duration-300 ${
-                  selectedCategory === ''
-                    ? 'text-teal-300 font-medium'
-                    : 'text-white/70 hover:text-teal-300/70'
-                }`}
-              >
-                {allCategoriesLabel}
-                {selectedCategory === '' && (
-                  <motion.div layoutId="activeTab" className="absolute -bottom-[1px] left-0 w-full h-[2px] bg-teal-300 shadow-[0_0_10px_rgba(94,234,212,0.5)]" />
-                )}
-              </button>
-
-              {categories.map((category) => {
-                const slug = getCategorySlug(category);
-                const label = getLocalizedText(category.title, language);
-                if (!slug || !label) return null;
+              {[{ slug: '', label: allCategoriesLabel, count: posts.length, key: '__all' },
+                ...categories
+                  .map((category) => ({
+                    slug: getCategorySlug(category),
+                    label: getCategoryLabel(category, language),
+                    count: categoryCounts[getCategorySlug(category)] || 0,
+                    key: category._id || getCategorySlug(category),
+                  }))
+                  .filter((item) => item.slug && item.label),
+              ].map((item) => {
+                const isActive = selectedCategory === item.slug;
 
                 return (
                   <button
-                    key={category._id || slug}
+                    key={item.key}
                     type="button"
                     onClick={() => {
-                      setSelectedCategory(slug);
+                      setSelectedCategory(item.slug);
                       setCurrentPage(1);
                     }}
-                    className={`relative whitespace-nowrap pb-4 text-[0.75rem] lg:text-[0.8rem] tracking-[0.15em] uppercase transition-colors duration-300 ${
-                      selectedCategory === slug
-                        ? 'text-teal-300 font-medium'
-                        : 'text-white/70 hover:text-teal-300/70'
+                    className={`group/filter flex items-baseline gap-1.5 whitespace-nowrap text-[0.72rem] uppercase tracking-[0.18em] transition-colors duration-300 ${
+                      isActive ? 'text-teal-300' : 'text-white/50 hover:text-white'
                     }`}
                   >
-                    {label}
-                    {selectedCategory === slug && (
-                      <motion.div layoutId="activeTab" className="absolute -bottom-[1px] left-0 w-full h-[2px] bg-teal-300 shadow-[0_0_10px_rgba(94,234,212,0.5)]" />
-                    )}
+                    <span
+                      className={`transition-all duration-300 ${
+                        isActive
+                          ? 'text-teal-300 drop-shadow-[0_0_6px_rgba(94,234,212,0.8)]'
+                          : 'text-white/25 group-hover/filter:text-teal-300/60'
+                      }`}
+                    >
+                      /
+                    </span>
+                    <span>{item.label}</span>
+                    <span className={`text-[0.6rem] tracking-normal notranslate ${isActive ? 'text-teal-300/60' : 'text-white/25'}`}>
+                      {item.count}
+                    </span>
                   </button>
                 );
               })}
@@ -153,8 +161,8 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
         </div>
 
         {/* SEARCH INPUT */}
-        <div className="relative w-full lg:w-72 flex-shrink-0 group pb-4 lg:pb-3">
-          <Search className="absolute left-0 top-[35%] lg:top-[20%] -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-teal-300 transition-colors duration-300" />
+        <div className="group relative w-full flex-shrink-0 border-b border-white/15 lg:w-72">
+          <Search className="absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30 transition-colors duration-300 group-focus-within:text-teal-300" />
           <input
             type="text"
             placeholder={t.search || 'Search posts...'}
@@ -163,75 +171,83 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
               setSearchQuery(event.target.value);
               setCurrentPage(1);
             }}
-            className="w-full bg-transparent pl-7 pr-2 py-1 text-sm text-white placeholder:text-white/30 outline-none transition-colors duration-300"
+            className="w-full bg-transparent py-2 pl-7 pr-2 text-sm text-white placeholder:text-white/30 outline-none"
           />
-          <div className="absolute -bottom-[1px] left-0 w-0 group-focus-within:w-full h-[2px] bg-teal-300 shadow-[0_0_10px_rgba(94,234,212,0.5)] transition-all duration-500 ease-out" />
+          <div className="absolute -bottom-[1px] left-0 h-[2px] w-0 bg-teal-300 shadow-[0_0_10px_rgba(94,234,212,0.5)] transition-all duration-500 ease-out group-focus-within:w-full" />
         </div>
       </div>
 
       <div className={`grid gap-10 xl:gap-12 ${promotedPosts.length ? 'lg:grid-cols-[minmax(0,1fr)_18rem]' : ''}`}>
         <div>
           {paginatedPosts.length ? (
-            <div id="blog-posts" className="space-y-6">
+            <div id="blog-posts">
               {paginatedPosts.map((post) => {
                 const postTitle = getLocalizedText(post.title, language);
                 const excerpt = getLocalizedText(post.excerpt, language);
                 const category = Array.isArray(post.categories) && post.categories.length > 0
                   ? getCategoryLabel(post.categories[0], language)
                   : '';
-                const imageUrl = post.mainImage ? urlFor(post.mainImage).width(400).height(300).url() : '';
+                const imageUrl = post.mainImage ? urlFor(post.mainImage).width(640).height(480).fit('crop').auto('format').url() : '';
+
+                const bodyArray = getLocalizedArray<any>(post.body, language);
+                const bodyText = extractPortableText(bodyArray);
+                const wordCount = bodyText.trim().split(/\s+/).length;
+                const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
                 return (
-                  <PrefetchLink key={post._id} href={localizedPath(language, `/blog/${post.slug.current}`)} className="group block">
-                    <div className="relative overflow-hidden border border-white/10 hover:border-teal-300/30 transition-all duration-500">
-                      <div className="flex flex-col md:flex-row md:h-[250px]">
-                        {imageUrl ? (
-                          <div className="relative w-full md:w-64 xl:w-80 h-48 md:h-full flex-shrink-0 overflow-hidden">
-                            <img
-                              src={imageUrl}
-                              alt={postTitle}
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                              loading="lazy"
-                            />
-                            <div className="absolute inset-0 bg-indigo-950/30 group-hover:bg-indigo-950/10 transition-colors duration-500" />
-                          </div>
-                        ) : null}
+                  <PrefetchLink
+                    key={post._id}
+                    href={localizedPath(language, `/blog/${post.slug.current}`)}
+                    className="group relative block border-b border-white/10 first:border-t"
+                  >
+                    <article className="grid gap-5 py-8 md:grid-cols-[minmax(0,1fr)_15rem] md:items-center md:gap-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-8">
+                      <div className="min-w-0">
+                        <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.68rem] uppercase tracking-[0.18em]">
+                          {category ? (
+                            <span className="text-teal-300/80 transition-colors duration-300 group-hover:text-teal-300">
+                              / {category}
+                            </span>
+                          ) : null}
+                          <span className="text-white/30">
+                            {new Date(post.publishedAt).toLocaleDateString(language === 'pl' ? 'pl-PL' : 'en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                            {` • ${readingTime} min ${language === 'pl' ? 'czytania' : 'read'}`}
+                          </span>
+                        </div>
 
-                        <div className="flex-1 p-4 flex flex-col">
-                          <div>
-                            <div className="flex items-center gap-4 mb-4 flex-wrap">
-                              {category ? (
-                                <span className="text-[0.65rem] px-3 py-1 border border-teal-300/20 bg-teal-300/5 text-teal-300 tracking-[0.2em] uppercase group-hover:border-teal-300/40 group-hover:bg-teal-300/10 transition-colors duration-500">
-                                  {category}
-                                </span>
-                              ) : null}
-                              <span className="text-xs text-white/30 ">
-                                {new Date(post.publishedAt).toLocaleDateString(language === 'pl' ? 'pl-PL' : 'en-US', {
-                                  year: 'numeric',
-                                  month: 'short',
-                                  day: 'numeric',
-                                })}
-                              </span>
-                            </div>
+                        <h2 className="mb-3 line-clamp-2 font-oxanium text-2xl font-light text-white transition-colors duration-300 group-hover:text-teal-300 lg:text-3xl">
+                          {postTitle}
+                        </h2>
 
-                            <h2 className="text-xl lg:text-2xl font-light font-oxanium text-white  mb-3 group-hover:text-teal-300 transition-colors duration-300 line-clamp-2">
-                              {postTitle}
-                            </h2>
+                        <p className="line-clamp-2 max-w-2xl text-sm font-light leading-relaxed text-white/50">
+                          {excerpt}
+                        </p>
 
-                            <p className="text-white/70  font-light text-sm leading-relaxed line-clamp-3">
-                              {excerpt}
-                            </p>
-                          </div>
-
-                          <div className="flex items-center gap-2 mt-2 text-white/50 group-hover:text-teal-300 transition-colors duration-300">
-                            <span className="text-sm ">{t.readMore}</span>
-                            <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                          </div>
+                        <div className="mt-4 flex items-center gap-2 text-teal-300/70 transition-all duration-500 md:translate-y-2 md:text-teal-300/0 md:group-hover:translate-y-0 md:group-hover:text-teal-300/90">
+                          <span className="text-xs uppercase tracking-wider">{t.readMore}</span>
+                          <ArrowUpRight className="h-4 w-4" />
                         </div>
                       </div>
 
-                      <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-teal-300/0 group-hover:border-teal-300/50 transition-colors duration-500" />
-                    </div>
+                      {imageUrl ? (
+                        <div className="relative order-first aspect-[16/9] overflow-hidden bg-white/5 md:order-none md:aspect-[4/3]">
+                          <img
+                            src={imageUrl}
+                            alt={postTitle}
+                            className="h-full w-full object-cover opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-indigo-950/30 transition-colors duration-500 group-hover:bg-indigo-950/0" />
+                          <div className="absolute left-0 top-0 h-5 w-5 border-l border-t border-teal-300/0 transition-colors duration-500 group-hover:border-teal-300/70" />
+                          <div className="absolute bottom-0 right-0 h-5 w-5 border-b border-r border-teal-300/0 transition-colors duration-500 group-hover:border-teal-300/70" />
+                        </div>
+                      ) : null}
+                    </article>
+
+                    <div className="absolute bottom-0 left-0 right-0 h-[2px] origin-left scale-x-0 bg-teal-300 shadow-[0_0_10px_rgba(94,234,212,0.5)] transition-transform duration-500 ease-out group-hover:scale-x-100" />
                   </PrefetchLink>
                 );
               })}
@@ -273,6 +289,11 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
               {promotedPosts.map((post) => {
                 const postTitle = getLocalizedText(post.title, language);
                 const imageUrl = post.mainImage ? urlFor(post.mainImage).width(96).height(72).fit('crop').auto('format').url() : '';
+                
+                const bodyArray = getLocalizedArray<any>(post.body, language);
+                const bodyText = extractPortableText(bodyArray);
+                const wordCount = bodyText.trim().split(/\s+/).length;
+                const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
                 return (
                   <PrefetchLink
@@ -300,6 +321,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
                           month: 'short',
                           year: 'numeric',
                         })}
+                        {` • ${readingTime} min ${language === 'pl' ? 'czytania' : 'read'}`}
                       </p>
                     </div>
                   </PrefetchLink>

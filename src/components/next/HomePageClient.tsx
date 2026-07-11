@@ -64,8 +64,8 @@ export default function HomePageClient({ projects, posts }: HomePageClientProps)
       return () => window.cancelIdleCallback(id);
     }
 
-    const id = window.setTimeout(() => setShowChat(true), 2500);
-    return () => window.clearTimeout(id);
+    const id = setTimeout(() => setShowChat(true), 2500);
+    return () => clearTimeout(id);
   }, []);
 
   return (

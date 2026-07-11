@@ -14,20 +14,46 @@ interface BlogLatestPostsSidebarProps {
   currentPostId: string;
   language: Language;
   posts: any[];
-  relatedServices?: any[];
+  toc?: { text: string; id: string }[];
 }
 
 type SidebarPosition = 'relative' | 'fixed' | 'bottom';
 
 const SIDEBAR_TOP_OFFSET = 112;
 
-export default function BlogLatestPostsSidebar({ currentPostId, language, posts, relatedServices = [] }: BlogLatestPostsSidebarProps) {
+export default function BlogLatestPostsSidebar({ currentPostId, language, posts, toc = [] }: BlogLatestPostsSidebarProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<SidebarPosition>('relative');
+  const [activeId, setActiveId] = useState<string>('');
+
   const latestPosts = [...posts]
     .filter((item) => item._id !== currentPostId)
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-    .slice(0, 6);
+    .slice(0, 3);
+
+  useEffect(() => {
+    if (!toc.length) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-100px 0px -80% 0px' }
+    );
+
+    toc.forEach((item) => {
+      const element = document.getElementById(item.id);
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [toc]);
 
   useEffect(() => {
     const updateSidebarPosition = () => {
@@ -62,7 +88,7 @@ export default function BlogLatestPostsSidebar({ currentPostId, language, posts,
     };
   }, []);
 
-  if (!latestPosts.length && !relatedServices.length) {
+  if (!toc.length && !latestPosts.length) {
     return null;
   }
 
@@ -75,45 +101,29 @@ export default function BlogLatestPostsSidebar({ currentPostId, language, posts,
   return (
     <aside className="relative hidden xl:col-start-3 xl:row-start-2 xl:block xl:self-stretch">
       <div ref={sidebarRef} className={`${sidebarPositionClass} max-h-[calc(100vh-8rem)] overflow-y-auto pr-1`}>
-        {relatedServices.length > 0 ? (
-          <div className="mb-10 border border-white/10 p-5">
-            <p className="text-xs uppercase tracking-[0.18em] text-teal-300/80">
-              {language === 'pl' ? 'Powiązane usługi' : 'Related services'}
-            </p>
-            <h2 className="mt-3 font-oxanium text-lg font-light leading-snug text-white">
-              {language === 'pl' ? 'Zobacz jak to wygląda w praktyce' : 'See how this works in practice'}
+        {toc.length > 0 ? (
+          <div className="mb-10">
+            <h2 className="border-b border-white/10 pb-4 text-sm font-light text-white/75">
+              {language === 'pl' ? 'Spis treści' : 'Table of Contents'}
             </h2>
-            <div className="mt-5 divide-y divide-white/10">
-              {relatedServices.slice(0, 3).map((service) => {
-                const title = getLocalizedText(service.title, language);
-                const intro = getLocalizedText(service.intro, language);
-
-                return (
-                  <PrefetchLink
-                    key={service._id}
-                    href={localizedPath(language, `/uslugi/${service.slug.current}`)}
-                    className="group flex items-start justify-between gap-3 py-4 first:pt-0 last:pb-0"
-                  >
-                    <span className="min-w-0">
-                      <span className="line-clamp-2 block text-sm leading-snug text-white/75 transition-colors group-hover:text-teal-300">
-                        {title}
-                      </span>
-                      {intro ? (
-                        <span className="mt-2 line-clamp-2 block text-xs leading-relaxed text-white/35">
-                          {intro}
-                        </span>
-                      ) : null}
-                    </span>
-                    <ArrowUpRight className="mt-0.5 h-4 w-4 shrink-0 text-white/30 transition-colors group-hover:text-teal-300" />
-                  </PrefetchLink>
-                );
-              })}
+            <div className="mt-5 space-y-3">
+              {toc.map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  className={`block text-sm transition-colors ${
+                    activeId === item.id ? 'text-teal-300 font-medium' : 'text-white/50 hover:text-teal-300'
+                  }`}
+                >
+                  {item.text}
+                </a>
+              ))}
             </div>
           </div>
         ) : null}
 
         {latestPosts.length > 0 ? (
-          <>
+          <div className="mb-10">
             <h2 className="border-b border-white/10 pb-4 text-sm font-light text-white/75">
               {translations[language].blog.post.latestPosts}
             </h2>
@@ -155,7 +165,7 @@ export default function BlogLatestPostsSidebar({ currentPostId, language, posts,
                 );
               })}
             </div>
-          </>
+          </div>
         ) : null}
       </div>
     </aside>

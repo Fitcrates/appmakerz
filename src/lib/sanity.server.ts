@@ -143,6 +143,7 @@ export async function getPosts() {
         order
       },
       publishedAt,
+      body { en, pl },
       excerpt { en, pl },
       featured,
       featuredOrder,
@@ -231,6 +232,7 @@ export async function getFeaturedPosts() {
       slug,
       mainImage,
       publishedAt,
+      body { en, pl },
       excerpt { en, pl },
       featured,
       featuredOrder,
@@ -259,6 +261,7 @@ export async function getPopularPosts() {
       slug,
       mainImage,
       publishedAt,
+      body { en, pl },
       viewCount,
       categories[]->{
         _id,
