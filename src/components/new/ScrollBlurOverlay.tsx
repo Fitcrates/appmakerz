@@ -35,7 +35,7 @@ export default function ScrollBlurOverlay() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
-          className="pointer-events-none fixed bottom-0 left-0 right-0 h-32 z-[40] bg-gradient-to-t from-indigo-950/80 to-transparent backdrop-blur-md [mask-image:linear-gradient(to_top,black_20%,transparent)]"
+          className="scroll-blur-overlay pointer-events-none fixed bottom-0 left-0 right-0 h-32 z-[40] bg-gradient-to-t from-indigo-950/80 to-transparent backdrop-blur-md [mask-image:linear-gradient(to_top,black_20%,transparent)]"
           aria-hidden="true"
         />
       )}

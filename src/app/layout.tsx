@@ -101,8 +101,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang={DEFAULT_LANGUAGE}>
       <head>
-        <link rel="preload" href="/fonts/IBM_Plex_Sans/IBMPlexSans-VariableFont_wdth,wght.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/Oxanium-VariableFont_wght.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preload" href="/fonts/IBM_Plex_Sans/IBMPlexSans-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/Oxanium-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <Script id="google-tag-bootstrap" strategy="beforeInteractive">
           {`
             window.dataLayer = window.dataLayer || [];

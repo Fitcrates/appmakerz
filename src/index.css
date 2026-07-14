@@ -2,14 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Critical CSS - Load this first */
+/* Critical CSS - Load this first.
+   woff2 subsets (latin + latin-ext) of the variable fonts; the full .ttf files
+   stay as a fallback for anything without woff2. Subsetting took the pair from
+   575 kB to 117 kB, which matters because both are preloaded in layout.tsx and
+   therefore compete with the HTML and JS for bandwidth on first paint. */
 @font-face {
   font-family: 'Oxanium';
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url('/fonts/Oxanium-VariableFont_wght.ttf') format('truetype-variations'),
-       url('/fonts/static/Oxanium-Regular.ttf') format('truetype');
+  src: url('/fonts/Oxanium-latin.woff2') format('woff2'),
+       url('/fonts/Oxanium-VariableFont_wght.ttf') format('truetype-variations');
 }
 
 @font-face {
@@ -17,7 +21,8 @@
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url('/fonts/IBM_Plex_Sans/IBMPlexSans-VariableFont_wdth,wght.ttf') format('truetype-variations');
+  src: url('/fonts/IBM_Plex_Sans/IBMPlexSans-latin.woff2') format('woff2'),
+       url('/fonts/IBM_Plex_Sans/IBMPlexSans-VariableFont_wdth,wght.ttf') format('truetype-variations');
 }
 
 @layer utilities {

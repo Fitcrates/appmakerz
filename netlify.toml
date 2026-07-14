@@ -12,6 +12,36 @@
   status = 301
   force = true
 
+# Netlify's edge cache is per-PoP by default, so the first visitor at each
+# location misses and wakes the Next.js server function. Measured on the live
+# site: 4.21 s TTFB cold vs 0.17 s warm — ~3.3 s of that is the cold function,
+# not DNS or TLS. `durable` promotes the rendered HTML into a shared global
+# cache, so a cold PoP is served from the cache instead of the function.
+#
+# Deliberately scoped to page routes: /api/* must never be cached by the CDN,
+# and /_next/static + /media are plain static assets that never touch a
+# function anyway. s-maxage matches `export const revalidate = 3600`.
+[[headers]]
+  for = "/"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, durable, s-maxage=3600, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/pl/*"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, durable, s-maxage=3600, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/en/*"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, durable, s-maxage=3600, stale-while-revalidate=604800"
+
+# The server function still runs in us-east-1 (~120 ms RTT from Poland) on every
+# cache miss and revalidation. Moving it to Frankfurt requires a Pro plan or
+# above; uncommenting this on a lower plan fails the build.
+# [functions]
+#   region = "eu-central-1"
+
 [[headers]]
   for = "/sitemap.xml"
   [headers.values]

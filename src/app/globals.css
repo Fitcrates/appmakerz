@@ -386,3 +386,62 @@
     display: none;
   }
 }
+
+/* ── Hero effects: reference (Blink/Gecko) rendering ──
+   Both filters are attached from CSS rather than from a `filter` attribute so
+   the Safari block below can override them by cascade. */
+
+.electric-logo-ring {
+  filter: url(#electric-logo-filter);
+}
+
+.laser-glow-group {
+  filter: url(#laserGlow);
+}
+
+/* ── Safari-only downgrades ──
+   `-webkit-named-image` is a WebKit-only value that Blink never shipped, so
+   this block targets Safari and leaves Chrome/Edge/Firefox on the reference
+   path above. WebKit evaluates SVG filter graphs on the CPU, on the main
+   thread, once per frame; the hero animates them continuously, which is what
+   drags the whole page down there.
+
+   - The electric ring drops to a 2-octave turbulence (visually near-identical
+     at baseFrequency 0.02, since the fine detail is smeared by the
+     displacement map anyway).
+   - The laser glow swaps feGaussianBlur+feMerge for stacked drop-shadows,
+     which WebKit hands to the GPU.
+   - backdrop-filter is removed where an animated layer sits behind it: every
+     laser frame dirties the region under the hero cards and the scroll
+     overlay, forcing Safari to re-blur their backdrops each frame. */
+
+@supports (background: -webkit-named-image(i)) {
+  .electric-logo-ring {
+    filter: url(#electric-logo-filter-lite);
+  }
+
+  .laser-glow-group {
+    filter: drop-shadow(0 0 6px #5eead4) drop-shadow(0 0 3px #5eead4);
+  }
+
+  .hero-glass-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background-color: rgba(30, 27, 75, 0.55);
+  }
+
+  .hero-glass-card:hover {
+    background-color: rgba(30, 27, 75, 0.72);
+  }
+
+  .scroll-blur-overlay {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-laser-field {
+    display: none;
+  }
+}

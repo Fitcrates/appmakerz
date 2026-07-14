@@ -202,7 +202,7 @@ const HeroNewv2: React.FC = () => {
                 return (
                   <div
                     key={item.title}
-                    className="group relative flex items-center sm:items-start gap-4 lg:gap-3 2xl:gap-5 p-4 sm:p-6 lg:p-3 xl:p-4 2xl:p-6 rounded-2xl shadow-[0_4_20px_rgba(0,0,0,0.2)] transition-all duration-500 bg-indigo-950/20 backdrop-blur-md hover:bg-indigo-950/40 border border-white/[0.05] hover:border-teal-300/20 card-shine"
+                    className="hero-glass-card group relative flex items-center sm:items-start gap-4 lg:gap-3 2xl:gap-5 p-4 sm:p-6 lg:p-3 xl:p-4 2xl:p-6 rounded-2xl shadow-[0_4_20px_rgba(0,0,0,0.2)] transition-all duration-500 bg-indigo-950/20 backdrop-blur-md hover:bg-indigo-950/40 border border-white/[0.05] hover:border-teal-300/20 card-shine"
                   >
                     {/* Background subtle glow on hover */}
                     <div className="absolute inset-0 bg-gradient-to-r from-teal-300/0 via-teal-300/0 to-teal-300/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
