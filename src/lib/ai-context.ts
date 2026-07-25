@@ -4,7 +4,7 @@ import { faqContent } from '@/content/faq';
 import { privacyPolicyContent } from '@/content/privacy-policy';
 import { pricingCopy } from '@/data/pricing-copy';
 import pricingConfig from '@/data/pricing-config.json';
-import { getAboutMe, getPosts, getProjects, getServiceLandings } from '@/lib/sanity.server';
+import { getAboutMe, getPostSummaries, getProjects, getServiceLandings } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import type { Language } from '@/lib/language';
 
@@ -191,7 +191,7 @@ export async function buildAIContextIndex(language: Language = 'pl'): Promise<Co
   const [services, projects, posts, aboutMe, chatKnowledge] = await Promise.all([
     getServiceLandings(),
     getProjects(),
-    getPosts().catch(() => []),
+    getPostSummaries().catch(() => []),
     getAboutMe().catch(() => null),
     getChatKnowledge(),
   ]);

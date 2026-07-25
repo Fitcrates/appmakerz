@@ -15,7 +15,7 @@ import ServiceDeliverablesNew from '@/components/new/ServiceDeliverablesNew';
 import ServiceProcessNew from '@/components/new/ServiceProcessNew';
 import HeroPulsePath from '@/components/new/HeroPulsePath';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
-import { getPosts, getProjects, getServiceLanding, getServiceLandings, getSitemapEntries, urlFor } from '@/lib/sanity.server';
+import { getPostSummaries, getProjects, getServiceLanding, getServiceLandings, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
@@ -65,7 +65,7 @@ function getRelatedItems<T>(items: T[], getText: (item: T) => string, keywords: 
   return related.length ? related : scored.slice(0, limit).map((entry) => entry.item);
 }
 
-export const revalidate = 3600;
+export const revalidate = 604800;
 export const dynamic = 'force-static';
 export const dynamicParams = true;
 
@@ -164,7 +164,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
   const [serviceLandings, projects, posts] = await Promise.all([
     getServiceLandings().catch(() => []),
     getProjects().catch(() => []),
-    getPosts().catch(() => []),
+    getPostSummaries().catch(() => []),
   ]);
 
   const title = getLocalizedText(landing.title, language);

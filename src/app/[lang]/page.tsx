@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import HomePageClient from '@/components/next/HomePageClient';
-import { getFeaturedProjects, getPosts } from '@/lib/sanity.server';
+import { getFeaturedProjects, getPostSummaries } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
@@ -13,7 +13,7 @@ interface LocalizedHomePageProps {
   params: Promise<{ lang: string }>;
 }
 
-export const revalidate = 3600;
+export const revalidate = 604800;
 export const dynamic = 'force-static';
 
 export function generateStaticParams() {
@@ -87,7 +87,7 @@ export default async function LocalizedHomePage({ params }: LocalizedHomePagePro
   try {
     [featuredProjects, latestPosts] = await Promise.all([
       getFeaturedProjects(),
-      getPosts(),
+      getPostSummaries(),
     ]);
   } catch {
     // Fallback to empty arrays; client sections handle missing Sanity content.

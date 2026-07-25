@@ -4,14 +4,14 @@ import CookieConsentNew from '@/components/new/CookieConsentNew';
 import ScrollBlurOverlay from '@/components/new/ScrollBlurOverlay';
 import CursorAura from '@/components/next/CursorAura';
 import HomePageClient from '@/components/next/HomePageClient';
-import { getFeaturedProjects, getPosts } from '@/lib/sanity.server';
+import { getFeaturedProjects, getPostSummaries } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
 import { DEFAULT_LANGUAGE } from '@/lib/language';
 import { DEFAULT_SOCIAL_IMAGE, SOCIAL_IMAGE_HEIGHT, SOCIAL_IMAGE_WIDTH } from '@/lib/seo';
 import { translations } from '@/translations/translations';
 import type { Post, Project } from '@/types/sanity.types';
 
-export const revalidate = 3600;
+export const revalidate = 604800;
 export const dynamic = 'force-static';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -66,7 +66,7 @@ export default async function HomePage() {
   try {
     [featuredProjects, latestPosts] = await Promise.all([
       getFeaturedProjects(),
-      getPosts(),
+      getPostSummaries(),
     ]);
   } catch {
     // Fallback to empty arrays; client sections handle missing Sanity content.

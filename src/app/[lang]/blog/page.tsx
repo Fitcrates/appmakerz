@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BlogIndexClient from '@/components/next/BlogIndexClient';
-import { getFeaturedPosts, getPostCategories, getPosts } from '@/lib/sanity.server';
+import { getFeaturedPosts, getPostCategories, getPostSummaries } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
@@ -14,7 +14,7 @@ interface LocalizedBlogPageProps {
   params: Promise<{ lang: string }>;
 }
 
-export const revalidate = 3600;
+export const revalidate = 604800;
 export const dynamic = 'force-static';
 
 export function generateStaticParams() {
@@ -83,7 +83,7 @@ export default async function LocalizedBlogPage({ params }: LocalizedBlogPagePro
   const language = lang as Language;
   const t = translations[language].blog;
   const [posts, featuredPosts, categories] = await Promise.all([
-    getPosts(),
+    getPostSummaries(),
     getFeaturedPosts(),
     getPostCategories(),
   ]);

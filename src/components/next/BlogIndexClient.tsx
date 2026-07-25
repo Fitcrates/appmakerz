@@ -31,6 +31,24 @@ function getCategoryLabel(category: any, language: Language): string {
   return getLocalizedText(category?.title, language);
 }
 
+// `wordCount` is computed in GROQ so list queries no longer have to ship the
+// full Portable Text bodies. The `body` branch stays as a fallback for callers
+// that still pass complete posts.
+function getReadingTime(post: any, language: Language): number {
+  const counted = post?.wordCount?.[language];
+  if (typeof counted === 'number' && counted > 0) {
+    return Math.max(1, Math.ceil(counted / 200));
+  }
+
+  if (post?.body) {
+    const bodyText = extractPortableText(getLocalizedArray<any>(post.body, language));
+    const wordCount = bodyText.trim().split(/\s+/).length;
+    return Math.max(1, Math.ceil(wordCount / 200));
+  }
+
+  return 1;
+}
+
 export default function BlogIndexClient({ posts, featuredPosts = [], categories = [], title, subtitle }: BlogIndexClientProps) {
   const { language } = useLanguage();
   const t = translations[language].blog;
@@ -189,10 +207,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
                   : '';
                 const imageUrl = post.mainImage ? urlFor(post.mainImage).width(640).height(480).fit('crop').auto('format').url() : '';
 
-                const bodyArray = getLocalizedArray<any>(post.body, language);
-                const bodyText = extractPortableText(bodyArray);
-                const wordCount = bodyText.trim().split(/\s+/).length;
-                const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+                const readingTime = getReadingTime(post, language);
 
                 return (
                   <PrefetchLink
@@ -289,11 +304,8 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
               {promotedPosts.map((post) => {
                 const postTitle = getLocalizedText(post.title, language);
                 const imageUrl = post.mainImage ? urlFor(post.mainImage).width(96).height(72).fit('crop').auto('format').url() : '';
-                
-                const bodyArray = getLocalizedArray<any>(post.body, language);
-                const bodyText = extractPortableText(bodyArray);
-                const wordCount = bodyText.trim().split(/\s+/).length;
-                const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+                const readingTime = getReadingTime(post, language);
 
                 return (
                   <PrefetchLink

@@ -4,7 +4,7 @@ import Script from 'next/script';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BlogPostLocalizedContent from '@/components/next/BlogPostLocalizedContent';
-import { getPost, getPosts, getSitemapEntries, urlFor } from '@/lib/sanity.server';
+import { getPost, getPostSummaries, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
@@ -24,7 +24,7 @@ interface LocalizedBlogPostPageProps {
   params: Promise<{ lang: string; slug: string }>;
 }
 
-export const revalidate = 3600;
+export const revalidate = 604800;
 export const dynamic = 'force-static';
 export const dynamicParams = true;
 
@@ -118,7 +118,7 @@ export default async function LocalizedBlogPostPage({ params }: LocalizedBlogPos
   }
 
   const language = lang as Language;
-  const [post, posts] = await Promise.all([getPost(slug), getPosts()]);
+  const [post, posts] = await Promise.all([getPost(slug), getPostSummaries()]);
 
   if (!post?._id) {
     notFound();

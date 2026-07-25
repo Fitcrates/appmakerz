@@ -54,7 +54,7 @@ function getLocalizedImageCards(value: unknown, language: Language) {
     .filter((card) => card.title || card.desc);
 }
 
-export const revalidate = 3600;
+export const revalidate = 604800;
 export const dynamic = 'force-static';
 
 export async function generateMetadata({ params }: LocalizedAboutMePageProps): Promise<Metadata> {

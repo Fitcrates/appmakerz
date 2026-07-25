@@ -26,6 +26,14 @@ function revalidateLocalizedPath(path: string) {
   for (const language of SUPPORTED_LANGUAGES) {
     revalidatePath(localizedPath(language, path));
   }
+
+  // localizedPath('pl', '/') is '/pl', so the un-prefixed root route
+  // (src/app/page.tsx) was never invalidated by any webhook. It renders the
+  // same featured projects and latest posts as /pl, and it is the canonical
+  // homepage — it has to be purged alongside the localized variants.
+  if (path === '/') {
+    revalidatePath('/');
+  }
 }
 
 function localizedAbsoluteUrls(path: string) {

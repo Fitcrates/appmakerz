@@ -28,7 +28,7 @@ interface LocalizedProjectPageProps {
   params: Promise<{ lang: string; slug: string }>;
 }
 
-export const revalidate = 3600;
+export const revalidate = 604800;
 export const dynamic = 'force-static';
 export const dynamicParams = true;
 

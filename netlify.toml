@@ -12,61 +12,24 @@
   status = 301
   force = true
 
-# Netlify's edge cache is per-PoP by default, so the first visitor at each
-# location misses and wakes the Next.js server function. Measured on the live
-# site: 4.21 s TTFB cold vs 0.17 s warm — ~3.3 s of that is the cold function,
-# not DNS or TLS. `durable` promotes the rendered HTML into a shared global
-# cache, so a cold PoP is served from the cache instead of the function.
+# IMPORTANT: everything in this file's [[headers]] blocks applies ONLY to files
+# Netlify serves from its own backing store. URLs handled by a function — which
+# is every HTML page, /sitemap.xml and /robots.txt — ignore them entirely.
+# Verified on production: /favicon.ico came back with X-Frame-Options while /
+# did not. Security headers for pages therefore live in next.config.ts
+# headers(), and page cache TTL is driven by each route's `export const
+# revalidate`, which is what the Next.js runtime feeds into Netlify's durable
+# cache (measured: /pl/faq with revalidate = 86400 reported ttl≈60000).
 #
-# Deliberately scoped to page routes: /api/* must never be cached by the CDN,
-# and /_next/static + /media are plain static assets that never touch a
-# function anyway. s-maxage matches `export const revalidate = 3600`.
-[[headers]]
-  for = "/"
-  [headers.values]
-    Netlify-CDN-Cache-Control = "public, durable, s-maxage=3600, stale-while-revalidate=604800"
+# Freshness does not depend on those TTLs: the Sanity webhook hits
+# /api/revalidate, which purges by tag and by path on every content change.
 
-[[headers]]
-  for = "/pl/*"
-  [headers.values]
-    Netlify-CDN-Cache-Control = "public, durable, s-maxage=3600, stale-while-revalidate=604800"
-
-[[headers]]
-  for = "/en/*"
-  [headers.values]
-    Netlify-CDN-Cache-Control = "public, durable, s-maxage=3600, stale-while-revalidate=604800"
-
-# The server function still runs in us-east-1 (~120 ms RTT from Poland) on every
-# cache miss and revalidation. Moving it to Frankfurt requires a Pro plan or
-# above; uncommenting this on a lower plan fails the build.
-# [functions]
-#   region = "eu-central-1"
-
-[[headers]]
-  for = "/sitemap.xml"
-  [headers.values]
-    Content-Type = "application/xml"
-    Cache-Control = "public, max-age=3600"
-
-[[headers]]
-  for = "/robots.txt"
-  [headers.values]
-    Content-Type = "text/plain"
-    Cache-Control = "public, max-age=86400"
-
-[[headers]]
-  for = "/llms.txt"
-  [headers.values]
-    Content-Type = "text/plain; charset=utf-8"
-    Cache-Control = "public, max-age=3600"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+# The Next.js server function runs in the project-level functions region,
+# US East (Ohio, `cmh`) by default — roughly 120 ms RTT from Poland before the
+# render even starts. Moving it to Frankfurt (`fra`) requires a Pro plan and
+# must be set in the Netlify UI under Project configuration > Build & deploy >
+# Continuous deployment > Functions region. A [functions] region key here does
+# not reach framework-generated functions, so it is intentionally not set.
 
 [[headers]]
   for = "/_next/static/*"
@@ -92,6 +55,13 @@
   for = "/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Static file in public/, so this one does take effect.
+[[headers]]
+  for = "/llms.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
 
 # Keep the custom AI edge function on Netlify while the site itself runs on Next.js.
 [[edge_functions]]

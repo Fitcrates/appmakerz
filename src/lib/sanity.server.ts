@@ -21,7 +21,13 @@ const builder = imageUrlBuilder({
   dataset,
 });
 
-export const SANITY_REVALIDATE_SECONDS = 3600;
+// A route's effective revalidate is the lowest of its segment config and the
+// revalidate on every fetch inside it, so leaving this at 3600 silently pinned
+// every Sanity-backed page back to a 1 h TTL — and that TTL is what the Netlify
+// runtime hands to the durable cache. Freshness comes from the Sanity webhook
+// (/api/revalidate) purging these tags on every content change, not from the
+// clock, so the timer only needs to be a backstop.
+export const SANITY_REVALIDATE_SECONDS = 604800;
 
 export const urlFor = (source: SanityImageSource) => builder.image(source);
 
@@ -126,7 +132,15 @@ async function fetchSanity<T>(query: string, params?: Record<string, unknown>, t
   });
 }
 
-export async function getPosts() {
+// Every list view (home, blog index, related posts, AI context) uses this.
+// It deliberately omits the Portable Text bodies: nothing in a list renders
+// them, only the reading-time estimate needed them, and GROQ counts the words
+// server-side instead. The previous version selected `body { en, pl }` for all
+// posts in both languages, which produced a 2.29 MB response — over the 2 MB
+// Next.js Data Cache limit, so it was re-fetched uncached on every render and
+// every revalidation. This variant is ~98 KB and caches normally.
+// Use getPost(slug) when you actually need a body.
+export async function getPostSummaries() {
   return fetchSanity<any[]>(
     `
     *[_type == "post" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc) {
@@ -143,7 +157,6 @@ export async function getPosts() {
         order
       },
       publishedAt,
-      body { en, pl },
       excerpt { en, pl },
       featured,
       featuredOrder,
@@ -167,6 +180,10 @@ export async function getPosts() {
         canonicalUrl,
         ogImage,
         noIndex
+      },
+      "wordCount": {
+        "en": length(string::split(pt::text(body.en), " ")),
+        "pl": length(string::split(pt::text(body.pl), " "))
       }
     }
   `,
@@ -232,7 +249,6 @@ export async function getFeaturedPosts() {
       slug,
       mainImage,
       publishedAt,
-      body { en, pl },
       excerpt { en, pl },
       featured,
       featuredOrder,
@@ -244,7 +260,11 @@ export async function getFeaturedPosts() {
         color,
         order
       },
-      tags
+      tags,
+      "wordCount": {
+        "en": length(string::split(pt::text(body.en), " ")),
+        "pl": length(string::split(pt::text(body.pl), " "))
+      }
     }
   `,
     {},
