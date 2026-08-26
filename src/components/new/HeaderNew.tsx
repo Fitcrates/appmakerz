@@ -16,12 +16,12 @@ import { localizedPath } from '../../lib/i18n-routing';
 import { translations } from '../../translations/translations';
 
 const getNavItems = (t: typeof translations.en.nav) => [
-  { label: t.about, href: '/#about' },
-  { label: t.projects, href: '/#projects' },
   { label: t.solutions, href: '/#systems' },
+  { label: t.projects, href: '/#projects' },
+  { label: t.about, href: '/#about' },
   { label: t.blog, href: '/blog' },
-  { label: t.contact, href: '/#contact' },
   { label: 'FAQ', href: '/faq' },
+  { label: t.contact, href: '/#contact' },
 ];
 
 interface ServiceLink {
@@ -241,18 +241,6 @@ const HeaderNew: React.FC = () => {
             </PrefetchLink>
 
             <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
-              {navItems.map((item) => (
-                <PrefetchLink
-                  key={item.label}
-                  href={item.href}
-                  onClick={(event) => handleNavClick(event, item.href)}
-                  className="relative text-white/90  font-light text-sm hover:text-white transition-colors group focus:outline-none focus:text-teal-300"
-                >
-                  {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-teal-300 group-hover:w-full transition-all duration-300" />
-                </PrefetchLink>
-              ))}
-
               <div
                 className="relative"
                 onMouseEnter={openServicesMenu}
@@ -394,6 +382,18 @@ const HeaderNew: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              {navItems.map((item) => (
+                <PrefetchLink
+                  key={item.label}
+                  href={item.href}
+                  onClick={(event) => handleNavClick(event, item.href)}
+                  className="relative text-white/90  font-light text-sm hover:text-white transition-colors group focus:outline-none focus:text-teal-300"
+                >
+                  {item.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-teal-300 group-hover:w-full transition-all duration-300" />
+                </PrefetchLink>
+              ))}
             </nav>
 
             <div className="hidden lg:flex items-center gap-4">
@@ -448,28 +448,11 @@ const HeaderNew: React.FC = () => {
               </button>
 
               <div className="space-y-4 overflow-y-auto">
-                {navItems.map((item, index) => (
-                  <motion.div
-                    key={item.label}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <PrefetchLink
-                      href={item.href}
-                      onClick={(event) => handleNavClick(event, item.href)}
-                      className="block text-2xl  font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
-                    >
-                      {item.label}
-                    </PrefetchLink>
-                  </motion.div>
-                ))}
-
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navItems.length * 0.1 }}
-                  className="pt-2 border-t border-white/10"
+                  transition={{ delay: 0 }}
+                  className="pb-4 border-b border-white/10"
                 >
                   <p className="text-xs uppercase tracking-[0.2em] text-white  mb-4">{t.services}</p>
                   <div className="space-y-2">
@@ -489,6 +472,23 @@ const HeaderNew: React.FC = () => {
                     })}
                   </div>
                 </motion.div>
+
+                {navItems.map((item, index) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (index + 1) * 0.1 }}
+                  >
+                    <PrefetchLink
+                      href={item.href}
+                      onClick={(event) => handleNavClick(event, item.href)}
+                      className="block text-2xl  font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
+                    >
+                      {item.label}
+                    </PrefetchLink>
+                  </motion.div>
+                ))}
               </div>
             </motion.nav>
           </motion.div>
