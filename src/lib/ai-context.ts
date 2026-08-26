@@ -80,9 +80,20 @@ function normalizeForSearch(value: string): string {
 }
 
 function tokenize(value: string): string[] {
+  // Słowa funkcyjne muszą tu być kompletne. Każde, które przejdzie, trafia w prawie każdy chunk
+  // i spłaszcza ranking do remisu — a przy okazji nabija licznik terminów, po którym trasa czatu
+  // rozpoznaje dopytanie bez tematu.
   const stopWords = new Set([
-    'oraz', 'albo', 'czy', 'jak', 'dla', 'the', 'and', 'with', 'what', 'how', 'can', 'you', 'ile', 'jaka', 'jaki',
-    'jest', 'are', 'appcrates', 'moze', 'mozesz', 'chce', 'need', 'want',
+    'oraz', 'albo', 'lub', 'czy', 'jak', 'dla', 'ile', 'jaka', 'jaki', 'jakie', 'jakis', 'jakies',
+    'jest', 'sa', 'byl', 'byla', 'bylo', 'nie', 'tak', 'tym', 'tego', 'tej', 'tam', 'tutaj',
+    'ale', 'czyli', 'wiec', 'tylko', 'takze', 'tez', 'jeszcze', 'juz', 'bardzo', 'sobie', 'siebie',
+    'przy', 'pod', 'nad', 'bez', 'przez', 'jako', 'jesli', 'zeby', 'aby', 'nad',
+    'ktory', 'ktora', 'ktore', 'jego', 'jej', 'ich', 'nas', 'wam', 'mnie', 'moje', 'twoj', 'twoja',
+    'moze', 'mozesz', 'macie', 'mam', 'masz', 'chce', 'robicie', 'piszecie', 'mozna', 'trzeba',
+    'appcrates',
+    'the', 'and', 'with', 'what', 'how', 'can', 'you', 'are', 'need', 'want', 'this', 'that',
+    'there', 'they', 'have', 'has', 'had', 'about', 'from', 'for', 'your', 'our', 'any', 'some',
+    'does', 'did', 'was', 'were', 'will', 'would', 'could', 'should', 'more', 'than', 'then', 'also',
   ]);
 
   return Array.from(new Set(
@@ -293,25 +304,60 @@ export async function buildAIContextIndex(language: Language = 'pl'): Promise<Co
   return chunks.filter((chunk) => chunk.content);
 }
 
+// Ile słów niosących treść zostaje z zapytania po odsianiu stop-słów.
+// Trasa czatu używa tego, żeby rozpoznać dopytanie, które samo w sobie nie niesie tematu.
+export function countQueryTerms(query: string): number {
+  return tokenize(query).length;
+}
+
 function getIntentBoosts(query: string): Partial<Record<ContextChunk['category'], number>> {
   const normalized = normalizeForSearch(query);
   return {
-    pricing: /\b(cena|koszt|wycena|budzet|ile|price|pricing|cost|budget|quote)\b/.test(normalized) ? 8 : 0,
-    privacy: /\b(rodo|gdpr|privacy|prywatnosc|dane|cookies|newsletter|zgoda)\b/.test(normalized) ? 8 : 0,
-    blog: /\b(blog|artykul|article|wpis|poradnik|case study|wiedza|know)\b/.test(normalized) ? 5 : 0,
-    service: /\b(usluga|oferta|service|offer|strona|sklep|ecommerce|marketplace|ai|saas)\b/.test(normalized) ? 4 : 0,
-    project: /\b(projekt|realizacja|portfolio|case|project|realization)\b/.test(normalized) ? 5 : 0,
-    faq: /\b(jak|czy|what|how|can|proces|process|czas|termin)\b/.test(normalized) ? 2 : 0,
+    // Bez domykającego \b — inaczej odmiana i liczba mnoga przechodzą bez boostu ("ceny", "kosztuje", "prices", "uslugi").
+    pricing: /\b(cen[aeyoiu]|cennik|koszt|wycen|budzet|ile|price|cost|budget|quote)/.test(normalized) ? 8 : 0,
+    privacy: /\b(rodo|gdpr|privacy|prywatnos|dane|cookie|newsletter|zgod)/.test(normalized) ? 8 : 0,
+    blog: /\b(blog|artykul|article|wpis|poradnik|case study|wiedz|know)/.test(normalized) ? 5 : 0,
+    service: /\b(uslug|ofert|service|offer|stron|sklep|ecommerce|marketplace|ai|saas)/.test(normalized) ? 4 : 0,
+    project: /\b(projekt|realizacj|portfolio|case|project)/.test(normalized) ? 5 : 0,
+    faq: /\b(jak|czy|what|how|can|proces|process|czas|termin)/.test(normalized) ? 2 : 0,
   };
+}
+
+const MIN_STEM_LENGTH = 4;
+
+// Dopasowanie po rdzeniu. Polska odmiana rozjeżdża zwykłe includes(): "cachowaniu" i "cache"
+// mają wspólne tylko "cach", więc bez tego pytanie o cachowanie nie trafiało we wpis o cache invalidation.
+function findTermMatch(haystack: string, term: string): 'exact' | 'stem' | null {
+  if (haystack.includes(term)) {
+    return 'exact';
+  }
+
+  for (let length = term.length - 1; length >= MIN_STEM_LENGTH; length -= 1) {
+    if (haystack.includes(term.slice(0, length))) {
+      return 'stem';
+    }
+  }
+
+  return null;
 }
 
 function scoreChunk(chunk: ContextChunk, queryTerms: string[], boosts: Partial<Record<ContextChunk['category'], number>>): number {
   if (chunk.category === 'core') return 100;
 
   const haystack = normalizeForSearch(`${chunk.title} ${chunk.content} ${chunk.keywords.join(' ')}`);
-  const lexicalScore = queryTerms.reduce((score, term) => (
-    haystack.includes(term) ? score + (chunk.title.toLowerCase().includes(term) ? 4 : 2) : score
-  ), 0);
+  // Tytuł też normalizujemy — inaczej termin bez ogonków nigdy nie trafi w tytuł z polskimi znakami.
+  const title = normalizeForSearch(chunk.title);
+
+  const lexicalScore = queryTerms.reduce((score, term) => {
+    const match = findTermMatch(haystack, term);
+    if (!match) {
+      return score;
+    }
+
+    // Trafienie po rdzeniu jest słabszym sygnałem niż dokładne, więc waży połowę.
+    const weight = match === 'exact' ? 2 : 1;
+    return score + (findTermMatch(title, term) ? weight * 2 : weight);
+  }, 0);
 
   return lexicalScore + (boosts[chunk.category] || 0) + (chunk.priority || 0);
 }
