@@ -21,7 +21,7 @@ export const PATCH = methodNotAllowed;
 export const DELETE = methodNotAllowed;
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL_FALLBACK = 'llama-3.1-8b-instant';
+const GROQ_MODEL_FALLBACK = 'openai/gpt-oss-20b';
 const GROQ_BASE_DELAY_MS = 1500;
 
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent';
@@ -108,7 +108,9 @@ async function callGroq(systemPrompt: string, messages: ChatMessage[]): Promise<
     },
     body: JSON.stringify({
       model: GROQ_MODEL_FALLBACK,
-      max_tokens: 300,
+      // gpt-oss liczy tokeny rozumowania do limitu, więc zostawiamy zapas na samą odpowiedź
+      max_completion_tokens: 800,
+      reasoning_effort: 'low',
       temperature: 0.3,
       messages: [
         { role: 'system', content: systemPrompt },
@@ -136,15 +138,17 @@ async function callGroq(systemPrompt: string, messages: ChatMessage[]): Promise<
 }
 
 async function callAIWithFallback(systemPrompt: string, messages: ChatMessage[]): Promise<{ ok: true; text: string } | { ok: false; status: number; text: string }> {
-  // 1. Try Gemini Flash first (free tier: 1M TPM)
-  const geminiResult = await callGemini(systemPrompt, messages);
-  if (geminiResult.ok) {
-    return geminiResult;
+  // 1. Try Gemini Flash first (free tier: 1M TPM). Bez klucza Gemini lecimy od razu na Groq.
+  if (process.env.GEMINI_API_KEY) {
+    const geminiResult = await callGemini(systemPrompt, messages);
+    if (geminiResult.ok) {
+      return geminiResult;
+    }
+
+    console.warn(`Gemini failed, falling back to Groq ${GROQ_MODEL_FALLBACK}…`);
   }
 
-  console.warn('Gemini failed, falling back to Groq 8b-instant…');
-
-  // 2. Fallback to Groq 8b-instant
+  // 2. Fallback (albo jedyny provider) — Groq
   return callGroq(systemPrompt, messages);
 }
 
