@@ -296,12 +296,13 @@ export async function buildAIContextIndex(language: Language = 'pl'): Promise<Co
 function getIntentBoosts(query: string): Partial<Record<ContextChunk['category'], number>> {
   const normalized = normalizeForSearch(query);
   return {
-    pricing: /\b(cena|koszt|wycena|budzet|ile|price|pricing|cost|budget|quote)\b/.test(normalized) ? 8 : 0,
-    privacy: /\b(rodo|gdpr|privacy|prywatnosc|dane|cookies|newsletter|zgoda)\b/.test(normalized) ? 8 : 0,
-    blog: /\b(blog|artykul|article|wpis|poradnik|case study|wiedza|know)\b/.test(normalized) ? 5 : 0,
-    service: /\b(usluga|oferta|service|offer|strona|sklep|ecommerce|marketplace|ai|saas)\b/.test(normalized) ? 4 : 0,
-    project: /\b(projekt|realizacja|portfolio|case|project|realization)\b/.test(normalized) ? 5 : 0,
-    faq: /\b(jak|czy|what|how|can|proces|process|czas|termin)\b/.test(normalized) ? 2 : 0,
+    // Bez domykającego \b — inaczej odmiana i liczba mnoga przechodzą bez boostu ("ceny", "kosztuje", "prices", "uslugi").
+    pricing: /\b(cen[aeyoiu]|cennik|koszt|wycen|budzet|ile|price|cost|budget|quote)/.test(normalized) ? 8 : 0,
+    privacy: /\b(rodo|gdpr|privacy|prywatnos|dane|cookie|newsletter|zgod)/.test(normalized) ? 8 : 0,
+    blog: /\b(blog|artykul|article|wpis|poradnik|case study|wiedz|know)/.test(normalized) ? 5 : 0,
+    service: /\b(uslug|ofert|service|offer|stron|sklep|ecommerce|marketplace|ai|saas)/.test(normalized) ? 4 : 0,
+    project: /\b(projekt|realizacj|portfolio|case|project)/.test(normalized) ? 5 : 0,
+    faq: /\b(jak|czy|what|how|can|proces|process|czas|termin)/.test(normalized) ? 2 : 0,
   };
 }
 
