@@ -5,6 +5,7 @@ import Image from 'next/image';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import SpotlightText from './SpotlightText';
 import BurnSpotlightText from './BurnSpotlightText';
+import BorderGlow from './BorderGlow';
 import { useLanguage } from '../../context/LanguageContext';
 import { localizedPath } from '../../lib/i18n-routing';
 import { translations } from '../../translations/translations';
@@ -251,20 +252,16 @@ const AboutNew: React.FC = () => {
           <motion.div
             ref={imageRef}
             style={{ y: imageY, scale: imageScale, willChange: 'transform' }}
-            className="relative aspect-[4/5] lg:sticky lg:top-32"
+            className="group relative aspect-[4/5] lg:sticky lg:top-32"
           >
-            <div className="absolute inset-0 overflow-hidden">
+            <BorderGlow animated>
               <NoiseRevealImage
                 src="/media/o_mnie.webp"
                 alt="Portrait of Arkadiusz Wawrzyniak, fullstack developer"
                 ariaLabel="Professional portrait showing the developer at work"
                 revealed={imageInView}
               />
-            </div>
-
-            <div className="absolute -top-4 -left-4 w-full h-full border border-teal-300/20" aria-hidden="true" />
-            <div className="absolute -top-2 -left-2 w-4 h-4 border-l-2 border-t-2 border-teal-300" aria-hidden="true" />
-            <div className="absolute -bottom-2 -right-2 w-4 h-4 border-r-2 border-b-2 border-teal-300" aria-hidden="true" />
+            </BorderGlow>
           </motion.div>
 
           <div className="lg:pt-16">

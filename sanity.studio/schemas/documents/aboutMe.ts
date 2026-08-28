@@ -352,6 +352,13 @@ export default {
       type: 'datetime',
       group: 'meta',
     },
+    {
+      name: 'updatedAt',
+      title: 'Content updated at',
+      type: 'datetime',
+      group: 'meta',
+      description: 'Optional. Set this only when you make a MEANINGFUL content update worth signalling to search engines. Leave empty and the automatic last-edit timestamp is used instead — but that one also bumps on typo fixes, so a manual date here gives you a truthful dateModified.',
+    },
   ],
   preview: {
     select: {

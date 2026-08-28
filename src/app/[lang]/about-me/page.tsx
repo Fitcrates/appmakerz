@@ -10,6 +10,7 @@ import { getAboutMe, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
+import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
 import { isLanguage, type Language } from '@/lib/language';
 import { getImageAlt } from '@/lib/image-alt';
 import {
@@ -198,12 +199,24 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
     description: intro || undefined,
   };
 
+  const webPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    '@id': absoluteUrl(localizedPath(language, '/about-me')),
+    url: absoluteUrl(localizedPath(language, '/about-me')),
+    inLanguage: language,
+    datePublished: getPublishedDate(about),
+    dateModified: getModifiedDate(about),
+    mainEntity: { '@id': absoluteUrl(localizedPath(language, '/about-me')) },
+  };
+
   return (
     <div className="min-h-screen bg-indigo-950">
       <NextHeader />
       <main className="-mb-px min-h-screen bg-indigo-950">
         <CyberPhilosophyLayout language={language} highlights={highlights} content={content} />
         <Script id="person-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <Script id="profilepage-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       </main>
       <div className="relative z-10 bg-indigo-950">
         <NextFooter />

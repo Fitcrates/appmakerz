@@ -12,12 +12,14 @@ import ChatWidget from '@/components/next/ChatWidget';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import SpotlightText from '@/components/new/SpotlightText';
 import ServiceDeliverablesNew from '@/components/new/ServiceDeliverablesNew';
+import ServiceModelsNew from '@/components/new/ServiceModelsNew';
 import ServiceProcessNew from '@/components/new/ServiceProcessNew';
 import HeroPulsePath from '@/components/new/HeroPulsePath';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getPostSummaries, getProjects, getServiceLanding, getServiceLandings, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
+import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
 import { getImageAlt } from '@/lib/image-alt';
@@ -27,7 +29,7 @@ import {
   SOCIAL_IMAGE_HEIGHT,
   SOCIAL_IMAGE_WIDTH,
 } from '@/lib/seo';
-import type { Post, Project, ServiceLanding } from '@/types/sanity.types';
+import type { Post, Project, ServiceLanding, ServiceModel } from '@/types/sanity.types';
 
 interface LocalizedServiceLandingPageProps {
   params: Promise<{ lang: string; slug: string }>;
@@ -175,6 +177,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
   const deliverables = getLocalizedArray<string>(landing.deliverables, language);
   const problems = getLocalizedArray<string>(landing.problems, language);
   const stats = getLocalizedArray<{ value: string; label: string }>(landing.stats, language);
+  const models = getLocalizedArray<ServiceModel>(landing.models, language);
   const processSteps = getLocalizedArray<string>(landing.processSteps, language);
   const faq = getLocalizedArray<{ question: string; answer: string }>(landing.faq, language);
   const richContent = getLocalizedArray<any>(landing.content, language);
@@ -268,6 +271,23 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
     ...(landing.city ? { areaServed: { '@type': 'City', name: landing.city } } : {}),
   };
 
+  const webPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': absoluteUrl(localizedPath(language, path)),
+    url: absoluteUrl(localizedPath(language, path)),
+    name: title,
+    description: getLocalizedText(landing.seo?.metaDescription, language, intro),
+    inLanguage: language,
+    datePublished: getPublishedDate(landing),
+    dateModified: getModifiedDate(landing),
+    isPartOf: {
+      '@type': 'WebSite',
+      url: absoluteUrl(localizedPath(language, '/')),
+      name: 'AppCrates',
+    },
+  };
+
   return (
     <>
       <NextHeader />
@@ -330,11 +350,11 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
         {stats.length > 0 ? (
           <section className="border-y border-white/10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-2 lg:grid-cols-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/10 border-x border-white/10">
                 {stats.map((stat: { value: string; label: string }, index: number) => (
                   <div
                     key={`stat-${index}`}
-                    className={`py-8 lg:py-10 px-6 ${index > 0 ? ' md:border-x border-white/10' : ''}`}
+                    className="bg-indigo-950 py-8 lg:py-10 px-6"
                   >
                     <p className="text-3xl sm:text-4xl font-light font-oxanium text-teal-300 notranslate">
                       {stat.value}
@@ -345,6 +365,10 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
               </div>
             </div>
           </section>
+        ) : null}
+
+        {models.length > 0 ? (
+          <ServiceModelsNew models={models} language={language} />
         ) : null}
 
         {problems.length > 0 ? (
@@ -613,6 +637,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
       <ChatWidget />
       <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="service-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      <Script id="webpage-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       {faqSchema ? <Script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}
     </>
   );

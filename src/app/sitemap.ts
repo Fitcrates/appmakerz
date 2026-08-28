@@ -3,6 +3,7 @@ import { getSitemapEntries } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { SUPPORTED_LANGUAGES } from '@/lib/language';
+import { getLatestModifiedDate, getModifiedDate } from '@/lib/content-dates';
 
 export const revalidate = 3600;
 
@@ -32,22 +33,35 @@ function localizedEntries(path: string, options: { changeFrequency: MetadataRout
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { posts, projects, serviceLandings } = await getSitemapEntries();
+  const { posts, projects, serviceLandings, aboutMe } = await getSitemapEntries();
+
+  // Static routes have no document of their own, so they inherit the freshness of
+  // whatever content they list. Without this they ship no <lastmod> at all.
+  const latestPost = getLatestModifiedDate(posts);
+  const latestOverall = getLatestModifiedDate([...posts, ...projects, ...serviceLandings]);
+  const staticLastModified: Record<string, string | undefined> = {
+    '/': latestOverall,
+    '/blog': latestPost,
+    '/about-me': getModifiedDate(aboutMe),
+  };
 
   return [
-    ...staticPages.flatMap((page) => localizedEntries(page.path, page)),
+    ...staticPages.flatMap((page) => localizedEntries(page.path, {
+      ...page,
+      lastModified: staticLastModified[page.path],
+    })),
     ...posts.flatMap((post) => localizedEntries(`/blog/${post.slug}`, {
-      lastModified: post._updatedAt || post.publishedAt,
+      lastModified: getModifiedDate(post),
       changeFrequency: 'monthly',
       priority: 0.7,
     })),
     ...projects.flatMap((project) => localizedEntries(`/project/${project.slug}`, {
-      lastModified: project._updatedAt || project.publishedAt,
+      lastModified: getModifiedDate(project),
       changeFrequency: 'monthly',
       priority: 0.7,
     })),
     ...serviceLandings.flatMap((service) => localizedEntries(`/uslugi/${service.slug}`, {
-      lastModified: service._updatedAt,
+      lastModified: getModifiedDate(service),
       changeFrequency: 'monthly',
       priority: 0.8,
     })),
