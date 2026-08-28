@@ -57,7 +57,7 @@ export default function ServiceProcessSteps({ steps, language }: ServiceProcessS
                     ) : null}
                   </div>
 
-                  <div className={isLast ? "pt-2" : "pt-2 pb-10 sm:pb-12"}>
+                  <div className={isLast ? "pt-2" : "pb-10 sm:pb-12"}>
                     <SpotlightText
                       as="p"
                       className="text-white/70 font-plex font-light text-lg sm:text-xl leading-relaxed group-hover:text-white/90 transition-colors duration-500"
