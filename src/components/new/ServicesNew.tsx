@@ -10,6 +10,7 @@ import {
 import { ArrowUpRight } from "lucide-react";
 import PrefetchLink from "@/components/next/PrefetchLink";
 import CrackImage from "./CrackImage";
+import BorderGlow from "./BorderGlow";
 import SpotlightText from "./SpotlightText";
 import BurnSpotlightText from "./BurnSpotlightText";
 import { useLanguage } from "../../context/LanguageContext";
@@ -239,40 +240,19 @@ const ServicesNew: React.FC = () => {
               <motion.div
                 ref={imageRef}
                 style={{ y: imageY, willChange: "transform" }}
-                className="relative w-full aspect-[3/4]"
+                className="group relative w-full aspect-[3/4]"
               >
-                <CrackImage
-                  src="/media/servicesgreek.webp"
-                  alt="Modern web development workspace showcasing professional services"
-                  className="w-full h-full"
-                  gridSize={4}
-                  cycleInterval={5000}
-                  transitionDuration={1.5}
-                  bleed={0.05}
-                />
-
-                <div
-                  className="absolute -top-4 -right-4 w-24 h-24 border border-teal-300/20"
-                  aria-hidden="true"
-                />
-                <div
-                  className="absolute -bottom-4 -left-4 w-32 h-32 border border-white/10"
-                  aria-hidden="true"
-                />
-
-                <motion.div
-                  className="absolute -right-8 top-1/4 w-2 h-16 bg-teal-300/30"
-                  aria-hidden="true"
-                  animate={{
-                    height: [64, 96, 64],
-                    opacity: [0.3, 0.5, 0.3],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
+                <BorderGlow animated>
+                  <CrackImage
+                    src="/media/servicesgreek.webp"
+                    alt="Modern web development workspace showcasing professional services"
+                    className="w-full h-full"
+                    gridSize={4}
+                    cycleInterval={5000}
+                    transitionDuration={1.5}
+                    bleed={0.05}
+                  />
+                </BorderGlow>
               </motion.div>
             </div>
           </div>

@@ -6,6 +6,7 @@ import NextFooter from '@/components/next/NextFooter';
 import BlogPostLocalizedContent from '@/components/next/BlogPostLocalizedContent';
 import { getPost, getPostSummaries, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
+import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
@@ -98,8 +99,8 @@ export async function generateMetadata({ params }: LocalizedBlogPostPageProps): 
       }],
       locale: language === 'pl' ? 'pl_PL' : 'en_US',
       alternateLocale: [language === 'pl' ? 'en_US' : 'pl_PL'],
-      publishedTime: post.publishedAt,
-      modifiedTime: post._updatedAt || post.publishedAt,
+      publishedTime: getPublishedDate(post),
+      modifiedTime: getModifiedDate(post),
     },
     twitter: {
       card: 'summary_large_image',
@@ -139,8 +140,8 @@ export default async function LocalizedBlogPostPage({ params }: LocalizedBlogPos
     headline: title,
     description,
     image: heroImageUrl,
-    datePublished: post.publishedAt,
-    dateModified: post._updatedAt || post.publishedAt,
+    datePublished: getPublishedDate(post),
+    dateModified: getModifiedDate(post),
     inLanguage: language,
     author: post.author ? {
       '@type': 'Person',

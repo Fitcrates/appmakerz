@@ -13,6 +13,7 @@ import { portableTextComponentsServer } from '@/components/next/PortableTextComp
 import { getProject, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
+import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
 import { localizedPath } from '@/lib/i18n-routing';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
 import { getImageAlt } from '@/lib/image-alt';
@@ -156,6 +157,25 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
     ],
   };
 
+  const creativeWorkSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    '@id': absoluteUrl(localizedPath(language, path)),
+    url: absoluteUrl(localizedPath(language, path)),
+    name: title,
+    description,
+    inLanguage: language,
+    datePublished: getPublishedDate(project),
+    dateModified: getModifiedDate(project),
+    ...(heroImageUrl ? { image: heroImageUrl } : {}),
+    ...(project.technologies?.length ? { keywords: project.technologies.join(', ') } : {}),
+    author: {
+      '@type': 'Organization',
+      name: 'AppCrates',
+      url: absoluteUrl(localizedPath(language, '/')),
+    },
+  };
+
   return (
     <>
       <NextHeader />
@@ -237,6 +257,7 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
       <NextFooter />
       <ChatWidget />
       <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <Script id="creativework-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }} />
     </>
   );
 }

@@ -170,6 +170,13 @@ export interface LocalizedFaq {
   pl?: LocalizedFaqItem[];
 }
 
+export interface ServiceModel {
+  label: string;
+  title: string;
+  audience: string;
+  points?: string[];
+}
+
 export interface ServiceLanding {
   _id: string;
   title: LocalizedText;
@@ -195,6 +202,10 @@ export interface ServiceLanding {
   stats?: {
     en?: Array<{ value: string; label: string }>;
     pl?: Array<{ value: string; label: string }>;
+  };
+  models?: {
+    en?: ServiceModel[];
+    pl?: ServiceModel[];
   };
   relatedServices?: ServiceLanding[];
   relatedProjects?: Project[];

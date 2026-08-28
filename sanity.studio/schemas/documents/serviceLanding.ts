@@ -383,6 +383,55 @@ export default {
       ],
     },
     {
+      name: 'models',
+      title: 'Delivery Models (optional fork)',
+      type: 'object',
+      group: 'content',
+      description: 'Optional. Use when one service splits into 2-3 delivery models (e.g. standalone marketplace vs. marketplace as an extra channel). Rendered as compact side-by-side cards. Leave empty to hide the section.',
+      fields: [
+        {
+          name: 'en',
+          title: 'English',
+          type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Generate 2 delivery models in {{language}} for service "{{title}}". Each needs a short label, a title, a one-line "for who", and 3 short bullet points.', aiOutput: 'array' },
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'label', title: 'Small label', type: 'string', validation: (Rule: any) => Rule.required() },
+                { name: 'title', title: 'Model name', type: 'string', validation: (Rule: any) => Rule.required() },
+                { name: 'audience', title: 'For who (one line)', type: 'string', validation: (Rule: any) => Rule.required() },
+                { name: 'points', title: 'Bullet points', type: 'array', of: [{ type: 'string' }], validation: (Rule: any) => Rule.max(4) },
+              ],
+              preview: { select: { title: 'title', subtitle: 'audience' } },
+            },
+          ],
+          validation: (Rule: any) => Rule.max(3),
+        },
+        {
+          name: 'pl',
+          title: 'Polish',
+          type: 'array',
+          components: { input: AIGeneratorInput },
+          options: { aiPrompt: 'Generate 2 delivery models in {{language}} for service "{{title}}". Each needs a short label, a title, a one-line "for who", and 3 short bullet points.', aiOutput: 'array' },
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'label', title: 'Small label', type: 'string', validation: (Rule: any) => Rule.required() },
+                { name: 'title', title: 'Model name', type: 'string', validation: (Rule: any) => Rule.required() },
+                { name: 'audience', title: 'For who (one line)', type: 'string', validation: (Rule: any) => Rule.required() },
+                { name: 'points', title: 'Bullet points', type: 'array', of: [{ type: 'string' }], validation: (Rule: any) => Rule.max(4) },
+              ],
+              preview: { select: { title: 'title', subtitle: 'audience' } },
+            },
+          ],
+          validation: (Rule: any) => Rule.max(3),
+        },
+      ],
+    },
+    {
       name: 'relatedServices',
       title: 'Related / Other Services',
       type: 'array',
@@ -500,6 +549,13 @@ export default {
       title: 'Published at',
       type: 'datetime',
       group: 'meta',
+    },
+    {
+      name: 'updatedAt',
+      title: 'Content updated at',
+      type: 'datetime',
+      group: 'meta',
+      description: 'Optional. Set this only when you make a MEANINGFUL content update worth signalling to search engines. Leave empty and the automatic last-edit timestamp is used instead — but that one also bumps on typo fixes, so a manual date here gives you a truthful dateModified.',
     },
   ],
   preview: {

@@ -205,6 +205,7 @@ export async function getPost(slug: string) {
       },
       mainImage,
       publishedAt,
+      updatedAt,
       body { en, pl },
       faq { en, pl },
       excerpt { en, pl },
@@ -380,6 +381,8 @@ export async function getProject(slug: string) {
       githubUrl,
       blogUrl,
       publishedAt,
+      updatedAt,
+      _updatedAt,
       seo {
         metaTitle { en, pl },
         metaDescription { en, pl },
@@ -398,6 +401,9 @@ export async function getServiceLanding(slug: string) {
   const landing = await fetchSanity<any>(
     `*[_type == "serviceLanding" && slug.current == $slug][0]{
       _id,
+      publishedAt,
+      updatedAt,
+      _updatedAt,
       title { en, pl },
       slug,
       serviceType,
@@ -414,6 +420,7 @@ export async function getServiceLanding(slug: string) {
       ctaLabel { en, pl },
       ctaSecondaryLabel { en, pl },
       stats { en, pl },
+      models { en, pl },
       relatedServices[]->{
         _id,
         title { en, pl },
@@ -516,6 +523,9 @@ export async function getAboutMe(slug: string = 'about-me') {
   return fetchSanity<any>(
     `*[_type == "aboutMe" && slug.current == $slug][0]{
       _id,
+      publishedAt,
+      updatedAt,
+      _updatedAt,
       title { en, pl },
       slug,
       eyebrow { en, pl },
@@ -584,28 +594,39 @@ export async function getAboutMe(slug: string = 'about-me') {
 }
 
 export async function getSitemapEntries() {
-  const [posts, projects, serviceLandings] = await Promise.all([
-    fetchSanity<Array<{ slug: string; publishedAt?: string; _updatedAt?: string }>>(`
+  const [posts, projects, serviceLandings, aboutMe] = await Promise.all([
+    fetchSanity<Array<{ slug: string; publishedAt?: string; updatedAt?: string; _updatedAt?: string }>>(`
       *[_type == "post" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(_updatedAt desc) {
         "slug": slug.current,
         publishedAt,
+        updatedAt,
         _updatedAt
       }
     `, {}, ['posts', 'sitemap']),
-    fetchSanity<Array<{ slug: string; publishedAt?: string; _updatedAt?: string }>>(`
+    fetchSanity<Array<{ slug: string; publishedAt?: string; updatedAt?: string; _updatedAt?: string }>>(`
       *[_type == "project" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(_updatedAt desc) {
         "slug": slug.current,
         publishedAt,
+        updatedAt,
         _updatedAt
       }
     `, {}, ['projects', 'sitemap']),
-    fetchSanity<Array<{ slug: string; _updatedAt?: string }>>(`
+    fetchSanity<Array<{ slug: string; publishedAt?: string; updatedAt?: string; _updatedAt?: string }>>(`
       *[_type == "serviceLanding" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(_updatedAt desc) {
         "slug": slug.current,
+        publishedAt,
+        updatedAt,
         _updatedAt
       }
     `, {}, ['service-landings', 'sitemap']),
+    fetchSanity<{ publishedAt?: string; updatedAt?: string; _updatedAt?: string } | null>(`
+      *[_type == "aboutMe" && slug.current == "about-me"][0] {
+        publishedAt,
+        updatedAt,
+        _updatedAt
+      }
+    `, {}, ['about-me', 'sitemap']),
   ]);
 
-  return { posts, projects, serviceLandings };
+  return { posts, projects, serviceLandings, aboutMe };
 }
