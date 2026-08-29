@@ -1,0 +1,182 @@
+/*
+ * Technology badge.
+ *
+ * Built as a two-cell tile (icon cell + label cell) rather than a pill, so it
+ * echoes the hairline-grid language used across the site instead of looking
+ * like a generic tag. The brand colour arrives via the --tech-color custom
+ * property set inline by the component.
+ */
+
+.badge {
+  --tech-color: rgb(94 234 212);
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.025);
+  color: rgba(255, 255, 255, 0.72);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    border-color 300ms ease,
+    background-color 300ms ease,
+    color 300ms ease,
+    transform 300ms ease;
+}
+
+.iconCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background-color 300ms ease, border-color 300ms ease;
+}
+
+.icon {
+  display: block;
+  background-color: rgba(255, 255, 255, 0.45);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  transition: background-color 300ms ease;
+}
+
+.monogram {
+  font-family: 'Oxanium', system-ui, sans-serif;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 300ms ease;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+/* Colour the icon at rest - used in the grouped tech stack section, where the
+   badges are few per row and the colour reads as a legend, not as noise. */
+.toneAlways .icon {
+  background-color: var(--tech-color);
+  opacity: 0.85;
+}
+
+.toneAlways .monogram {
+  color: var(--tech-color);
+  opacity: 0.85;
+}
+
+/* Interactive states. Applied on hover and focus so keyboard users get them
+   too, and mirrored on touch via the group hover of the parent list. */
+.badge:hover,
+.badge:focus-visible {
+  border-color: color-mix(in srgb, var(--tech-color) 50%, transparent);
+  background-color: color-mix(in srgb, var(--tech-color) 7%, transparent);
+  color: #ffffff;
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.badge:hover .iconCell,
+.badge:focus-visible .iconCell {
+  background-color: color-mix(in srgb, var(--tech-color) 12%, transparent);
+  border-right-color: color-mix(in srgb, var(--tech-color) 35%, transparent);
+}
+
+.badge:hover .icon,
+.badge:focus-visible .icon {
+  background-color: var(--tech-color);
+  opacity: 1;
+}
+
+.badge:hover .monogram,
+.badge:focus-visible .monogram {
+  color: var(--tech-color);
+  opacity: 1;
+}
+
+/* Sizes */
+.sm {
+  height: 1.75rem;
+  font-size: 0.75rem;
+}
+
+.sm .iconCell {
+  width: 1.625rem;
+}
+
+.sm .icon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.sm .monogram {
+  font-size: 0.6875rem;
+}
+
+.sm .label {
+  padding: 0 0.625rem;
+}
+
+.md {
+  height: 2.25rem;
+  font-size: 0.8125rem;
+}
+
+.md .iconCell {
+  width: 2.125rem;
+}
+
+.md .icon {
+  width: 0.9375rem;
+  height: 0.9375rem;
+}
+
+.md .monogram {
+  font-size: 0.8125rem;
+}
+
+.md .label {
+  padding: 0 0.875rem;
+}
+
+/* Overflow counter shown when a list is capped. */
+.more {
+  display: inline-flex;
+  align-items: center;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  line-height: 1;
+  text-decoration: none;
+  transition: color 300ms ease, border-color 300ms ease;
+}
+
+.more:hover,
+.more:focus-visible {
+  color: rgb(94 234 212);
+  border-color: rgba(94, 234, 212, 0.4);
+  outline: none;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    transition: none;
+  }
+
+  .badge:hover,
+  .badge:focus-visible {
+    transform: none;
+  }
+}

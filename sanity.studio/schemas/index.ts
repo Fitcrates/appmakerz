@@ -10,6 +10,7 @@ import pages from './documents/pages';
 import serviceLanding from './documents/serviceLanding';
 import aboutMe from './documents/aboutMe';
 import category from './documents/category';
+import { projectSectionTypes } from './objects/project/sections';
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // Documents
@@ -25,4 +26,6 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   blockContent,
   blogTable,
   gallery,
+  // Project page sections
+  ...(projectSectionTypes as unknown as SchemaTypeDefinition[]),
 ];

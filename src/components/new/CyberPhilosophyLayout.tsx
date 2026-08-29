@@ -5,7 +5,6 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Image from 'next/image';
 import PrefetchLink from '@/components/next/PrefetchLink';
-import FloatingLines from '@/components/new/FloatingLines';
 import PhilosophyProcess from '@/components/new/PhilosophyProcess';
 import PhilosophyTiltCard from '@/components/new/PhilosophyTiltCard';
 import SpotlightText from '@/components/new/SpotlightText';
@@ -59,11 +58,6 @@ export interface CyberPhilosophyContent {
     highlights?: Highlight[];
     primaryButton?: string;
     secondaryButton?: string;
-  };
-  backgrounds?: {
-    hero?: string;
-    process?: string;
-    beyondCode?: string;
   };
 }
 
@@ -120,21 +114,6 @@ const defaultFounderParagraphs = [
   'Today I use technology to solve business problems with the same mindset that guided me from the beginning:',
 ];
 
-const defaultBackgrounds = {
-  hero: '/media/about/ChatGPT Image 17 cze 2026, 11_06_48.webp',
-  process: '/media/about/ChatGPT Image 17 cze 2026, 11_06_55.webp',
-  beyondCode: '/media/about/ChatGPT Image 17 cze 2026, 11_07_28.png',
-};
-
-function SectionBackdrop({ image }: { image: string }) {
-  return (
-    <>
-      <div className="absolute inset-0 bg-fixed bg-center bg-cover opacity-[0.18]" style={{ backgroundImage: `url('${image}')` }} />
-      <div className="absolute inset-0 bg-indigo-950/40 backdrop-blur-[1px]" />
-    </>
-  );
-}
-
 function SectionHeading({ eyebrow, title, accent }: { eyebrow: string; title: string; accent: string }) {
   return (
     <div className="cyber-reveal mx-auto mb-12 max-w-3xl text-center md:mb-16">
@@ -149,25 +128,6 @@ function SectionHeading({ eyebrow, title, accent }: { eyebrow: string; title: st
           {accent}
         </SpotlightText>
       </h2>
-    </div>
-  );
-}
-
-function FixedLightRibbon() {
-  return (
-    <div className="fixed inset-0 z-[1] pointer-events-none opacity-[0.54]">
-      <FloatingLines
-        enabledWaves={['middle']}
-        lineCount={4}
-        lineDistance={12}
-        bendRadius={12}
-        bendStrength={-0.9}
-        interactive={false}
-        parallax={false}
-        animationSpeed={0.42}
-        linesGradient={['#5EEAD4', '#6D5DF5', '#5EEAD4']}
-        mixBlendMode="screen"
-      />
     </div>
   );
 }
@@ -303,11 +263,6 @@ export default function CyberPhilosophyLayout({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const hero = content?.hero;
-  const backgrounds = {
-    hero: content?.backgrounds?.hero || defaultBackgrounds.hero,
-    process: content?.backgrounds?.process || defaultBackgrounds.process,
-    beyondCode: content?.backgrounds?.beyondCode || defaultBackgrounds.beyondCode,
-  };
   const principleCards = content?.principlesSection?.cards?.length ? content.principlesSection.cards : principles;
   const beyondCodeCards = content?.beyondCodeSection?.cards?.length ? content.beyondCodeSection.cards : beyondCode;
   const ctaHighlights = content?.ctaSection?.highlights?.length ? content.ctaSection.highlights : highlights;
@@ -344,17 +299,8 @@ export default function CyberPhilosophyLayout({
       className="relative min-h-screen overflow-hidden bg-indigo-950 text-white selection:bg-teal-300/20 selection:text-teal-100"
     >
    
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(94,234,212,0.12),transparent_38%),linear-gradient(180deg,rgba(8,11,34,0.72),#090c24_62%,#08091d)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(94,234,212,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(94,234,212,0.03)_1px,transparent_1px)] bg-[size:80px_80px] opacity-30" />
-      </div>
-
-      <FixedLightRibbon />
-
-      <div className="relative z-10">
-        <section className="relative flex min-h-[calc(100vh-72px)] flex-col items-center justify-center overflow-hidden px-4 pb-16 pt-28 sm:px-6 lg:px-8">
-          <SectionBackdrop image={backgrounds.hero} />
-
+      <div>
+        <section className="relative flex min-h-[calc(100vh-72px)] flex-col items-center justify-center overflow-hidden bg-indigo-950 px-4 pb-16 pt-28 sm:px-6 lg:px-8">
           <div className="cyber-reveal relative z-10 mx-auto max-w-5xl text-center">
             <SpotlightText as="p" className="mb-5 font-plex text-xs uppercase tracking-[0.38em] text-teal-300/60" glowSize={100}>
               {hero?.eyebrow || 'Founder operating system'}
@@ -381,8 +327,7 @@ export default function CyberPhilosophyLayout({
           <FounderStatement content={content?.founderStatement} />
         </section>
 
-        <section className="relative overflow-hidden border-y border-teal-300/10 px-4 py-20 sm:px-6 md:py-24 lg:px-8">
-          <SectionBackdrop image={backgrounds.hero} />
+        <section className="relative overflow-hidden border-y border-white/10 bg-indigo-950 px-4 py-20 sm:px-6 md:py-24 lg:px-8">
           <div className="relative z-10 mx-auto max-w-7xl">
             <SectionHeading
               eyebrow={content?.principlesSection?.eyebrow || 'How I think'}
@@ -404,8 +349,7 @@ export default function CyberPhilosophyLayout({
           </div>
         </section>
 
-        <section className="relative overflow-hidden border-y border-teal-300/10">
-          <SectionBackdrop image={backgrounds.process} />
+        <section className="relative overflow-hidden border-y border-white/10 bg-indigo-950">
           <PhilosophyProcess
             eyebrow={content?.processSection?.eyebrow}
             title={content?.processSection?.title}
@@ -414,8 +358,7 @@ export default function CyberPhilosophyLayout({
           />
         </section>
 
-        <section className="relative overflow-hidden border-y border-teal-300/10 px-4 py-20 sm:px-6 md:py-24 lg:px-8">
-          <SectionBackdrop image={backgrounds.beyondCode} />
+        <section className="relative overflow-hidden border-y border-white/10 bg-indigo-950 px-4 py-20 sm:px-6 md:py-24 lg:px-8">
           <div className="relative z-10 mx-auto max-w-7xl">
             <SectionHeading
               eyebrow={content?.beyondCodeSection?.eyebrow || 'Human inputs'}
@@ -453,9 +396,7 @@ export default function CyberPhilosophyLayout({
           </div>
         </section>
 
-        <section className="relative overflow-hidden px-4 py-24 sm:px-6 md:py-32 lg:px-8">
-          <SectionBackdrop image={backgrounds.hero} />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-40 bg-gradient-to-t from-indigo-950 via-transparent to-transparent" />
+        <section className="relative overflow-hidden bg-indigo-950 px-4 py-24 sm:px-6 md:py-32 lg:px-8">
           <div className="cyber-reveal relative z-10 mx-auto max-w-4xl text-center">
             <div className="font-oxanium text-4xl font-light leading-tight text-white sm:text-5xl lg:text-6xl">
               {ctaHeadlineLines.map((line) => (

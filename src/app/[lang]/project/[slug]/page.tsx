@@ -1,17 +1,17 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
-import { PortableText } from '@portabletext/react';
-import { ArrowLeft, ArrowUpRight, Feather, Github, Globe } from 'lucide-react';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
-import BurnSpotlightText from '@/components/new/BurnSpotlightText';
-import PrefetchLink from '@/components/next/PrefetchLink';
 import ChatWidget from '@/components/next/ChatWidget';
-import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
-import { getProject, getSitemapEntries, urlFor } from '@/lib/sanity.server';
-import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
+import ProjectHero from '@/components/project/ProjectHero';
+import ProjectFactBar from '@/components/project/ProjectFactBar';
+import ProjectToc from '@/components/project/ProjectToc';
+import ProjectSections from '@/components/project/ProjectSections';
+import ProjectNextPrev from '@/components/project/ProjectNextPrev';
+import { buildHeadingAnchors, buildToc, normalizeSections } from '@/components/project/sectionModel';
+import { getAdjacentProjects, getProject, getSitemapEntries, urlFor } from '@/lib/sanity.server';
+import { getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
 import { localizedPath } from '@/lib/i18n-routing';
@@ -126,11 +126,37 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
     notFound();
   }
 
+  const adjacent = await getAdjacentProjects(slug).catch(() => ({ previous: null, next: null }));
+
   const title = getLocalizedText(project.title, language);
   const description = getLocalizedText(project.description, language);
-  const body = getLocalizedArray<any>(project.body, language);
-  const heroImageUrl = project.mainImage ? urlFor(project.mainImage).width(1200).height(630).auto('format').fit('crop').url() : '';
+  const heroImageUrl = project.mainImage
+    ? urlFor(project.mainImage).width(1920).auto('format').quality(90).fit('max').url()
+    : '';
   const path = `/project/${project.slug.current}`;
+
+  // Authored sections when they exist, the legacy `body` wrapped in one rich
+  // text section when they do not - both take the same rendering path.
+  const sections = normalizeSections(project, language);
+  const toc = buildToc(sections, language);
+  const headingAnchors = buildHeadingAnchors(sections, language);
+  const stackSection = sections.find((section) => section._type === 'projectTechStack');
+  const hasAuthoredCta = sections.some((section) => section._type === 'projectCtaBand');
+
+  const faqItems = sections
+    .filter((section) => section._type === 'projectFaq')
+    .flatMap((section) => (Array.isArray(section.items) ? section.items : []))
+    .map((item: unknown) => {
+      const faqItem = item && typeof item === 'object'
+        ? item as { question?: unknown; answer?: unknown }
+        : {};
+
+      return {
+        question: getLocalizedText(faqItem.question, language),
+        answer: getLocalizedText(faqItem.answer, language),
+      };
+    })
+    .filter((item) => item.question && item.answer);
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -145,7 +171,7 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
       {
         '@type': 'ListItem',
         position: 2,
-        name: translations[language].projectDetails.backToProjects || 'Projects',
+        name: t.projects,
         item: absoluteUrl(localizedPath(language, '/#projects')),
       },
       {
@@ -176,88 +202,83 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
     },
   };
 
+  const faqSchema = faqItems.length
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        inLanguage: language,
+        mainEntity: faqItems.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: { '@type': 'Answer', text: item.answer },
+        })),
+      }
+    : null;
+
   return (
     <>
       <NextHeader />
 
-      <main className="min-h-screen bg-indigo-950 pt-16 lg:pt-24 pb-24">
-        {heroImageUrl ? (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 lg:mb-16">
-            <div className="relative h-[38vh] sm:h-[44vh] lg:h-[50vh] overflow-hidden border border-white/10">
-              <Image src={heroImageUrl} alt={getImageAlt(project.mainImage, title)} unoptimized fill priority sizes="(max-width: 768px) 100vw, 1200px" className="object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/70 via-indigo-950/20 to-transparent pointer-events-none" />
+      <main className="min-h-screen bg-indigo-950">
+        <ProjectHero
+          project={project}
+          language={language}
+          title={title}
+          description={description}
+          heroImageUrl={heroImageUrl}
+          stackAnchor={stackSection?.anchor}
+          labels={{
+            home: translations[language].navigation.home,
+            projects: t.projects,
+            liveDemo: t.liveDemo,
+            sourceCode: t.sourceCode,
+            blogPost: t.blogPost,
+            moreTech: (count: number) => `+${count} ${t.moreTech}`,
+          }}
+        />
+
+        <ProjectFactBar project={project} language={language} />
+
+        <ProjectToc entries={toc} label={t.onThisPage} />
+
+        <ProjectSections sections={sections} headingAnchors={headingAnchors} language={language} />
+
+        {!hasAuthoredCta ? (
+          <section className="border-t border-white/10 bg-teal-300/[0.035] py-16 lg:py-24">
+            <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+              <p className="font-oxanium text-2xl font-light leading-tight text-white sm:text-3xl lg:text-4xl">
+                {t.closingTitle}
+              </p>
+              <p className="mx-auto mt-5 max-w-2xl font-plex text-lg font-light leading-relaxed text-white/65">
+                {t.closingText}
+              </p>
+              <a
+                href={localizedPath(language, '/#contact')}
+                className="group relative mt-10 inline-flex min-w-[230px] items-center justify-center overflow-hidden bg-teal-300 px-10 py-5 text-center font-normal text-indigo-950 transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                aria-label={t.contactCta}
+              >
+                <span className="relative z-10">{t.contactCta}</span>
+                <span className="absolute inset-0 -translate-x-full bg-white transition-transform duration-500 group-hover:translate-x-0" />
+              </a>
             </div>
-          </div>
+          </section>
         ) : null}
 
-        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 text-sm text-white/70 mb-8 overflow-hidden font-plex">
-            <PrefetchLink href={localizedPath(language, '/')} className="hover:text-teal-300 transition-colors">{translations[language].navigation.home}</PrefetchLink>
-            <span className="text-white/30">/</span>
-            <PrefetchLink href={localizedPath(language, '/#projects')} className="hover:text-teal-300 transition-colors">{language === 'pl' ? 'Projekty' : 'Projects'}</PrefetchLink>
-            <span className="text-white/30">/</span>
-            <span className="text-white/60 truncate max-w-[250px] sm:max-w-none">{title}</span>
-          </div>
-
-          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white  leading-tight mb-8">
-            <BurnSpotlightText as="span" className="font-inherit text-inherit" glowSize={150}>
-              {title}
-            </BurnSpotlightText>
-          </h1>
-
-          {project.technologies?.length ? (
-            <div className="flex flex-wrap gap-3 mb-12">
-              {project.technologies.map((tech: string) => (
-                <span key={tech} className="px-4 py-2 bg-white/5 border border-white/10 text-white/70  text-sm">{tech}</span>
-              ))}
-            </div>
-          ) : null}
-
-          <div className="flex flex-wrap gap-4 mb-16 pb-12 border-b border-white/10">
-            {project.projectUrl ? (
-              <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-3 px-6 py-3 bg-teal-300 text-indigo-950  font-normal hover:bg-teal-200 transition-colors">
-                <Globe className="w-4 h-4" />
-                {t.liveDemo}
-                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
-            ) : null}
-            {project.githubUrl ? (
-              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-3 px-6 py-3 border border-white/20 text-white  hover:border-teal-300 hover:text-teal-300 transition-colors">
-                <Github className="w-4 h-4" />
-                {t.sourceCode}
-                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
-            ) : null}
-            {project.blogUrl ? (
-              <a href={project.blogUrl} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-3 px-6 py-3 border border-white/20 text-white  hover:border-teal-300 hover:text-teal-300 transition-colors">
-                <Feather className="w-4 h-4" />
-                {t.blogPost}
-                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
-            ) : null}
-          </div>
-
-          <article className="prose prose-lg prose-invert max-w-none prose-headings:font-light prose-headings:text-white prose-h1:text-teal-300 prose-h2:text-teal-300 prose-h3:text-white prose-h4:text-white prose-p:text-white/60 prose-p:leading-relaxed prose-a:text-teal-300 prose-a:no-underline hover:prose-a:text-teal-200 prose-strong:text-white prose-strong:font-medium prose-li:text-white/60 prose-li:marker:text-teal-300 prose-ul:text-white/60 prose-ol:text-white/60 prose-code:text-teal-300 prose-code:bg-white/5 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-white/5 prose-pre:border prose-pre:border-white/10 prose-blockquote:border-l-teal-300 prose-blockquote:text-white/50 prose-img:rounded-lg prose-img:border prose-img:border-white/10">
-            {body.length ? <PortableText value={body} components={portableTextComponentsServer} /> : <p>{description}</p>}
-          </article>
-
-          <div className="mt-16 flex justify-center">
-            <a
-              href={localizedPath(language, '/#contact')}
-              className="group relative min-w-[230px] overflow-hidden bg-teal-300 px-10 py-5 text-center font-normal text-indigo-950 transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
-              aria-label={t.contactCta}
-            >
-              <span className="relative z-10">{t.contactCta}</span>
-              <div className="absolute inset-0 -translate-x-full bg-white transition-transform duration-500 group-hover:translate-x-0" />
-            </a>
-          </div>
-        </section>
+        <ProjectNextPrev
+          previous={adjacent?.previous}
+          next={adjacent?.next}
+          language={language}
+          labels={{ previous: t.previousProject, next: t.nextProject, all: t.allProjects }}
+        />
       </main>
 
       <NextFooter />
       <ChatWidget />
       <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="creativework-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }} />
+      {faqSchema ? (
+        <Script id="project-faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      ) : null}
     </>
   );
 }

@@ -1,5 +1,7 @@
 import { AIGeneratorInput } from '../../components/AIGeneratorInput';
 import { AIWholePostGenerator } from '../../components/AIWholePostGenerator';
+import { projectSectionTypeNames } from '../objects/project/sections';
+import { localizedString } from '../objects/project/shared';
 
 export default {
   name: 'project',
@@ -7,6 +9,7 @@ export default {
   type: 'document',
   groups: [
     { name: 'content', title: 'Content', default: true },
+    { name: 'sections', title: 'Page Sections' },
     { name: 'links', title: 'Links' },
     { name: 'seo', title: 'SEO' },
     { name: 'meta', title: 'Metadata' },
@@ -181,10 +184,35 @@ export default {
       title: 'Technologies',
       type: 'array',
       group: 'content',
+      description: 'Shown in the hero. The first 8 are rendered inline, the rest collapse behind a counter - use the Tech Stack section for the full, grouped list.',
       of: [{type: 'string'}],
       options: {
         layout: 'tags',
       },
+    },
+    {
+      name: 'facts',
+      title: 'Fact Bar',
+      type: 'array',
+      group: 'content',
+      description: 'The strip under the hero: role, client, industry, timeline, status. Two to five entries work best - it is what gives short case studies visual weight.',
+      validation: (Rule: any) => Rule.max(6),
+      of: [
+        {
+          type: 'object',
+          fields: [
+            localizedString('label', 'Label', { max: 30 }),
+            localizedString('value', 'Value', { max: 60 }),
+          ],
+          preview: {
+            select: { title: 'value.pl', titleEn: 'value.en', subtitle: 'label.pl' },
+            prepare: (selection: any) => ({
+              title: selection.title || selection.titleEn || 'Fact',
+              subtitle: selection.subtitle,
+            }),
+          },
+        },
+      ],
     },
     {
       name: 'publishedAt',
@@ -218,10 +246,20 @@ export default {
       group: 'links',
     },
     {
+      name: 'sections',
+      title: 'Page Sections',
+      type: 'array',
+      group: 'sections',
+      description: 'Build the page from blocks. Everything is optional and repeatable - use as many Rich Text sections as you need instead of one long body. When this is empty the legacy Body field is rendered instead.',
+      of: projectSectionTypeNames.map((type) => ({ type })),
+    },
+    {
       name: 'body',
-      title: 'Body',
+      title: 'Body (legacy)',
       type: 'object',
       group: 'content',
+      description: 'Kept for projects written before Page Sections existed. It is rendered as a single rich text section when Page Sections is empty.',
+      options: { collapsible: true, collapsed: true },
       fields: [
         {
           name: 'en',

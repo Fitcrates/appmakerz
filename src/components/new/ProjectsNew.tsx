@@ -142,7 +142,7 @@ const ProjectRow = memo<{ project: Project; index: number; language: 'en' | 'pl'
           </div>
 
           <div className="absolute right-24 top-1/2 -translate-y-1/2 w-[480px] h-[336px] pointer-events-none hidden lg:block z-[100] opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-300">
-            <div className="w-full h-full bg-indigo-900 border border-teal-300/30 overflow-hidden shadow-2xl">
+            <div className="w-full h-full bg-indigo-950 border border-teal-300/30 overflow-hidden shadow-2xl">
               <img
                 src={project.image}
                 alt={`Preview of ${project.title} project`}
