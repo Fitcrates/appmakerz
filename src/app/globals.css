@@ -22,7 +22,10 @@
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  white-space: pre-wrap;
+  /* pre-line, not pre-wrap: the base text node collapses whitespace runs, so the
+     attr() overlay has to collapse them too or the two layers wrap differently.
+     Explicit newlines (from <br> in the source) still break. */
+  white-space: pre-line;
   color: transparent;
   background: var(--spotlight-color, #5eead4);
   background-clip: text;
