@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
 import ChatWidget from '@/components/next/ChatWidget';
@@ -28,10 +29,10 @@ type LocalizedSanityCard = {
   _key?: string;
   title?: string;
   description?: string;
-  image?: any;
+  image?: SanityImageSource;
 };
 
-function getSanityImageUrl(image: any, width: number = 1800): string | undefined {
+function getSanityImageUrl(image: SanityImageSource | undefined, width: number = 1800): string | undefined {
   return image ? urlFor(image).width(width).auto('format').url() : undefined;
 }
 
@@ -181,11 +182,6 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
       ),
       primaryButton: getLocalizedText(about.ctaSection?.primaryButton, language),
       secondaryButton: getLocalizedText(about.ctaSection?.secondaryButton, language),
-    },
-    backgrounds: {
-      hero: getSanityImageUrl(about.backgrounds?.hero, 1800),
-      process: getSanityImageUrl(about.backgrounds?.process, 1800),
-      beyondCode: getSanityImageUrl(about.backgrounds?.beyondCode, 1800),
     },
   };
 

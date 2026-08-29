@@ -388,6 +388,14 @@ export const translations = {
       sourceCode: "Source Code",
       blogPost: "Blog Post",
       contactCta: "Contact me ",
+      projects: "Projects",
+      onThisPage: "On this page",
+      previousProject: "Previous project",
+      nextProject: "Next project",
+      allProjects: "Project navigation",
+      moreTech: "more",
+      closingTitle: "Interested in something similar?",
+      closingText: "Tell me what you need and you will get a concrete scope, timeline and price.",
     },
 
     // Newsletter Modal
@@ -814,6 +822,14 @@ export const translations = {
       sourceCode: "Kod źródłowy",
       blogPost: "Post na blogu",
       contactCta: "Skontaktuj się",
+      projects: "Projekty",
+      onThisPage: "Na tej stronie",
+      previousProject: "Poprzedni projekt",
+      nextProject: "Następny projekt",
+      allProjects: "Nawigacja po projektach",
+      moreTech: "więcej",
+      closingTitle: "Potrzebujesz czegoś podobnego?",
+      closingText: "Napisz, czego potrzebujesz — dostaniesz konkretny zakres, termin i cenę.",
     },
 
     // Newsletter Modal

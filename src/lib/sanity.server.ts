@@ -374,7 +374,11 @@ export async function getProject(slug: string) {
       title,
       slug,
       description,
+      category,
+      year,
       mainImage,
+      sections,
+      facts,
       body,
       technologies,
       projectUrl,
@@ -394,6 +398,23 @@ export async function getProject(slug: string) {
     }`,
     { slug },
     ['project', slug]
+  );
+}
+
+/**
+ * Previous / next project in publication order, used by the footer navigation
+ * on the project page. Returns nulls at the ends of the list.
+ */
+export async function getAdjacentProjects(slug: string) {
+  return fetchSanity<{ previous: any; next: any }>(
+    `{
+      "previous": *[_type == "project" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true) && slug.current != $slug && publishedAt < *[_type == "project" && slug.current == $slug][0].publishedAt]
+        | order(publishedAt desc)[0]{ _id, title, slug, category, year, mainImage },
+      "next": *[_type == "project" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true) && slug.current != $slug && publishedAt > *[_type == "project" && slug.current == $slug][0].publishedAt]
+        | order(publishedAt asc)[0]{ _id, title, slug, category, year, mainImage }
+    }`,
+    { slug },
+    ['projects', 'project', slug]
   );
 }
 
