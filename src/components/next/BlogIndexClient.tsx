@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ArrowUpRight, Search } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import PrefetchLink from '@/components/next/PrefetchLink';
+import SearchBar from '@/components/next/SearchBar';
 import { useLanguage } from '@/context/LanguageContext';
 import { urlFor } from '@/lib/sanity.image';
 import { getLocalizedText, getLocalizedArray } from '@/lib/localize';
@@ -179,20 +180,17 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
         </div>
 
         {/* SEARCH INPUT */}
-        <div className="group relative w-full flex-shrink-0 border-b border-white/15 lg:w-72">
-          <Search className="absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-white/30 transition-colors duration-300 group-focus-within:text-teal-300" />
-          <input
-            type="text"
-            placeholder={t.search || 'Search posts...'}
-            value={searchQuery}
-            onChange={(event) => {
-              setSearchQuery(event.target.value);
-              setCurrentPage(1);
-            }}
-            className="w-full bg-transparent py-2 pl-7 pr-2 text-sm text-white placeholder:text-white/30 outline-none"
-          />
-          <div className="absolute -bottom-[1px] left-0 h-[2px] w-0 bg-teal-300 shadow-[0_0_10px_rgba(94,234,212,0.5)] transition-all duration-500 ease-out group-focus-within:w-full" />
-        </div>
+        <SearchBar
+          id="blog-search"
+          label={t.search || 'Search posts'}
+          placeholder={t.search || 'Search posts...'}
+          value={searchQuery}
+          onValueChange={(value) => {
+            setSearchQuery(value);
+            setCurrentPage(1);
+          }}
+          className="lg:w-72"
+        />
       </div>
 
       <div className={`grid gap-10 xl:gap-12 ${promotedPosts.length ? 'lg:grid-cols-[minmax(0,1fr)_18rem]' : ''}`}>

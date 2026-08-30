@@ -9,8 +9,9 @@ import { localizedPath } from '../../lib/i18n-routing';
 import { translations } from '../../translations/translations';
 import { trackContactClick } from '../../utils/gtm';
 
-const getFooterNavItems = (t: typeof translations.en.nav) => [
+const getFooterNavItems = (t: typeof translations.en.nav, marketplaceGuideLabel: string) => [
   { name: t.home, href: '/#hero' },
+  { name: marketplaceGuideLabel, href: '/marketplace-guide' },
   { name: t.about, href: '/#about' },
   { name: t.projects, href: '/#projects' },
   { name: t.services, href: '/#services' },
@@ -70,7 +71,7 @@ const FooterNew: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language].footer;
   const navT = translations[language].nav;
-  const footerNavItems = getFooterNavItems(navT).map((item) => ({
+  const footerNavItems = getFooterNavItems(navT, t.links.marketplaceGuide).map((item) => ({
     ...item,
     href: localizedPath(language, item.href),
   }));

@@ -1,0 +1,135 @@
+{
+  "reviewedAt": "2026-08-30",
+  "chapters": [
+    {
+      "id": "0",
+      "slug": "getting-started",
+      "order": 0
+    },
+    {
+      "id": "1",
+      "slug": "operating-model",
+      "order": 1
+    },
+    {
+      "id": "2",
+      "slug": "build-plan",
+      "order": 2
+    },
+    {
+      "id": "3",
+      "slug": "responsibility-matrix",
+      "order": 3
+    },
+    {
+      "id": "4",
+      "slug": "seller-onboarding",
+      "order": 4
+    },
+    {
+      "id": "5",
+      "slug": "product-listing",
+      "order": 5
+    },
+    {
+      "id": "6",
+      "slug": "gpsr-product-safety",
+      "order": 6
+    },
+    {
+      "id": "7",
+      "slug": "category-gates",
+      "order": 7
+    },
+    {
+      "id": "8",
+      "slug": "bdo-packaging-epr",
+      "order": 8
+    },
+    {
+      "id": "9",
+      "slug": "consumer-law",
+      "order": 9
+    },
+    {
+      "id": "10",
+      "slug": "pricing-promotions-ranking-reviews",
+      "order": 10
+    },
+    {
+      "id": "11",
+      "slug": "payments-payouts-vat",
+      "order": 11
+    },
+    {
+      "id": "12",
+      "slug": "gdpr-data-protection",
+      "order": 12
+    },
+    {
+      "id": "13",
+      "slug": "dsa-moderation",
+      "order": 13
+    },
+    {
+      "id": "14",
+      "slug": "p2b-seller-rules",
+      "order": 14
+    },
+    {
+      "id": "15",
+      "slug": "dac7-reporting",
+      "order": 15
+    },
+    {
+      "id": "16",
+      "slug": "ecommerce-accessibility",
+      "order": 16
+    },
+    {
+      "id": "17",
+      "slug": "cybersecurity-nis2",
+      "order": 17
+    },
+    {
+      "id": "18",
+      "slug": "data-retention",
+      "order": 18
+    },
+    {
+      "id": "19",
+      "slug": "operating-calendar",
+      "order": 19
+    },
+    {
+      "id": "20",
+      "slug": "business-models",
+      "order": 20
+    },
+    {
+      "id": "21",
+      "slug": "documents-and-procedures",
+      "order": 21
+    },
+    {
+      "id": "22",
+      "slug": "launch-checklist",
+      "order": 22
+    },
+    {
+      "id": "23",
+      "slug": "common-mistakes",
+      "order": 23
+    },
+    {
+      "id": "24",
+      "slug": "sources-and-updates",
+      "order": 24
+    },
+    {
+      "id": "legal",
+      "slug": "legal-notice",
+      "order": 25
+    }
+  ]
+}

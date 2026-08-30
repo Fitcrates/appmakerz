@@ -7,6 +7,7 @@ import pricingConfig from '@/data/pricing-config.json';
 import { getAboutMe, getPostSummaries, getProjects, getServiceLandings } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import type { Language } from '@/lib/language';
+import { getMarketplaceGuide, type GuideBlock } from '@/lib/marketplace-guide';
 
 type LocalizedString = string | { en?: string; pl?: string };
 
@@ -38,7 +39,7 @@ interface ContextChunk {
   id: string;
   title: string;
   content: string;
-  category: 'core' | 'faq' | 'privacy' | 'pricing' | 'knowledge' | 'service' | 'project' | 'blog' | 'about';
+  category: 'core' | 'faq' | 'privacy' | 'pricing' | 'knowledge' | 'guide' | 'service' | 'project' | 'blog' | 'about';
   keywords: string[];
   priority?: number;
 }
@@ -151,6 +152,86 @@ function buildKnowledgeChunks(raw: string): ContextChunk[] {
     .filter((chunk): chunk is ContextChunk => Boolean(chunk));
 }
 
+function guideBlockText(block: GuideBlock): string {
+  if (block.type === 'paragraph' || block.type === 'list-item') {
+    return block.segments.map((segment) => segment.text).join('');
+  }
+
+  if (block.type === 'callout') {
+    return `${block.label ? `${block.label}: ` : ''}${block.text}`;
+  }
+
+  if (block.type === 'table') {
+    return block.rows.map((row) => row.join(' | ')).join('. ');
+  }
+
+  return block.text;
+}
+
+function splitGuideText(value: string, maxLength: number = 1300): string[] {
+  const words = value.replace(/\s+/g, ' ').trim().split(' ');
+  const parts: string[] = [];
+  let current = '';
+
+  for (const word of words) {
+    if (current && current.length + word.length + 1 > maxLength) {
+      parts.push(current);
+      current = word;
+    } else {
+      current = current ? `${current} ${word}` : word;
+    }
+  }
+
+  if (current) parts.push(current);
+  return parts;
+}
+
+function buildMarketplaceGuideChunks(language: Language): ContextChunk[] {
+  const guide = getMarketplaceGuide(language);
+  const chunks: ContextChunk[] = [];
+
+  guide.chapters.forEach((chapter) => {
+    const chapterTitle = chapter.title.replace(/^\d+\.\s*/, '');
+    let sectionTitle = chapterTitle;
+    let sectionBlocks: string[] = [];
+    let sectionIndex = 0;
+
+    const flush = () => {
+      const text = sectionBlocks.join(' ').trim();
+      if (!text) return;
+
+      splitGuideText(text).forEach((part, partIndex) => {
+        const sourcePath = `/${language}/marketplace-guide/${chapter.slug}`;
+        chunks.push(makeChunk({
+          id: `marketplace-guide-${chapter.slug}-${sectionIndex}-${partIndex}`,
+          title: sectionTitle === chapterTitle ? chapterTitle : `${chapterTitle} — ${sectionTitle}`,
+          content: `${part} ${language === 'pl' ? 'Źródło' : 'Source'}: ${sourcePath}`,
+          category: 'guide',
+          priority: 3,
+          keywords: tokenize(`marketplace przewodnik guide ${chapterTitle} ${sectionTitle} ${part}`),
+        }));
+      });
+
+      sectionBlocks = [];
+      sectionIndex += 1;
+    };
+
+    chapter.blocks.forEach((block) => {
+      if (block.type === 'heading') {
+        flush();
+        sectionTitle = block.text;
+        return;
+      }
+
+      sectionBlocks.push(guideBlockText(block));
+    });
+
+    flush();
+  });
+
+  return chunks;
+}
+
 function buildPricingChunks(language: Language): ContextChunk[] {
   const copy = pricingCopy[language];
   const services = pricingConfig.services as Record<string, PricingService>;
@@ -255,6 +336,7 @@ export async function buildAIContextIndex(language: Language = 'pl'): Promise<Co
   });
 
   chunks.push(...buildKnowledgeChunks(chatKnowledge));
+  chunks.push(...buildMarketplaceGuideChunks(language));
   chunks.push(...buildPricingChunks(language));
 
   services.forEach((service: ServiceContextItem) => {
@@ -317,6 +399,7 @@ function getIntentBoosts(query: string): Partial<Record<ContextChunk['category']
     pricing: /\b(cen[aeyoiu]|cennik|koszt|wycen|budzet|ile|price|cost|budget|quote)/.test(normalized) ? 8 : 0,
     privacy: /\b(rodo|gdpr|privacy|prywatnos|dane|cookie|newsletter|zgod)/.test(normalized) ? 8 : 0,
     blog: /\b(blog|artykul|article|wpis|poradnik|case study|wiedz|know)/.test(normalized) ? 5 : 0,
+    guide: /\b(marketplace|gpsr|dac7|bdo|epr|p2b|dsa|nis2|rodo|gdpr|onboarding|sprzedawc|seller|vendor|moderac|reklamac|płatno|platno|payment|compliance|zgodn)/.test(normalized) ? 7 : 0,
     service: /\b(uslug|ofert|service|offer|stron|sklep|ecommerce|marketplace|ai|saas)/.test(normalized) ? 4 : 0,
     project: /\b(projekt|realizacj|portfolio|case|project)/.test(normalized) ? 5 : 0,
     faq: /\b(jak|czy|what|how|can|proces|process|czas|termin)/.test(normalized) ? 2 : 0,

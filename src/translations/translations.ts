@@ -317,6 +317,7 @@ export const translations = {
         github: "GitHub",
         linkedin: "LinkedIn",
         blog: "Blog",
+        marketplaceGuide: "Marketplace guide",
       },
       legal: {
         privacy: "Privacy",
@@ -751,6 +752,7 @@ export const translations = {
         github: "GitHub",
         linkedin: "LinkedIn",
         blog: "Blog",
+        marketplaceGuide: "Przewodnik marketplace",
       },
       legal: {
         privacy: "Prywatność",
