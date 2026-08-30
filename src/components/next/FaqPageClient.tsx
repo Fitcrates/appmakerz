@@ -1,8 +1,9 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import type { FaqContent } from '@/content/faq';
+import SearchBar from '@/components/next/SearchBar';
 
 interface FaqPageClientProps {
   content: FaqContent;
@@ -47,18 +48,14 @@ export default function FaqPageClient({ content }: FaqPageClientProps) {
 
   return (
     <div>
-      <div className="mb-8 relative">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Search className="w-5 h-5 text-white/70" />
-        </div>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder={content.searchPlaceholder}
-          className="w-full bg-white/5 border border-white/10 text-white placeholder-white/40  text-base py-4 pl-12 pr-4 focus:outline-none focus:border-teal-300/50 transition-colors"
-        />
-      </div>
+      <SearchBar
+        id="faq-search"
+        label={content.searchPlaceholder}
+        placeholder={content.searchPlaceholder}
+        value={searchQuery}
+        onValueChange={setSearchQuery}
+        className="mb-8"
+      />
 
       <div className="border-t border-white/10">
         {filteredFaqs.length ? (

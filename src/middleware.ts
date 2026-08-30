@@ -8,6 +8,7 @@ const LEGACY_PUBLIC_PATHS = [
   '/blog',
   '/faq',
   '/kalkulator',
+  '/marketplace-guide',
   '/privacy-policy',
   '/project',
   '/unsubscribe',
@@ -54,5 +55,5 @@ export function middleware(request: NextRequest) {
 // for it, so matching the homepage only bought an extra edge-function hop (and
 // its cold start) on the most requested route in the site.
 export const config = {
-  matcher: ['/about-me/:path*', '/blog/:path*', '/faq/:path*', '/kalkulator/:path*', '/privacy-policy/:path*', '/project/:path*', '/unsubscribe/:path*', '/uslugi/:path*', '/api/chat/:path*'],
+  matcher: ['/about-me/:path*', '/blog/:path*', '/faq/:path*', '/kalkulator/:path*', '/marketplace-guide/:path*', '/privacy-policy/:path*', '/project/:path*', '/unsubscribe/:path*', '/uslugi/:path*', '/api/chat/:path*'],
 };

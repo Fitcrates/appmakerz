@@ -51,7 +51,8 @@ html, body {
   font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  /* `hidden` creates a scroll container and breaks descendant position: sticky. */
+  overflow-x: clip;
 }
 
 * {
