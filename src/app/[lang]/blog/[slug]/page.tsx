@@ -4,7 +4,7 @@ import Script from 'next/script';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BlogPostLocalizedContent from '@/components/next/BlogPostLocalizedContent';
-import { getPost, getPostSummaries, getSitemapEntries, urlFor } from '@/lib/sanity.server';
+import { getPost, getPostPageContext, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
 import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
@@ -119,7 +119,7 @@ export default async function LocalizedBlogPostPage({ params }: LocalizedBlogPos
   }
 
   const language = lang as Language;
-  const [post, posts] = await Promise.all([getPost(slug), getPostSummaries()]);
+  const [post, postContext] = await Promise.all([getPost(slug), getPostPageContext(slug)]);
 
   if (!post?._id) {
     notFound();
@@ -204,7 +204,7 @@ export default async function LocalizedBlogPostPage({ params }: LocalizedBlogPos
   return (
     <div className="bg-indigo-950 min-h-screen">
       <NextHeader />
-      <BlogPostLocalizedContent post={post} posts={posts} />
+      <BlogPostLocalizedContent post={post} postContext={postContext} />
       <NextFooter />
 
       <Script id="blog-posting-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }} />

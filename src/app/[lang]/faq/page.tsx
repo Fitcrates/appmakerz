@@ -5,7 +5,6 @@ import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import FaqPageClient from '@/components/next/FaqPageClient';
-import ChatWidget from '@/components/next/ChatWidget';
 import { faqContent } from '@/content/faq';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
@@ -104,7 +103,6 @@ export default async function LocalizedFaqPage({ params }: LocalizedFaqPageProps
         <Script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       </main>
       <NextFooter />
-      <ChatWidget />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -30,11 +31,6 @@ const PRE_COVER_DELAY_MS = 50;
 // Zwiększ, aby błyskawica rozlewała się wolniej.
 // UWAGA: Musi być zsynchronizowane z COVER_ANIM_MS w NoiseTransitionCanvas.tsx!
 const COVER_DURATION_MS = 700;
-
-// NAVIGATE_DELAY_MS: Moment podjęcia właściwej nawigacji (zmiany URL).
-// Ustawione na to samo co COVER_DURATION_MS, by odbyło się to przy w pełni zakrytym ekranie.
-// Możesz to zmniejszyć, aby szybciej rozpocząć ładowanie nowej strony w tle.
-const NAVIGATE_DELAY_MS = 200;
 
 // REVEAL_START_DELAY_MS: Minimalny czas, przez który ekran ma pozostać w pełni zakryty
 // zanim zacznie się odsłanianie nowej strony. Zwiększ, by utrzymać pełne tło dłużej.
@@ -67,18 +63,16 @@ export default function RouteTransitionProvider({
   const activeNavigationId = useRef(0);
   const coverStartTimerRef = useRef<number | null>(null);
   const coverTimerRef = useRef<number | null>(null);
-  const navigateTimerRef = useRef<number | null>(null);
   const revealStartTimerRef = useRef<number | null>(null);
   const cleanupTimerRef = useRef<number | null>(null);
   const failsafeTimerRef = useRef<number | null>(null);
   const navigationOriginRef = useRef('');
   const pendingNavigationRef = useRef<(() => void) | null>(null);
-  const navigateTriggeredRef = useRef(false);
   const incomingReadyRef = useRef(false);
   const isNavigatingRef = useRef(false);
   const phaseRef = useRef(phase);
 
-  const clearTransitionTimers = () => {
+  const clearTransitionTimers = useCallback(() => {
     if (coverStartTimerRef.current !== null) {
       window.clearTimeout(coverStartTimerRef.current);
       coverStartTimerRef.current = null;
@@ -86,10 +80,6 @@ export default function RouteTransitionProvider({
     if (coverTimerRef.current !== null) {
       window.clearTimeout(coverTimerRef.current);
       coverTimerRef.current = null;
-    }
-    if (navigateTimerRef.current !== null) {
-      window.clearTimeout(navigateTimerRef.current);
-      navigateTimerRef.current = null;
     }
     if (revealStartTimerRef.current !== null) {
       window.clearTimeout(revealStartTimerRef.current);
@@ -99,21 +89,21 @@ export default function RouteTransitionProvider({
       window.clearTimeout(cleanupTimerRef.current);
       cleanupTimerRef.current = null;
     }
-  };
+  }, []);
 
-  const clearFailsafeTimer = () => {
+  const clearFailsafeTimer = useCallback(() => {
     if (failsafeTimerRef.current !== null) {
       window.clearTimeout(failsafeTimerRef.current);
       failsafeTimerRef.current = null;
     }
-  };
+  }, []);
 
-  const clearAllTimers = () => {
+  const clearAllTimers = useCallback(() => {
     clearTransitionTimers();
     clearFailsafeTimer();
-  };
+  }, [clearFailsafeTimer, clearTransitionTimers]);
 
-  const cleanupTransition = (navigationId?: number) => {
+  const cleanupTransition = useCallback((navigationId?: number) => {
     if (
       navigationId !== undefined &&
       activeNavigationId.current !== navigationId
@@ -123,7 +113,6 @@ export default function RouteTransitionProvider({
 
     clearAllTimers();
     pendingNavigationRef.current = null;
-    navigateTriggeredRef.current = false;
     incomingReadyRef.current = false;
     isNavigatingRef.current = false;
     setIsNavigating(false);
@@ -132,9 +121,9 @@ export default function RouteTransitionProvider({
     setSnapshotScrollY(0);
     phaseRef.current = 'idle';
     setPhase('idle');
-  };
+  }, [clearAllTimers]);
 
-  const startReveal = (navigationId: number) => {
+  const startReveal = useCallback((navigationId: number) => {
     if (activeNavigationId.current !== navigationId) {
       return;
     }
@@ -151,7 +140,7 @@ export default function RouteTransitionProvider({
     cleanupTimerRef.current = window.setTimeout(() => {
       cleanupTransition(navigationId);
     }, REVEAL_DURATION_MS);
-  };
+  }, [cleanupTransition]);
 
   const captureSnapshot = () => {
     setSnapshotMarkup(null);
@@ -194,7 +183,7 @@ export default function RouteTransitionProvider({
         startReveal(navigationId);
       }, REVEAL_START_DELAY_MS);
     }
-  }, [pathname]);
+  }, [pathname, startReveal]);
 
   useEffect(() => {
     if (!isNavigating) {
@@ -224,13 +213,13 @@ export default function RouteTransitionProvider({
     }, FAILSAFE_MS);
 
     return clearFailsafeTimer;
-  }, [isNavigating]);
+  }, [clearFailsafeTimer, cleanupTransition, isNavigating, startReveal]);
 
   useEffect(() => {
     return () => {
       clearAllTimers();
     };
-  }, []);
+  }, [clearAllTimers]);
 
   return (
     <RouteTransitionContext.Provider
@@ -246,7 +235,6 @@ export default function RouteTransitionProvider({
           clearAllTimers();
           captureSnapshot();
           pendingNavigationRef.current = navigate || null;
-          navigateTriggeredRef.current = false;
           incomingReadyRef.current = false;
           setNavigationTarget(target);
           isNavigatingRef.current = true;
@@ -256,18 +244,16 @@ export default function RouteTransitionProvider({
           phaseRef.current = 'pre-cover';
           setPhase('pre-cover');
 
+          // Start fetching the destination immediately. The transition can
+          // cover the current page while the router works in parallel.
+          pendingNavigationRef.current?.();
+          pendingNavigationRef.current = null;
+
           // After browser paints the initial state, trigger cover animation
           coverStartTimerRef.current = window.setTimeout(() => {
             if (activeNavigationId.current !== navigationId) return;
             phaseRef.current = 'cover';
             setPhase('cover');
-
-            navigateTimerRef.current = window.setTimeout(() => {
-              if (activeNavigationId.current !== navigationId) return;
-              navigateTriggeredRef.current = true;
-              pendingNavigationRef.current?.();
-              pendingNavigationRef.current = null;
-            }, NAVIGATE_DELAY_MS);
 
             coverTimerRef.current = window.setTimeout(() => {
               if (activeNavigationId.current !== navigationId) return;

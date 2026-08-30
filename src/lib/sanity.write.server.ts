@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { createClient } from '@sanity/client';
+import { createHash } from 'node:crypto';
 import { v4 as uuidv4 } from 'uuid';
 
 const projectId =
@@ -52,15 +53,31 @@ export async function subscribeToNewsletter(email: string, categories: string[])
     return { success: true, reactivated: true };
   }
 
-  await writeClient.create({
-    _type: 'subscriber',
-    email: normalizedEmail,
-    subscribedCategories: categories,
-    unsubscribeToken: uuidv4(),
-    isActive: true,
-    status: 'active',
-    subscribedAt: new Date().toISOString(),
-  });
+  const subscriberId = `subscriber.${createHash('sha256').update(normalizedEmail).digest('hex')}`;
+  const subscribedAt = new Date().toISOString();
+  const unsubscribeToken = uuidv4();
+
+  await writeClient
+    .transaction()
+    .createIfNotExists({
+      _id: subscriberId,
+      _type: 'subscriber',
+      email: normalizedEmail,
+      subscribedCategories: categories,
+      unsubscribeToken,
+      isActive: true,
+      status: 'active',
+      subscribedAt,
+    })
+    .patch(subscriberId, (patch) => patch.set({
+      email: normalizedEmail,
+      subscribedCategories: categories,
+      unsubscribeToken,
+      isActive: true,
+      status: 'active',
+      subscribedAt,
+    }))
+    .commit();
 
   return { success: true, reactivated: false };
 }

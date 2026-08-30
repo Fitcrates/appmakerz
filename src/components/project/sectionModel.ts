@@ -56,7 +56,6 @@ export interface ProjectSection {
   width: SectionWidth;
   tone: SectionTone;
   // Section payloads differ per type; the renderer reads them by name.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 

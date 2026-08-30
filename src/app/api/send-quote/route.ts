@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import type { Language } from '@/lib/language';
+import { checkServerRateLimit, getRequestIp } from '@/lib/server-rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -115,6 +116,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email service is not configured' }, { status: 503, headers: NO_STORE_HEADERS });
     }
 
+    const rateLimit = await checkServerRateLimit({
+      scope: 'quote',
+      identifier: getRequestIp(request),
+      limit: 5,
+      windowMs: 60 * 60 * 1000,
+    });
+    if (rateLimit.limited) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: NO_STORE_HEADERS });
+    }
+
     const body = await request.json();
     const name = String(body?.name || '').trim().slice(0, 120);
     const email = String(body?.email || '').trim().slice(0, 180);
@@ -125,8 +136,11 @@ export async function POST(request: Request) {
     const priceMax = Number(body?.priceMax || 0);
     const noPrice = Boolean(body?.noPrice);
     const language = isLanguage(body?.language) ? body.language : 'pl';
+    const requestId = typeof body?.requestId === 'string' && /^[a-f0-9-]{36}$/i.test(body.requestId)
+      ? body.requestId
+      : '';
 
-    if (!name || !email || !selection.serviceLabel) {
+    if (!name || !email || !selection.serviceLabel || !requestId) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400, headers: NO_STORE_HEADERS });
     }
 
@@ -135,27 +149,25 @@ export async function POST(request: Request) {
     const priceText = formatPrice(priceMin, priceMax, noPrice);
     const disclaimer = getQuoteDisclaimer(language);
 
-    const developerEmail = await resend.emails.send({
-      from: `AppCrates Kalkulator <${fromEmail}>`,
-      to: toEmail,
-      subject: `Nowe zapytanie — ${selection.serviceLabel}`,
-      replyTo: email,
-      html: getDeveloperEmailTemplate({ name, email, phone, message, selection, priceText, disclaimer }),
-    });
+    const [developerEmail, clientEmail] = await Promise.all([
+      resend.emails.send({
+        from: `AppCrates Kalkulator <${fromEmail}>`,
+        to: toEmail,
+        subject: `Nowe zapytanie — ${selection.serviceLabel}`,
+        replyTo: email,
+        html: getDeveloperEmailTemplate({ name, email, phone, message, selection, priceText, disclaimer }),
+      }, { idempotencyKey: `quote-developer-${requestId}` }),
+      resend.emails.send({
+        from: `AppCrates <${fromEmail}>`,
+        to: email,
+        subject: 'Otrzymałem Twoje zapytanie — AppCrates',
+        html: getClientEmailTemplate({ name, selection, priceText, language, disclaimer }),
+      }, { idempotencyKey: `quote-client-${requestId}` }),
+    ]);
 
-    if (developerEmail.error) {
-      return NextResponse.json({ error: developerEmail.error.message }, { status: 400, headers: NO_STORE_HEADERS });
-    }
-
-    const clientEmail = await resend.emails.send({
-      from: `AppCrates <${fromEmail}>`,
-      to: email,
-      subject: 'Otrzymałem Twoje zapytanie — AppCrates',
-      html: getClientEmailTemplate({ name, selection, priceText, language, disclaimer }),
-    });
-
-    if (clientEmail.error) {
-      return NextResponse.json({ error: clientEmail.error.message }, { status: 400, headers: NO_STORE_HEADERS });
+    const emailError = developerEmail.error || clientEmail.error;
+    if (emailError) {
+      return NextResponse.json({ error: emailError.message }, { status: 400, headers: NO_STORE_HEADERS });
     }
 
     return NextResponse.json({ ok: true }, { status: 200, headers: NO_STORE_HEADERS });

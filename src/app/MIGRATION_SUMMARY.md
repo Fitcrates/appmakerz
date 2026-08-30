@@ -20,7 +20,7 @@ Rozwiązanie to w 100% zadowala docelowe potężne optymalizacje serwerów Next.
 ## 2. Podział środowiskowy i przenoszenie procesów (Vite ➡ Next.js)
 Doprowadzono do ostatecznego i bardzo poprawnego rozłamu kodu, stawiając na innowacyjny ustandaryzowany model:
 - Wszelkie kluczowe dla robotów Google szkielety (wszystkie widoki główne, system \`metadata\` z tagami i generowaniem kanonicznych stron, wyciąganie po stronie serwera JSONów CMS) zostały podniesione do struktury **Server Components**. Takie podejście optymalizuje metryki Google SEO - do przeglądarki spływa pre-renderowany czysty szkielet.
-- Niezbędna dynamika powiązana z hookami (stanem i obsługą `useRef`), formularzami, efektami (*CursorGlowContext.tsx*) oraz podstawnymi animacjami od Sanity (BurnSpotlightText, SpotlightText) zostały opruszone dyrektywą `"use client";`, wymuszającą renderowanie Hydracji na domowej maszynie użytkownika - nie naruszając jednocześnie statyki zewnętrznej dla w/w robotów i ucinając konflikty Render Error the browser has mismatch.
+- Niezbędna dynamika powiązana z hookami, formularzami oraz animacjami została wydzielona do małych komponentów z dyrektywą `"use client";`. Pozostała część widoków nadal renderuje się na serwerze, dzięki czemu przeglądarka pobiera mniej JavaScriptu i unika konfliktów hydracji.
 
 ## 3. Optymalizacja Wydajności i Czystość Kodu
 Dzięki przenosinom, dokonaliśmy bezpiecznych cięć w zdepraecjonowanych logikach frontendowych:

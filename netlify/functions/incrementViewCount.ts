@@ -42,7 +42,7 @@ export const handler: Handler = async (event) => {
   try {
     const body = JSON.parse(event.body || '{}');
     postId = body.postId;
-  } catch (e) {
+  } catch {
     return { statusCode: 400, headers, body: JSON.stringify({ success: false, message: 'Invalid request body' }) };
   }
 

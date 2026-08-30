@@ -14,10 +14,9 @@ Po opublikowaniu / aktualizacji / usunięciu dokumentu w Sanity Studio, webhook 
 
 | Funkcja | Tagi | Ścieżki |
 |---|---|---|
-| `getPosts` | `posts`, `blog` | `/blog` |
+| `getPostSummaries` / `getPostContextSummaries` | `posts`, `blog` | `/blog` |
 | `getPost(slug)` | `post`, `<slug>` | `/blog/<slug>` |
-| `getPopularPosts` | `posts` | — |
-| `getProjects` | `projects` | `/project` |
+| `getProjectSummaries` | `projects` | `/project` |
 | `getProject(slug)` | `project`, `<slug>` | `/project/<slug>` |
 | `getServiceLanding(slug)` | `service-landing`, `<slug>` | `/uslugi/<slug>` |
 | `getServiceLandings` | `service-landings` | — |
@@ -55,4 +54,4 @@ Po opublikowaniu / aktualizacji / usunięciu dokumentu w Sanity Studio, webhook 
 SANITY_WEBHOOK_SECRET=twoj-sekret-z-sanity-studio
 ```
 
-Po wdrożeniu na produkcję, opublikowanie posta w Sanity spowoduje natychmiastową rewalidację `/blog` — nowy post pojawi się na liście bez czekania na wygaśnięcie cache (1h).
+Po wdrożeniu na produkcję opublikowanie posta w Sanity natychmiast wygasi odpowiednie tagi i ścieżki — nowy post pojawi się na liście bez czekania na tygodniowy TTL awaryjny.

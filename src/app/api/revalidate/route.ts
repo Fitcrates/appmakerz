@@ -12,6 +12,10 @@ import {
 
 export const runtime = 'nodejs';
 
+function expireTag(tag: string) {
+  revalidateTag(tag, { expire: 0 });
+}
+
 function getSlugValue(slug: unknown): string | null {
   if (typeof slug === 'string') return slug;
   if (slug && typeof slug === 'object' && 'current' in slug) {
@@ -74,12 +78,12 @@ export async function POST(request: NextRequest) {
     const indexNowUrls = new Set<string>();
 
     if (docType === 'post') {
-      revalidateTag('posts');
-      revalidateTag('blog');
-      revalidateTag('featured-posts');
-      revalidateTag('post'); // Clear individual post fetch cache
+      expireTag('posts');
+      expireTag('blog');
+      expireTag('featured-posts');
+      expireTag('post'); // Clear individual post fetch cache
       if (slug) {
-        revalidateTag(slug);
+        expireTag(slug);
       }
       
       // Revalidate both route patterns and the concrete localized URLs users request.
@@ -96,10 +100,10 @@ export async function POST(request: NextRequest) {
       }
 
     } else if (docType === 'project') {
-      revalidateTag('projects');
-      revalidateTag('project'); // Clear individual project fetch cache
+      expireTag('projects');
+      expireTag('project'); // Clear individual project fetch cache
       if (slug) {
-        revalidateTag(slug);
+        expireTag(slug);
       }
       
       revalidatePath('/[lang]', 'page'); // Homepage has featured projects
@@ -112,10 +116,10 @@ export async function POST(request: NextRequest) {
       }
 
     } else if (docType === 'serviceLanding') {
-      revalidateTag('service-landings');
-      revalidateTag('service-landing');
+      expireTag('service-landings');
+      expireTag('service-landing');
       if (slug) {
-        revalidateTag(slug);
+        expireTag(slug);
       }
       
       revalidatePath('/[lang]/uslugi/[slug]', 'page');
@@ -125,21 +129,22 @@ export async function POST(request: NextRequest) {
       }
 
     } else if (docType === 'aboutMe') {
-      revalidateTag('about-me');
+      expireTag('about-me');
       revalidatePath('/[lang]/about-me', 'page');
       revalidateLocalizedPath('/about-me');
       localizedAbsoluteUrls('/about-me').forEach((url) => indexNowUrls.add(url));
     } else if (docType === 'category') {
-      revalidateTag('post-categories');
-      revalidateTag('posts');
-      revalidateTag('blog');
-      revalidateTag('featured-posts');
+      expireTag('post-categories');
+      expireTag('posts');
+      expireTag('blog');
+      expireTag('featured-posts');
       revalidatePath('/[lang]/blog', 'page');
       revalidateLocalizedPath('/blog');
       localizedAbsoluteUrls('/blog').forEach((url) => indexNowUrls.add(url));
     }
 
-    revalidateTag('sitemap');
+    expireTag('sitemap');
+    expireTag('ai-context');
     revalidatePath('/sitemap.xml');
     indexNowUrls.add(absoluteUrl('/sitemap.xml'));
     const indexNow = await submitIndexNow(Array.from(indexNowUrls));

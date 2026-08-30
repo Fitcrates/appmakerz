@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import PrefetchLink from '@/components/next/PrefetchLink';
-import ChatWidget from '@/components/next/ChatWidget';
 import { privacyPolicyContent } from '@/content/privacy-policy';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
@@ -101,7 +100,6 @@ export default async function LocalizedPrivacyPolicyPage({ params }: LocalizedPr
         </div>
       </main>
       <NextFooter />
-      <ChatWidget />
     </div>
   );
 }

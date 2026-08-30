@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 interface CrackImageProps {
@@ -36,7 +36,7 @@ const CrackImage: React.FC<CrackImageProps> = ({
   const totalTiles = gridSize * gridSize;
 
   // Generate random offsets for warping effect - image shifts within fixed tiles
-  const generateOffsets = (intensity: number = 1) => {
+  const generateOffsets = useCallback((intensity: number = 1) => {
     const newOffsets: TileOffset[] = [];
     for (let i = 0; i < totalTiles; i++) {
       newOffsets.push({
@@ -50,13 +50,13 @@ const CrackImage: React.FC<CrackImageProps> = ({
       });
     }
     return newOffsets;
-  };
+  }, [totalTiles]);
 
   // Initialize offsets
   useEffect(() => {
     setOffsets(generateOffsets(1));
     setOffsets2(generateOffsets(0.7));
-  }, [totalTiles, bleed]);
+  }, [bleed, generateOffsets]);
 
   // Update dimensions
   useEffect(() => {
@@ -89,7 +89,7 @@ const CrackImage: React.FC<CrackImageProps> = ({
     }, cycleInterval);
 
     return () => clearInterval(interval);
-  }, [cycleInterval]);
+  }, [cycleInterval, generateOffsets]);
 
   // Get current offset based on animation phase
   const getCurrentOffset = (tileId: number): TileOffset => {
@@ -210,11 +210,7 @@ const CrackImage: React.FC<CrackImageProps> = ({
         }}
       />
 
-      {/* Corner accents */}
-      <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-teal-300/30" />
-      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-teal-300/30" />
-      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-teal-300/30" />
-      <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-teal-300/30" />
+
     </div>
   );
 };
