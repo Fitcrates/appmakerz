@@ -8,7 +8,6 @@ import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import FaqAccordionList from '@/components/next/FaqAccordionList';
 import PrefetchLink from '@/components/next/PrefetchLink';
-import ChatWidget from '@/components/next/ChatWidget';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import SpotlightText from '@/components/new/SpotlightText';
 import ServiceDeliverablesNew from '@/components/new/ServiceDeliverablesNew';
@@ -16,7 +15,7 @@ import ServiceModelsNew from '@/components/new/ServiceModelsNew';
 import ServiceProcessNew from '@/components/new/ServiceProcessNew';
 import HeroPulsePath from '@/components/new/HeroPulsePath';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
-import { getPostSummaries, getProjects, getServiceLanding, getServiceLandings, getSitemapEntries, urlFor } from '@/lib/sanity.server';
+import { getProjectSummaries, getRelatedPostCandidates, getServiceLanding, getServiceLandings, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
@@ -163,10 +162,13 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
     notFound();
   }
 
+  const manualServices = Array.isArray(landing.relatedServices) ? landing.relatedServices : [];
+  const manualProjects = Array.isArray(landing.relatedProjects) ? landing.relatedProjects : [];
+  const manualPosts = Array.isArray(landing.relatedPosts) ? landing.relatedPosts : [];
   const [serviceLandings, projects, posts] = await Promise.all([
-    getServiceLandings().catch(() => []),
-    getProjects().catch(() => []),
-    getPostSummaries().catch(() => []),
+    manualServices.length ? Promise.resolve([]) : getServiceLandings().catch(() => []),
+    manualProjects.length ? Promise.resolve([]) : getProjectSummaries().catch(() => []),
+    manualPosts.length ? Promise.resolve([]) : getRelatedPostCandidates().catch(() => []),
   ]);
 
   const title = getLocalizedText(landing.title, language);
@@ -191,9 +193,6 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
     landing.city || '',
     landing.seo?.keywords?.join(' ') || '',
   ].join(' '))));
-  const manualServices = Array.isArray(landing.relatedServices) ? landing.relatedServices : [];
-  const manualProjects = Array.isArray(landing.relatedProjects) ? landing.relatedProjects : [];
-  const manualPosts = Array.isArray(landing.relatedPosts) ? landing.relatedPosts : [];
   const automaticServices = (serviceLandings as ServiceLanding[])
     .filter((service) => service.slug?.current && service.slug.current !== landing.slug.current)
     .slice(0, 8);
@@ -664,7 +663,6 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
       </main>
 
       <NextFooter />
-      <ChatWidget />
       <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="service-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <Script id="webpage-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />

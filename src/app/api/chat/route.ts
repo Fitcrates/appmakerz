@@ -5,6 +5,7 @@ import { sanitizeInput } from '@/lib/sanitize';
 import { siteUrl } from '@/lib/site';
 import type { Language } from '@/lib/language';
 import { pricingCopy } from '@/data/pricing-copy';
+import { checkServerRateLimit, getRequestIp } from '@/lib/server-rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,7 +31,6 @@ const GEMINI_MAX_RETRIES = 2;
 
 const WINDOW_MS = 60 * 1000;
 const MAX_REQUESTS = 10;
-const ipHits = new Map<string, { count: number; resetAt: number }>();
 
 async function callGemini(systemPrompt: string, messages: ChatMessage[]): Promise<{ ok: true; text: string } | { ok: false; status: number; text: string }> {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -172,30 +172,6 @@ const ADMIN_TARGET_PATTERNS = [
   /\b(post|posta|wpis|wpisu|blog|bloga|projekt|projektu|stron[ayę]|usług[aię]|polityk[aię]|faq|sanity|cms|newsletter|subskrypcj[aię]|konto|dane|rekord|baz[ayę])\b/i,
   /\b(blog post|project|page|service|privacy policy|cms|sanity|newsletter|subscription|account|data|record|database)\b/i,
 ];
-
-function getClientIp(request: Request): string {
-  const forwardedFor = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
-  const realIp = request.headers.get('x-real-ip')?.trim();
-  const netlifyIp = request.headers.get('x-nf-client-connection-ip')?.trim();
-  return forwardedFor || realIp || netlifyIp || 'unknown';
-}
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const current = ipHits.get(ip);
-
-  if (!current || current.resetAt <= now) {
-    ipHits.set(ip, { count: 1, resetAt: now + WINDOW_MS });
-    return false;
-  }
-
-  if (current.count >= MAX_REQUESTS) {
-    return true;
-  }
-
-  current.count += 1;
-  return false;
-}
 
 function isAllowedOrigin(request: Request): boolean {
   const origin = request.headers.get('origin');
@@ -440,9 +416,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403, headers: NO_STORE_HEADERS });
     }
 
-    const ip = getClientIp(request);
+    const ip = getRequestIp(request);
 
-    if (isRateLimited(ip)) {
+    const rateLimit = await checkServerRateLimit({
+      scope: 'chat',
+      identifier: ip,
+      limit: MAX_REQUESTS,
+      windowMs: WINDOW_MS,
+    });
+
+    if (rateLimit.limited) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: NO_STORE_HEADERS });
     }
 

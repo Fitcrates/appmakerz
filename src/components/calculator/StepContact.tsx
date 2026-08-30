@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import type { PriceResult, QuoteSelectionSummary, ServiceConfig } from '@/lib/calculator/types';
 import type { Language } from '@/lib/language';
 
@@ -32,6 +32,7 @@ export default function StepContact({ service, summary, price, language, copy }:
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const requestIdRef = useRef<string | null>(null);
   const noPrice = Boolean(service?.noPrice);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -40,6 +41,7 @@ export default function StepContact({ service, summary, price, language, copy }:
     setErrorMessage('');
 
     try {
+      requestIdRef.current ||= crypto.randomUUID();
       const response = await fetch('/api/send-quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -50,6 +52,7 @@ export default function StepContact({ service, summary, price, language, copy }:
           priceMax: noPrice ? 0 : price.max,
           noPrice,
           language,
+          requestId: requestIdRef.current,
         }),
       });
       const data = await response.json().catch(() => null);
@@ -59,6 +62,7 @@ export default function StepContact({ service, summary, price, language, copy }:
       }
 
       setForm(initialForm);
+      requestIdRef.current = null;
       setStatus('success');
     } catch (error) {
       setStatus('error');

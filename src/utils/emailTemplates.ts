@@ -1,4 +1,15 @@
-export const getContactTemplate = (name: string, message: string) => `
+const escapeHtml = (value: string) => value
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#039;');
+
+export const getContactTemplate = (name: string, message: string) => {
+  const safeName = escapeHtml(name);
+  const safeMessage = escapeHtml(message);
+
+  return `
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -52,7 +63,7 @@ export const getContactTemplate = (name: string, message: string) => `
                 Cześć <strong style="color:#c9d1e8;">AppCrates</strong>,
               </p>
               <p style="margin:0 0 32px;font-size:15px;color:#8892b0;line-height:1.6;">
-                Otrzymałeś nową wiadomość od <strong style="color:#00e5c3;">${name}</strong>:
+                Otrzymałeś nową wiadomość od <strong style="color:#00e5c3;">${safeName}</strong>:
               </p>
 
               <!-- Message block -->
@@ -64,7 +75,7 @@ export const getContactTemplate = (name: string, message: string) => `
                     <!-- Quote icon -->
                     <p style="margin:0 0 10px;font-size:28px;line-height:1;color:#00e5c3;opacity:0.4;">&ldquo;</p>
                     <p style="margin:0;font-size:15px;color:#c9d1e8;line-height:1.8;font-style:italic;">
-                      ${message.replace(/\n/g, '<br/>')}
+                      ${safeMessage.replace(/\n/g, '<br/>')}
                     </p>
                   </td>
                 </tr>
@@ -112,6 +123,7 @@ export const getContactTemplate = (name: string, message: string) => `
 </body>
 </html>
 `;
+};
 
 export const getNewsletterTemplate = (to_email: string, categories: string, blog_title: string, blog_url: string, author_name: string, unsubscribe_url: string) => `
 <!DOCTYPE html>

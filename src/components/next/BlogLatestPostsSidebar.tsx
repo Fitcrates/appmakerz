@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { ArrowUpRight } from 'lucide-react';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import type { Language } from '@/lib/language';
 import { getLocalizedText } from '@/lib/localize';
@@ -11,7 +10,6 @@ import { urlFor } from '@/lib/sanity.image';
 import { translations } from '@/translations/translations';
 
 interface BlogLatestPostsSidebarProps {
-  currentPostId: string;
   language: Language;
   posts: any[];
   toc?: { text: string; id: string }[];
@@ -21,15 +19,12 @@ type SidebarPosition = 'relative' | 'fixed' | 'bottom';
 
 const SIDEBAR_TOP_OFFSET = 112;
 
-export default function BlogLatestPostsSidebar({ currentPostId, language, posts, toc = [] }: BlogLatestPostsSidebarProps) {
+export default function BlogLatestPostsSidebar({ language, posts, toc = [] }: BlogLatestPostsSidebarProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<SidebarPosition>('relative');
   const [activeId, setActiveId] = useState<string>('');
 
-  const latestPosts = [...posts]
-    .filter((item) => item._id !== currentPostId)
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-    .slice(0, 3);
+  const latestPosts = posts.slice(0, 3);
 
   useEffect(() => {
     if (!toc.length) return;

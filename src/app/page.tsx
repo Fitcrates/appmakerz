@@ -3,6 +3,7 @@ import NextProviders from '@/components/next/NextProviders';
 import CookieConsentNew from '@/components/new/CookieConsentNew';
 import ScrollBlurOverlay from '@/components/new/ScrollBlurOverlay';
 import CursorAura from '@/components/next/CursorAura';
+import DeferredChatWidget from '@/components/next/DeferredChatWidget';
 import HomePageClient from '@/components/next/HomePageClient';
 import { getFeaturedProjects, getPostSummaries } from '@/lib/sanity.server';
 import { absoluteUrl } from '@/lib/site';
@@ -78,6 +79,7 @@ export default async function HomePage() {
       <CookieConsentNew />
       <ScrollBlurOverlay />
       <CursorAura />
+      <DeferredChatWidget />
     </NextProviders>
   );
 }

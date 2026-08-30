@@ -134,7 +134,6 @@ export default function NoiseTransitionCanvas({
         return;
       }
 
-      const { w, h } = dimRef.current;
       const elapsed = performance.now() - animStartRef.current;
 
       /* Compute how much of the screen should be covered (0–1) */

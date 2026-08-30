@@ -28,7 +28,7 @@ function shouldRedirectToDefaultLanguage(pathname: string) {
   return LEGACY_PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (request.method === 'GET' && shouldRedirectToDefaultLanguage(request.nextUrl.pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = `/pl${request.nextUrl.pathname === '/' ? '' : request.nextUrl.pathname}`;

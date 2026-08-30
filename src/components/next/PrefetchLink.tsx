@@ -38,7 +38,7 @@ const PrefetchLink = forwardRef<HTMLAnchorElement, PrefetchLinkProps>(function P
     onMouseEnter,
     onFocus,
     onTouchStart,
-    prefetch = true,
+    prefetch = false,
     prefetchOnIntent = true,
     ...props
   },

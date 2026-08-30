@@ -4,7 +4,7 @@ import { faqContent } from '@/content/faq';
 import { privacyPolicyContent } from '@/content/privacy-policy';
 import { pricingCopy } from '@/data/pricing-copy';
 import pricingConfig from '@/data/pricing-config.json';
-import { getAboutMe, getPostSummaries, getProjects, getServiceLandings } from '@/lib/sanity.server';
+import { getAboutMe, getPostContextSummaries, getProjectSummaries, getServiceLandings } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import type { Language } from '@/lib/language';
 import { getMarketplaceGuide, type GuideBlock } from '@/lib/marketplace-guide';
@@ -282,8 +282,8 @@ function buildPricingChunks(language: Language): ContextChunk[] {
 export async function buildAIContextIndex(language: Language = 'pl'): Promise<ContextChunk[]> {
   const [services, projects, posts, aboutMe, chatKnowledge] = await Promise.all([
     getServiceLandings(),
-    getProjects(),
-    getPostSummaries().catch(() => []),
+    getProjectSummaries(),
+    getPostContextSummaries().catch(() => []),
     getAboutMe().catch(() => null),
     getChatKnowledge(),
   ]);

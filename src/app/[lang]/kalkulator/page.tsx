@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
-import ChatWidget from '@/components/next/ChatWidget';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import PricingCalculator from '@/components/calculator/PricingCalculator';
 import { pricingCopy } from '@/data/pricing-copy';
@@ -109,7 +108,6 @@ export default async function LocalizedCalculatorPage({ params }: LocalizedCalcu
         </div>
       </main>
       <NextFooter />
-      <ChatWidget />
     </div>
   );
 }

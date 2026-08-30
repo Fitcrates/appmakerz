@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import HeroNewv2 from '@/components/new/HeroNewv2';
@@ -14,7 +14,6 @@ const ProjectsNew = dynamic(() => import('@/components/new/ProjectsNew'));
 const SolutionsNew = dynamic(() => import('@/components/new/SolutionsNew'));
 const LatestBlogPostsSection = dynamic(() => import('@/components/next/LatestBlogPostsSection'));
 const ContactNew = dynamic(() => import('@/components/new/ContactNew'));
-const ChatWidget = dynamic(() => import('@/components/next/ChatWidget'), { ssr: false });
 
 interface HomePageClientProps {
   projects?: Project[];
@@ -42,8 +41,6 @@ function scrollToHashWithOffset() {
 }
 
 export default function HomePageClient({ projects, posts }: HomePageClientProps) {
-  const [showChat, setShowChat] = useState(false);
-
   useEffect(() => {
     const runScroll = () => {
       window.setTimeout(scrollToHashWithOffset, 50);
@@ -52,20 +49,6 @@ export default function HomePageClient({ projects, posts }: HomePageClientProps)
     runScroll();
     window.addEventListener('hashchange', runScroll);
     return () => window.removeEventListener('hashchange', runScroll);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return undefined;
-    }
-
-    if ('requestIdleCallback' in window) {
-      const id = window.requestIdleCallback(() => setShowChat(true), { timeout: 3500 });
-      return () => window.cancelIdleCallback(id);
-    }
-
-    const id = setTimeout(() => setShowChat(true), 2500);
-    return () => clearTimeout(id);
   }, []);
 
   return (
@@ -82,7 +65,6 @@ export default function HomePageClient({ projects, posts }: HomePageClientProps)
         <ContactNew />
       </main>
       <NextFooter />
-      {showChat ? <ChatWidget /> : null}
     </div>
   );
 }

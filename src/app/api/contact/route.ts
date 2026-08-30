@@ -1,14 +1,27 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { getContactTemplate } from '@/utils/emailTemplates';
+import { checkServerRateLimit, getRequestIp } from '@/lib/server-rate-limit';
 
 // Make sure to add RESEND_API_KEY to your .env file
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
+    const rateLimit = await checkServerRateLimit({
+      scope: 'contact',
+      identifier: getRequestIp(request),
+      limit: 5,
+      windowMs: 60 * 60 * 1000,
+    });
+    if (rateLimit.limited) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const body = await request.json();
-    const { name, email, message } = body;
+    const name = typeof body?.name === 'string' ? body.name.trim().slice(0, 120) : '';
+    const email = typeof body?.email === 'string' ? body.email.trim().slice(0, 180) : '';
+    const message = typeof body?.message === 'string' ? body.message.trim().slice(0, 4_000) : '';
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });

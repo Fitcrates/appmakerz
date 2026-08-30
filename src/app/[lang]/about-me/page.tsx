@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
-import ChatWidget from '@/components/next/ChatWidget';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import CyberPhilosophyLayout, { type CyberPhilosophyContent } from '@/components/new/CyberPhilosophyLayout';
@@ -217,7 +216,6 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
       <div className="relative z-10 bg-indigo-950">
         <NextFooter />
       </div>
-      <ChatWidget />
     </div>
   );
 }

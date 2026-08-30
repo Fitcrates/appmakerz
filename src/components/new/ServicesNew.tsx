@@ -4,8 +4,6 @@ import { useRef } from "react";
 import {
   motion,
   useInView,
-  useScroll,
-  useTransform,
 } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import PrefetchLink from "@/components/next/PrefetchLink";
@@ -144,7 +142,6 @@ const ServiceItem: React.FC<{
 
 const ServicesNew: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, {
     once: true,
     margin: "-100px",
@@ -152,17 +149,6 @@ const ServicesNew: React.FC = () => {
   const { language } = useLanguage();
   const t = translations[language].services;
   const services = getServices(t);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-
-  const imageY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ["-10%", "10%"]
-  );
 
   return (
     <section
@@ -234,14 +220,10 @@ const ServicesNew: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Right — sticky image */}
+          {/* Right — image centered once within the complete services list */}
           <div className="lg:flex lg:items-center">
-            <div className="sticky top-32 w-full">
-              <motion.div
-                ref={imageRef}
-                style={{ y: imageY, willChange: "transform" }}
-                className="group relative w-full aspect-[3/4]"
-              >
+            <div className="w-full">
+              <div className="group relative w-full aspect-[3/4]">
                 <BorderGlow animated>
                   <CrackImage
                     src="/media/servicesgreek.webp"
@@ -253,7 +235,7 @@ const ServicesNew: React.FC = () => {
                     bleed={0.05}
                   />
                 </BorderGlow>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import NextProviders from '@/components/next/NextProviders';
 import CookieConsentNew from '@/components/new/CookieConsentNew';
 import ScrollBlurOverlay from '@/components/new/ScrollBlurOverlay';
 import CursorAura from '@/components/next/CursorAura';
+import DeferredChatWidget from '@/components/next/DeferredChatWidget';
 import { SUPPORTED_LANGUAGES, isLanguage, type Language } from '@/lib/language';
 
 interface LanguageLayoutProps {
@@ -27,6 +28,7 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
       <CookieConsentNew />
       <ScrollBlurOverlay />
       <CursorAura />
+      <DeferredChatWidget />
     </NextProviders>
   );
 }

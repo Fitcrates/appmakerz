@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import Script from 'next/script';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
-import ChatWidget from '@/components/next/ChatWidget';
 import ProjectHero from '@/components/project/ProjectHero';
 import ProjectFactBar from '@/components/project/ProjectFactBar';
 import ProjectToc from '@/components/project/ProjectToc';
@@ -273,7 +272,6 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
       </main>
 
       <NextFooter />
-      <ChatWidget />
       <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <Script id="creativework-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }} />
       {faqSchema ? (

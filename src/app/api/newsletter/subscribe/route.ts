@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { subscribeToNewsletter } from '@/lib/sanity.write.server';
+import { checkServerRateLimit, getRequestIp } from '@/lib/server-rate-limit';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,6 +10,19 @@ const NO_STORE_HEADERS = {
 
 export async function POST(request: Request) {
   try {
+    const rateLimit = await checkServerRateLimit({
+      scope: 'newsletter-subscribe',
+      identifier: getRequestIp(request),
+      limit: 5,
+      windowMs: 60 * 60 * 1000,
+    });
+    if (rateLimit.limited) {
+      return NextResponse.json(
+        { success: false, message: 'Too many requests.' },
+        { status: 429, headers: NO_STORE_HEADERS }
+      );
+    }
+
     const body = await request.json();
     const email = typeof body?.email === 'string' ? body.email.trim() : '';
     const categories = Array.isArray(body?.categories)

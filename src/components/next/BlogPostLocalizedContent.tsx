@@ -20,10 +20,14 @@ import { translations } from '@/translations/translations';
 
 interface BlogPostLocalizedContentProps {
   post: any;
-  posts: any[];
+  postContext: {
+    previous: any | null;
+    next: any | null;
+    latest: any[];
+  };
 }
 
-export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocalizedContentProps) {
+export default function BlogPostLocalizedContent({ post, postContext }: BlogPostLocalizedContentProps) {
   const { language } = useLanguage();
   const t = translations[language].blog;
 
@@ -45,10 +49,8 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
       return { text, id };
     })
     .filter((item: any) => item.text);
-  const allPostsSorted = [...posts].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-  const currentIndex = allPostsSorted.findIndex((item) => item._id === post._id);
-  const previousPost = currentIndex > 0 ? allPostsSorted[currentIndex - 1] : null;
-  const nextPost = currentIndex < allPostsSorted.length - 1 ? allPostsSorted[currentIndex + 1] : null;
+  const previousPost = postContext.previous;
+  const nextPost = postContext.next;
   const relatedServices = Array.isArray(post.relatedServices) ? post.relatedServices : [];
 
   return (
@@ -203,7 +205,7 @@ export default function BlogPostLocalizedContent({ post, posts }: BlogPostLocali
             </div>
           </div>
 
-          <BlogLatestPostsSidebar currentPostId={post._id} language={language} posts={posts} toc={toc} />
+          <BlogLatestPostsSidebar language={language} posts={postContext.latest} toc={toc} />
         </div>
       </main>
     </>

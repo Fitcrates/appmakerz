@@ -241,6 +241,25 @@ export async function getPost(slug: string) {
   );
 }
 
+export async function getPostPageContext(slug: string) {
+  return fetchSanity<{
+    previous: any | null;
+    next: any | null;
+    latest: any[];
+  }>(
+    `{
+      "previous": *[_type == "post" && defined(slug.current) && slug.current != $slug && (!defined(seo.noIndex) || seo.noIndex != true) && publishedAt > *[_type == "post" && slug.current == $slug][0].publishedAt]
+        | order(publishedAt asc)[0]{ _id, title { en, pl }, slug, publishedAt },
+      "next": *[_type == "post" && defined(slug.current) && slug.current != $slug && (!defined(seo.noIndex) || seo.noIndex != true) && publishedAt < *[_type == "post" && slug.current == $slug][0].publishedAt]
+        | order(publishedAt desc)[0]{ _id, title { en, pl }, slug, publishedAt },
+      "latest": *[_type == "post" && defined(slug.current) && slug.current != $slug && (!defined(seo.noIndex) || seo.noIndex != true)]
+        | order(publishedAt desc)[0...3]{ _id, title { en, pl }, slug, mainImage, publishedAt }
+    }`,
+    { slug },
+    ['posts', 'post-navigation', slug]
+  );
+}
+
 export async function getFeaturedPosts() {
   return fetchSanity<any[]>(
     `
@@ -273,36 +292,9 @@ export async function getFeaturedPosts() {
   );
 }
 
-export async function getPopularPosts() {
+export async function getProjectSummaries() {
   return fetchSanity<any[]>(
-    `
-    *[_type == "post" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(viewCount desc, publishedAt desc) [0...3] {
-      _id,
-      title { en, pl },
-      slug,
-      mainImage,
-      publishedAt,
-      body { en, pl },
-      viewCount,
-      categories[]->{
-        _id,
-        title { en, pl },
-        slug,
-        color,
-        order
-      },
-      tags
-    }
-  `,
-    {},
-    ['posts']
-  );
-}
-
-export async function getProjects() {
-  return fetchSanity<any[]>(
-    `
-    *[_type == "project" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc) {
+    `*[_type == "project" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc) {
       _id,
       title,
       homepageTitle,
@@ -312,24 +304,42 @@ export async function getProjects() {
       category,
       year,
       mainImage,
-      body,
       technologies,
-      projectUrl,
-      githubUrl,
-      blogUrl,
-      publishedAt,
-      seo {
-        metaTitle { en, pl },
-        metaDescription { en, pl },
-        keywords,
-        canonicalUrl,
-        ogImage,
-        noIndex
-      }
-    }
-  `,
+      publishedAt
+    }`,
     {},
     ['projects']
+  );
+}
+
+export async function getPostContextSummaries() {
+  return fetchSanity<any[]>(
+    `*[_type == "post" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc) {
+      _id,
+      title { en, pl },
+      slug,
+      excerpt { en, pl },
+      tags
+    }`,
+    {},
+    ['posts', 'blog']
+  );
+}
+
+export async function getRelatedPostCandidates() {
+  return fetchSanity<any[]>(
+    `*[_type == "post" && defined(slug.current) && (!defined(seo.noIndex) || seo.noIndex != true)] | order(publishedAt desc)[0...24] {
+      _id,
+      title { en, pl },
+      slug,
+      mainImage,
+      publishedAt,
+      excerpt { en, pl },
+      categories[]->{ _id, title { en, pl }, slug },
+      tags
+    }`,
+    {},
+    ['posts', 'blog']
   );
 }
 
