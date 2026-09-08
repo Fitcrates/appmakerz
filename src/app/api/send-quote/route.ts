@@ -56,7 +56,7 @@ function getQuoteDisclaimer(language: Language) {
 
 function formatSelection(selection: QuoteSelection) {
   const lines = [
-    `<p><strong>Usługa:</strong> ${escapeHtml(selection.serviceLabel || '—')}</p>`,
+    `<p><strong>Usługa:</strong> ${escapeHtml(selection.serviceLabel || '-')}</p>`,
     selection.baseLabel ? `<p><strong>Baza:</strong> ${escapeHtml(selection.baseLabel)}</p>` : '',
     selection.cmsLabel ? `<p><strong>CMS:</strong> ${escapeHtml(selection.cmsLabel)}</p>` : '',
     selection.featuresLabels?.length ? `<p><strong>Funkcje:</strong> ${selection.featuresLabels.map(escapeHtml).join(', ')}</p>` : '',
@@ -73,7 +73,7 @@ function getDeveloperEmailTemplate(input: { name: string; email: string; phone: 
         <h2 style="color:#ffffff;margin-top:0;">Nowe zapytanie z kalkulatora</h2>
         <p><strong>Imię:</strong> ${escapeHtml(input.name)}</p>
         <p><strong>Email:</strong> ${escapeHtml(input.email)}</p>
-        <p><strong>Telefon:</strong> ${escapeHtml(input.phone || '—')}</p>
+        <p><strong>Telefon:</strong> ${escapeHtml(input.phone || '-')}</p>
         <hr style="border:none;border-top:1px solid #1e2240;margin:24px 0;" />
         <h3 style="color:#00e5c3;">Wybrane opcje</h3>
         ${formatSelection(input.selection)}
@@ -81,7 +81,7 @@ function getDeveloperEmailTemplate(input: { name: string; email: string; phone: 
         <p style="font-size:12px;color:#8892b0;margin-top:12px;">${escapeHtml(input.disclaimer)}</p>
         <hr style="border:none;border-top:1px solid #1e2240;margin:24px 0;" />
         <p><strong>Wiadomość:</strong></p>
-        <p>${escapeHtml(input.message || '—').replace(/\n/g, '<br/>')}</p>
+        <p>${escapeHtml(input.message || '-').replace(/\n/g, '<br/>')}</p>
       </div>
     </div>
   `;
@@ -153,14 +153,14 @@ export async function POST(request: Request) {
       resend.emails.send({
         from: `AppCrates Kalkulator <${fromEmail}>`,
         to: toEmail,
-        subject: `Nowe zapytanie — ${selection.serviceLabel}`,
+        subject: `Nowe zapytanie - ${selection.serviceLabel}`,
         replyTo: email,
         html: getDeveloperEmailTemplate({ name, email, phone, message, selection, priceText, disclaimer }),
       }, { idempotencyKey: `quote-developer-${requestId}` }),
       resend.emails.send({
         from: `AppCrates <${fromEmail}>`,
         to: email,
-        subject: 'Otrzymałem Twoje zapytanie — AppCrates',
+        subject: 'Otrzymałem Twoje zapytanie - AppCrates',
         html: getClientEmailTemplate({ name, selection, priceText, language, disclaimer }),
       }, { idempotencyKey: `quote-client-${requestId}` }),
     ]);

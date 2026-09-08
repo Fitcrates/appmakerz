@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: LocalizedFaqPageProps): Promi
       languages: {
         en: absoluteUrl(localizedPath('en', '/faq')),
         pl: absoluteUrl(localizedPath('pl', '/faq')),
-        'x-default': absoluteUrl(localizedPath('pl', '/faq')),
+        'x-default': absoluteUrl(localizedPath('en', '/faq')),
       },
     },
     robots: { index: true, follow: true },

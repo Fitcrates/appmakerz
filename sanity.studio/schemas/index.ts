@@ -10,6 +10,7 @@ import pages from './documents/pages';
 import serviceLanding from './documents/serviceLanding';
 import aboutMe from './documents/aboutMe';
 import category from './documents/category';
+import redirect from './documents/redirect';
 import { projectSectionTypes } from './objects/project/sections';
 
 export const schemaTypes: SchemaTypeDefinition[] = [
@@ -22,6 +23,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   serviceLanding,
   aboutMe,
   category,
+  redirect,
   // Objects
   blockContent,
   blogTable,

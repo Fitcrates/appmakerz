@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: {
         pl: absoluteUrl(localizedPath('pl', path)),
         en: absoluteUrl(localizedPath('en', path)),
-        'x-default': absoluteUrl(localizedPath('pl', path)),
+        'x-default': absoluteUrl(localizedPath('en', path)),
       },
     },
     robots: { index: true, follow: true },

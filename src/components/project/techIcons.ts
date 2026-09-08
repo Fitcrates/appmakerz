@@ -111,8 +111,12 @@ const TECH_ICONS: Record<string, TechIcon> = {
   sanity: { slug: 'sanity', color: '#F03E2F' },
   contentful: { slug: 'contentful', color: '#2478CC' },
   strapi: { slug: 'strapi', color: '#4945FF' },
+  payload: { slug: 'payloadcms', color: '#FFFFFF' },
+  payloadcms: { slug: 'payloadcms', color: '#FFFFFF' },
+  meilisearch: { slug: 'meilisearch', color: '#FF5CAA' },
   stripe: { slug: 'stripe', color: '#635BFF' },
   paypal: { slug: 'paypal', color: '#003087' },
+  klarna: { slug: 'klarna', color: '#FFB3C7' },
 
   // Infrastructure & tooling
   docker: { slug: 'docker', color: '#2496ED' },

@@ -136,7 +136,7 @@ export default function ChatWidget() {
       };
       sessionStorage.setItem('calculatorPrefill', JSON.stringify(prefill));
     }
-    // If no concrete params detected, do NOT set calculatorPrefill — user will walk through the full form from step 0
+    // If no concrete params detected, do NOT set calculatorPrefill - user will walk through the full form from step 0
 
     setIsOpen(false);
     router.push(localizedPath(language, '/kalkulator'));
@@ -427,7 +427,7 @@ export default function ChatWidget() {
               </span>
             </div>
 
-            {/* Electric border — outside the button */}
+            {/* Electric border - outside the button */}
             <span
               className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-teal-300/70 animate-[electricPulse_2s_ease-in-out_infinite]"
               style={{ filter: 'url(#electric-turbulence)' }}

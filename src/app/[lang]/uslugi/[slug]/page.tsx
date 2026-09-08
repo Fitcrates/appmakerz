@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Script from 'next/script';
 import { PortableText } from '@portabletext/react';
-import { ArrowUpRight, BookOpenCheck } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import FaqAccordionList from '@/components/next/FaqAccordionList';
@@ -14,12 +14,17 @@ import ServiceDeliverablesNew from '@/components/new/ServiceDeliverablesNew';
 import ServiceModelsNew from '@/components/new/ServiceModelsNew';
 import ServiceProcessNew from '@/components/new/ServiceProcessNew';
 import HeroPulsePath from '@/components/new/HeroPulsePath';
+import ServiceStatsNew from '@/components/new/ServiceStatsNew';
+import GuideCtaSection from '@/components/new/GuideCtaSection';
+import ServiceCtaNew from '@/components/new/ServiceCtaNew';
+import HubLanding from '@/components/new/HubLanding';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getProjectSummaries, getRelatedPostCandidates, getServiceLanding, getServiceLandings, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
 import { localizedPath } from '@/lib/i18n-routing';
+import { getMarketplaceGuideChapter } from '@/lib/marketplace-guide';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
 import { getImageAlt } from '@/lib/image-alt';
 import {
@@ -120,7 +125,7 @@ export async function generateMetadata({ params }: LocalizedServiceLandingPagePr
       languages: {
         en: absoluteUrl(localizedPath('en', path)),
         pl: absoluteUrl(localizedPath('pl', path)),
-        'x-default': absoluteUrl(localizedPath('pl', path)),
+        'x-default': absoluteUrl(localizedPath('en', path)),
       },
     },
     robots: landing.seo?.noIndex ? { index: false, follow: false } : { index: true, follow: true },
@@ -231,6 +236,16 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
   const relatedPosts = (manualPosts.length ? manualPosts : automaticPosts)
     .filter((post) => post.slug?.current)
     .slice(0, 3);
+  // Chapter titles live in the guide's own JSON, so an editor picking slugs in
+  // Sanity never has to retype them — and a slug that no longer exists is
+  // dropped rather than rendered as a dead link.
+  const guideChapterLinks = (landing.guideCta?.chapters ?? [])
+    .map((slug: string) => {
+      const chapter = getMarketplaceGuideChapter(language, slug);
+      return chapter ? { slug, title: chapter.title } : null;
+    })
+    .filter((entry): entry is { slug: string; title: string } => entry !== null);
+
   const hasInternalLinks = otherServices.length > 0 || relatedProjects.length > 0 || relatedPosts.length > 0;
 
   const breadcrumbSchema = {
@@ -291,6 +306,14 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
     <>
       <NextHeader />
 
+      {landing.layoutVariant === 'hub' ? (
+        <HubLanding
+          landing={landing}
+          language={language}
+          relatedPosts={relatedPosts as Post[]}
+          guideChapterLinks={guideChapterLinks}
+        />
+      ) : (
       <main className="min-h-screen bg-indigo-950">
         <section className="relative min-h-[60vh] lg:min-h-[75vh] flex items-end overflow-hidden">
           {heroImageUrl ? (
@@ -346,25 +369,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
           </div>
         </section>
 
-        {stats.length > 0 ? (
-          <section className="border-y border-white/10">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/10 border-x border-white/10">
-                {stats.map((stat: { value: string; label: string }, index: number) => (
-                  <div
-                    key={`stat-${index}`}
-                    className="bg-indigo-950 py-8 lg:py-10 px-6"
-                  >
-                    <p className="text-3xl sm:text-4xl font-light font-oxanium text-teal-300 notranslate">
-                      {stat.value}
-                    </p>
-                    <p className="text-white/50 text-sm mt-2">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        ) : null}
+        <ServiceStatsNew stats={stats} language={language} />
 
         {models.length > 0 ? (
           <ServiceModelsNew models={models} language={language} />
@@ -452,34 +457,8 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
           </section>
         ) : null}
 
-        {landing.slug.current === 'marketplace-multi-vendor-medusa-js' ? (
-          <section className="border-t border-white/10 py-16 lg:py-20">
-            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-              <div className="grid gap-8 border border-teal-300/20 bg-teal-300/[0.05] p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
-                <div>
-                  <div className="mb-4 flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-teal-300">
-                    <BookOpenCheck className="h-4 w-4" aria-hidden="true" />
-                    {language === 'pl' ? 'Bezpłatna baza wiedzy' : 'Free knowledge base'}
-                  </div>
-                  <h2 className="font-oxanium text-2xl font-light text-white sm:text-3xl">
-                    {language === 'pl' ? 'Praktyczny przewodnik operacyjny dla marketplace' : 'Practical marketplace operations guide'}
-                  </h2>
-                  <p className="mt-4 max-w-2xl font-light leading-relaxed text-white/60">
-                    {language === 'pl'
-                      ? '25 rozdziałów o odpowiedzialności, onboardingu sprzedawców, GPSR, DSA, płatnościach, DAC7, BDO i procesach potrzebnych przed uruchomieniem sprzedaży.'
-                      : '25 chapters covering responsibility, seller onboarding, GPSR, DSA, payments, DAC7, packaging compliance, and the processes required before launch.'}
-                  </p>
-                </div>
-                <PrefetchLink
-                  href={localizedPath(language, '/marketplace-guide')}
-                  className="inline-flex items-center justify-center gap-2 border border-teal-300/40 px-6 py-3 text-sm text-teal-300 transition-colors hover:bg-teal-300 hover:text-indigo-950"
-                >
-                  {language === 'pl' ? 'Otwórz przewodnik' : 'Open the guide'}
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                </PrefetchLink>
-              </div>
-            </div>
-          </section>
+        {landing.guideCta?.enabled ? (
+          <GuideCtaSection chapters={guideChapterLinks} language={language} />
         ) : null}
 
         {faq.length > 0 ? (
@@ -637,30 +616,9 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
           </section>
         ) : null}
 
-        <section className="py-20 lg:py-24 border-t border-white/10">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="mb-6">
-              <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-white" glowSize={200} baseDelay={100} charDelay={30}>
-                {language === 'pl' ? 'Gotowy, żeby zacząć?' : 'Ready to get started?'}
-              </BurnSpotlightText>
-            </div>
-            <div className="mb-10 max-w-2xl mx-auto">
-              <SpotlightText as="p" className="text-white/50 font-light font-plex text-lg" glowSize={150}>
-                {language === 'pl'
-                  ? 'Porozmawiajmy o Twoim projekcie. Bezpłatna konsultacja, bez zobowiązań.'
-                  : "Let's talk about your project. Free consultation, no obligations."}
-              </SpotlightText>
-            </div>
-            <PrefetchLink
-              href={localizedPath(language, '/#contact')}
-              className="group relative inline-block px-12 py-5 bg-teal-300 text-indigo-950 font-normal overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
-            >
-              <span className="relative z-10">{ctaLabel}</span>
-              <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-            </PrefetchLink>
-          </div>
-        </section>
+        <ServiceCtaNew ctaLabel={ctaLabel} language={language} />
       </main>
+      )}
 
       <NextFooter />
       <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />

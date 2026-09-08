@@ -3,6 +3,9 @@
 import { motion } from "framer-motion";
 import SpotlightText from "./SpotlightText";
 import BurnSpotlightText from "./BurnSpotlightText";
+import PrefetchLink from "@/components/next/PrefetchLink";
+import { localizedPath } from "@/lib/i18n-routing";
+import type { Language } from "@/lib/language";
 import type { ServiceModel } from "@/types/sanity.types";
 
 interface ServiceModelsNewProps {
@@ -36,8 +39,8 @@ export default function ServiceModelsNew({ models, language }: ServiceModelsNewP
           glowSize={120}
         >
           {language === 'pl'
-            ? 'Ten sam silnik, dwa scenariusze wdrożenia. Nie musisz wiedzieć, który wybrać — to ustalamy na pierwszej rozmowie.'
-            : 'Same engine, two rollout scenarios. You do not need to decide upfront — we settle it in the first conversation.'}
+            ? 'Ten sam silnik, dwa scenariusze wdrożenia. Nie musisz wiedzieć, który wybrać - to ustalamy na pierwszej rozmowie.'
+            : 'Same engine, two rollout scenarios. You do not need to decide upfront - we settle it in the first conversation.'}
         </SpotlightText>
 
         <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
@@ -83,6 +86,17 @@ export default function ServiceModelsNew({ models, language }: ServiceModelsNewP
                       ))}
                     </ul>
                   </>
+                ) : null}
+
+                {/* Optional: turns a model card into a routing card, which is
+                    what makes this component reusable as the hub's fork. */}
+                {model.linkHref && model.linkLabel ? (
+                  <PrefetchLink
+                    href={localizedPath(language as Language, model.linkHref)}
+                    className="mt-8 inline-block self-start font-plex text-sm text-teal-300 transition-colors hover:text-teal-200"
+                  >
+                    {model.linkLabel} <span aria-hidden="true">→</span>
+                  </PrefetchLink>
                 ) : null}
               </div>
             </motion.div>

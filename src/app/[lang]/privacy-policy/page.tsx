@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: LocalizedPrivacyPolicyPagePro
       languages: {
         en: absoluteUrl(localizedPath('en', '/privacy-policy')),
         pl: absoluteUrl(localizedPath('pl', '/privacy-policy')),
-        'x-default': absoluteUrl(localizedPath('pl', '/privacy-policy')),
+        'x-default': absoluteUrl(localizedPath('en', '/privacy-policy')),
       },
     },
     robots: { index: true, follow: true },

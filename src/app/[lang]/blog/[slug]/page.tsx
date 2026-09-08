@@ -81,7 +81,7 @@ export async function generateMetadata({ params }: LocalizedBlogPostPageProps): 
       languages: {
         en: absoluteUrl(localizedPath('en', path)),
         pl: absoluteUrl(localizedPath('pl', path)),
-        'x-default': absoluteUrl(localizedPath('pl', path)),
+        'x-default': absoluteUrl(localizedPath('en', path)),
       },
     },
     robots: post.seo?.noIndex ? { index: false, follow: false } : { index: true, follow: true },

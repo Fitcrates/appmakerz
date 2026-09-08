@@ -95,8 +95,8 @@ const ContactNew: React.FC = () => {
                   {t.info.email.label}
                 </span>
                 <a
-                  href="mailto:appcratesdev@gmail.com"
-                  onClick={() => trackContactClick('email', 'appcratesdev@gmail.com')}
+                  href="mailto:kontakt@appcrates.pl"
+                  onClick={() => trackContactClick('email', 'kontakt@appcrates.pl')}
                   className="text-xl text-white  hover:text-teal-300 transition-colors"
                 >
                   {t.info.email.value}
