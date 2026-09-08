@@ -66,10 +66,10 @@ export const translations = {
 
     // About Section (AboutNew)
     about: {
-      label: "[ 01 — About ]",
+      label: "[ 01 - About ]",
       heading: "Solutions that\ngrow your\nbusiness",
       description: {
-        p1: "I help businesses succeed online. Whether you need an e-commerce shop to sell products, a landing page that converts visitors into customers, or AI-powered apps to automate your workflows — I deliver complete solutions from start to finish.",
+        p1: "I help businesses succeed online. Whether you need an e-commerce shop to sell products, a landing page that converts visitors into customers, or AI-powered apps to automate your workflows - I deliver complete solutions from start to finish.",
         p2: "You get a partner who understands your business goals. I handle everything: design, development, content management systems you can update yourself, and ongoing support. No technical knowledge needed on your end.",
       },
       stats: {
@@ -81,7 +81,7 @@ export const translations = {
 
     // Projects Section (ProjectsNew)
     projects: {
-      label: "[ 02 — Work ]",
+      label: "[ 02 - Work ]",
       heading: "Selected Projects",
       viewAction: "View",
       cta: "Want to work together?",
@@ -119,42 +119,42 @@ export const translations = {
           description: "High-converting spa website with client-friendly content management system. Owners can update services, prices, and promotions themselves without technical help. Increased bookings by 40% in first month."
         },
         koreanBbq: {
-          title: "HWA / 火 — Korean BBQ",
+          title: "HWA / 火 - Korean BBQ",
           category: "Premium Frontend Experience",
           description: "A conceptual frontend project simulating a luxury Korean BBQ restaurant. Built with Next.js featuring cinematic GSAP ScrollTrigger animations, a custom CSS architecture, and full i18n support."
         },
         lumier: {
           title: "Interior Lighting Design Demo",
           category: "Landing Page",
-          description: "Professional demo website for an interior lighting design company. Built around light, motion, and code. Real-time 3D rendering, GSAP, Canvas — no compromises on performance."
+          description: "Professional demo website for an interior lighting design company. Built around light, motion, and code. Real-time 3D rendering, GSAP, Canvas - no compromises on performance."
         }
       },
     },
 
     // Services Section (ServicesNew)
     services: {
-      label: "[ 02 — Services ]",
+      label: "[ 02 - Services ]",
       heading: "What I can build for you",
       cta: "Consult Your Project",
       items: {
         shopify: {
           number: "01",
           title: "Shopify stores & custom storefronts",
-          punchline: "Launch quickly today — without limiting tomorrow's growth.",
+          punchline: "Launch quickly today - without limiting tomorrow's growth.",
           description: "Shopify stores for every stage of growth: from focused theme-based launches to custom headless storefronts built with Next.js or TanStack, tailored integrations and conversion-focused UX.",
           href: "/services/shopify-development",
         },
         websites: {
           number: "02",
           title: "Websites",
-          punchline: "A site that brings in clients — not just looks good.",
-          description: "Modern business websites and landing pages on Next.js: lightning-fast load times, solid SEO and high conversion — ready for traffic from day one.",
+          punchline: "A site that brings in clients - not just looks good.",
+          description: "Modern business websites and landing pages on Next.js: lightning-fast load times, solid SEO and high conversion - ready for traffic from day one.",
           href: "/services/professional-website-development",
         },
         ecommerce: {
           number: "03",
           title: "Headless e-commerce stores",
-          punchline: "Full control over your store — no commissions, no growth ceiling.",
+          punchline: "Full control over your store - no commissions, no growth ceiling.",
           description: "B2C and B2B online stores on Medusa.js: open-source commerce, flexible checkout, product logic and integrations without the limits of closed SaaS platforms.",
           href: "/services/e-commerce-shops-medusa-js",
         },
@@ -169,14 +169,14 @@ export const translations = {
           number: "05",
           title: "AI integrations & automation",
           punchline: "Less repetitive work, more time for what actually matters.",
-          description: "AI chatbots, RAG assistants, process automations and integrations with business data — solutions that genuinely lighten the load and speed up customer handling.",
+          description: "AI chatbots, RAG assistants, process automations and integrations with business data - solutions that genuinely lighten the load and speed up customer handling.",
           href: "/services/ai-integrations",
         },
         apps: {
           number: "06",
           title: "Custom web applications",
           punchline: "A system built around your business, not the other way around.",
-          description: "Web apps, B2B dashboards, MVPs and SaaS platforms built around real business logic — with clean architecture and room to scale.",
+          description: "Web apps, B2B dashboards, MVPs and SaaS platforms built around real business logic - with clean architecture and room to scale.",
           href: "/services/custom-web-applications",
         },
       },
@@ -184,7 +184,7 @@ export const translations = {
 
     // Solutions Section (SolutionsNew)
     solutions: {
-      label: "[ 04 — Solutions ]",
+      label: "[ 04 - Solutions ]",
       heading: "How can I help?",
       cta: "Let's talk about your project",
       items: {
@@ -192,25 +192,25 @@ export const translations = {
           number: "01",
           title: "Landing Pages & Business Websites",
           problem: "Getting traffic, but not enough inquiries?",
-          description: "Conversion- and SEO-focused landing pages on Next.js — fast loading, responsive, modern design, high conversion rates and excellent scalability.",
+          description: "Conversion- and SEO-focused landing pages on Next.js - fast loading, responsive, modern design, high conversion rates and excellent scalability.",
         },
         ecommerce: {
           number: "02",
           title: "Shopify & Custom E-Commerce Stores",
           problem: "Your platform starting to hold you back?",
-          description: "Shopify stores from fast theme-based launches to custom headless storefronts on Next.js or TanStack — plus Medusa.js when your commerce logic needs full open-source control.",
+          description: "Shopify stores from fast theme-based launches to custom headless storefronts on Next.js or TanStack - plus Medusa.js when your commerce logic needs full open-source control.",
         },
         marketplace: {
           number: "03",
           title: "Marketplaces & Multi-Vendor Platforms",
           problem: "Looking to build a platform for multiple sellers?",
-          description: "Marketplaces with custom commission logic, payments and vendor account management — tailored to your business model from the first line of code.",
+          description: "Marketplaces with custom commission logic, payments and vendor account management - tailored to your business model from the first line of code.",
         },
         webApps: {
           number: "04",
           title: "Custom Web Applications",
           problem: "No off-the-shelf tool fits your workflow?",
-          description: "Web applications and internal systems on Next.js — built around real business logic, with architecture that grows alongside your company.",
+          description: "Web applications and internal systems on Next.js - built around real business logic, with architecture that grows alongside your company.",
         },
         seo: {
           number: "05",
@@ -223,10 +223,10 @@ export const translations = {
 
     // Contact Section (ContactNew)
     contact: {
-      label: "[ 06 — Contact ]",
+      label: "[ 06 - Contact ]",
       heading: "Let's work together",
       info: {
-        email: { label: "Email", value: "appcratesdev@gmail.com" },
+        email: { label: "Email", value: "kontakt@appcrates.pl" },
         phone: { label: "Phone", value: "+48 733 433 230" },
         location: { label: "Location", value: "Wrocław, Poland" },
       },
@@ -308,7 +308,7 @@ export const translations = {
         success: "Successfully subscribed!",
       },
       brand: {
-        description: "AppCrates — crafting exceptional digital experiences through modern web development.",
+        description: "AppCrates - crafting exceptional digital experiences through modern web development.",
       },
       navigation: "Navigation",
       connect: "Connect",
@@ -332,7 +332,7 @@ export const translations = {
       title: "Blog",
       subtitle: "Thoughts, tutorials, and insights",
       latestSection: {
-        label: "[ 05 — Blog ]",
+        label: "[ 05 - Blog ]",
         heading: "Latest from the blog",
         subtitle: "Fresh notes on web development, AI, e-commerce and the decisions behind modern digital products.",
         cta: "View all posts",
@@ -500,10 +500,10 @@ export const translations = {
 
     // About Section (AboutNew)
     about: {
-      label: "[ 01 — O mnie ]",
+      label: "[ 01 - O mnie ]",
       heading: "Rozwiązania, które\nrozwijają Twój\nbiznes",
       description: {
-        p1: "Pomagam firmom odnosić sukcesy w internecie. Czy potrzebujesz sklepu internetowego do sprzedaży produktów, landing page który zamienia odwiedzających w klientów, czy aplikacji AI automatyzujących procesy — dostarczam kompletne rozwiązania od początku do końca.",
+        p1: "Pomagam firmom odnosić sukcesy w internecie. Czy potrzebujesz sklepu internetowego do sprzedaży produktów, landing page który zamienia odwiedzających w klientów, czy aplikacji AI automatyzujących procesy - dostarczam kompletne rozwiązania od początku do końca.",
         p2: "Zyskujesz partnera, który rozumie cele Twojego biznesu. Zajmuję się wszystkim: projektem, programowaniem, systemami zarządzania treścią które możesz sam aktualizować, oraz stałym wsparciem. Nie potrzebujesz wiedzy technicznej.",
       },
       stats: {
@@ -515,7 +515,7 @@ export const translations = {
 
     // Projects Section (ProjectsNew)
     projects: {
-      label: "[ 03 — Projekty ]",
+      label: "[ 03 - Projekty ]",
       heading: "Wybrane Projekty",
       viewAction: "Zobacz",
       cta: "Chcesz współpracować?",
@@ -553,14 +553,14 @@ export const translations = {
           description: "Wysokokonwertująca strona spa z łatwym systemem zarządzania treścią dla właścicieli. Właściciele mogą samodzielnie aktualizować usługi, ceny i promocje bez pomocy programisty. Wzrost rezerwacji o 40% w pierwszym miesiącu."
         },
         koreanBbq: {
-          title: "HWA / 火 — Premium Korean BBQ",
+          title: "HWA / 火 - Premium Korean BBQ",
           category: "Koncepcyjny Projekt Frontendowy",
           description: "W pełni immersyjna platforma symulująca stronę luksusowej restauracji. Stworzona w Next.js z kinowymi animacjami GSAP ScrollTrigger, dedykowanym systemem CSS i pełnym wsparciem dla wielojęzyczności."
         },
         lumier: {
           title: "Demo strona designu oświetlenia wnętrz",
           category: "Landing Page",
-          description: "Profesjonalna strona demonstracyjna dla firmy zajmującej się designem oświetlenia wnętrz. Zbudowane wokół światła, ruchu i kodu. Rendering 3D w czasie rzeczywistym, GSAP, Canvas — bez kompromisów w wydajności."
+          description: "Profesjonalna strona demonstracyjna dla firmy zajmującej się designem oświetlenia wnętrz. Zbudowane wokół światła, ruchu i kodu. Rendering 3D w czasie rzeczywistym, GSAP, Canvas - bez kompromisów w wydajności."
         }
       },
     },
@@ -568,28 +568,28 @@ export const translations = {
 
     // Services Section (ServicesNew)
     services: {
-      label: "[ 02 — Usługi ]",
+      label: "[ 02 - Usługi ]",
       heading: "Co mogę dla Ciebie zbudować",
       cta: "Skonsultuj Swój Projekt",
       items: {
         shopify: {
           number: "01",
           title: "Sklepy Shopify i custom storefronty",
-          punchline: "Szybki start dziś — bez ograniczania jutrzejszego wzrostu.",
+          punchline: "Szybki start dziś - bez ograniczania jutrzejszego wzrostu.",
           description: "Sklepy Shopify na każdy etap rozwoju: od sprawnych wdrożeń na motywie po customowe storefronty headless na Next.js lub TanStack, dedykowane integracje i UX nastawiony na konwersję.",
           href: "/uslugi/shopify-development",
         },
         websites: {
           number: "02",
           title: "Strony internetowe",
-          punchline: "Strona, która przyciąga klientów — nie tylko wygląda.",
-          description: "Nowoczesne strony firmowe i landing page na Next.js: błyskawiczne ładowanie, solidne SEO i wysoka konwersja — gotowe na ruch od pierwszego dnia.",
+          punchline: "Strona, która przyciąga klientów - nie tylko wygląda.",
+          description: "Nowoczesne strony firmowe i landing page na Next.js: błyskawiczne ładowanie, solidne SEO i wysoka konwersja - gotowe na ruch od pierwszego dnia.",
           href: "/uslugi/professional-website-development",
         },
         ecommerce: {
           number: "03",
           title: "Sklepy headless e-commerce",
-          punchline: "Sklep z pełną kontrolą — bez prowizji, bez sufitu wzrostu.",
+          punchline: "Sklep z pełną kontrolą - bez prowizji, bez sufitu wzrostu.",
           description: "Sklepy B2C i B2B na Medusa.js: open-source commerce, elastyczny checkout, logika produktów i integracje bez ograniczeń zamkniętych platform SaaS.",
           href: "/uslugi/e-commerce-shops-medusa-js",
         },
@@ -604,14 +604,14 @@ export const translations = {
           number: "05",
           title: "Wdrożenia AI i automatyzacje",
           punchline: "Mniej powtarzalnej pracy, więcej czasu na to, co ważne.",
-          description: "Chatboty AI, asystenci RAG, automatyzacje procesów i integracje z danymi firmowymi — rozwiązania, które realnie odciążają zespół i przyspieszają obsługę klientów.",
+          description: "Chatboty AI, asystenci RAG, automatyzacje procesów i integracje z danymi firmowymi - rozwiązania, które realnie odciążają zespół i przyspieszają obsługę klientów.",
           href: "/uslugi/ai-integrations",
         },
         apps: {
           number: "06",
           title: "Dedykowane aplikacje webowe",
           punchline: "System dopasowany do Twojej firmy, nie firma dopasowana do systemu.",
-          description: "Aplikacje webowe, panele B2B, MVP i platformy SaaS budowane pod konkretną logikę biznesową — z czystą architekturą i przestrzenią do skalowania.",
+          description: "Aplikacje webowe, panele B2B, MVP i platformy SaaS budowane pod konkretną logikę biznesową - z czystą architekturą i przestrzenią do skalowania.",
           href: "/uslugi/custom-web-applications",
         },
       },
@@ -619,7 +619,7 @@ export const translations = {
 
     // Solutions Section (SolutionsNew)
     solutions: {
-      label: "[ 04 — Rozwiązania ]",
+      label: "[ 04 - Rozwiązania ]",
       heading: "Jak mogę pomóc?",
       cta: "Porozmawiajmy o Twoim projekcie",
       items: {
@@ -627,25 +627,25 @@ export const translations = {
           number: "01",
           title: "Strony Landing Page i Firmowe",
           problem: "Masz ruch, ale mało zapytań?",
-          description: "Landing page na Next.js zoptymalizowany pod konwersję i SEO — szybkie ładowanie, responsywne, nowoczesny design, wysoka konwersja, doskonała skalowalność. ",
+          description: "Landing page na Next.js zoptymalizowany pod konwersję i SEO - szybkie ładowanie, responsywne, nowoczesny design, wysoka konwersja, doskonała skalowalność. ",
         },
         ecommerce: {
           number: "02",
           title: "Sklepy Shopify i custom e-commerce",
           problem: "Platforma zaczyna ograniczać Twój rozwój?",
-          description: "Sklepy Shopify od szybkiego startu na motywie po custom headless na Next.js lub TanStack — oraz Medusa.js, gdy logika commerce wymaga pełnej kontroli open-source.",
+          description: "Sklepy Shopify od szybkiego startu na motywie po custom headless na Next.js lub TanStack - oraz Medusa.js, gdy logika commerce wymaga pełnej kontroli open-source.",
         },
         marketplace: {
           number: "03",
           title: "Marketplace i Platformy Multi-Vendor",
           problem: "Chcesz zbudować platformę dla wielu sprzedawców?",
-          description: "Marketplace'y z własną logiką prowizji, płatności i zarządzania kontami sprzedawców — dopasowane do modelu biznesowego od pierwszej linii kodu.",
+          description: "Marketplace'y z własną logiką prowizji, płatności i zarządzania kontami sprzedawców - dopasowane do modelu biznesowego od pierwszej linii kodu.",
         },
         webApps: {
           number: "04",
           title: "Dedykowane Aplikacje Webowe",
           problem: "Żadne gotowe narzędzie nie pasuje do Twojego procesu?",
-          description: "Aplikacje webowe i systemy wewnętrzne na Next.js — budowane pod realną logikę biznesową, z architekturą, która rośnie razem z firmą.",
+          description: "Aplikacje webowe i systemy wewnętrzne na Next.js - budowane pod realną logikę biznesową, z architekturą, która rośnie razem z firmą.",
         },
         seo: {
           number: "05",
@@ -658,10 +658,10 @@ export const translations = {
 
     // Contact Section (ContactNew)
     contact: {
-      label: "[ 06 — Kontakt ]",
+      label: "[ 06 - Kontakt ]",
       heading: "Pracujmy razem",
       info: {
-        email: { label: "Email", value: "appcratesdev@gmail.com" },
+        email: { label: "Email", value: "kontakt@appcrates.pl" },
         phone: { label: "Telefon", value: "+48 733 433 230" },
         location: { label: "Lokalizacja", value: "Wrocław, Polska" },
       },
@@ -743,7 +743,7 @@ export const translations = {
         success: "Pomyślnie zasubskrybowano!",
       },
       brand: {
-        description: "AppCrates — tworzę wyjątkowe cyfrowe doświadczenia poprzez nowoczesny web development.",
+        description: "AppCrates - tworzę wyjątkowe cyfrowe doświadczenia poprzez nowoczesny web development.",
       },
       navigation: "Nawigacja",
       connect: "Połącz się",
@@ -767,7 +767,7 @@ export const translations = {
       title: "Blog",
       subtitle: "Przemyślenia, tutoriale i spostrzeżenia",
       latestSection: {
-        label: "[ 05 — Blog ]",
+        label: "[ 05 - Blog ]",
         heading: "Najnowsze wpisy z bloga",
         subtitle: "Świeże notatki o web developmencie, AI, e-commerce i decyzjach stojących za nowoczesnymi produktami cyfrowymi.",
         cta: "Zobacz wszystkie wpisy",
@@ -831,7 +831,7 @@ export const translations = {
       allProjects: "Nawigacja po projektach",
       moreTech: "więcej",
       closingTitle: "Potrzebujesz czegoś podobnego?",
-      closingText: "Napisz, czego potrzebujesz — dostaniesz konkretny zakres, termin i cenę.",
+      closingText: "Napisz, czego potrzebujesz - dostaniesz konkretny zakres, termin i cenę.",
     },
 
     // Newsletter Modal

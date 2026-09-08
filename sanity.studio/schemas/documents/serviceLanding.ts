@@ -1,3 +1,4 @@
+import guideManifest from '../../../src/content/marketplace-guide/manifest.json';
 import { AIGeneratorInput } from '../../components/AIGeneratorInput';
 import { AIWholePostGenerator } from '../../components/AIWholePostGenerator';
 
@@ -53,6 +54,22 @@ export default {
         maxLength: 96,
       },
       validation: (Rule: any) => Rule.required(),
+    },
+    {
+      name: 'layoutVariant',
+      title: 'Page layout',
+      type: 'string',
+      group: 'content',
+      description:
+        'Service = the standard sales landing. Hub = the MedusaJS overview page: a different section order that routes to the narrower services instead of selling one of them.',
+      options: {
+        list: [
+          { title: 'Service landing (default)', value: 'service' },
+          { title: 'Technology hub', value: 'hub' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'service',
     },
     {
       name: 'serviceType',
@@ -403,6 +420,8 @@ export default {
                 { name: 'title', title: 'Model name', type: 'string', validation: (Rule: any) => Rule.required() },
                 { name: 'audience', title: 'For who (one line)', type: 'string', validation: (Rule: any) => Rule.required() },
                 { name: 'points', title: 'Bullet points', type: 'array', of: [{ type: 'string' }], validation: (Rule: any) => Rule.max(4) },
+                { name: 'linkLabel', title: 'Link label', type: 'string' },
+                { name: 'linkHref', title: 'Link target', type: 'string', description: 'Path without the language prefix. Turns the model into a routing card on the hub.' },
               ],
               preview: { select: { title: 'title', subtitle: 'audience' } },
             },
@@ -423,11 +442,202 @@ export default {
                 { name: 'title', title: 'Model name', type: 'string', validation: (Rule: any) => Rule.required() },
                 { name: 'audience', title: 'For who (one line)', type: 'string', validation: (Rule: any) => Rule.required() },
                 { name: 'points', title: 'Bullet points', type: 'array', of: [{ type: 'string' }], validation: (Rule: any) => Rule.max(4) },
+                { name: 'linkLabel', title: 'Link label', type: 'string' },
+                { name: 'linkHref', title: 'Link target', type: 'string', description: 'Path without the language prefix. Turns the model into a routing card on the hub.' },
               ],
               preview: { select: { title: 'title', subtitle: 'audience' } },
             },
           ],
           validation: (Rule: any) => Rule.max(3),
+        },
+      ],
+    },
+    {
+      name: 'capabilities',
+      title: 'Capabilities (hub)',
+      type: 'object',
+      group: 'content',
+      description: 'Grouped scope list. Hub layout only. A group without a link is still worth listing.',
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        { name: 'en', title: 'English', type: 'array', of: [{
+          type: 'object',
+          fields: [
+            { name: 'group', title: 'Group', type: 'string', validation: (Rule: any) => Rule.required() },
+            { name: 'items', title: 'Items', type: 'array', of: [{ type: 'string' }], validation: (Rule: any) => Rule.min(1) },
+            { name: 'linkLabel', title: 'Link label', type: 'string' },
+            { name: 'linkHref', title: 'Link target', type: 'string', description: 'Path without the language prefix, e.g. /uslugi/marketplace-multi-vendor-medusa-js' },
+          ],
+          preview: { select: { title: 'group', subtitle: 'linkHref' } },
+        }] },
+        { name: 'pl', title: 'Polish', type: 'array', of: [{
+          type: 'object',
+          fields: [
+            { name: 'group', title: 'Group', type: 'string', validation: (Rule: any) => Rule.required() },
+            { name: 'items', title: 'Items', type: 'array', of: [{ type: 'string' }], validation: (Rule: any) => Rule.min(1) },
+            { name: 'linkLabel', title: 'Link label', type: 'string' },
+            { name: 'linkHref', title: 'Link target', type: 'string', description: 'Path without the language prefix, e.g. /uslugi/marketplace-multi-vendor-medusa-js' },
+          ],
+          preview: { select: { title: 'group', subtitle: 'linkHref' } },
+        }] },
+      ],
+    },
+    {
+      name: 'fitYes',
+      title: 'Good fit when (hub)',
+      type: 'object',
+      group: 'content',
+      description: 'Hub layout only. Rendered beside fitNo.',
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        { name: 'en', title: 'English', type: 'array', of: [{ type: 'string' }] },
+        { name: 'pl', title: 'Polish', type: 'array', of: [{ type: 'string' }] },
+      ],
+    },
+    {
+      name: 'fitNo',
+      title: 'Poor fit when (hub)',
+      type: 'object',
+      group: 'content',
+      description: 'Hub layout only. Saying who this is not for filters out bad leads before they write.',
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        { name: 'en', title: 'English', type: 'array', of: [{ type: 'string' }] },
+        { name: 'pl', title: 'Polish', type: 'array', of: [{ type: 'string' }] },
+      ],
+    },
+    {
+      name: 'integrations',
+      title: 'Integrations (hub)',
+      type: 'object',
+      group: 'content',
+      description: 'Hub layout only. Rows grouped by the group field.',
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        { name: 'en', title: 'English', type: 'array', of: [{
+          type: 'object',
+          fields: [
+            { name: 'group', title: 'Group', type: 'string', description: 'Rows sharing a group are rendered together under one heading.' },
+            { name: 'name', title: 'The need', type: 'string', description: 'Phrase it from the buyer side, e.g. "Sprzedajesz juz gdzie indziej". Not a vendor name.', validation: (Rule: any) => Rule.required() },
+            { name: 'detail', title: 'What answers it', type: 'string', description: 'What they get, and which tools it runs on.' },
+            { name: 'meta', title: 'Small note underneath', type: 'string' },
+          ],
+          preview: { select: { title: 'name', subtitle: 'detail' } },
+        }] },
+        { name: 'pl', title: 'Polish', type: 'array', of: [{
+          type: 'object',
+          fields: [
+            { name: 'group', title: 'Group', type: 'string', description: 'Rows sharing a group are rendered together under one heading.' },
+            { name: 'name', title: 'The need', type: 'string', description: 'Phrase it from the buyer side, e.g. "Sprzedajesz juz gdzie indziej". Not a vendor name.', validation: (Rule: any) => Rule.required() },
+            { name: 'detail', title: 'What answers it', type: 'string', description: 'What they get, and which tools it runs on.' },
+            { name: 'meta', title: 'Small note underneath', type: 'string' },
+          ],
+          preview: { select: { title: 'name', subtitle: 'detail' } },
+        }] },
+      ],
+    },
+    {
+      name: 'technologies',
+      title: 'Technology chips (hub)',
+      type: 'array',
+      group: 'content',
+      of: [{ type: 'string' }],
+      options: { layout: 'tags' },
+      description: 'Hub layout only. Names only — avoid pinning versions, which dates the page and reads as a limit on what you will use.',
+    },
+    {
+      name: 'hubMedia',
+      title: 'Images between sections (hub)',
+      type: 'array',
+      group: 'content',
+      description:
+        'Hub layout only. Drop a mockup, screenshot or diagram into any slot. Slots left empty simply render nothing, so the page never has a hole where a picture was meant to go.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'placement',
+              title: 'Where it goes',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'After the store / marketplace fork', value: 'after-fork' },
+                  { title: 'After the scope list', value: 'after-capabilities' },
+                  { title: 'After "who is this for"', value: 'after-fit' },
+                  { title: 'After the connections list', value: 'after-integrations' },
+                  { title: 'After the evidence articles', value: 'after-evidence' },
+                ],
+              },
+              validation: (Rule: any) => Rule.required(),
+            },
+            {
+              name: 'image',
+              title: 'Image',
+              type: 'image',
+              options: { hotspot: true },
+              fields: [
+                {
+                  name: 'alt',
+                  title: 'Alt text',
+                  type: 'string',
+                  validation: (Rule: any) => Rule.required().warning('Add alt text for accessibility and image search.'),
+                },
+              ],
+              validation: (Rule: any) => Rule.required(),
+            },
+            {
+              name: 'caption',
+              title: 'Caption',
+              type: 'object',
+              fields: [
+                { name: 'en', title: 'English', type: 'string' },
+                { name: 'pl', title: 'Polish', type: 'string' },
+              ],
+            },
+            {
+              name: 'wide',
+              title: 'Full width',
+              type: 'boolean',
+              description: 'Off keeps the image inside the text column. On lets a wide screenshot use the whole band.',
+              initialValue: false,
+            },
+          ],
+          preview: { select: { title: 'placement', media: 'image' } },
+        },
+      ],
+    },
+    {
+      name: 'guideCta',
+      title: 'Marketplace guide CTA',
+      type: 'object',
+      group: 'links',
+      description:
+        'Shows the “Practical marketplace operations guide” block on this landing. This used to be hardcoded to one slug in the page template, so no other landing could ever surface the guide.',
+      options: { collapsible: true, collapsed: false },
+      fields: [
+        {
+          name: 'enabled',
+          title: 'Show the guide CTA',
+          type: 'boolean',
+          initialValue: false,
+        },
+        {
+          name: 'chapters',
+          title: 'Deep-link these chapters',
+          type: 'array',
+          of: [{ type: 'string' }],
+          // The 24 chapter pages are only reachable from the guide index, so
+          // pointing a landing at the two or three that match its intent is
+          // worth more than another link to the guide root.
+          options: {
+            list: guideManifest.chapters.map((chapter: { slug: string }) => ({
+              title: chapter.slug,
+              value: chapter.slug,
+            })),
+          },
+          validation: (Rule: any) => Rule.max(4).warning('More than four turns the block into a link dump.'),
+          description: 'Optional. Leave empty to link to the guide index only.',
         },
       ],
     },

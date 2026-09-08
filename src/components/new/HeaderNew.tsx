@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, ArrowUpRight } from 'lucide-react';
-import { PiGlobeDuotone, PiShoppingCartDuotone, PiStorefrontDuotone, PiRobotDuotone, PiBrowserDuotone } from 'react-icons/pi';
+import { PiGlobeDuotone, PiShoppingCartDuotone, PiStorefrontDuotone, PiRobotDuotone, PiBrowserDuotone, PiStackDuotone } from 'react-icons/pi';
 import { SiShopify } from 'react-icons/si';
 import { IconType } from 'react-icons';
 import PrefetchLink from '@/components/next/PrefetchLink';
@@ -24,6 +24,8 @@ const getNavItems = (t: typeof translations.en.nav) => [
   { label: t.contact, href: '/#contact' },
 ];
 
+type ServiceGroupKey = 'medusa' | 'other';
+
 interface ServiceLink {
   icon: IconType;
   label: string;
@@ -31,18 +33,39 @@ interface ServiceLink {
   longDescription: string;
   href: string;
   image: string;
+  /** Which cluster the entry belongs to in the dropdown. */
+  group: ServiceGroupKey;
 }
 
+// The two Medusa services are children of the hub, not its siblings, so the
+// menu groups them under it instead of listing seven peers.
+const getServiceGroups = (language: string): Array<{ key: ServiceGroupKey; label: string }> => [
+  { key: 'medusa', label: 'Medusa.js' },
+  { key: 'other', label: language === 'pl' ? 'Pozostałe usługi' : 'Other services' },
+];
+
 const getServiceLandingLinks = (language: string): ServiceLink[] => [
+  {
+    icon: PiStackDuotone,
+    label: language === 'pl' ? 'MedusaJS: wdrożenia i rozwój' : 'MedusaJS development',
+    description: language === 'pl' ? 'Punkt wyjścia do sklepów i marketplace' : 'The way into stores and marketplaces',
+    longDescription: language === 'pl'
+      ? 'Sklepy dla jednego sprzedawcy, platformy marketplace i integracje z tym, czego już używasz. Zacznij tutaj, jeśli nie wiesz jeszcze, którego wariantu potrzebujesz.'
+      : 'Single-seller stores, marketplace platforms and integrations with what you already use. Start here if you are not yet sure which variant you need.',
+    href: '/uslugi/medusa-js-development',
+    image: '/media/solutions/marketplace.webp',
+    group: 'medusa',
+  },
   {
     icon: SiShopify,
     label: language === 'pl' ? 'Sklepy Shopify' : 'Shopify Stores',
     description: language === 'pl' ? 'Od prostych sklepów po custom storefronty' : 'From simple stores to custom storefronts',
     longDescription: language === 'pl'
-      ? 'Projektuję i wdrażam sklepy Shopify dopasowane do etapu rozwoju biznesu — od sprawnego startu na gotowym motywie po w pełni customowe storefronty headless na Next.js lub TanStack.'
-      : 'I design and build Shopify stores matched to your stage of growth — from a focused launch on a proven theme to fully custom headless storefronts built with Next.js or TanStack.',
+      ? 'Projektuję i wdrażam sklepy Shopify dopasowane do etapu rozwoju biznesu - od sprawnego startu na gotowym motywie po w pełni customowe storefronty headless na Next.js lub TanStack.'
+      : 'I design and build Shopify stores matched to your stage of growth - from a focused launch on a proven theme to fully custom headless storefronts built with Next.js or TanStack.',
     href: '/uslugi/shopify-development',
     image: '/media/solutions/ecommerceshop.webp',
+    group: 'other',
   },
   {
     icon: PiGlobeDuotone,
@@ -53,6 +76,7 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
       : 'Conversion and SEO-optimized modern websites built on Next.js. Lightning-fast load times, exceptional design, and fully ready to scale your traffic from day one.',
     href: '/uslugi/professional-website-development',
     image: '/media/solutions/landing.webp',
+    group: 'other',
   },
   {
     icon: PiShoppingCartDuotone,
@@ -63,6 +87,7 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
       : 'Build a store without SaaS limitations or commissions. Enjoy total design freedom, advanced product logic, and unmatched performance through headless architecture.',
     href: '/uslugi/e-commerce-shops-medusa-js',
     image: '/media/solutions/ecommerceshop.webp',
+    group: 'medusa',
   },
   {
     icon: PiStorefrontDuotone,
@@ -73,6 +98,7 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
       : 'Implementation of powerful platforms on Medusa.js. Custom commission models, integrated payment systems, and dedicated vendor dashboards tailored to your exact business model.',
     href: '/uslugi/marketplace-multi-vendor-medusa-js',
     image: '/media/solutions/marketplace.webp',
+    group: 'medusa',
   },
   {
     icon: PiRobotDuotone,
@@ -83,6 +109,7 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
       : 'Boost efficiency with smart assistants and automated workflows. From customer support chatbots to custom RAG systems trained securely on your company\'s internal data.',
     href: '/uslugi/ai-automation-rpa-solutions',
     image: '/media/solutions/SEO.webp',
+    group: 'other',
   },
   {
     icon: PiBrowserDuotone,
@@ -93,6 +120,7 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
       : 'Tailor-made internal systems, SaaS platforms, and B2B dashboards. Clean architecture (Next.js) and intuitive interfaces designed for the best user experience.',
     href: '/uslugi/custom-web-applications',
     image: '/media/solutions/webapps.webp',
+    group: 'other',
   },
 ];
 
@@ -113,10 +141,28 @@ const HeaderNew: React.FC = () => {
     ...item,
     href: localizedPath(language, item.href),
   }));
+  // On mobile the menu is a vertical list reached with the thumb, so Contact
+  // goes to the top instead of the bottom of a six-item scroll. The desktop bar
+  // keeps the conventional order, with Contact last.
+  const mobileNavItems = [
+    ...navItems.filter((item) => item.label === t.contact),
+    ...navItems.filter((item) => item.label !== t.contact),
+  ];
   const serviceLandingLinks = getServiceLandingLinks(language).map((item) => ({
     ...item,
     href: localizedPath(language, item.href),
   }));
+  // Grouped for display only. The flat array stays the source of truth because
+  // activeServiceHoverIndex indexes into it to drive the preview panel.
+  const serviceGroups = getServiceGroups(language)
+    .map((group) => ({
+      ...group,
+      entries: serviceLandingLinks
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => item.group === group.key),
+    }))
+    .filter((group) => group.entries.length > 0);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -275,43 +321,50 @@ const HeaderNew: React.FC = () => {
                   <div className="w-full max-w-6xl mx-4 mt-2 rounded-[24px] border border-white/20 bg-indigo-950/40 p-2 shadow-[0_24px_60px_rgba(0,0,0,0.6)] backdrop-blur-2xl">
                     {/* Wewnętrzna ramka */}
                     <div className="rounded-[18px] border border-white/10 bg-indigo-950 overflow-hidden">
-                      <div className="p-8">
+                      <div className="p-6">
                         <div className="grid grid-cols-12 gap-8 min-h-[380px]">
                         {/* Lewa strona - lista usług */}
-                        <div className="col-span-5 flex flex-col gap-2 border-r border-white/10 pr-6 py-2">
-                          {serviceLandingLinks.map((item, index) => {
-                            const Icon = item.icon;
-                            const isActive = index === activeServiceHoverIndex;
-                            return (
-                              <PrefetchLink
-                                key={item.href}
-                                href={item.href}
-                                onClick={() => setIsServicesMenuOpen(false)}
-                                onMouseEnter={() => handleMouseEnterService(index)}
-                                className={`group/service-card flex min-w-0 items-center gap-4 rounded-xl transition-all duration-300 p-3 ${isActive
-                                  ? 'border border-teal-300/30 bg-white/[0.04] shadow-[0_0_20px_rgba(45,212,191,0.05)]'
-                                  : 'border border-transparent hover:border-white/10 hover:bg-white/[0.02]'
-                                  }`}
-                              >
-                                <div className={`w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isActive
-                                  ? 'bg-teal-300/10 border border-teal-300/30 text-teal-300 shadow-[0_0_15px_rgba(45,212,191,0.1)]'
-                                  : 'bg-white/5 border border-white/10 text-white/60 group-hover/service-card:bg-white/10 group-hover/service-card:text-white/90'
-                                  }`}>
-                                  <Icon className="w-5 h-5" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <p className={`text-[15px] font-medium transition-colors duration-300 ${isActive ? 'text-teal-300' : 'text-white/90 group-hover/service-card:text-white'}`}>
-                                    {item.label}
-                                  </p>
-                                  <p className="text-xs text-white/50 mt-0.5 truncate">{item.description}</p>
-                                </div>
-                                <ArrowUpRight className={`w-4 h-4 transition-all duration-300 ${isActive
-                                  ? 'text-teal-300 opacity-100 translate-x-0'
-                                  : 'text-white/30 opacity-0 -translate-x-3 group-hover/service-card:opacity-50 group-hover/service-card:-translate-x-1'
-                                  }`} />
-                              </PrefetchLink>
-                            );
-                          })}
+                        <div className="col-span-5 flex flex-col gap-3 border-r border-white/10 pr-6 py-1">
+                          {serviceGroups.map((group) => (
+                            <div key={group.key} className="flex flex-col gap-1">
+                              <p className="px-3 font-plex text-[10px] uppercase tracking-[0.22em] text-white/35">
+                                {group.label}
+                              </p>
+                            {group.entries.map(({ item, index }) => {
+                              const Icon = item.icon;
+                              const isActive = index === activeServiceHoverIndex;
+                              return (
+                                <PrefetchLink
+                                  key={item.href}
+                                  href={item.href}
+                                  onClick={() => setIsServicesMenuOpen(false)}
+                                  onMouseEnter={() => handleMouseEnterService(index)}
+                                  className={`group/service-card flex min-w-0 items-center gap-4 rounded-xl transition-all duration-300 p-2.5 ${isActive
+                                    ? 'border border-teal-300/30 bg-white/[0.04] shadow-[0_0_20px_rgba(45,212,191,0.05)]'
+                                    : 'border border-transparent hover:border-white/10 hover:bg-white/[0.02]'
+                                    }`}
+                                >
+                                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isActive
+                                    ? 'bg-teal-300/10 border border-teal-300/30 text-teal-300 shadow-[0_0_15px_rgba(45,212,191,0.1)]'
+                                    : 'bg-white/5 border border-white/10 text-white/60 group-hover/service-card:bg-white/10 group-hover/service-card:text-white/90'
+                                    }`}>
+                                    <Icon className="w-5 h-5" />
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <p className={`text-[15px] font-medium transition-colors duration-300 ${isActive ? 'text-teal-300' : 'text-white/90 group-hover/service-card:text-white'}`}>
+                                      {item.label}
+                                    </p>
+                                    <p className="text-xs text-white/50 mt-0.5 truncate">{item.description}</p>
+                                  </div>
+                                  <ArrowUpRight className={`w-4 h-4 transition-all duration-300 ${isActive
+                                    ? 'text-teal-300 opacity-100 translate-x-0'
+                                    : 'text-white/30 opacity-0 -translate-x-3 group-hover/service-card:opacity-50 group-hover/service-card:-translate-x-1'
+                                    }`} />
+                                </PrefetchLink>
+                              );
+                            })}
+                            </div>
+                          ))}
                         </div>
 
                         {/* Prawa strona - dynamiczny podgląd */}
@@ -455,25 +508,32 @@ const HeaderNew: React.FC = () => {
                   className="pb-4 border-b border-white/10"
                 >
                   <p className="text-xs uppercase tracking-[0.2em] text-white  mb-4">{t.services}</p>
-                  <div className="space-y-2">
-                    {serviceLandingLinks.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <PrefetchLink
-                          key={item.href}
-                          href={item.href}
-                          onClick={closeMobileMenu}
-                          className="flex items-center gap-3 py-1 text-base  font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
-                        >
-                          <Icon className="w-4 h-4 text-teal-300/60" />
-                          <span>{item.label}</span>
-                        </PrefetchLink>
-                      );
-                    })}
+                  <div className="space-y-4">
+                    {serviceGroups.map((group) => (
+                      <div key={group.key} className="space-y-2">
+                        <p className="font-plex text-[10px] uppercase tracking-[0.22em] text-white/35">
+                          {group.label}
+                        </p>
+                        {group.entries.map(({ item }) => {
+                          const Icon = item.icon;
+                          return (
+                            <PrefetchLink
+                              key={item.href}
+                              href={item.href}
+                              onClick={closeMobileMenu}
+                              className="flex items-center gap-3 py-1 text-base  font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
+                            >
+                              <Icon className="w-4 h-4 text-teal-300/60" />
+                              <span>{item.label}</span>
+                            </PrefetchLink>
+                          );
+                        })}
+                      </div>
+                    ))}
                   </div>
                 </motion.div>
 
-                {navItems.map((item, index) => (
+                {mobileNavItems.map((item, index) => (
                   <motion.div
                     key={item.label}
                     initial={{ opacity: 0, x: 20 }}

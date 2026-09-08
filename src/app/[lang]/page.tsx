@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: LocalizedHomePageProps): Prom
       languages: {
         en: absoluteUrl(localizedPath('en', '/')),
         pl: absoluteUrl(localizedPath('pl', '/')),
-        'x-default': absoluteUrl(localizedPath('pl', '/')),
+        'x-default': absoluteUrl(localizedPath('en', '/')),
       },
     },
     openGraph: {

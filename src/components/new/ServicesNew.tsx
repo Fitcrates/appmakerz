@@ -183,7 +183,7 @@ const ServicesNew: React.FC = () => {
 
         {/* ── Content: list left, sticky image right ── */}
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-          {/* Left — service list */}
+          {/* Left - service list */}
           <div>
             <div className="border-t border-white/10">
               {services.map((service, index) => (
@@ -220,7 +220,7 @@ const ServicesNew: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Right — image centered once within the complete services list */}
+          {/* Right - image centered once within the complete services list */}
           <div className="lg:flex lg:items-center">
             <div className="w-full">
               <div className="group relative w-full aspect-[3/4]">

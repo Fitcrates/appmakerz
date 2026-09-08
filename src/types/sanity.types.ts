@@ -175,6 +175,39 @@ export interface ServiceModel {
   title: string;
   audience: string;
   points?: string[];
+  linkLabel?: string;
+  linkHref?: string;
+}
+
+/** A group of related things the studio can do, rendered as one block on the hub. */
+export interface ServiceCapability {
+  group: string;
+  items?: string[];
+  linkLabel?: string;
+  linkHref?: string;
+}
+
+export type HubMediaPlacement =
+  | 'after-fork'
+  | 'after-capabilities'
+  | 'after-fit'
+  | 'after-integrations'
+  | 'after-evidence';
+
+/** An optional picture dropped between two hub sections. */
+export interface HubMediaEntry {
+  placement: HubMediaPlacement;
+  image?: SanityImage & { alt?: string };
+  caption?: LocalizedText;
+  wide?: boolean;
+}
+
+/** One row in the hub's integration ledger. `group` buckets rows under a heading. */
+export interface ServiceIntegration {
+  group?: string;
+  name: string;
+  detail?: string;
+  meta?: string;
 }
 
 export interface ServiceLanding {
@@ -206,6 +239,24 @@ export interface ServiceLanding {
   models?: {
     en?: ServiceModel[];
     pl?: ServiceModel[];
+  };
+  /** 'hub' swaps the sales layout for the technology-overview one. Defaults to 'service'. */
+  layoutVariant?: 'service' | 'hub';
+  capabilities?: {
+    en?: ServiceCapability[];
+    pl?: ServiceCapability[];
+  };
+  fitYes?: LocalizedStringArray;
+  fitNo?: LocalizedStringArray;
+  integrations?: {
+    en?: ServiceIntegration[];
+    pl?: ServiceIntegration[];
+  };
+  technologies?: string[];
+  hubMedia?: HubMediaEntry[];
+  guideCta?: {
+    enabled?: boolean;
+    chapters?: string[];
   };
   relatedServices?: ServiceLanding[];
   relatedProjects?: Project[];

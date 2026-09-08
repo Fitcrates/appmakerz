@@ -50,6 +50,7 @@
         "npm:resend@^6.12.2",
         "npm:sanity-plugin-media@^4.3.0",
         "npm:sanity@^5.25.1",
+        "npm:styled-components@^6.5.3",
         "npm:tailwind-merge@^3.5.0",
         "npm:tailwindcss-animate@^1.0.7",
         "npm:tailwindcss@^3.4.16",

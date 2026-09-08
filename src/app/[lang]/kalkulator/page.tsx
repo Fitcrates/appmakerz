@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: LocalizedCalculatorPageProps)
       languages: {
         en: absoluteUrl(localizedPath('en', '/kalkulator')),
         pl: absoluteUrl(localizedPath('pl', '/kalkulator')),
-        'x-default': absoluteUrl(localizedPath('pl', '/kalkulator')),
+        'x-default': absoluteUrl(localizedPath('en', '/kalkulator')),
       },
     },
     openGraph: {

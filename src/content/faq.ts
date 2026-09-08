@@ -29,11 +29,11 @@ export const faqContent = {
       },
       {
         question: 'Do you offer on-site consultations or AI implementations locally?',
-        answer: 'Yes — for businesses in Wrocław and the Lower Silesia region, I offer on-site consultations and hands-on AI implementations. This includes analyzing workflows, identifying automation opportunities, and implementing solutions such as internal AI tools or RAG-based systems directly within your company environment.'
+        answer: 'Yes - for businesses in Wrocław and the Lower Silesia region, I offer on-site consultations and hands-on AI implementations. This includes analyzing workflows, identifying automation opportunities, and implementing solutions such as internal AI tools or RAG-based systems directly within your company environment.'
       },
       {
         question: 'Does AI actually make sense for my business?',
-        answer: 'Not always — and that is the honest answer. AI only makes sense when it solves a real problem or saves time and money. I start by analyzing your workflows and only then propose specific solutions. In many cases, simple automations bring more value than forcing AI into places where it is not needed.'
+        answer: 'Not always - and that is the honest answer. AI only makes sense when it solves a real problem or saves time and money. I start by analyzing your workflows and only then propose specific solutions. In many cases, simple automations bring more value than forcing AI into places where it is not needed.'
       },
       {
         question: 'Do you work with Headless CMS?',
@@ -41,7 +41,7 @@ export const faqContent = {
       },
       {
         question: 'Can you integrate AI into a product without blowing up the budget?',
-        answer: 'Yes — and that is exactly the right way to approach it. I focus on practical AI implementations that solve a real business problem instead of forcing AI into everything just because it is trendy. The goal is to improve workflows, user experience, or automation in a way that actually makes financial sense.'
+        answer: 'Yes - and that is exactly the right way to approach it. I focus on practical AI implementations that solve a real business problem instead of forcing AI into everything just because it is trendy. The goal is to improve workflows, user experience, or automation in a way that actually makes financial sense.'
       },
       {
         question: 'What technologies and frameworks do you use?',
@@ -49,7 +49,7 @@ export const faqContent = {
       },
       {
         question: 'Do you create custom UI/UX or work from ready-made templates?',
-        answer: 'I strongly prefer custom design work. Templates may be fast, but they rarely reflect the quality, character, and strategic goals of a serious brand. I build interfaces that are aligned with the product, the audience, and the business objective — not generic layouts dressed up with nicer colors.'
+        answer: 'I strongly prefer custom design work. Templates may be fast, but they rarely reflect the quality, character, and strategic goals of a serious brand. I build interfaces that are aligned with the product, the audience, and the business objective - not generic layouts dressed up with nicer colors.'
       },
       {
         question: 'Can you build visually advanced landing pages or portfolio websites?',
@@ -65,7 +65,7 @@ export const faqContent = {
       },
       {
         question: 'Can you improve or extend an existing application?',
-        answer: 'It depends on the technology stack. I work most efficiently with modern JavaScript/TypeScript-based applications (React, Next.js, Node.js). In those cases, I can improve architecture, add features, and optimize performance. For older stacks like PHP or Angular, I evaluate each project individually — sometimes it makes more sense to rebuild key parts instead of forcing changes into outdated architecture.'
+        answer: 'It depends on the technology stack. I work most efficiently with modern JavaScript/TypeScript-based applications (React, Next.js, Node.js). In those cases, I can improve architecture, add features, and optimize performance. For older stacks like PHP or Angular, I evaluate each project individually - sometimes it makes more sense to rebuild key parts instead of forcing changes into outdated architecture.'
       },
       {
         question: 'Do you build admin panels or custom internal tools?',
@@ -115,11 +115,11 @@ export const faqContent = {
       },
       {
         question: 'Czy oferujesz konsultacje i wdrożenia AI na miejscu?',
-        answer: 'Tak — dla firm z Wrocławia i Dolnego Śląska oferuję konsultacje oraz wdrożenia na miejscu. Mogę przyjechać do firmy, przeanalizować procesy, znaleźć miejsca do automatyzacji i wdrożyć rozwiązania takie jak wewnętrzne narzędzia AI czy systemy RAG dopasowane do realnych potrzeb biznesu.'
+        answer: 'Tak - dla firm z Wrocławia i Dolnego Śląska oferuję konsultacje oraz wdrożenia na miejscu. Mogę przyjechać do firmy, przeanalizować procesy, znaleźć miejsca do automatyzacji i wdrożyć rozwiązania takie jak wewnętrzne narzędzia AI czy systemy RAG dopasowane do realnych potrzeb biznesu.'
       },
       {
         question: 'Czy AI ma sens w mojej firmie?',
-        answer: 'Nie zawsze — i to jest uczciwa odpowiedź. AI ma sens tylko wtedy, gdy realnie rozwiązuje problem lub oszczędza czas i pieniądze. Dlatego najpierw analizuję procesy w firmie, a dopiero potem proponuję konkretne wdrożenia. W wielu przypadkach proste automatyzacje dają większy efekt niż „modne” rozwiązania AI wdrażane na siłę.'
+        answer: 'Nie zawsze - i to jest uczciwa odpowiedź. AI ma sens tylko wtedy, gdy realnie rozwiązuje problem lub oszczędza czas i pieniądze. Dlatego najpierw analizuję procesy w firmie, a dopiero potem proponuję konkretne wdrożenia. W wielu przypadkach proste automatyzacje dają większy efekt niż „modne” rozwiązania AI wdrażane na siłę.'
       },
       {
         question: 'Czy pracujesz z Headless CMS?',
@@ -127,7 +127,7 @@ export const faqContent = {
       },
       {
         question: 'Czy wdrażasz AI do aplikacji bez przepalania budżetu?',
-        answer: 'Tak — i właśnie tak powinno się do tego podchodzić. Stawiam na praktyczne wdrożenia AI, które rozwiązują realny problem biznesowy, zamiast wrzucać sztuczną inteligencję wszędzie tylko dlatego, że jest modna. Liczy się sens, zwrot z inwestycji i konkretna wartość dla użytkownika lub zespołu.'
+        answer: 'Tak - i właśnie tak powinno się do tego podchodzić. Stawiam na praktyczne wdrożenia AI, które rozwiązują realny problem biznesowy, zamiast wrzucać sztuczną inteligencję wszędzie tylko dlatego, że jest modna. Liczy się sens, zwrot z inwestycji i konkretna wartość dla użytkownika lub zespołu.'
       },
       {
         question: 'Z jakich technologii i frameworków korzystasz?',
@@ -151,7 +151,7 @@ export const faqContent = {
       },
       {
         question: 'Czy możesz wejść do istniejącego projektu i go rozwinąć?',
-        answer: 'To zależy od technologii. Najlepiej pracuję z nowoczesnymi aplikacjami opartymi o JavaScript/TypeScript (React, Next.js, Node.js). W takich projektach mogę rozwijać funkcje, poprawiać architekturę i wydajność. W przypadku starszych technologii, takich jak PHP czy Angular, każdy projekt oceniam indywidualnie — często bardziej opłaca się przebudować kluczowe elementy niż na siłę rozwijać przestarzałą strukturę.'
+        answer: 'To zależy od technologii. Najlepiej pracuję z nowoczesnymi aplikacjami opartymi o JavaScript/TypeScript (React, Next.js, Node.js). W takich projektach mogę rozwijać funkcje, poprawiać architekturę i wydajność. W przypadku starszych technologii, takich jak PHP czy Angular, każdy projekt oceniam indywidualnie - często bardziej opłaca się przebudować kluczowe elementy niż na siłę rozwijać przestarzałą strukturę.'
       },
       {
         question: 'Czy tworzysz panele administracyjne i narzędzia wewnętrzne dla firm?',

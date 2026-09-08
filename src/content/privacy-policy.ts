@@ -9,7 +9,7 @@ export const privacyPolicyContent = {
         title: '1. Data Controller',
         paragraphs: [
           'The controller of your personal data processed through the appcrates.pl website is AppCrates (hereinafter referred to as the "Controller").',
-          'If you have any questions regarding data protection or wish to exercise your privacy rights, please contact us at: appcratesdev@gmail.com.',
+          'If you have any questions regarding data protection or wish to exercise your privacy rights, please contact us at: kontakt@appcrates.pl.',
         ],
       },
       {
@@ -40,7 +40,7 @@ export const privacyPolicyContent = {
           '• The right to restrict data processing or object to processing based on legitimate interests.',
           '• The right to data portability.',
           '• The right to withdraw consent at any time (e.g., for the newsletter).',
-          'To exercise these rights, contact us at appcratesdev@gmail.com. You also have the right to lodge a complaint with a Data Protection Authority if you believe we are violating data protection laws.',
+          'To exercise these rights, contact us at kontakt@appcrates.pl. You also have the right to lodge a complaint with a Data Protection Authority if you believe we are violating data protection laws.',
         ],
       },
       {
@@ -81,7 +81,7 @@ export const privacyPolicyContent = {
         title: '1. Administrator Danych Osobowych',
         paragraphs: [
           'Administratorem Twoich danych osobowych przetwarzanych w ramach serwisu appcrates.pl jest AppCrates (dalej: "Administrator").',
-          'We wszystkich sprawach związanych z ochroną danych osobowych oraz realizacją Twoich praw możesz kontaktować się pod adresem e-mail: appcratesdev@gmail.com.',
+          'We wszystkich sprawach związanych z ochroną danych osobowych oraz realizacją Twoich praw możesz kontaktować się pod adresem e-mail: kontakt@appcrates.pl.',
         ],
       },
       {
@@ -112,7 +112,7 @@ export const privacyPolicyContent = {
           '• Prawo do ograniczenia przetwarzania oraz prawo do wniesienia sprzeciwu wobec przetwarzania.',
           '• Prawo do przenoszenia danych.',
           '• Prawo do cofnięcia zgody (np. na newsletter) w dowolnym momencie.',
-          'Aby skorzystać z tych praw, wyślij wiadomość na appcratesdev@gmail.com. Masz również prawo wnieść skargę do organu nadzorczego (w Polsce jest to Prezes Urzędu Ochrony Danych Osobowych - PUODO), jeśli uznasz, że łamiemy prawo.',
+          'Aby skorzystać z tych praw, wyślij wiadomość na kontakt@appcrates.pl. Masz również prawo wnieść skargę do organu nadzorczego (w Polsce jest to Prezes Urzędu Ochrony Danych Osobowych - PUODO), jeśli uznasz, że łamiemy prawo.',
         ],
       },
       {

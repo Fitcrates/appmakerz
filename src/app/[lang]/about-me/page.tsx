@@ -91,7 +91,7 @@ export async function generateMetadata({ params }: LocalizedAboutMePageProps): P
       languages: {
         en: absoluteUrl(localizedPath('en', '/about-me')),
         pl: absoluteUrl(localizedPath('pl', '/about-me')),
-        'x-default': absoluteUrl(localizedPath('pl', '/about-me')),
+        'x-default': absoluteUrl(localizedPath('en', '/about-me')),
       },
     },
     robots: about.seo?.noIndex ? { index: false, follow: false } : { index: true, follow: true },

@@ -231,8 +231,8 @@ const FooterNew: React.FC = () => {
                 <ul className="space-y-4" role="list">
                   <li>
                     <a
-                      href="mailto:appcratesdev@gmail.com"
-                      onClick={() => trackContactClick('email', 'appcratesdev@gmail.com')}
+                      href="mailto:kontakt@appcrates.pl"
+                      onClick={() => trackContactClick('email', 'kontakt@appcrates.pl')}
                       className="text-white/60  hover:text-teal-300 transition-colors"
                     >
                       {t.links.email}
