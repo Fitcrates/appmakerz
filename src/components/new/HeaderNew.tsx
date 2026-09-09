@@ -409,9 +409,9 @@ const HeaderNew: React.FC = () => {
                                   </span>
                                 </div>
 
-                                <h3 className="text-3xl lg:text-4xl font-light text-white mb-4 drop-shadow-lg">
+                                <p className="text-3xl lg:text-4xl font-light text-white mb-4 drop-shadow-lg">
                                   {serviceLandingLinks[activeServiceHoverIndex].label}
-                                </h3>
+                                </p>
 
                                 <p className="text-white/90 text-sm leading-relaxed max-w-md mb-8">
                                   {serviceLandingLinks[activeServiceHoverIndex].longDescription}

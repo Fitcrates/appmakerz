@@ -678,9 +678,9 @@ export default {
       title: 'Related Blog Posts',
       type: 'array',
       group: 'links',
-      description: 'Optional manual blog links shown in the internal linking section. Leave empty to use automatic fallback.',
+      description: 'Optional manual blog links. The hub layout shows up to eight of them as its evidence section; the standard service layout shows the first three. Leave empty to use automatic fallback.',
       of: [{ type: 'reference', to: [{ type: 'post' }] }],
-      validation: (Rule: any) => Rule.max(3),
+      validation: (Rule: any) => Rule.max(8),
     },
     {
       name: 'seo',

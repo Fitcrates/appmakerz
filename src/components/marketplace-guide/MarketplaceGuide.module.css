@@ -23,7 +23,7 @@
   gap: 0.6rem;
   margin-bottom: 1.4rem;
   color: #5eead4;
-  font-family: var(--font-oxanium), sans-serif;
+  font-family: 'Oxanium', system-ui, sans-serif;
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -33,7 +33,7 @@
   max-width: 980px;
   margin: 0;
   color: #fff;
-  font-family: var(--font-oxanium), sans-serif;
+  font-family: 'Oxanium', system-ui, sans-serif;
   font-size: clamp(3rem, 6.2vw, 5.5rem);
   font-weight: 300;
   line-height: 1.02;
@@ -73,7 +73,7 @@
 .indexNote h2 {
   margin: 0 0 0.7rem;
   color: #fff;
-  font-family: var(--font-oxanium), sans-serif;
+  font-family: 'Oxanium', system-ui, sans-serif;
   font-size: 1.45rem;
   font-weight: 400;
 }
@@ -95,7 +95,7 @@
 .indexStats strong {
   display: block;
   color: #5eead4;
-  font-family: var(--font-oxanium), sans-serif;
+  font-family: 'Oxanium', system-ui, sans-serif;
   font-size: 1.8rem;
   font-weight: 300;
 }
@@ -108,16 +108,174 @@
   line-height: 1.4;
 }
 
+/* Track = one of the two guides sharing this index. The heading only renders
+   when there is more than one, so these styles are inert until then. */
+.searchTrack {
+  display: block;
+  margin-top: 0.15rem;
+  color: rgba(94, 234, 212, 0.7);
+  font-size: 0.72rem;
+  font-style: normal;
+  letter-spacing: 0.04em;
+}
+
+.trackSection + .trackSection { margin-top: 5rem; }
+
+/* --- track switcher --- */
+/* Same control as the language toggle in the header: a translucent pill with a
+   teal thumb sliding under the labels. Two stacked boxes read as a form. */
+.trackSwitcherRow {
+  display: flex;
+  margin: 0 0 3.25rem;
+}
+
+.trackSwitcher {
+  position: relative;
+  display: grid;
+  /* Equal columns, or the sliding thumb cannot match both labels. */
+  grid-template-columns: repeat(var(--track-count, 2), minmax(0, 1fr));
+  width: fit-content;
+  gap: 0.25rem;
+  padding: 0.3rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.trackThumb {
+  position: absolute;
+  z-index: 0;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  left: 0.3rem;
+  width: calc((100% - 0.6rem - 0.25rem * (var(--track-count, 2) - 1)) / var(--track-count, 2));
+  border-radius: 999px;
+  background: #5eead4;
+  box-shadow: 0 0 28px rgba(94, 234, 212, 0.28);
+  transform: translateX(calc(var(--track-active, 0) * (100% + 0.25rem)));
+  transition: transform 320ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trackTab,
+.trackTabActive {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'Oxanium', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: color 220ms ease;
+}
+
+.trackTab { color: rgba(255, 255, 255, 0.66); }
+.trackTab:hover { color: #fff; }
+.trackTabActive { color: #0b1020; }
+
+.trackTab:focus-visible,
+.trackTabActive:focus-visible {
+  outline: 2px solid rgba(94, 234, 212, 0.65);
+  outline-offset: 3px;
+}
+
+.trackTabCount {
+  /* 12px text, so it has to clear 4.5:1 against the glass. */
+  color: rgba(255, 255, 255, 0.62);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  transition: color 220ms ease;
+}
+
+.trackTabActive .trackTabCount { color: rgba(11, 16, 32, 0.6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .trackThumb { transition: none; }
+}
+
+@media (max-width: 480px) {
+  .trackSwitcherRow { display: block; }
+  .trackSwitcher { width: 100%; }
+  .trackTab,
+  .trackTabActive { justify-content: center; padding: 0.7rem 0.9rem; font-size: 0.95rem; }
+}
+
+.trackHeader {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trackHeader h2 {
+  margin: 0;
+  color: #fff;
+  font-family: 'Oxanium', system-ui, sans-serif;
+  font-size: clamp(1.75rem, 3.2vw, 2.35rem);
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.trackSubtitle {
+  margin: 0.6rem 0 0;
+  color: rgba(94, 234, 212, 0.85);
+  font-size: 0.95rem;
+}
+
+.trackHeader p:last-child {
+  max-width: 62ch;
+  margin: 0.9rem 0 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 300;
+  line-height: 1.7;
+}
+
 .chapterGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 4rem;
+  column-gap: 3.5rem;
+}
+
+/* --- thematic grouping inside a track --- */
+.chapterSection + .chapterSection { margin-top: 3.25rem; }
+
+.sectionLabel {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  margin: 0 0 0.35rem;
+  color: rgba(255, 255, 255, 0.82);
+  /* Was 0.7rem in the body face, which made it smaller than the card titles it
+     introduces. The structural chain now steps 2.35 -> 1.4 -> 1rem, all Oxanium. */
+  font-family: 'Oxanium', system-ui, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.25;
+  text-transform: none;
+}
+
+.sectionCount {
+  color: rgba(94, 234, 212, 0.55);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
 }
 
 .chapterCard {
   position: relative;
-  min-height: 170px;
-  padding: 1.75rem 2.5rem 1.75rem 0;
+  /* min-height forced empty space under short descriptions and stretched the
+     page; letting content set the height shortens the scroll noticeably. */
+  padding: 1.4rem 2rem 1.5rem 0;
   color: inherit;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   text-decoration: none;
@@ -148,10 +306,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #5eead4;
-  font-family: var(--font-oxanium), sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  color: rgba(94, 234, 212, 0.75);
+  font-family: 'Oxanium', system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.1em;
 }
 
 .chapterNumber svg {
@@ -164,25 +323,27 @@
   transform: translate(2px, -2px);
 }
 
-.chapterCard h2 {
-  margin: 1.15rem 0 0.55rem;
-  color: rgba(255, 255, 255, 0.88);
-  font-family: var(--font-oxanium), sans-serif;
-  font-size: 1.08rem;
+.chapterCard h3 {
+  margin: 0.75rem 0 0.5rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-family: 'Oxanium', system-ui, sans-serif;
+  font-size: 1rem;
   font-weight: 400;
-  line-height: 1.38;
+  line-height: 1.35;
   transition: color 180ms ease;
 }
 
-.chapterCard:hover h2 { color: #5eead4; }
+.chapterCard:hover h3 { color: #5eead4; }
 
 .chapterCard p {
   display: -webkit-box;
   overflow: hidden;
   margin: 0;
-  color: rgba(255, 255, 255, 0.43);
-  font-size: 0.84rem;
-  line-height: 1.55;
+  /* was 0.43 at 0.84rem, which sits under the contrast floor for small text
+     on this ground and is what made the page tiring to read. */
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.875rem;
+  line-height: 1.62;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
@@ -217,7 +378,7 @@
 
 .searchResults a:last-child { border-bottom: 0; }
 .searchResults a:hover { background: rgba(94, 234, 212, 0.07); }
-.searchResults a > span:first-child { color: #5eead4; font-family: var(--font-oxanium), sans-serif; font-size: 0.75rem; }
+.searchResults a > span:first-child { color: #5eead4; font-family: 'Oxanium', system-ui, sans-serif; font-size: 0.75rem; }
 .searchResults strong { display: block; color: #fff; font-size: 0.9rem; font-weight: 500; }
 .searchResults small { display: -webkit-box; overflow: hidden; margin-top: 0.2rem; color: rgba(255, 255, 255, 0.42); line-height: 1.35; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
 .searchResults p { margin: 0; padding: 1rem; }
@@ -276,7 +437,7 @@
   transition: color 160ms ease, border-color 160ms ease;
 }
 
-.sidebarNav a span:first-child { color: rgba(94, 234, 212, 0.55); font-family: var(--font-oxanium), sans-serif; }
+.sidebarNav a span:first-child { color: rgba(94, 234, 212, 0.55); font-family: 'Oxanium', system-ui, sans-serif; }
 .sidebarNav a:hover { color: rgba(255, 255, 255, 0.8); border-left-color: rgba(94, 234, 212, 0.45); }
 .sidebarNav .activeChapter { color: #fff; border-left-color: #5eead4; }
 .article { min-width: 0; }
@@ -302,7 +463,7 @@
 .articleHeader h1 {
   margin: 0;
   color: #fff;
-  font-family: var(--font-oxanium), sans-serif;
+  font-family: 'Oxanium', system-ui, sans-serif;
   font-size: clamp(2.5rem, 5vw, 4.35rem);
   font-weight: 300;
   line-height: 1.08;
@@ -312,7 +473,7 @@
 .articleMeta {
   margin-bottom: 1rem;
   color: #5eead4;
-  font-family: var(--font-oxanium), sans-serif;
+  font-family: 'Oxanium', system-ui, sans-serif;
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -333,7 +494,7 @@
 .body h3 {
   scroll-margin-top: 7rem;
   color: #fff;
-  font-family: var(--font-oxanium), sans-serif;
+  font-family: 'Oxanium', system-ui, sans-serif;
   font-weight: 400;
   line-height: 1.28;
 }
@@ -359,7 +520,7 @@
   border-left: 2px solid #94a3b8;
 }
 
-.callout strong { display: block; margin-bottom: 0.35rem; color: #fff; font-family: var(--font-oxanium), sans-serif; font-size: 0.7rem; letter-spacing: 0.14em; }
+.callout strong { display: block; margin-bottom: 0.35rem; color: #fff; font-family: 'Oxanium', system-ui, sans-serif; font-size: 0.7rem; letter-spacing: 0.14em; }
 .callout p { margin: 0; color: rgba(255, 255, 255, 0.72); line-height: 1.68; }
 .callout_stop { border-left-color: #fb7185; background: rgba(244, 63, 94, 0.06); }
 .callout_practice { border-left-color: #5eead4; background: rgba(45, 212, 191, 0.06); }
@@ -367,6 +528,10 @@
 .callout_decision { border-left-color: #a78bfa; background: rgba(139, 92, 246, 0.06); }
 .callout_evidence { border-left-color: #60a5fa; background: rgba(59, 130, 246, 0.06); }
 .callout_deadline { border-left-color: #f97316; background: rgba(249, 115, 22, 0.06); }
+/* Declared in the block type from the start but never styled, so it rendered
+   without the left rule the other six have. Neutral on purpose: it marks an
+   aside, not a warning. */
+.callout_note { border-left-color: rgba(255, 255, 255, 0.35); background: rgba(255, 255, 255, 0.03); }
 
 .tableScroll {
   margin: 2rem 0;
@@ -376,12 +541,12 @@
 }
 
 .contentTable { width: 100%; min-width: 600px; border-collapse: collapse; font-size: 0.86rem; line-height: 1.55; }
-.contentTable th { padding: 0.9rem; color: #fff; background: rgba(94, 234, 212, 0.07); font-family: var(--font-oxanium), sans-serif; font-weight: 500; text-align: left; }
+.contentTable th { padding: 0.9rem; color: #fff; background: rgba(94, 234, 212, 0.07); font-family: 'Oxanium', system-ui, sans-serif; font-weight: 500; text-align: left; }
 .contentTable td { padding: 0.9rem; color: rgba(255, 255, 255, 0.66); vertical-align: top; white-space: pre-line; border-top: 1px solid rgba(255, 255, 255, 0.07); }
 .contentTable tr:hover td { background: rgba(255, 255, 255, 0.02); }
 .checklistWrap { margin: 2rem 0; }
 .checklistSummary { display: flex; align-items: baseline; gap: 0.6rem; color: rgba(255, 255, 255, 0.46); }
-.checklistSummary strong { color: #5eead4; font-family: var(--font-oxanium), sans-serif; font-size: 1.25rem; }
+.checklistSummary strong { color: #5eead4; font-family: 'Oxanium', system-ui, sans-serif; font-size: 1.25rem; }
 .checklistWrap .tableScroll { margin-top: 0.8rem; }
 .checklistWrap input { width: 1rem; height: 1rem; accent-color: #5eead4; }
 .checkedRow td { color: rgba(255, 255, 255, 0.34); background: rgba(94, 234, 212, 0.025); }
@@ -408,7 +573,7 @@
 }
 
 .toc .guideSearch { margin-bottom: 1.8rem; }
-.toc > strong { display: block; margin-bottom: 0.85rem; padding-bottom: 0.8rem; color: rgba(255, 255, 255, 0.65); border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-family: var(--font-oxanium), sans-serif; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; }
+.toc > strong { display: block; margin-bottom: 0.85rem; padding-bottom: 0.8rem; color: rgba(255, 255, 255, 0.65); border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-family: 'Oxanium', system-ui, sans-serif; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; }
 .toc > a { display: block; margin: 0.65rem 0; color: rgba(255, 255, 255, 0.4); font-size: 0.75rem; line-height: 1.4; text-decoration: none; transition: color 160ms ease, transform 160ms ease; }
 .toc > a:hover { color: #5eead4; transform: translateX(3px); }
 
@@ -425,7 +590,7 @@
 .articlePager > a:last-child { justify-content: flex-end; text-align: right; }
 .articlePager > a:hover { color: #5eead4; }
 .articlePager small { display: block; color: rgba(255, 255, 255, 0.32); text-transform: uppercase; letter-spacing: 0.1em; }
-.articlePager strong { display: block; margin-top: 0.25rem; color: inherit; font-family: var(--font-oxanium), sans-serif; font-size: 0.82rem; font-weight: 400; line-height: 1.4; }
+.articlePager strong { display: block; margin-top: 0.25rem; color: inherit; font-family: 'Oxanium', system-ui, sans-serif; font-size: 0.82rem; font-weight: 400; line-height: 1.4; }
 
 .serviceCta {
   margin-top: 4rem;
@@ -433,7 +598,7 @@
   border-top: 1px solid rgba(94, 234, 212, 0.28);
 }
 
-.serviceCta strong { display: block; max-width: 620px; color: #fff; font-family: var(--font-oxanium), sans-serif; font-size: 1.35rem; font-weight: 400; line-height: 1.4; }
+.serviceCta strong { display: block; max-width: 620px; color: #fff; font-family: 'Oxanium', system-ui, sans-serif; font-size: 1.35rem; font-weight: 400; line-height: 1.4; }
 .serviceCta p { max-width: 620px; margin: 0.65rem 0 1rem; color: rgba(255, 255, 255, 0.5); font-size: 0.88rem; line-height: 1.6; }
 .serviceCta a { display: inline-flex; align-items: center; gap: 0.4rem; color: #5eead4; font-size: 0.82rem; text-decoration: none; }
 

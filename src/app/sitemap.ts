@@ -4,7 +4,7 @@ import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
 import { SUPPORTED_LANGUAGES } from '@/lib/language';
 import { getLatestModifiedDate, getModifiedDate } from '@/lib/content-dates';
-import { MARKETPLACE_GUIDE_REVIEWED_AT, MARKETPLACE_GUIDE_SLUGS } from '@/lib/marketplace-guide-manifest';
+import { MARKETPLACE_GUIDE_INDEXABLE_SLUGS, MARKETPLACE_GUIDE_UPDATED_AT } from '@/lib/marketplace-guide-manifest';
 
 export const revalidate = 3600;
 
@@ -67,12 +67,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     })),
     ...localizedEntries('/marketplace-guide', {
-      lastModified: MARKETPLACE_GUIDE_REVIEWED_AT,
+      lastModified: MARKETPLACE_GUIDE_UPDATED_AT,
       changeFrequency: 'monthly',
       priority: 0.85,
     }),
-    ...MARKETPLACE_GUIDE_SLUGS.flatMap((slug) => localizedEntries(`/marketplace-guide/${slug}`, {
-      lastModified: MARKETPLACE_GUIDE_REVIEWED_AT,
+    ...MARKETPLACE_GUIDE_INDEXABLE_SLUGS.flatMap((slug) => localizedEntries(`/marketplace-guide/${slug}`, {
+      lastModified: MARKETPLACE_GUIDE_UPDATED_AT,
       changeFrequency: 'monthly',
       priority: 0.75,
     })),

@@ -157,7 +157,25 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preload" href="/fonts/IBM_Plex_Sans/IBMPlexSans-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/Oxanium-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <Script id="google-tag-bootstrap" strategy="beforeInteractive">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }} />
+      </head>
+      <body className="bg-indigo-950 text-white antialiased">
+        <NextProviders initialLanguage={language}>
+          {children}
+          <CookieConsentNew />
+          <ScrollBlurOverlay />
+          <CursorAura />
+          <DeferredChatWidget />
+        </NextProviders>
+        {/* React warns about any literal <script> it renders on the client, and
+            this layout re-renders on soft navigation, so the consent defaults go
+            through next/script too. It injects outside the React tree.
+
+            afterInteractive runs before the lazyOnload loader below, so the
+            consent command is already sitting at the head of dataLayer by the
+            time gtag.js starts reading it. */}
+        <Script id="google-tag-bootstrap" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){window.dataLayer.push(arguments);}
@@ -184,17 +202,6 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
             </Script>
           </>
         ) : null}
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }} />
-      </head>
-      <body className="bg-indigo-950 text-white antialiased">
-        <NextProviders initialLanguage={language}>
-          {children}
-          <CookieConsentNew />
-          <ScrollBlurOverlay />
-          <CursorAura />
-          <DeferredChatWidget />
-        </NextProviders>
       </body>
     </html>
   );
