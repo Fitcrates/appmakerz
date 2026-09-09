@@ -48,7 +48,7 @@ export default function HubCapabilities({ capabilities, language }: HubCapabilit
                 key={`capability-${index}`}
                 className={index === 0 ? 'pb-7' : 'border-t border-white/10 py-7'}
               >
-                <h3 className="font-plex text-[11px] tracking-[0.2em] uppercase text-white/40">
+                <h3 className="font-oxanium text-xl font-light text-white/85 sm:text-[1.375rem]">
                   {group.group}
                 </h3>
                 <SpotlightText

@@ -1,135 +1,336 @@
 {
   "reviewedAt": "2026-08-30",
+  "updatedAt": "2026-09-09",
   "chapters": [
     {
       "id": "0",
       "slug": "getting-started",
-      "order": 0
+      "order": 0,
+      "track": "regulacje",
+      "section": 0
     },
     {
       "id": "1",
       "slug": "operating-model",
-      "order": 1
+      "order": 1,
+      "track": "regulacje",
+      "section": 0
     },
     {
       "id": "2",
       "slug": "build-plan",
-      "order": 2
+      "order": 2,
+      "track": "regulacje",
+      "section": 0
     },
     {
       "id": "3",
       "slug": "responsibility-matrix",
-      "order": 3
+      "order": 3,
+      "track": "regulacje",
+      "section": 0
     },
     {
       "id": "4",
       "slug": "seller-onboarding",
-      "order": 4
+      "order": 4,
+      "track": "regulacje",
+      "section": 1
     },
     {
       "id": "5",
       "slug": "product-listing",
-      "order": 5
+      "order": 5,
+      "track": "regulacje",
+      "section": 1
     },
     {
       "id": "6",
       "slug": "gpsr-product-safety",
-      "order": 6
+      "order": 6,
+      "track": "regulacje",
+      "section": 1
     },
     {
       "id": "7",
       "slug": "category-gates",
-      "order": 7
+      "order": 7,
+      "track": "regulacje",
+      "section": 1
     },
     {
       "id": "8",
       "slug": "bdo-packaging-epr",
-      "order": 8
+      "order": 8,
+      "track": "regulacje",
+      "section": 1
     },
     {
       "id": "9",
       "slug": "consumer-law",
-      "order": 9
+      "order": 9,
+      "track": "regulacje",
+      "section": 2
     },
     {
       "id": "10",
       "slug": "pricing-promotions-ranking-reviews",
-      "order": 10
+      "order": 10,
+      "track": "regulacje",
+      "section": 2
     },
     {
       "id": "11",
       "slug": "payments-payouts-vat",
-      "order": 11
+      "order": 11,
+      "track": "regulacje",
+      "section": 2
     },
     {
       "id": "12",
       "slug": "gdpr-data-protection",
-      "order": 12
+      "order": 12,
+      "track": "regulacje",
+      "section": 3
     },
     {
       "id": "13",
       "slug": "dsa-moderation",
-      "order": 13
+      "order": 13,
+      "track": "regulacje",
+      "section": 3
     },
     {
       "id": "14",
       "slug": "p2b-seller-rules",
-      "order": 14
+      "order": 14,
+      "track": "regulacje",
+      "section": 3
     },
     {
       "id": "15",
       "slug": "dac7-reporting",
-      "order": 15
+      "order": 15,
+      "track": "regulacje",
+      "section": 3
     },
     {
       "id": "16",
       "slug": "ecommerce-accessibility",
-      "order": 16
+      "order": 16,
+      "track": "regulacje",
+      "section": 3
     },
     {
       "id": "17",
       "slug": "cybersecurity-nis2",
-      "order": 17
+      "order": 17,
+      "track": "regulacje",
+      "section": 3
     },
     {
       "id": "18",
       "slug": "data-retention",
-      "order": 18
+      "order": 18,
+      "track": "regulacje",
+      "section": 3
     },
     {
       "id": "19",
       "slug": "operating-calendar",
-      "order": 19
+      "order": 19,
+      "track": "regulacje",
+      "section": 4
     },
     {
       "id": "20",
       "slug": "business-models",
-      "order": 20
+      "order": 20,
+      "track": "regulacje",
+      "section": 4
     },
     {
       "id": "21",
       "slug": "documents-and-procedures",
-      "order": 21
+      "order": 21,
+      "track": "regulacje",
+      "section": 4
     },
     {
       "id": "22",
       "slug": "launch-checklist",
-      "order": 22
+      "order": 22,
+      "track": "regulacje",
+      "section": 4
     },
     {
       "id": "23",
       "slug": "common-mistakes",
-      "order": 23
+      "order": 23,
+      "track": "regulacje",
+      "section": 4
     },
     {
       "id": "24",
       "slug": "sources-and-updates",
-      "order": 24
+      "order": 24,
+      "track": "regulacje",
+      "section": 4
     },
     {
       "id": "legal",
       "slug": "legal-notice",
-      "order": 25
+      "order": 25,
+      "noIndex": true,
+      "track": "regulacje",
+      "section": 4
+    },
+    {
+      "id": "0",
+      "slug": "architektura-jak-korzystac",
+      "order": 0,
+      "track": "architektura",
+      "section": 0
+    },
+    {
+      "id": "1",
+      "slug": "model-marketplace-przed-funkcjami",
+      "order": 1,
+      "track": "architektura",
+      "section": 0
+    },
+    {
+      "id": "2",
+      "slug": "sprzedawca-model-danych-i-onboarding",
+      "order": 2,
+      "track": "architektura",
+      "section": 1
+    },
+    {
+      "id": "3",
+      "slug": "katalog-sprzedawcy",
+      "order": 3,
+      "track": "architektura",
+      "section": 1
+    },
+    {
+      "id": "4",
+      "slug": "integracje-ze-sklepami-sprzedawcow",
+      "order": 4,
+      "track": "architektura",
+      "section": 1
+    },
+    {
+      "id": "5",
+      "slug": "stany-magazynowe",
+      "order": 5,
+      "track": "architektura",
+      "section": 1
+    },
+    {
+      "id": "6",
+      "slug": "koszyk-i-checkout",
+      "order": 6,
+      "track": "architektura",
+      "section": 2
+    },
+    {
+      "id": "7",
+      "slug": "model-zamowienia",
+      "order": 7,
+      "track": "architektura",
+      "section": 2
+    },
+    {
+      "id": "8",
+      "slug": "wysylka-i-realizacja",
+      "order": 8,
+      "track": "architektura",
+      "section": 2
+    },
+    {
+      "id": "9",
+      "slug": "platnosci",
+      "order": 9,
+      "track": "architektura",
+      "section": 3
+    },
+    {
+      "id": "10",
+      "slug": "wyplaty",
+      "order": 10,
+      "track": "architektura",
+      "section": 3
+    },
+    {
+      "id": "11",
+      "slug": "prowizje",
+      "order": 11,
+      "track": "architektura",
+      "section": 3
+    },
+    {
+      "id": "12",
+      "slug": "promocje-i-lojalnosc",
+      "order": 12,
+      "track": "architektura",
+      "section": 3
+    },
+    {
+      "id": "13",
+      "slug": "zwroty-i-spory",
+      "order": 13,
+      "track": "architektura",
+      "section": 3
+    },
+    {
+      "id": "14",
+      "slug": "moderacja-i-decyzje-operatora",
+      "order": 14,
+      "track": "architektura",
+      "section": 4
+    },
+    {
+      "id": "15",
+      "slug": "panel-operatora",
+      "order": 15,
+      "track": "architektura",
+      "section": 4
+    },
+    {
+      "id": "16",
+      "slug": "zdarzenia-powiadomienia-odzyskiwanie",
+      "order": 16,
+      "track": "architektura",
+      "section": 4
+    },
+    {
+      "id": "17",
+      "slug": "granice-bezpieczenstwa",
+      "order": 17,
+      "track": "architektura",
+      "section": 4
+    },
+    {
+      "id": "18",
+      "slug": "decyzje-odwracalne-i-nieodwracalne",
+      "order": 18,
+      "track": "architektura",
+      "section": 5
+    },
+    {
+      "id": "19",
+      "slug": "macierz-dojrzalosci",
+      "order": 19,
+      "track": "architektura",
+      "section": 5
+    },
+    {
+      "id": "20",
+      "slug": "referencyjny-mvp",
+      "order": 20,
+      "track": "architektura",
+      "section": 5
     }
   ]
 }

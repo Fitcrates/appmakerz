@@ -228,6 +228,72 @@ Wyszukiwanie: Algolia lub Meilisearch.
 `/en/uslugi/medusa-js-development` jako dwa adresy. Niewykonalne przed Fazą F —
 slug jest jeden na dokument. Hub stoi pod wspólnym `medusa-js-development`.
 
+### Faza D2 - higiena metadanych przewodnika regulacyjnego
+
+Sekcja miała tydzień i była świeżo zaindeksowana, czyli był to najlepszy moment
+na poprawki metadanych i najgorszy na restrukturyzację.
+
+- [x] usunięty zdublowany sufiks tytułu. Root layout dokleja `| AppCrates`, a
+      strona rozdziału doklejała jeszcze `| Przewodnik marketplace`, co dawało
+      tytuły po 103 znaki przy budżecie ok. 60. Tytuły spadły do 49-78 znaków
+- [x] przepisane 26 opisów PL i 26 EN. Stan przed: 5 pustych, 2 fragmenty list,
+      14 uciętych w połowie słowa na 240 znakach (`importuje/nabyw`, `lub uzas`).
+      Po: wszystkie 126-153 znaki, pełne zdania, bez em dasha
+- [ ] rozważyć `noIndex` na `legal-notice` - zastrzeżenie prawne nie powinno
+      konkurować w wyszukiwarce z rozdziałami merytorycznymi
+
+**Świadomie nie scalane.** Sześć rozdziałów prozatorskich jest niedoważonych
+(`pricing-promotions-ranking-reviews` 420 słów na cztery tematy,
+`payments-payouts-vat` 426 na trzy), ale siedem najkrótszych to tabele i
+checklisty, gdzie mała liczba słów jest formatem, nie wadą (`launch-checklist`
+349 słów w tabeli o 66 komórkach). Scalanie kosztowałoby 22 przekierowania i
+zabrało granularność, której potrzebuje hub do linkowania w głąb. Właściwa
+naprawa jest addytywna: rozbudować sześć, nie kasować URL-i.
+
+### Faza D3 - odnoga przewodnika
+
+Jedno wejście `/pl/marketplace-guide`, dwie ścieżki, zero zmian w 26 istniejących
+adresach rozdziałów.
+
+- [x] `legal-notice` na `noindex, follow` i wypięty z sitemapy (25 zamiast 26
+      rozdziałów). Strona nadal dostępna i linkowana z nawigacji
+- [x] pole `track` w manifeście i w obu plikach treści, wszystkie istniejące
+      rozdziały oznaczone jako `regulacje`
+- [x] metadane obu ścieżek (tytuł, podtytuł, opis) w `pl.json` i `en.json`
+- [x] `getMarketplaceGuideTracks()` - ścieżka bez rozdziałów jest pomijana, więc
+      druga pojawi się dopiero z pierwszym rozdziałem architektonicznym
+- [x] rozdroże renderuje nagłówek ścieżki tylko wtedy, gdy ścieżek jest więcej
+      niż jedna; przy jednej strona wygląda jak dotąd
+- [x] licznik na rozdrożu liczony z danych zamiast zahardkodowanego "25+"
+- [x] nawigacja zawężona do ścieżki: sidebar, menu mobilne, poprzedni/następny
+      i okruszki. Poprzednio `prev/next` indeksowało tablicę wszystkich
+      rozdziałów przez `chapter.order`, co działało tylko przy jednej ścieżce
+- [x] wyszukiwarka obejmuje obie ścieżki, ale wynik pokazuje, z którego
+      przewodnika pochodzi. Bez tego dwa rozdziały „0. Jak korzystać" byłyby
+      nierozróżnialne
+- [x] tytuł parasolowy rozdroża zmieniony na „Przewodniki dla marketplace"
+      (EN „Marketplace guides"), bo strona hostuje dwa przewodniki, a nie jeden.
+      Licznik u góry opisuje bazę wiedzy, każda ścieżka pokazuje własną liczbę
+      rozdziałów w nagłówku
+- [x] **wszystkie 21 rozdziałów ścieżki architektonicznej, PL i EN.**
+      PL 12 965 słów (śr. 617), EN 15 214 (śr. 724). Numeracja ciągła 0-20,
+      zero duplikatów slugów, zero opisów ponad 160 znaków, zero em dashy
+- [x] rozdziały stykające się z regulacjami (9-14, 17) mają callbox ZAKRES
+      odsyłający do drugiej ścieżki; sprawdzone programowo, że terminy
+      regulacyjne padają wyłącznie w tych odsyłaczach
+- [x] dopisany brakujący styl `callout_note`. Wariant był w typie bloku od
+      początku, ale nigdy nie dostał CSS
+- [x] poprawione 4 twierdzenia o systemie produkcyjnym, które asertowały brak
+      możliwości platformy. Najpoważniejsze: rozdział o stanach twierdził, że
+      pod wielomagazynowość nie powstał interfejs, podczas gdy platforma daje
+      lokalizacje i panel natywnie
+- [ ] **weryfikacja merytoryczna treści przez właściciela** przed publikacją
+
+Ścieżki: **Obowiązki operatora marketplace** oraz **Architektura marketplace:
+od MVP do skali**. Plan rozdziałów skonsolidowany z 25 w briefie do 21, żeby
+żaden nie wszedł do indeksu jako cienki. Zasady ujawniania w
+`docs/marketplace-architecture-brief-korekty.md`.
+
 ### Faza E — proof
 
 - [ ] Artovnia: Medusa.js w title / H1 / pierwszym akapicie, wyjęta z `+3 więcej`

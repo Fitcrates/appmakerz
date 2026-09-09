@@ -8,12 +8,15 @@ import PrefetchLink from '@/components/next/PrefetchLink';
 import styles from '@/components/marketplace-guide/MarketplaceGuide.module.css';
 import { localizedPath } from '@/lib/i18n-routing';
 import { guideHeadingId } from '@/lib/marketplace-guide-shared';
+import { MARKETPLACE_GUIDE_NOINDEX_SLUGS } from '@/lib/marketplace-guide-manifest';
 import { absoluteUrl } from '@/lib/site';
 import {
   type GuideBlock,
   getMarketplaceGuide,
   getMarketplaceGuideChapter,
   getMarketplaceGuideNavigation,
+  getMarketplaceGuideSiblings,
+  getMarketplaceGuideTrack,
 } from '@/lib/marketplace-guide';
 import { MARKETPLACE_GUIDE_SLUGS } from '@/lib/marketplace-guide-manifest';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
@@ -37,7 +40,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const path = `/marketplace-guide/${chapter.slug}`;
   const canonical = absoluteUrl(localizedPath(language, path));
   return {
-    title: `${chapter.title} | ${language === 'pl' ? 'Przewodnik marketplace' : 'Marketplace guide'}`,
+    // The root layout already appends "| AppCrates" to a string title, so adding
+    // a second suffix here produced titles like "13. DSA: ... | Przewodnik
+    // marketplace | AppCrates" - 103 characters, of which Google shows about 60.
+    title: chapter.title,
     description: chapter.description,
     alternates: {
       canonical,
@@ -47,7 +53,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         'x-default': absoluteUrl(localizedPath('en', path)),
       },
     },
-    robots: { index: true, follow: true },
+    // The legal disclaimer stays reachable and linked, but answers no search
+    // query; indexing it only lets it compete with the substantive chapters.
+    robots: MARKETPLACE_GUIDE_NOINDEX_SLUGS.has(chapter.slug)
+      ? { index: false, follow: true }
+      : { index: true, follow: true },
     openGraph: { type: 'article', url: canonical, title: chapter.title, description: chapter.description, siteName: 'AppCrates', images: [DEFAULT_SOCIAL_IMAGE], locale: language === 'pl' ? 'pl_PL' : 'en_US', publishedTime: '2026-08-30', modifiedTime: '2026-08-30' },
     twitter: { card: 'summary_large_image', title: chapter.title, description: chapter.description, images: [DEFAULT_SOCIAL_IMAGE] },
   };
@@ -61,8 +71,11 @@ export default async function MarketplaceGuideChapterPage({ params }: PageProps)
   const chapter = getMarketplaceGuideChapter(language, slug);
   if (!chapter) notFound();
   const navigation = getMarketplaceGuideNavigation(language);
-  const previous = guide.chapters[chapter.order - 1];
-  const next = guide.chapters[chapter.order + 1];
+  // Scoped to the chapter's own track: the two guides share this file, so
+  // walking the whole chapter array would step from one guide into the other.
+  const { previous, next, siblings } = getMarketplaceGuideSiblings(language, slug);
+  const track = getMarketplaceGuideTrack(language, chapter.track);
+  const trackTitle = track?.title ?? guide.title;
   const headings = chapter.blocks.filter(
     (block): block is Extract<GuideBlock, { type: 'heading' }> => block.type === 'heading' && block.level === 2
   );
@@ -73,7 +86,7 @@ export default async function MarketplaceGuideChapterPage({ params }: PageProps)
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: language === 'pl' ? 'Strona główna' : 'Home', item: absoluteUrl(localizedPath(language, '/')) },
-      { '@type': 'ListItem', position: 2, name: guide.title, item: absoluteUrl(localizedPath(language, '/marketplace-guide')) },
+      { '@type': 'ListItem', position: 2, name: trackTitle, item: absoluteUrl(localizedPath(language, '/marketplace-guide')) },
       { '@type': 'ListItem', position: 3, name: cleanTitle, item: absoluteUrl(localizedPath(language, path)) },
     ],
   };
@@ -96,7 +109,7 @@ export default async function MarketplaceGuideChapterPage({ params }: PageProps)
         <aside className={styles.sidebar} aria-label={language === 'pl' ? 'Rozdziały przewodnika' : 'Guide chapters'}>
           <PrefetchLink className={styles.sidebarHome} href={localizedPath(language, '/marketplace-guide')}><LibraryBig aria-hidden="true" size={15} /> {language === 'pl' ? 'Wszystkie rozdziały' : 'All chapters'}</PrefetchLink>
           <div className={styles.sidebarNav}>
-            {guide.chapters.map((item) => (
+            {siblings.map((item) => (
               <PrefetchLink key={item.slug} className={item.slug === chapter.slug ? styles.activeChapter : ''} href={localizedPath(language, `/marketplace-guide/${item.slug}`)} aria-current={item.slug === chapter.slug ? 'page' : undefined}>
                 <span>{item.id === 'legal' ? '§' : item.id.padStart(2, '0')}</span>
                 <span>{item.title.replace(/^\d+\.\s*/, '')}</span>
@@ -108,12 +121,12 @@ export default async function MarketplaceGuideChapterPage({ params }: PageProps)
         <article className={styles.article}>
           <details className={styles.mobileNav}>
             <summary>{language === 'pl' ? 'Rozdziały przewodnika' : 'Guide chapters'}</summary>
-            <div>{guide.chapters.map((item) => <PrefetchLink key={item.slug} href={localizedPath(language, `/marketplace-guide/${item.slug}`)}>{item.id === 'legal' ? '§' : item.id.padStart(2, '0')} - {item.title.replace(/^\d+\.\s*/, '')}</PrefetchLink>)}</div>
+            <div>{siblings.map((item) => <PrefetchLink key={item.slug} href={localizedPath(language, `/marketplace-guide/${item.slug}`)}>{item.id === 'legal' ? '§' : item.id.padStart(2, '0')} - {item.title.replace(/^\d+\.\s*/, '')}</PrefetchLink>)}</div>
           </details>
           <nav className={styles.breadcrumbs} aria-label={language === 'pl' ? 'Okruszki' : 'Breadcrumbs'}>
             <PrefetchLink href={localizedPath(language, '/')}>{language === 'pl' ? 'Strona główna' : 'Home'}</PrefetchLink>
             <ChevronRight aria-hidden="true" size={13} />
-            <PrefetchLink href={localizedPath(language, '/marketplace-guide')}>{language === 'pl' ? 'Przewodnik marketplace' : 'Marketplace guide'}</PrefetchLink>
+            <PrefetchLink href={localizedPath(language, '/marketplace-guide')}>{trackTitle}</PrefetchLink>
             <ChevronRight aria-hidden="true" size={13} />
             <span>{chapter.id === 'legal' ? '§' : chapter.id.padStart(2, '0')}</span>
           </nav>

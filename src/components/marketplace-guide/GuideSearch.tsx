@@ -13,6 +13,7 @@ type SearchChapter = {
   title: string;
   description: string;
   headings: string[];
+  track?: string;
 };
 
 export default function GuideSearch({ language, chapters, compact = false }: { language: Language; chapters: SearchChapter[]; compact?: boolean }) {
@@ -52,6 +53,7 @@ export default function GuideSearch({ language, chapters, compact = false }: { l
               <span>{chapter.id === 'legal' ? '§' : chapter.id.padStart(2, '0')}</span>
               <span>
                 <strong>{chapter.title.replace(/^\d+\.\s*/, '')}</strong>
+                {chapter.track ? <em className={styles.searchTrack}>{chapter.track}</em> : null}
                 <small>{chapter.description}</small>
               </span>
             </PrefetchLink>

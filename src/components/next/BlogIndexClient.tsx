@@ -132,7 +132,16 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
       <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
 
         {/* CATEGORY FILTERS */}
-        <div className="flex flex-wrap items-center gap-x-7 gap-y-3">
+        {/* Same glass pill as the guide's track selector, tighter padding: these
+            are five or more chips, not two, so they have to sit closer. The
+            shared container only appears from sm up. Below that the chips wrap
+            to four rows and it turns into a blob around them, so each chip
+            carries its own glass instead. */}
+        <div
+          className="inline-flex flex-wrap items-center gap-2 self-start sm:gap-1 sm:rounded-full sm:border sm:border-white/[0.14] sm:bg-white/[0.06] sm:p-1 sm:shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_40px_rgba(0,0,0,0.28)] sm:backdrop-blur-xl"
+          role="group"
+          aria-label={language === 'pl' ? 'Filtruj po kategorii' : 'Filter by category'}
+        >
           {categories.length ? (
             <>
               {[{ slug: '', label: allCategoriesLabel, count: posts.length, key: '__all' },
@@ -151,25 +160,19 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
                   <button
                     key={item.key}
                     type="button"
+                    aria-pressed={isActive}
                     onClick={() => {
                       setSelectedCategory(item.slug);
                       setCurrentPage(1);
                     }}
-                    className={`group/filter flex items-baseline gap-1.5 whitespace-nowrap text-[0.72rem] uppercase tracking-[0.18em] transition-colors duration-300 ${
-                      isActive ? 'text-teal-300' : 'text-white/50 hover:text-white'
+                    className={`flex items-baseline gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-[0.72rem] uppercase tracking-[0.18em] transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-300/65 sm:border-0 ${
+                      isActive
+                        ? 'border-transparent bg-teal-300 text-indigo-950 shadow-[0_0_24px_rgba(94,234,212,0.28)]'
+                        : 'border-white/[0.14] bg-white/[0.06] text-white/60 backdrop-blur-md hover:text-white sm:bg-transparent sm:backdrop-blur-none'
                     }`}
                   >
-                    <span
-                      className={`transition-all duration-300 ${
-                        isActive
-                          ? 'text-teal-300 drop-shadow-[0_0_6px_rgba(94,234,212,0.8)]'
-                          : 'text-white/25 group-hover/filter:text-teal-300/60'
-                      }`}
-                    >
-                      /
-                    </span>
                     <span>{item.label}</span>
-                    <span className={`text-[0.6rem] tracking-normal notranslate ${isActive ? 'text-teal-300/60' : 'text-white/25'}`}>
+                    <span className={`text-[0.6rem] tracking-normal notranslate ${isActive ? 'text-indigo-950/60' : 'text-white/35'}`}>
                       {item.count}
                     </span>
                   </button>

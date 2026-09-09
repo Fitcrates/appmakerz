@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
-import { ArrowUpRight, CalendarDays, LibraryBig } from 'lucide-react';
+import { CalendarDays, LibraryBig } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import GuideSearch from '@/components/marketplace-guide/GuideSearch';
-import PrefetchLink from '@/components/next/PrefetchLink';
+import GuideTrackSwitcher from '@/components/marketplace-guide/GuideTrackSwitcher';
 import styles from '@/components/marketplace-guide/MarketplaceGuide.module.css';
 import { absoluteUrl } from '@/lib/site';
 import { localizedPath } from '@/lib/i18n-routing';
-import { getMarketplaceGuide, getMarketplaceGuideNavigation } from '@/lib/marketplace-guide';
+import { getMarketplaceGuide, getMarketplaceGuideNavigation, getMarketplaceGuideTracks } from '@/lib/marketplace-guide';
 import { isLanguage, type Language } from '@/lib/language';
 import { DEFAULT_SOCIAL_IMAGE } from '@/lib/seo';
 
@@ -44,6 +44,11 @@ export default async function MarketplaceGuideIndex({ params }: PageProps) {
   const language = lang as Language;
   const guide = getMarketplaceGuide(language);
   const navigation = getMarketplaceGuideNavigation(language);
+  const tracks = getMarketplaceGuideTracks(language);
+  const tableCount = guide.chapters.reduce(
+    (total, chapter) => total + chapter.blocks.filter((block) => block.type === 'table').length,
+    0
+  );
   const date = new Intl.DateTimeFormat(language === 'pl' ? 'pl-PL' : 'en-GB', { dateStyle: 'long', timeZone: 'Europe/Warsaw' }).format(new Date(`${guide.reviewedAt}T12:00:00+02:00`));
   const schema = {
     '@context': 'https://schema.org',
@@ -72,19 +77,32 @@ export default async function MarketplaceGuideIndex({ params }: PageProps) {
             <p>{guide.description}</p>
           </div>
           <div className={styles.indexStats}>
-            <div><strong>25+</strong><span>{language === 'pl' ? 'rozdziałów operacyjnych' : 'operational chapters'}</span></div>
-            <div><strong>78</strong><span>{language === 'pl' ? 'tabel i decyzji' : 'tables and decisions'}</span></div>
+            <div><strong>{guide.chapters.length}</strong><span>{language === 'pl' ? 'rozdziałów w bazie wiedzy' : 'chapters in the knowledge base'}</span></div>
+            {/* Counted from the data: a hardcoded number went stale the moment
+                the second track was added. */}
+            <div><strong>{tableCount}</strong><span>{language === 'pl' ? 'tabel i checklist' : 'tables and checklists'}</span></div>
           </div>
         </div>
-        <div className={styles.chapterGrid}>
-          {guide.chapters.map((chapter) => (
-            <PrefetchLink key={chapter.slug} className={styles.chapterCard} href={localizedPath(language, `/marketplace-guide/${chapter.slug}`)}>
-              <span className={styles.chapterNumber}>{chapter.id === 'legal' ? '§' : chapter.id.padStart(2, '0')}<ArrowUpRight aria-hidden="true" size={16} /></span>
-              <h2>{chapter.title.replace(/^\d+\.\s*/, '')}</h2>
-              <p>{chapter.description}</p>
-            </PrefetchLink>
-          ))}
-        </div>
+        <GuideTrackSwitcher
+          language={language}
+          tracks={tracks.map((track) => ({
+            key: track.key,
+            shortTitle: track.shortTitle,
+            title: track.title,
+            subtitle: track.subtitle,
+            description: track.description,
+            chapterCount: track.chapters.length,
+            sections: track.sections.map((section) => ({
+              title: section.title,
+              chapters: section.chapters.map((chapter) => ({
+                id: chapter.id,
+                slug: chapter.slug,
+                title: chapter.title,
+                description: chapter.description,
+              })),
+            })),
+          }))}
+        />
       </section>
       <script id="marketplace-guide-index-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </>

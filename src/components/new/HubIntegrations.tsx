@@ -61,7 +61,7 @@ export default function HubIntegrations({ integrations, language }: HubIntegrati
         {groups.map((group, groupIndex) => (
           <div key={`integration-group-${groupIndex}`} className={groupIndex > 0 ? 'mt-14' : ''}>
             {group.heading ? (
-              <h3 className="font-plex text-[11px] tracking-[0.2em] uppercase text-white/40">
+              <h3 className="font-oxanium text-xl font-light text-white/85 sm:text-[1.375rem]">
                 {group.heading}
               </h3>
             ) : null}

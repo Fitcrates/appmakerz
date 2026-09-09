@@ -173,7 +173,9 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
   const [serviceLandings, projects, posts] = await Promise.all([
     manualServices.length ? Promise.resolve([]) : getServiceLandings().catch(() => []),
     manualProjects.length ? Promise.resolve([]) : getProjectSummaries().catch(() => []),
-    manualPosts.length ? Promise.resolve([]) : getRelatedPostCandidates().catch(() => []),
+    // The hub tops its hand-picked posts up with automatic matches, so it needs
+    // the candidate list even when an editor has already chosen some.
+    manualPosts.length && landing.layoutVariant !== 'hub' ? Promise.resolve([]) : getRelatedPostCandidates().catch(() => []),
   ]);
 
   const title = getLocalizedText(landing.title, language);
@@ -214,6 +216,9 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
     relatedKeywords,
     3
   );
+  // The hub uses these posts as its evidence section, so three is too few
+  // there. The standard service layout keeps three: there they are a card row.
+  const relatedPostLimit = landing.layoutVariant === 'hub' ? 8 : 3;
   const automaticPosts = getRelatedItems<Post>(
     posts as Post[],
     (post) => [
@@ -225,7 +230,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
       post.tags?.join(' ') || '',
     ].join(' '),
     relatedKeywords,
-    3
+    relatedPostLimit + manualPosts.length
   );
   const otherServices = (manualServices.length ? manualServices : automaticServices)
     .filter((service) => service.slug?.current && service.slug.current !== landing.slug.current)
@@ -233,9 +238,19 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
   const relatedProjects = (manualProjects.length ? manualProjects : automaticProjects)
     .filter((project) => project.slug?.current)
     .slice(0, 3);
-  const relatedPosts = (manualPosts.length ? manualPosts : automaticPosts)
-    .filter((post) => post.slug?.current)
-    .slice(0, 3);
+  // A manual pick is authoritative on the standard layout. On the hub it sets
+  // the order and the rest of the slots are filled automatically, so the
+  // evidence section is never three items wide just because nobody revisited it.
+  const chosenPosts = manualPosts.filter((post) => post.slug?.current);
+  const fallbackPosts = automaticPosts.filter((post) => post.slug?.current);
+  const relatedPosts = (() => {
+    if (landing.layoutVariant !== 'hub') {
+      return (chosenPosts.length ? chosenPosts : fallbackPosts).slice(0, relatedPostLimit);
+    }
+    const alreadyChosen = new Set(chosenPosts.map((post) => post._id));
+    return [...chosenPosts, ...fallbackPosts.filter((post) => !alreadyChosen.has(post._id))]
+      .slice(0, relatedPostLimit);
+  })();
   // Chapter titles live in the guide's own JSON, so an editor picking slugs in
   // Sanity never has to retype them — and a slug that no longer exists is
   // dropped rather than rendered as a dead link.
