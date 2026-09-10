@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Script from 'next/script';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import ProjectHero from '@/components/project/ProjectHero';
@@ -54,9 +53,13 @@ export async function generateMetadata({ params }: LocalizedProjectPageProps): P
   const project = await getProject(slug);
 
   if (!project?._id) {
+    // Next 16 answers an unknown param on a dynamicParams route with 200 even
+    // when the page calls notFound(), so the status cannot be fixed from here.
+    // What can be fixed is the indexing signal: noindex, and no canonical
+    // pointing at some other page as if this one were a variant of it.
     return {
       title: translations[language].projectDetails.backToProjects,
-      alternates: { canonical: absoluteUrl(localizedPath(language, '/')) },
+      robots: { index: false, follow: false },
     };
   }
 
@@ -272,10 +275,10 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
       </main>
 
       <NextFooter />
-      <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <Script id="creativework-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }} />
+      <script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="creativework-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(creativeWorkSchema) }} />
       {faqSchema ? (
-        <Script id="project-faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        <script id="project-faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       ) : null}
     </>
   );

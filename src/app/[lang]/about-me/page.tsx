@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import { notFound } from 'next/navigation';
-import Script from 'next/script';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import CyberPhilosophyLayout, { type CyberPhilosophyContent } from '@/components/new/CyberPhilosophyLayout';
@@ -210,8 +209,8 @@ export default async function LocalizedAboutMePage({ params }: LocalizedAboutMeP
       <NextHeader />
       <main className="-mb-px min-h-screen bg-indigo-950">
         <CyberPhilosophyLayout language={language} highlights={highlights} content={content} />
-        <Script id="person-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-        <Script id="profilepage-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
+        <script id="person-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script id="profilepage-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
       </main>
       <div className="relative z-10 bg-indigo-950">
         <NextFooter />
