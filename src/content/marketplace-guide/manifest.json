@@ -3,6 +3,14 @@
   "updatedAt": "2026-09-09",
   "chapters": [
     {
+      "id": "legal",
+      "slug": "legal-notice",
+      "order": 25,
+      "noIndex": true,
+      "track": "regulacje",
+      "section": 0
+    },
+    {
       "id": "0",
       "slug": "getting-started",
       "order": 0,
@@ -28,112 +36,128 @@
       "slug": "responsibility-matrix",
       "order": 3,
       "track": "regulacje",
-      "section": 0
+      "section": 0,
+      "jurisdiction": "eu"
     },
     {
       "id": "4",
       "slug": "seller-onboarding",
       "order": 4,
       "track": "regulacje",
-      "section": 1
+      "section": 1,
+      "jurisdiction": "eu"
     },
     {
       "id": "5",
       "slug": "product-listing",
       "order": 5,
       "track": "regulacje",
-      "section": 1
+      "section": 1,
+      "jurisdiction": "eu"
     },
     {
       "id": "6",
       "slug": "gpsr-product-safety",
       "order": 6,
       "track": "regulacje",
-      "section": 1
+      "section": 1,
+      "jurisdiction": "eu"
     },
     {
       "id": "7",
       "slug": "category-gates",
       "order": 7,
       "track": "regulacje",
-      "section": 1
+      "section": 1,
+      "jurisdiction": "eu"
     },
     {
       "id": "8",
       "slug": "bdo-packaging-epr",
       "order": 8,
       "track": "regulacje",
-      "section": 1
+      "section": 1,
+      "jurisdiction": "pl"
     },
     {
       "id": "9",
       "slug": "consumer-law",
       "order": 9,
       "track": "regulacje",
-      "section": 2
+      "section": 2,
+      "jurisdiction": "eu"
     },
     {
       "id": "10",
       "slug": "pricing-promotions-ranking-reviews",
       "order": 10,
       "track": "regulacje",
-      "section": 2
+      "section": 2,
+      "jurisdiction": "eu"
     },
     {
       "id": "11",
       "slug": "payments-payouts-vat",
       "order": 11,
       "track": "regulacje",
-      "section": 2
+      "section": 2,
+      "jurisdiction": "eu"
     },
     {
       "id": "12",
       "slug": "gdpr-data-protection",
       "order": 12,
       "track": "regulacje",
-      "section": 3
+      "section": 3,
+      "jurisdiction": "eu"
     },
     {
       "id": "13",
       "slug": "dsa-moderation",
       "order": 13,
       "track": "regulacje",
-      "section": 3
+      "section": 3,
+      "jurisdiction": "eu"
     },
     {
       "id": "14",
       "slug": "p2b-seller-rules",
       "order": 14,
       "track": "regulacje",
-      "section": 3
+      "section": 3,
+      "jurisdiction": "eu"
     },
     {
       "id": "15",
       "slug": "dac7-reporting",
       "order": 15,
       "track": "regulacje",
-      "section": 3
+      "section": 3,
+      "jurisdiction": "eu"
     },
     {
       "id": "16",
       "slug": "ecommerce-accessibility",
       "order": 16,
       "track": "regulacje",
-      "section": 3
+      "section": 3,
+      "jurisdiction": "eu"
     },
     {
       "id": "17",
       "slug": "cybersecurity-nis2",
       "order": 17,
       "track": "regulacje",
-      "section": 3
+      "section": 3,
+      "jurisdiction": "pl"
     },
     {
       "id": "18",
       "slug": "data-retention",
       "order": 18,
       "track": "regulacje",
-      "section": 3
+      "section": 3,
+      "jurisdiction": "eu"
     },
     {
       "id": "19",
@@ -174,14 +198,6 @@
       "id": "24",
       "slug": "sources-and-updates",
       "order": 24,
-      "track": "regulacje",
-      "section": 4
-    },
-    {
-      "id": "legal",
-      "slug": "legal-notice",
-      "order": 25,
-      "noIndex": true,
       "track": "regulacje",
       "section": 4
     },

@@ -642,3 +642,59 @@
 @media (prefers-reduced-motion: reduce) {
   .chapterCard::after, .chapterNumber svg, .toc > a { transition: none; }
 }
+
+/* --- jurisdiction badge --- */
+/* Two states only: does the chapter transfer to another EU market, or is it
+   Polish detail. Anything finer would mean maintaining 27 national views. */
+.chapterNumberLead {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.badgeEu,
+.badgePl {
+  padding: 0.15rem 0.45rem;
+  border: 1px solid;
+  border-radius: 3px;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  cursor: help;
+}
+
+.badgeEu {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.badgePl {
+  border-color: rgba(94, 234, 212, 0.4);
+  color: rgba(94, 234, 212, 0.9);
+}
+
+.jurisdictionLegend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 1.5rem;
+  margin: -1rem 0 2.5rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+/* direct child only: the badges sit inside .jurisdictionLegendItem and were
+   inheriting this muted colour as their own first-child */
+.jurisdictionLegend > span:first-child { color: rgba(255, 255, 255, 0.35); }
+
+.jurisdictionLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.articleHeader .badgeEu,
+.articleHeader .badgePl { vertical-align: middle; margin-left: 0.7rem; }

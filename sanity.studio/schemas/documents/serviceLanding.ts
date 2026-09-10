@@ -613,7 +613,7 @@ export default {
       type: 'object',
       group: 'links',
       description:
-        'Shows the “Practical marketplace operations guide” block on this landing. This used to be hardcoded to one slug in the page template, so no other landing could ever surface the guide.',
+        'Shows the marketplace guide block on this landing. This used to be hardcoded to one slug in the page template, so no other landing could ever surface the guide.',
       options: { collapsible: true, collapsed: false },
       fields: [
         {
@@ -627,16 +627,17 @@ export default {
           title: 'Deep-link these chapters',
           type: 'array',
           of: [{ type: 'string' }],
-          // The 24 chapter pages are only reachable from the guide index, so
-          // pointing a landing at the two or three that match its intent is
-          // worth more than another link to the guide root.
+          // The chapter pages are only reachable from the guide index, so
+          // pointing a landing at the few that match its intent is worth more
+          // than another link to the guide root. With two tracks in the guide,
+          // a mix of obligations and architecture reads better than either alone.
           options: {
             list: guideManifest.chapters.map((chapter: { slug: string }) => ({
               title: chapter.slug,
               value: chapter.slug,
             })),
           },
-          validation: (Rule: any) => Rule.max(4).warning('More than four turns the block into a link dump.'),
+          validation: (Rule: any) => Rule.max(6).warning('More than six turns the block into a link dump.'),
           description: 'Optional. Leave empty to link to the guide index only.',
         },
       ],

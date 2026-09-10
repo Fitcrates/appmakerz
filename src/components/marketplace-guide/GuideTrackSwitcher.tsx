@@ -5,9 +5,12 @@ import { ArrowUpRight } from 'lucide-react';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import { localizedPath } from '@/lib/i18n-routing';
 import type { Language } from '@/lib/language';
+import JurisdictionBadge from './JurisdictionBadge';
 import styles from './MarketplaceGuide.module.css';
 
-type Chapter = { id: string; slug: string; title: string; description: string };
+import type { GuideJurisdiction } from '@/lib/marketplace-guide';
+
+type Chapter = { id: string; slug: string; title: string; description: string; jurisdiction?: GuideJurisdiction };
 type Section = { title: string; chapters: Chapter[] };
 export type SwitcherTrack = {
   key: string;
@@ -90,6 +93,22 @@ export default function GuideTrackSwitcher({
             </div>
           ) : null}
 
+          {/* Shown only for the track that carries markers, so the architecture
+              track is not annotated with a legal legend it never uses. */}
+          {track.sections.some((section) => section.chapters.some((chapter) => chapter.jurisdiction)) ? (
+            <p className={styles.jurisdictionLegend}>
+              <span>{language === 'pl' ? 'Zasięg:' : 'Scope:'}</span>
+              <span className={styles.jurisdictionLegendItem}>
+                <JurisdictionBadge jurisdiction="eu" language={language} />
+                {language === 'pl' ? 'obowiązek z prawa UE, szczegóły wdrożenia bywają krajowe' : 'obligation from EU law, implementation details can be national'}
+              </span>
+              <span className={styles.jurisdictionLegendItem}>
+                <JurisdictionBadge jurisdiction="pl" language={language} />
+                {language === 'pl' ? 'polskie rejestry, progi lub terminy' : 'Polish registers, thresholds or deadlines'}
+              </span>
+            </p>
+          ) : null}
+
           {track.sections.map((section) => (
             <div key={section.title} className={styles.chapterSection}>
               <h2 className={styles.sectionLabel}>
@@ -104,7 +123,10 @@ export default function GuideTrackSwitcher({
                     href={localizedPath(language, `/marketplace-guide/${chapter.slug}`)}
                   >
                     <span className={styles.chapterNumber}>
-                      {chapter.id === 'legal' ? '§' : chapter.id.padStart(2, '0')}
+                      <span className={styles.chapterNumberLead}>
+                        {chapter.id === 'legal' ? '§' : chapter.id.padStart(2, '0')}
+                        <JurisdictionBadge jurisdiction={chapter.jurisdiction} language={language} />
+                      </span>
                       <ArrowUpRight aria-hidden="true" size={16} />
                     </span>
                     <h3>{chapter.title.replace(/^\d+\.\s*/, '')}</h3>

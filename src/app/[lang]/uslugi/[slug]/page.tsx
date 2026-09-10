@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import Script from 'next/script';
 import { PortableText } from '@portabletext/react';
 import { ArrowUpRight } from 'lucide-react';
 import NextHeader from '@/components/next/NextHeader';
@@ -24,7 +23,7 @@ import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
 import { localizedPath } from '@/lib/i18n-routing';
-import { getMarketplaceGuideChapter } from '@/lib/marketplace-guide';
+import { getMarketplaceGuideChapter, getMarketplaceGuideTracks } from '@/lib/marketplace-guide';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
 import { getImageAlt } from '@/lib/image-alt';
 import {
@@ -97,9 +96,13 @@ export async function generateMetadata({ params }: LocalizedServiceLandingPagePr
   const landing = await getServiceLanding(slug);
 
   if (!landing?._id) {
+    // Next 16 answers an unknown param on a dynamicParams route with 200 even
+    // when the page calls notFound(), so the status cannot be fixed from here.
+    // What can be fixed is the indexing signal: noindex, and no canonical
+    // pointing at some other page as if this one were a variant of it.
     return {
       title: language === 'pl' ? 'Usługa' : 'Service',
-      alternates: { canonical: absoluteUrl(localizedPath(language, '/')) },
+      robots: { index: false, follow: false },
     };
   }
 
@@ -261,6 +264,11 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
     })
     .filter((entry): entry is { slug: string; title: string } => entry !== null);
 
+  // The CTA used to state a chapter count in its own copy. That went stale
+  // the day the second track was added, so it comes from the guide data now.
+  const guideTracks = getMarketplaceGuideTracks(language);
+  const guideChapterCount = guideTracks.reduce((total, track) => total + track.chapters.length, 0);
+
   const hasInternalLinks = otherServices.length > 0 || relatedProjects.length > 0 || relatedPosts.length > 0;
 
   const breadcrumbSchema = {
@@ -327,6 +335,8 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
           language={language}
           relatedPosts={relatedPosts as Post[]}
           guideChapterLinks={guideChapterLinks}
+          guideChapterCount={guideChapterCount}
+          guideTrackCount={guideTracks.length}
         />
       ) : (
       <main className="min-h-screen bg-indigo-950">
@@ -473,7 +483,12 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
         ) : null}
 
         {landing.guideCta?.enabled ? (
-          <GuideCtaSection chapters={guideChapterLinks} language={language} />
+          <GuideCtaSection
+            chapters={guideChapterLinks}
+            chapterCount={guideChapterCount}
+            trackCount={guideTracks.length}
+            language={language}
+          />
         ) : null}
 
         {faq.length > 0 ? (
@@ -636,10 +651,10 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
       )}
 
       <NextFooter />
-      <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      <Script id="service-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
-      <Script id="webpage-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
-      {faqSchema ? <Script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}
+      <script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script id="service-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
+      <script id="webpage-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }} />
+      {faqSchema ? <script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}
     </>
   );
 }

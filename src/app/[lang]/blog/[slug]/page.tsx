@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Script from 'next/script';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import BlogPostLocalizedContent from '@/components/next/BlogPostLocalizedContent';
@@ -51,9 +50,13 @@ export async function generateMetadata({ params }: LocalizedBlogPostPageProps): 
   const post = await getPost(slug);
 
   if (!post?._id) {
+    // Next 16 answers an unknown param on a dynamicParams route with 200 even
+    // when the page calls notFound(), so the status cannot be fixed from here.
+    // What can be fixed is the indexing signal: noindex, and no canonical
+    // pointing at some other page as if this one were a variant of it.
     return {
       title: translations[language].blog.post.backToBlog,
-      alternates: { canonical: absoluteUrl(localizedPath(language, '/blog')) },
+      robots: { index: false, follow: false },
     };
   }
 
@@ -207,9 +210,9 @@ export default async function LocalizedBlogPostPage({ params }: LocalizedBlogPos
       <BlogPostLocalizedContent post={post} postContext={postContext} />
       <NextFooter />
 
-      <Script id="blog-posting-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }} />
-      <Script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      {faqSchema ? <Script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}
+      <script id="blog-posting-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }} />
+      <script id="breadcrumb-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {faqSchema ? <script id="faq-schema" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} /> : null}
     </div>
   );
 }

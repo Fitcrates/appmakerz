@@ -2,9 +2,37 @@
   "language": "pl",
   "title": "Przewodniki dla marketplace",
   "subtitle": "Dwie ścieżki: co musisz spełnić i jak to zbudować, żeby dało się to spełniać",
-  "description": "Baza wiedzy dla małych i średnich platform sprzedających towary w Polsce i UE. Pierwsza ścieżka opisuje obowiązki operatora, druga decyzje architektoniczne i ich konsekwencje.",
+  "description": "Baza wiedzy dla małych i średnich platform sprzedających towary konsumentom w Polsce. Obowiązki operatora oraz decyzje architektoniczne i ich konsekwencje.",
   "reviewedAt": "2026-08-30",
   "chapters": [
+    {
+      "id": "legal",
+      "slug": "legal-notice",
+      "title": "Ważne zastrzeżenie dotyczące charakteru materiału",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "segments": [
+            {
+              "text": "Niniejszy materiał ma charakter wyłącznie informacyjny i edukacyjny. Zawiera autorską interpretację ogólnych przepisów, oficjalnych materiałów i praktycznych sposobów organizacji marketplace według stanu źródeł na wskazaną datę. Nie stanowi porady prawnej, podatkowej, księgowej, technicznej, inwestycyjnej ani indywidualnej oceny zgodności produktu, przedsiębiorcy lub platformy. Nie gwarantuje kompletności ani zgodności konkretnego wdrożenia, ponieważ obowiązki zależą od rzeczywistego modelu działalności, kategorii produktów, statusu stron, krajów sprzedaży i aktualnej praktyki organów."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "segments": [
+            {
+              "text": "Materiał nie powinien być jedyną podstawą decyzji biznesowej, uruchomienia sprzedaży, dopuszczenia produktu ani wyboru sposobu rozliczeń. Przed wdrożeniem rozwiązania w konkretnej działalności należy zweryfikować aktualny stan prawny i - gdy ryzyko lub model tego wymaga - uzyskać indywidualną ocenę właściwego prawnika, doradcy podatkowego, księgowego albo specjalisty produktowego. Publikacja lub udostępnienie materiału nie tworzy relacji doradczej z jego autorem. Zastrzeżenie nie wyłącza odpowiedzialności, której nie można wyłączyć na podstawie bezwzględnie obowiązujących przepisów."
+            }
+          ]
+        }
+      ],
+      "order": 25,
+      "description": "Materiał informacyjny i edukacyjny, autorska interpretacja przepisów na wskazaną datę. Nie stanowi porady prawnej ani opinii prawnej.",
+      "track": "regulacje",
+      "section": 0,
+      "sectionTitle": "Zanim zaczniesz"
+    },
     {
       "id": "0",
       "slug": "getting-started",
@@ -14,7 +42,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "Ten przewodnik opisuje co właściciel małego lub średniego marketplace ma zdecydować, zbudować, pokazać użytkownikom i archiwizować. Nie jest specyfikacją kodu. Zakłada sprzedaż fizycznych towarów konsumentom w Polsce, z możliwością dopuszczania sprzedawców z innych państw UE lub spoza UE."
+              "text": "Ten przewodnik opisuje co właściciel małego lub średniego marketplace ma zdecydować, zbudować, pokazać użytkownikom i archiwizować. Nie jest specyfikacją kodu. Zakłada sprzedaż fizycznych towarów konsumentom w Polsce, z możliwością dopuszczania sprzedawców z innych państw UE lub spoza UE. Jeżeli kierujesz sprzedaż także do konsumentów w innych państwach UE, część obowiązków ocenia się według prawa kraju konsumenta i wymaga osobnego sprawdzenia."
             }
           ]
         },
@@ -247,10 +275,11 @@
         }
       ],
       "order": 0,
-      "description": "Co właściciel małego lub średniego marketplace ma zdecydować, zbudować, pokazać użytkownikom i archiwizować. Sprzedaż towarów konsumentom w PL i UE.",
+      "description": "Co właściciel małego lub średniego marketplace ma zdecydować, zbudować, pokazać użytkownikom i archiwizować. Sprzedaż towarów konsumentom w Polsce.",
       "track": "regulacje",
       "section": 0,
-      "sectionTitle": "Zanim zaczniesz"
+      "sectionTitle": "Zanim zaczniesz",
+      "seoTitle": "Przewodnik marketplace: zakres, role i jak czytać"
     },
     {
       "id": "1",
@@ -506,7 +535,8 @@
       "description": "Najczęstszy błąd to zacząć od katalogu i płatności, zanim wiadomo, kto sprzedaje, przyjmuje pieniądze, pakuje i obsługuje reklamację.",
       "track": "regulacje",
       "section": 0,
-      "sectionTitle": "Zanim zaczniesz"
+      "sectionTitle": "Zanim zaczniesz",
+      "seoTitle": "Model działalności marketplace i odpowiedzialność"
     },
     {
       "id": "2",
@@ -878,7 +908,8 @@
       "description": "Co musi istnieć przed pierwszym sprzedawcą, co przed pierwszą sprzedażą, a co dopiero przy wzroście. Kolejność wdrożenia zamiast listy życzeń.",
       "track": "regulacje",
       "section": 0,
-      "sectionTitle": "Zanim zaczniesz"
+      "sectionTitle": "Zanim zaczniesz",
+      "seoTitle": "Plan budowy marketplace: co musi być i kiedy"
     },
     {
       "id": "3",
@@ -961,7 +992,9 @@
       "description": "Kto odpowiada za tożsamość sprzedawcy, dokumenty produktu, płatność i reklamację. Operator, sprzedawca i dostawca zewnętrzny w jednej tabeli.",
       "track": "regulacje",
       "section": 0,
-      "sectionTitle": "Zanim zaczniesz"
+      "sectionTitle": "Zanim zaczniesz",
+      "seoTitle": "Podział odpowiedzialności w marketplace",
+      "jurisdiction": "eu"
     },
     {
       "id": "4",
@@ -1388,7 +1421,9 @@
       "description": "Onboarding nie może być ankietą „firma czy osoba prywatna”. Ustala role, od których zależą prawo konsumenckie, GPSR, BDO, VAT, DAC7 i wypłaty.",
       "track": "regulacje",
       "section": 1,
-      "sectionTitle": "Sprzedawcy i produkty"
+      "sectionTitle": "Sprzedawcy i produkty",
+      "seoTitle": "Onboarding sprzedawcy w marketplace: kogo dopuścić",
+      "jurisdiction": "eu"
     },
     {
       "id": "5",
@@ -1659,7 +1694,9 @@
       "description": "Karta produktu to miejsce wykonania obowiązków przedkontraktowych, GPSR i DSA. Brak wymaganego elementu blokuje publikację, a nie ostrzega.",
       "track": "regulacje",
       "section": 1,
-      "sectionTitle": "Sprzedawcy i produkty"
+      "sectionTitle": "Sprzedawcy i produkty",
+      "seoTitle": "Karta produktu w marketplace: wymagane informacje",
+      "jurisdiction": "eu"
     },
     {
       "id": "6",
@@ -2137,7 +2174,9 @@
       "description": "GPSR obowiązuje od 13 grudnia 2024 r. Kto jest podmiotem odpowiedzialnym, jakie dane muszą stać przy ofercie i kiedy oferta nie może się ukazać.",
       "track": "regulacje",
       "section": 1,
-      "sectionTitle": "Sprzedawcy i produkty"
+      "sectionTitle": "Sprzedawcy i produkty",
+      "seoTitle": "GPSR w marketplace: obowiązki platformy",
+      "jurisdiction": "eu"
     },
     {
       "id": "7",
@@ -2293,7 +2332,9 @@
       "description": "GPSR nie zastępuje przepisów szczególnych. Dla każdej kategorii operator zatwierdza listę wymaganych informacji i dowodów, zanim ją otworzy.",
       "track": "regulacje",
       "section": 1,
-      "sectionTitle": "Sprzedawcy i produkty"
+      "sectionTitle": "Sprzedawcy i produkty",
+      "seoTitle": "Kategorie regulowane w marketplace: bramki",
+      "jurisdiction": "eu"
     },
     {
       "id": "8",
@@ -2837,7 +2878,9 @@
       "description": "BDO nie dotyczy automatycznie każdego, kto sprzedaje. Dotyczy konkretnych ról i grup produktów, najczęściej tego, kto pakuje i wprowadza towar.",
       "track": "regulacje",
       "section": 1,
-      "sectionTitle": "Sprzedawcy i produkty"
+      "sectionTitle": "Sprzedawcy i produkty",
+      "seoTitle": "BDO i EPR w marketplace: kto naprawdę ma obowiązek",
+      "jurisdiction": "pl"
     },
     {
       "id": "9",
@@ -3171,7 +3214,9 @@
       "description": "Co kupujący musi zobaczyć przed zakupem, jak liczy się termin odstąpienia i kto rozpatruje reklamację, gdy sprzedawcą jest ktoś inny niż operator.",
       "track": "regulacje",
       "section": 2,
-      "sectionTitle": "Sprzedaż i pieniądze"
+      "sectionTitle": "Sprzedaż i pieniądze",
+      "seoTitle": "Prawo konsumenckie w marketplace: zwroty",
+      "jurisdiction": "eu"
     },
     {
       "id": "10",
@@ -3400,7 +3445,9 @@
       "description": "Najniższa cena z 30 dni przy każdej obniżce, jawne kryteria rankingu, oznaczanie reklam i weryfikacja opinii. Cztery obowiązki na jednym ekranie.",
       "track": "regulacje",
       "section": 2,
-      "sectionTitle": "Sprzedaż i pieniądze"
+      "sectionTitle": "Sprzedaż i pieniądze",
+      "seoTitle": "Omnibus w marketplace: ceny, ranking i opinie",
+      "jurisdiction": "eu"
     },
     {
       "id": "11",
@@ -3632,7 +3679,9 @@
       "description": "Dlaczego mały marketplace potrzebuje dostawcy z produktem marketplace: podział płatności, harmonogram wypłat, zwroty, chargeback i uzgodnienia.",
       "track": "regulacje",
       "section": 2,
-      "sectionTitle": "Sprzedaż i pieniądze"
+      "sectionTitle": "Sprzedaż i pieniądze",
+      "seoTitle": "Płatności w marketplace: wypłaty, VAT i faktury",
+      "jurisdiction": "eu"
     },
     {
       "id": "12",
@@ -4221,7 +4270,9 @@
       "description": "Akceptacja regulaminu nie jest zgodą RODO. Konto, zamówienie, płatność i bezpieczeństwo mają własne podstawy prawne, a nie jedną wspólną.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Dane i zgodność"
+      "sectionTitle": "Dane i zgodność",
+      "seoTitle": "RODO w marketplace: role, podstawy i retencja",
+      "jurisdiction": "eu"
     },
     {
       "id": "13",
@@ -4562,7 +4613,9 @@
       "description": "Marketplace jest zwykle usługą hostingu i platformą internetową. Zwolnienie ze względu na wielkość nie oznacza braku obowiązków DSA.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Dane i zgodność"
+      "sectionTitle": "Dane i zgodność",
+      "seoTitle": "DSA w marketplace: moderacja i sprzedawcy",
+      "jurisdiction": "eu"
     },
     {
       "id": "14",
@@ -4768,7 +4821,9 @@
       "description": "P2B chroni sprzedawców biznesowych wobec operatora: jawne kryteria rankingu, uzasadnienie zawieszenia konta i terminy wypowiedzenia umowy.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Dane i zgodność"
+      "sectionTitle": "Dane i zgodność",
+      "seoTitle": "P2B w marketplace: zasady dla sprzedawców",
+      "jurisdiction": "eu"
     },
     {
       "id": "15",
@@ -4950,7 +5005,9 @@
       "description": "DAC7 nie jest podatkiem platformy. To należyta staranność, zbieranie i weryfikacja danych sprzedawców oraz coroczne raportowanie operatora.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Dane i zgodność"
+      "sectionTitle": "Dane i zgodność",
+      "seoTitle": "DAC7 w marketplace: raportowanie sprzedawców",
+      "jurisdiction": "eu"
     },
     {
       "id": "16",
@@ -5185,7 +5242,9 @@
       "description": "Akt o dostępności obejmuje handel elektroniczny. Mikroprzedsiębiorca jest zwolniony, mały i średni operator nie. Gdzie dokładnie przebiega granica.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Dane i zgodność"
+      "sectionTitle": "Dane i zgodność",
+      "seoTitle": "Dostępność e-commerce: EAA dla marketplace",
+      "jurisdiction": "eu"
     },
     {
       "id": "17",
@@ -5458,7 +5517,9 @@
       "description": "Marketplace trzyma dane sprzedawców, adresy klientów i dokumenty zgodności. Przejęcie konta jest tu incydentem, a nie tylko problemem IT.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Dane i zgodność"
+      "sectionTitle": "Dane i zgodność",
+      "seoTitle": "NIS2 i KSC w e-commerce: obowiązki operatora",
+      "jurisdiction": "pl"
     },
     {
       "id": "18",
@@ -5552,7 +5613,9 @@
       "description": "Nie istnieje jeden termin „RODO to 5 lat”. Każda grupa danych ma własny cel, podstawę i najdłuższy obowiązujący termin przechowywania.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Dane i zgodność"
+      "sectionTitle": "Dane i zgodność",
+      "seoTitle": "Retencja danych w marketplace: jak długo",
+      "jurisdiction": "eu"
     },
     {
       "id": "19",
@@ -5847,7 +5910,8 @@
       "description": "Co sprawdzać codziennie, co co miesiąc, a co raz w roku, i kto po stronie operatora jest właścicielem każdego z tych procesów.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Uruchomienie i praca bieżąca"
+      "sectionTitle": "Uruchomienie i praca bieżąca",
+      "seoTitle": "Kalendarz operacyjny marketplace: terminy roczne"
     },
     {
       "id": "20",
@@ -6161,7 +6225,8 @@
       "description": "Cztery warianty marketplace i konsekwencje każdego. Rekomendowany start: sprzedawcy z Polski i UE, bez fulfillment operatora i kategorii ryzyka.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Uruchomienie i praca bieżąca"
+      "sectionTitle": "Uruchomienie i praca bieżąca",
+      "seoTitle": "Modele biznesowe marketplace: cztery warianty"
     },
     {
       "id": "21",
@@ -6497,7 +6562,8 @@
       "description": "Dokumenty widoczne dla klientów, umowy ze sprzedawcami i procedury wewnętrzne. Lista tego, co musi być gotowe przed uruchomieniem sprzedaży.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Uruchomienie i praca bieżąca"
+      "sectionTitle": "Uruchomienie i praca bieżąca",
+      "seoTitle": "Dokumenty i procedury marketplace: pełna lista"
     },
     {
       "id": "22",
@@ -6632,7 +6698,8 @@
       "description": "Pytania GO / NO-GO przed otwarciem sprzedaży. Odpowiedź „nie” przy punkcie blokującym zatrzymuje start, a nie tylko generuje ostrzeżenie.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Uruchomienie i praca bieżąca"
+      "sectionTitle": "Uruchomienie i praca bieżąca",
+      "seoTitle": "Checklista przed uruchomieniem marketplace"
     },
     {
       "id": "23",
@@ -6717,7 +6784,8 @@
       "description": "Mity, które kosztują najwięcej: „w regulaminie napiszemy, że odpowiada sprzedawca”, „jesteśmy mali, więc DSA nas nie dotyczy”, „zgodność na koniec”.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Uruchomienie i praca bieżąca"
+      "sectionTitle": "Uruchomienie i praca bieżąca",
+      "seoTitle": "Najczęstsze błędy przy uruchamianiu marketplace"
     },
     {
       "id": "24",
@@ -6926,35 +6994,8 @@
       "description": "Obowiązujące akty prawne i materiały właściwych organów, nie blogi kancelarii. Zasada aktualizacji: przegląd zmian co najmniej raz na kwartał.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Uruchomienie i praca bieżąca"
-    },
-    {
-      "id": "legal",
-      "slug": "legal-notice",
-      "title": "Ważne zastrzeżenie dotyczące charakteru materiału",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "segments": [
-            {
-              "text": "Niniejszy materiał ma charakter wyłącznie informacyjny i edukacyjny. Zawiera autorską interpretację ogólnych przepisów, oficjalnych materiałów i praktycznych sposobów organizacji marketplace według stanu źródeł na wskazaną datę. Nie stanowi porady prawnej, podatkowej, księgowej, technicznej, inwestycyjnej ani indywidualnej oceny zgodności produktu, przedsiębiorcy lub platformy. Nie gwarantuje kompletności ani zgodności konkretnego wdrożenia, ponieważ obowiązki zależą od rzeczywistego modelu działalności, kategorii produktów, statusu stron, krajów sprzedaży i aktualnej praktyki organów."
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "segments": [
-            {
-              "text": "Materiał nie powinien być jedyną podstawą decyzji biznesowej, uruchomienia sprzedaży, dopuszczenia produktu ani wyboru sposobu rozliczeń. Przed wdrożeniem rozwiązania w konkretnej działalności należy zweryfikować aktualny stan prawny i - gdy ryzyko lub model tego wymaga - uzyskać indywidualną ocenę właściwego prawnika, doradcy podatkowego, księgowego albo specjalisty produktowego. Publikacja lub udostępnienie materiału nie tworzy relacji doradczej z jego autorem. Zastrzeżenie nie wyłącza odpowiedzialności, której nie można wyłączyć na podstawie bezwzględnie obowiązujących przepisów."
-            }
-          ]
-        }
-      ],
-      "order": 25,
-      "description": "Materiał informacyjny i edukacyjny, autorska interpretacja przepisów na wskazaną datę. Nie stanowi porady prawnej ani opinii prawnej.",
-      "track": "regulacje",
-      "section": 4,
-      "sectionTitle": "Uruchomienie i praca bieżąca"
+      "sectionTitle": "Uruchomienie i praca bieżąca",
+      "seoTitle": "Źródła prawne i aktualizacja przewodnika"
     },
     {
       "id": "0",
@@ -7249,7 +7290,8 @@
         }
       ],
       "section": 0,
-      "sectionTitle": "Zanim zaczniesz"
+      "sectionTitle": "Zanim zaczniesz",
+      "seoTitle": "Architektura marketplace: jak czytać przewodnik"
     },
     {
       "id": "1",
@@ -7653,7 +7695,8 @@
         }
       ],
       "section": 0,
-      "sectionTitle": "Zanim zaczniesz"
+      "sectionTitle": "Zanim zaczniesz",
+      "seoTitle": "Model marketplace przed funkcjami"
     },
     {
       "id": "2",
@@ -8010,7 +8053,8 @@
         }
       ],
       "section": 1,
-      "sectionTitle": "Dane i katalog"
+      "sectionTitle": "Dane i katalog",
+      "seoTitle": "Model danych sprzedawcy w marketplace"
     },
     {
       "id": "3",
@@ -8366,7 +8410,8 @@
         }
       ],
       "section": 1,
-      "sectionTitle": "Dane i katalog"
+      "sectionTitle": "Dane i katalog",
+      "seoTitle": "Katalog wielu sprzedawców: produkty i warianty"
     },
     {
       "id": "4",
@@ -8784,7 +8829,8 @@
         }
       ],
       "section": 1,
-      "sectionTitle": "Dane i katalog"
+      "sectionTitle": "Dane i katalog",
+      "seoTitle": "Integracje marketplace ze sklepami sprzedawców"
     },
     {
       "id": "5",
@@ -9132,7 +9178,8 @@
         }
       ],
       "section": 1,
-      "sectionTitle": "Dane i katalog"
+      "sectionTitle": "Dane i katalog",
+      "seoTitle": "Stany magazynowe w marketplace: rezerwacje"
     },
     {
       "id": "6",
@@ -9528,7 +9575,8 @@
         }
       ],
       "section": 2,
-      "sectionTitle": "Transakcja"
+      "sectionTitle": "Transakcja",
+      "seoTitle": "Koszyk wielu sprzedawców i checkout w marketplace"
     },
     {
       "id": "7",
@@ -9918,7 +9966,8 @@
         }
       ],
       "section": 2,
-      "sectionTitle": "Transakcja"
+      "sectionTitle": "Transakcja",
+      "seoTitle": "Model zamówienia w marketplace wielu sprzedawców"
     },
     {
       "id": "8",
@@ -10251,7 +10300,8 @@
         }
       ],
       "section": 2,
-      "sectionTitle": "Transakcja"
+      "sectionTitle": "Transakcja",
+      "seoTitle": "Wysyłka w marketplace: koszty, paczki i realizacja"
     },
     {
       "id": "9",
@@ -10658,7 +10708,8 @@
         }
       ],
       "section": 3,
-      "sectionTitle": "Pieniądze"
+      "sectionTitle": "Pieniądze",
+      "seoTitle": "Płatności w marketplace: split payment i zdarzenia"
     },
     {
       "id": "10",
@@ -11062,7 +11113,8 @@
         }
       ],
       "section": 3,
-      "sectionTitle": "Pieniądze"
+      "sectionTitle": "Pieniądze",
+      "seoTitle": "Wypłaty dla sprzedawców: salda i harmonogram"
     },
     {
       "id": "11",
@@ -11410,7 +11462,8 @@
         }
       ],
       "section": 3,
-      "sectionTitle": "Pieniądze"
+      "sectionTitle": "Pieniądze",
+      "seoTitle": "Prowizje w marketplace: naliczanie i wersjonowanie"
     },
     {
       "id": "12",
@@ -11794,7 +11847,8 @@
         }
       ],
       "section": 3,
-      "sectionTitle": "Pieniądze"
+      "sectionTitle": "Pieniądze",
+      "seoTitle": "Promocje w marketplace: kto finansuje rabat"
     },
     {
       "id": "13",
@@ -12182,7 +12236,8 @@
         }
       ],
       "section": 3,
-      "sectionTitle": "Pieniądze"
+      "sectionTitle": "Pieniądze",
+      "seoTitle": "Zwroty i spory w marketplace: przepływ"
     },
     {
       "id": "14",
@@ -12513,7 +12568,8 @@
         }
       ],
       "section": 4,
-      "sectionTitle": "Operacje"
+      "sectionTitle": "Operacje",
+      "seoTitle": "Moderacja w marketplace: decyzje i ślad audytowy"
     },
     {
       "id": "15",
@@ -12876,7 +12932,8 @@
         }
       ],
       "section": 4,
-      "sectionTitle": "Operacje"
+      "sectionTitle": "Operacje",
+      "seoTitle": "Panel operatora marketplace: ekrany i uprawnienia"
     },
     {
       "id": "16",
@@ -13269,7 +13326,8 @@
         }
       ],
       "section": 4,
-      "sectionTitle": "Operacje"
+      "sectionTitle": "Operacje",
+      "seoTitle": "Zdarzenia i powiadomienia w marketplace"
     },
     {
       "id": "17",
@@ -13651,7 +13709,8 @@
         }
       ],
       "section": 4,
-      "sectionTitle": "Operacje"
+      "sectionTitle": "Operacje",
+      "seoTitle": "Bezpieczeństwo marketplace: izolacja danych"
     },
     {
       "id": "18",
@@ -13974,7 +14033,8 @@
         }
       ],
       "section": 5,
-      "sectionTitle": "Podsumowanie"
+      "sectionTitle": "Podsumowanie",
+      "seoTitle": "Decyzje odwracalne i nieodwracalne w marketplace"
     },
     {
       "id": "19",
@@ -14133,7 +14193,8 @@
         }
       ],
       "section": 5,
-      "sectionTitle": "Podsumowanie"
+      "sectionTitle": "Podsumowanie",
+      "seoTitle": "Dojrzałość marketplace: co ręcznie, a co automatem"
     },
     {
       "id": "20",
@@ -14476,7 +14537,8 @@
         }
       ],
       "section": 5,
-      "sectionTitle": "Podsumowanie"
+      "sectionTitle": "Podsumowanie",
+      "seoTitle": "MVP marketplace: minimalny zakres na start"
     }
   ],
   "tracks": [
@@ -14484,7 +14546,7 @@
       "key": "regulacje",
       "shortTitle": "Regulacje",
       "title": "Obowiązki operatora marketplace",
-      "subtitle": "Co musisz spełnić, żeby legalnie sprzedawać w Polsce i UE",
+      "subtitle": "Co musisz spełnić, żeby legalnie prowadzić marketplace w Polsce",
       "description": "GPSR, BDO, prawo konsumenckie, RODO, DSA, P2B, DAC7 i dostępność. Reguły decyzyjne, podział odpowiedzialności i checklista przed uruchomieniem."
     },
     {
@@ -14494,5 +14556,6 @@
       "subtitle": "Jak to zbudować, żeby za rok nie trzeba było przepisywać",
       "description": "Model zamówienia, koszyk wielu sprzedawców, prowizje, wypłaty i integracje. Które decyzje są odwracalne, a które kosztują migrację."
     }
-  ]
+  ],
+  "seoTitle": "Marketplace w Polsce: obowiązki i architektura"
 }
