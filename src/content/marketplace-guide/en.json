@@ -2,9 +2,37 @@
   "language": "en",
   "title": "Marketplace guides",
   "subtitle": "Two tracks: what you have to meet, and how to build it so meeting it stays possible",
-  "description": "A knowledge base for small and mid-sized platforms selling goods in Poland and the EU. The first track covers operator obligations, the second covers architectural decisions and their consequences.",
+  "description": "A knowledge base for small and mid-sized platforms selling goods to consumers in the EU. Operator obligations, plus the architectural decisions behind them.",
   "reviewedAt": "2026-08-30",
   "chapters": [
+    {
+      "id": "legal",
+      "slug": "legal-notice",
+      "title": "Important Disclaimer Regarding the Nature of the Material",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "segments": [
+            {
+              "text": "This material is for informational and educational purposes only. It contains the author's interpretation of general provisions, official materials, and practical ways to organise a marketplace based on the sources available as of the indicated date. It does not constitute legal, tax, accounting, technical or investment advice, or an individual assessment of product, seller or platform compliance. It does not guarantee completeness or compliance for a specific implementation, as obligations depend on the actual business model, product categories, party status, sales countries, and current authority practices."
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "segments": [
+            {
+              "text": "The material should not be the sole basis for business decisions, launching sales, approving products, or choosing settlement methods. Before implementing a solution in a specific business, verify the current legal position and - where the risk or business model requires it - obtain an individual assessment from a qualified lawyer, tax adviser, accountant, or product specialist. Publication or distribution of the material does not create an advisory relationship with its author. This disclaimer does not exclude liability that cannot be excluded under mandatory provisions."
+            }
+          ]
+        }
+      ],
+      "order": 25,
+      "description": "Informational and educational material, an author interpretation of the rules as of the stated date. It is not legal advice or a legal opinion.",
+      "track": "regulacje",
+      "section": 0,
+      "sectionTitle": "Before you start"
+    },
     {
       "id": "0",
       "slug": "getting-started",
@@ -14,7 +42,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "This guide describes what a small or medium-sized marketplace owner needs to decide, build, show to users, and archive. It is not a code specification. It assumes the sale of physical goods to consumers in Poland, with the possibility of allowing sellers from other EU or non-EU countries."
+              "text": "This guide describes what a small or medium-sized marketplace owner needs to decide, build, show to users, and archive. It is not a code specification. It assumes the sale of physical goods to consumers in the European Union, with sellers based inside or outside the EU. Obligations that come from EU regulations apply the same way in every member state. Obligations that come from directives are implemented country by country, and where that distinction matters the guide uses Poland as the worked example."
             }
           ]
         },
@@ -22,7 +50,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "The document covers common requirements for a typical marketplace: consumer law, pricing and reviews, GPSR and product safety, DSA, P2B, GDPR/RODO, cookies and marketing, DAC7, BDO and packaging, payments, VAT, accessibility, and cybersecurity. Regulated goods - for example, food, cosmetics, toys, electronics, medical devices, alcohol, or chemicals - require an additional industry-specific gateway described in Chapter 7."
+              "text": "The document covers common requirements for a typical marketplace: consumer law, pricing and reviews, GPSR and product safety, DSA, P2B, GDPR, cookies and marketing, DAC7, packaging and extended producer responsibility, payments, VAT, accessibility, and cybersecurity. Regulated goods - for example, food, cosmetics, toys, electronics, medical devices, alcohol, or chemicals - require an additional industry-specific gateway described in Chapter 7."
             }
           ]
         },
@@ -163,7 +191,7 @@
             [
               "Marketplace service",
               "Platform operator",
-              "Responsible for platform terms and conditions, accounts, ranking, moderation, interface, service security, part of GDPR/RODO, DSA/P2B, and DAC7."
+              "Responsible for platform terms and conditions, accounts, ranking, moderation, interface, service security, part of GDPR, DSA/P2B, and DAC7."
             ],
             [
               "Product",
@@ -241,16 +269,17 @@
           "ordered": false,
           "segments": [
             {
-              "text": "Packaged product placer - an entity that, in situations defined by law, is the first to make a packaged product available in Poland, imports it, or packages a product before placing it on the market. This is a BDO role, not a synonym for seller."
+              "text": "Packaged product placer - an entity that, in situations defined by law, is the first to make a packaged product available on the market of a member state, imports it, or packages a product before placing it on the market. This is an EPR role, not a synonym for seller."
             }
           ]
         }
       ],
       "order": 0,
-      "description": "What the owner of a small or mid-sized marketplace has to decide, build, show to users and archive. Selling goods to consumers in Poland and the EU.",
+      "description": "What the owner of a small or mid-sized marketplace has to decide, build, show to users and archive. Selling goods to consumers in the EU.",
       "track": "regulacje",
       "section": 0,
-      "sectionTitle": "Before you start"
+      "sectionTitle": "Before you start",
+      "seoTitle": "Marketplace guide: scope, roles and how to read it"
     },
     {
       "id": "1",
@@ -345,7 +374,7 @@
           "type": "callout",
           "variant": "decision",
           "label": "DECISION",
-          "text": "This model limits risk but does not exempt the operator from GPSR, DSA, consumer law, GDPR/RODO, DAC7, P2B, or obligations regarding prices, reviews, and availability."
+          "text": "This model limits risk but does not exempt the operator from GPSR, DSA, consumer law, GDPR, DAC7, P2B, or obligations regarding prices, reviews, and availability."
         },
         {
           "type": "heading",
@@ -363,7 +392,7 @@
             [
               "sells its own goods",
               "becomes the seller and distributor, and sometimes the manufacturer or importer",
-              "Separate own offers from others, assign consumer, product, VAT, and BDO responsibility."
+              "Separate own offers from others, assign consumer, product, VAT, and EPR responsibility."
             ],
             [
               "offers goods under its own brand",
@@ -373,12 +402,12 @@
             [
               "imports goods from outside the EU",
               "becomes the importer or participates in import",
-              "Verify the manufacturer, the responsible person in the EU, documentation, labeling, VAT/customs, EPR/BDO, and traceability."
+              "Verify the manufacturer, the responsible person in the EU, documentation, labeling, VAT/customs, EPR, and traceability."
             ],
             [
               "stores and packs orders",
               "may be responsible for packaging, and the scope of its influence on the product increases",
-              "Establish BDO for materials added during fulfillment, control of batches, returns, and recalls; include the division of roles in the agreement."
+              "Establish EPR duties for materials added during fulfillment, control of batches, returns, and recalls; include the division of roles in the agreement."
             ],
             [
               "collects money itself and later pays the seller",
@@ -506,7 +535,8 @@
       "description": "The usual mistake is starting with the catalogue and payments before deciding who sells, takes the money, packs the parcel and handles the complaint.",
       "track": "regulacje",
       "section": 0,
-      "sectionTitle": "Before you start"
+      "sectionTitle": "Before you start",
+      "seoTitle": "Marketplace operating model and responsibility"
     },
     {
       "id": "2",
@@ -532,7 +562,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "Agreement and terms and conditions for sellers, covering P2B, division of responsibilities, product documents, BDO, DAC7, payouts, complaints, recalls, and penalties."
+              "text": "Agreement and terms and conditions for sellers, covering P2B, division of responsibilities, product documents, EPR, DAC7, payouts, complaints, recalls, and penalties."
             }
           ]
         },
@@ -736,7 +766,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "Established schedule for audits of offers, sellers, BDO, DAC7, security, and retention."
+              "text": "Established schedule for audits of offers, sellers, EPR, DAC7, security, and retention."
             }
           ]
         },
@@ -806,8 +836,8 @@
               "manual review does not fit before publication or documents frequently expire"
             ],
             [
-              "BDO/EPR",
-              "Status declaration, BDO number and scope only when relevant, registry check result, and reminder",
+              "EPR",
+              "Status declaration, EPR registration number and scope only when relevant, registry check result, and reminder",
               "operator handles fulfillment, own packaging, cross-border sales, or PPWR requires additional checks"
             ],
             [
@@ -878,7 +908,8 @@
       "description": "What must exist before the first seller, what before the first sale, and what only once you grow. An implementation order rather than a wish list.",
       "track": "regulacje",
       "section": 0,
-      "sectionTitle": "Before you start"
+      "sectionTitle": "Before you start",
+      "seoTitle": "Marketplace build plan: what must exist and when"
     },
     {
       "id": "3",
@@ -931,8 +962,8 @@
               "Licensed PSP handles accounts, settlement, payment KYC, and part of fraud"
             ],
             [
-              "BDO/Packaging",
-              "Checks seller's declaration and BDO; responsible for its own goods, imports, or fulfillment",
+              "EPR and packaging",
+              "Checks seller's declaration and EPR registration; responsible for its own goods, imports, or fulfillment",
               "Defines its role and accounts for packaging/products it is responsible for",
               "Fulfillment must report packaging consumption to the relevant responsible entity"
             ],
@@ -961,7 +992,9 @@
       "description": "Who answers for seller identity, product documents, payment and complaints. Operator, seller and external provider in a single table.",
       "track": "regulacje",
       "section": 0,
-      "sectionTitle": "Before you start"
+      "sectionTitle": "Before you start",
+      "seoTitle": "Marketplace responsibility: operator vs seller",
+      "jurisdiction": "eu"
     },
     {
       "id": "4",
@@ -972,7 +1005,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "Onboarding cannot be a single survey of 'company/private person'. It must establish roles, upon which consumer law, product safety, BDO, VAT, DAC7, and payouts depend."
+              "text": "Onboarding cannot be a single survey of 'company/private person'. It must establish roles, upon which consumer law, product safety, EPR, VAT, DAC7, and payouts depend."
             }
           ]
         },
@@ -1012,7 +1045,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "NIP/TIN, EU VAT number, KRS or relevant registry and number - if applicable;"
+              "text": "national tax identifier, EU VAT number, company register and entry number - if applicable;"
             }
           ]
         },
@@ -1048,7 +1081,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "BDO/EPR and scope of registration, where applicable, or specific basis for exemption;"
+              "text": "EPR registration and its scope, where applicable, or a specific basis for exemption;"
             }
           ]
         },
@@ -1165,7 +1198,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "the entity responsible for EPR/BDO in Poland or another country of delivery;"
+              "text": "the entity responsible for EPR in each country of delivery;"
             }
           ]
         },
@@ -1199,11 +1232,11 @@
             ],
             [
               "Company and representation",
-              "current CEIDG/KRS entry or relevant foreign registry",
+              "current entry in the national company or business register",
               "Suspend onboarding; request clarification and proof of authorization."
             ],
             [
-              "NIP/VAT",
+              "Tax ID / VAT",
               "relevant official database, including VIES for EU VAT",
               "Do not use the 'active VAT' status based solely on a declaration."
             ],
@@ -1218,8 +1251,8 @@
               "Access only for authorized personnel; do not copy documents 'just in case' if the obligation does not apply."
             ],
             [
-              "BDO",
-              "BDO search engine/registry and relevant registration department",
+              "EPR",
+              "national EPR register lookup and the relevant registration section",
               "The number alone is insufficient if the scope does not cover the given role or product group."
             ],
             [
@@ -1368,7 +1401,7 @@
               "text": "; "
             },
             {
-              "text": "UOKiK - information obligations of platforms",
+              "text": "UOKiK (Poland) - information obligations of platforms",
               "href": "https://prawakonsumenta.uokik.gov.pl/zmiany-2023/"
             },
             {
@@ -1388,7 +1421,9 @@
       "description": "Onboarding cannot be a single „business or private person” question. It sets the roles that consumer law, GPSR, EPR, VAT, DAC7 and payouts depend on.",
       "track": "regulacje",
       "section": 1,
-      "sectionTitle": "Sellers and products"
+      "sectionTitle": "Sellers and products",
+      "seoTitle": "Marketplace seller onboarding: whom to allow",
+      "jurisdiction": "eu"
     },
     {
       "id": "5",
@@ -1448,7 +1483,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "warnings and safety information in Polish only if the product requires them;"
+              "text": "warnings and safety information in the language of the destination market only if the product requires them;"
             }
           ]
         },
@@ -1528,7 +1563,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "a human or automated check rejects blurry, cropped photos, photos in a foreign language without Polish information, or photos depicting a different version of the product."
+              "text": "a human or automated check rejects blurry, cropped photos, photos in a language other than the destination market without the required local information, or photos depicting a different version of the product."
             }
           ]
         },
@@ -1659,7 +1694,9 @@
       "description": "The product card is where pre-contractual, GPSR and DSA duties are met. A missing mandatory element blocks publication rather than warning about it.",
       "track": "regulacje",
       "section": 1,
-      "sectionTitle": "Sellers and products"
+      "sectionTitle": "Sellers and products",
+      "seoTitle": "Marketplace product listing: required information",
+      "jurisdiction": "eu"
     },
     {
       "id": "6",
@@ -2096,14 +2133,14 @@
               "text": "; "
             },
             {
-              "text": "UOKiK - entrepreneurs' obligations",
+              "text": "UOKiK (Poland) - entrepreneurs' obligations",
               "href": "https://www.uokik.gov.pl/public/bezpieczenstwo-produktow-obowiazki-przedsiebiorcow"
             },
             {
               "text": "; "
             },
             {
-              "text": "UOKiK - GPSR questions and answers",
+              "text": "UOKiK (Poland) - GPSR questions and answers",
               "href": "https://uokik.gov.pl/bezpieczenstwo-produktow-pytania-i-odpowiedzi"
             },
             {
@@ -2137,7 +2174,9 @@
       "description": "GPSR applies from 13 December 2024. Who the responsible operator is, what data must sit next to the offer, and when an offer cannot go live at all.",
       "track": "regulacje",
       "section": 1,
-      "sectionTitle": "Sellers and products"
+      "sectionTitle": "Sellers and products",
+      "seoTitle": "GPSR for marketplaces: platform and seller duties",
+      "jurisdiction": "eu"
     },
     {
       "id": "7",
@@ -2167,12 +2206,12 @@
             ],
             [
               "Electrical and electronic equipment",
-              "relevant CE regulations, electrical/EMC/RoHS safety, WEEE/BDO, energy labels where applicable",
-              "import without an EU entity, lack of declaration, BDO number, or mandatory label"
+              "relevant CE regulations, electrical/EMC/RoHS safety, WEEE and EPR, energy labels where applicable",
+              "import without an EU entity, lack of declaration, EPR registration number, or mandatory label"
             ],
             [
               "Batteries and products with batteries",
-              "battery regulation, markings, safety, EPR/BDO",
+              "battery regulation, markings, safety, EPR",
               "offer without battery type, information, and proper registration of the responsible entity"
             ],
             [
@@ -2293,18 +2332,20 @@
       "description": "GPSR does not replace sector rules. For each category the operator approves the list of required information and evidence before opening it to sellers.",
       "track": "regulacje",
       "section": 1,
-      "sectionTitle": "Sellers and products"
+      "sectionTitle": "Sellers and products",
+      "seoTitle": "Regulated categories: marketplace gates",
+      "jurisdiction": "eu"
     },
     {
       "id": "8",
       "slug": "bdo-packaging-epr",
-      "title": "8. BDO, packaging, and EPR: who is actually responsible",
+      "title": "8. Packaging and EPR: who is actually responsible",
       "blocks": [
         {
           "type": "paragraph",
           "segments": [
             {
-              "text": "BDO does not automatically apply to everyone who sells. It applies to specific roles and product groups. In a marketplace, the most common obligation arises when an entity packages a product and is the first to introduce it in that packaging in Poland, imports/acquires the product in packaging from another EU country or from outside the EU, offers its own brand, or introduces equipment, batteries, tires, oils, or products covered by other BDO sections."
+              "text": "EPR does not automatically apply to everyone who sells. It applies to specific roles and product groups. In a marketplace, the most common obligation arises when an entity packages a product and is the first to place it in that packaging on a national market, imports or acquires the packaged product from another EU country or from outside the EU, offers its own brand, or places equipment, batteries, tyres, oils, or products covered by a separate EPR scheme on the market."
             }
           ]
         },
@@ -2330,7 +2371,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "BDO/EPR: who introduces packaging or a specific product group to the market and has an obligation to register/account for it?"
+              "text": "EPR: who places packaging or a specific product group on the market and has an obligation to register and account for it?"
             }
           ]
         },
@@ -2351,7 +2392,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "First, determine the seller's status. The Polish BDO obligation for \"introducers of products in packaging\" applies to an entrepreneur conducting business activity. BDO should not be automatically requested from a person who occasionally sells privately, nor - as a rule - from a person properly conducting unregistered business activity, which according to the Entrepreneurship Law is not business activity."
+              "text": "First, determine the seller's status. EPR obligations for those placing packaged products on the market apply to an entrepreneur conducting business activity. Registration should not be requested automatically from a person who occasionally sells privately, nor, as a rule, from a person properly conducting activity that national law does not treat as business activity at all (in Poland, unregistered activity under the Entrepreneurship Law)."
             }
           ]
         },
@@ -2377,7 +2418,7 @@
           "ordered": true,
           "segments": [
             {
-              "text": "Are they packaging their own or someone else's product themselves and are the first to introduce it in that packaging in Poland?"
+              "text": "Are they packaging their own or someone else's product themselves and are the first to place it in that packaging on the market where it is sold?"
             }
           ]
         },
@@ -2395,7 +2436,7 @@
           "ordered": true,
           "segments": [
             {
-              "text": "Does the product belong to a group covered by a separate BDO/EPR entry, e.g., electrical equipment, batteries, tires, oils, or single-use products?"
+              "text": "Does the product belong to a group covered by a separate EPR scheme, for example electrical equipment, batteries, tyres, oils, or single-use products?"
             }
           ]
         },
@@ -2403,7 +2444,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "If the entrepreneur answers 'yes', the platform requires the identification of the responsible entity, the BDO number, and the relevant scope of the entry, or documented proof why the obligation rests with another entity."
+              "text": "If the entrepreneur answers 'yes', the platform requires the identification of the responsible entity, the EPR registration number, and the relevant scope of the entry, or documented proof why the obligation rests with another entity."
             }
           ]
         },
@@ -2417,7 +2458,7 @@
           "type": "callout",
           "variant": "stop",
           "label": "STOP",
-          "text": "The checkbox 'BDO does not apply to me' without a supply chain description is insufficient. Sales can only be activated once it is known who is packaging, who is importing, and who is the first to introduce this packaging or product into Poland."
+          "text": "The checkbox 'EPR does not apply to me' without a supply chain description is insufficient. Sales can only be activated once it is known who is packaging, who is importing, and who is the first to place this packaging or product on the market."
         },
         {
           "type": "heading",
@@ -2430,50 +2471,50 @@
             [
               "Scenario",
               "GPSR",
-              "BDO/Packaging",
+              "EPR and packaging",
               "Marketplace Decision"
             ],
             [
               "An entrepreneur-artisan makes a mug, puts it in their own box, and ships it.",
               "They are the producer of the mug; there is no safety exemption due to scale.",
               "They are an entrepreneur introducing a product in packaging; registration, annual fee, and reporting remain despite the small scale.",
-              "Require documentation for the mug and BDO; packaging weights are settled by the seller, not the platform."
+              "Require documentation for the mug and EPR registration; packaging weights are settled by the seller, not the platform."
             ],
             [
               "A person occasionally sells their own painting as a private individual.",
               "Pure consumer-to-consumer sales, as a rule, do not impose GPSR entrepreneur obligations on the seller.",
-              "They are not an entrepreneur, so sending a painting privately does not create a BDO entry obligation as an introducer.",
-              "Do not require BDO; require true status, photos, and a secure description. Monitor whether the account is not actually conducting regular trade."
+              "They are not an entrepreneur, so sending a painting privately does not create an EPR registration obligation.",
+              "Do not require EPR registration; require true status, photos, and a secure description. Monitor whether the account is not actually conducting regular trade."
             ],
             [
               "A person runs a legal unregistered business and ships handicrafts.",
-              "May be treated as a trader/producer for safety and consumer law purposes, despite lacking CEIDG registration.",
-              "Unregistered business is not an economic activity within the meaning of the Entrepreneurship Law, so as a rule, it is not subject to BDO registration.",
-              "Separate onboarding path without forced BDO; declaration of status and alert upon exceeding limits/changing form."
+              "May be treated as a trader or producer for safety and consumer law purposes, despite not being entered in a business register.",
+              "Unregistered business is not an economic activity within the meaning of the Entrepreneurship Law, so as a rule, it is not subject to EPR registration.",
+              "Separate onboarding path without a forced EPR registration; declaration of status and an alert on exceeding limits or changing legal form."
             ],
             [
-              "A Polish reseller buys packaged goods from a Polish producer and ships them without additional packaging.",
+              "A reseller buys packaged goods from a domestic producer and ships them without additional packaging.",
               "Usually a distributor.",
-              "The entity that first introduced the original packaging into Poland is usually responsible for it.",
+              "The entity that first placed the original packaging on the market is usually responsible for it.",
               "Require proof of origin and identification of the responsible party; do not automatically attribute another's packaging to the reseller."
             ],
             [
               "The same reseller adds a cardboard box, envelope, filler, or shipping film.",
               "Product distributor.",
-              "For the added packaging, they may become the introducer/packer subject to BDO.",
-              "Require BDO and record-keeping for materials added to shipments."
+              "For the added packaging, they may become the packer subject to EPR.",
+              "Require EPR registration and record-keeping for materials added to shipments."
             ],
             [
-              "Dropshipping from a Polish wholesaler; the wholesaler packs and ships.",
+              "Dropshipping from a domestic wholesaler; the wholesaler packs and ships.",
               "The seller must know the producer and the roles in the chain.",
               "The obligation may rest with the wholesaler/packer if they are the one introducing the packaging; establish this by contract and proof.",
-              "Require written designation of the responsible party and BDO; lack of proof means blocking."
+              "Require written designation of the responsible party and its EPR registration; lack of proof means blocking."
             ],
             [
-              "Dropshipping directly from China to a Polish consumer.",
+              "Dropshipping directly from outside the EU to a consumer in the EU.",
               "There must be an importer/responsible person in the EU and product compliance.",
               "Import/EPR obligations arise; do not assume a foreign wholesaler will fulfill them.",
-              "High-risk category; allow only after written analysis of the product, importer, VAT/customs, and BDO/EPR."
+              "High-risk category; allow only after written analysis of the product, importer, VAT/customs, and EPR."
             ],
             [
               "The operator only provides the service; sellers pack and ship themselves.",
@@ -2485,13 +2526,13 @@
               "The operator manages fulfillment and uses their own boxes.",
               "Impact on logistics increases traceability obligations.",
               "It must be determined who introduces the packaging and to whom fulfillment transfers weights; the operator may have their own obligation.",
-              "Do not launch fulfillment without a BDO model, material record-keeping, and a contractual division."
+              "Do not launch fulfilment without an EPR model, material record-keeping, and a contractual division of duties."
             ],
             [
               "A network of 1000 flower shops; each packs a bouquet and ships it.",
               "Each flower shop is a seller; for the products they create, they may also be a producer.",
               "Each settles for the packaging they introduce; the operator settles only for their own/fulfillment.",
-              "BDO onboarding per flower shop, weight of paper/film/ribbons/shipping packaging according to classification."
+              "EPR onboarding per flower shop, weight of paper, film, ribbons and shipping packaging according to classification."
             ]
           ]
         },
@@ -2504,7 +2545,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "An entrepreneur introducing no more than 1 Mg of packaging per year may, after meeting de minimis aid conditions and submitting documents on time, obtain an exemption from certain financial obligations, including the product fee and specific duties. This does not automatically mean no BDO registration, record-keeping, or annual reporting."
+              "text": "Thresholds and exemptions of this kind are set nationally, so they have to be checked per market. In Poland, an entrepreneur placing no more than 1 Mg of packaging per year on the market may, after meeting de minimis aid conditions and filing documents on time, obtain an exemption from certain financial obligations, including the product fee. That exemption does not remove registration, record-keeping, or annual reporting."
             }
           ]
         },
@@ -2512,7 +2553,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "For micro-entrepreneurs, the registration fee is currently PLN 200, and the annual fee is also PLN 200 until the end of February. In the year of paying the registration fee, the annual fee is not paid additionally. For other entities, the rate is PLN 800."
+              "text": "Fees are national as well. In Poland, the registration fee for micro-entrepreneurs is currently PLN 200 and the annual fee is also PLN 200, due by the end of February; in the year the registration fee is paid, the annual fee is not paid on top. For other entities the rate is PLN 800."
             }
           ]
         },
@@ -2526,7 +2567,7 @@
           "type": "callout",
           "variant": "deadline",
           "label": "DEADLINE",
-          "text": "For a typical introducer of products in packaging: registration before commencing the obligated activity; annual fee by the end of February; reporting and the relevant de minimis application generally by March 15 for the previous year. Deadlines and scope must be confirmed for the specific BDO department."
+          "text": "For a typical entity placing packaged products on the market in Poland: registration before commencing the obligated activity; annual fee by the end of February; reporting and the relevant de minimis application generally by 15 March for the previous year. Deadlines and scope are national and must be confirmed for the specific register section in each market."
         },
         {
           "type": "heading",
@@ -2537,7 +2578,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "Regulation (EU) 2025/40 on packaging and packaging waste (PPWR) is being applied in stages from August 12, 2026. It does not immediately replace all national BDO/EPR mechanisms; it adds common requirements for packaging in the EU."
+              "text": "Regulation (EU) 2025/40 on packaging and packaging waste (PPWR) is being applied in stages from August 12, 2026. It does not immediately replace national EPR mechanisms; it adds common requirements for packaging across the EU."
             }
           ]
         },
@@ -2624,7 +2665,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "Subsequently, it makes best efforts to assess the completeness and reliability of the information, particularly through official registers. A micro/small operator exempted from the relevant DSA section still complies with Polish BDO and other regulations, and it is worth building the same mechanism earlier, as it will be needed after growth and when selling to other countries."
+              "text": "Subsequently, it makes best efforts to assess the completeness and reliability of the information, particularly through official registers. A micro or small operator exempted from the relevant DSA section still complies with national EPR and other regulations, and it is worth building the same mechanism earlier, as it will be needed after growth and when selling to other countries."
             }
           ]
         },
@@ -2632,7 +2673,7 @@
           "type": "callout",
           "variant": "stop",
           "label": "STOP",
-          "text": "After the PPWR enters into force, the BDO number for Poland is not a universal \"packaging passport\" for the entire EU. Sales to a consumer in another country require establishing EPR registration and a representative in that country in accordance with the PPWR."
+          "text": "After the PPWR enters into force, a national EPR registration is not a universal \"packaging passport\" for the entire EU. Sales to a consumer in another country require establishing EPR registration and a representative in that country in accordance with the PPWR."
         },
         {
           "type": "heading",
@@ -2653,7 +2694,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "from an entrepreneur subject to the obligation – the BDO number and the entity name consistent with the register;"
+              "text": "from an entrepreneur subject to the obligation – the EPR registration number and the entity name consistent with the register;"
             }
           ]
         },
@@ -2707,14 +2748,14 @@
           "ordered": false,
           "segments": [
             {
-              "text": "blocking a new category if it requires a different BDO field."
+              "text": "blocking a new category if it requires a different EPR scheme."
             }
           ]
         },
         {
           "type": "heading",
           "level": 2,
-          "text": "The operator does not settle BDO for sellers, but cannot ignore deficiencies"
+          "text": "The operator does not settle EPR for sellers, but cannot ignore deficiencies"
         },
         {
           "type": "paragraph",
@@ -2773,7 +2814,7 @@
           "type": "callout",
           "variant": "important",
           "label": "IMPORTANT",
-          "text": "BDO is a multi-area register. A number obtained for waste or one type of product does not prove fulfillment of obligations for packaging, batteries, or electrical equipment."
+          "text": "A national EPR register usually covers several areas at once (in Poland, BDO). A number obtained for waste or for one type of product does not prove that obligations for packaging, batteries, or electrical equipment have been met."
         },
         {
           "type": "paragraph",
@@ -2796,35 +2837,35 @@
               "text": "; "
             },
             {
-              "text": "Act on Packaging and Packaging Waste Management – text in force in 2026",
+              "text": "Act on Packaging and Packaging Waste Management (Poland) – text in force in 2026",
               "href": "https://www.dziennikustaw.gov.pl/D2026000061901.pdf"
             },
             {
               "text": "; "
             },
             {
-              "text": "Biznes.gov.pl – unregistered activity is not economic activity",
+              "text": "Biznes.gov.pl (Poland) – unregistered activity is not economic activity",
               "href": "https://biznes.gov.pl/pl/firma/zakladanie-firmy/chce-wiedziec-jak-zalozyc-wlasna-firme/dzialalnosc-nierejestrowa-oraz-inne-sytuacje-w-ktorych-nie-trzeba-rejestrowac-firmy"
             },
             {
               "text": "; "
             },
             {
-              "text": "BDO – register and information",
+              "text": "BDO (Poland) – national EPR register and information",
               "href": "https://bdo.mos.gov.pl/"
             },
             {
               "text": "; "
             },
             {
-              "text": "Marshal's Office of the Wielkopolskie Voivodeship – BDO register and fees",
+              "text": "Marshal's Office of the Wielkopolskie Voivodeship (Poland) – BDO register and fees",
               "href": "https://www.umww.pl/rejestr-bdo1"
             },
             {
               "text": "; "
             },
             {
-              "text": "official information on the 1 Mg threshold and the March 15 deadline",
+              "text": "official Polish information on the 1 Mg threshold and the 15 March deadline",
               "href": "https://www.malopolskie.kas.gov.pl/bg/urzad-skarbowy-w-zakopanem/wiadomosci/komunikaty/-/asset_publisher/23eG/content/informacje-dla-przedsiebiorcow-wpisanych-do-bazy-bdo"
             },
             {
@@ -2837,7 +2878,9 @@
       "description": "EPR duties do not apply automatically to everyone who sells. They follow specific roles and product groups, usually whoever packs and first places goods.",
       "track": "regulacje",
       "section": 1,
-      "sectionTitle": "Sellers and products"
+      "sectionTitle": "Sellers and products",
+      "seoTitle": "EPR and packaging for marketplaces: who is liable",
+      "jurisdiction": "pl"
     },
     {
       "id": "9",
@@ -3144,21 +3187,21 @@
               "text": "Basis and sources: "
             },
             {
-              "text": "UOKiK - Right to Information",
+              "text": "UOKiK (Poland) - Right to Information",
               "href": "https://prawakonsumenta.uokik.gov.pl/pytania-i-odpowiedzi/prawo-do-informacji/"
             },
             {
               "text": "; "
             },
             {
-              "text": "UOKiK - Withdrawal Deadlines",
+              "text": "UOKiK (Poland) - Withdrawal Deadlines",
               "href": "https://prawakonsumenta.uokik.gov.pl/prawo-odstapienia-od-umowy/terminy-odstapienie/"
             },
             {
               "text": "; "
             },
             {
-              "text": "UOKiK - Complaint and Goods Non-conformity",
+              "text": "UOKiK (Poland) - Complaint and Goods Non-conformity",
               "href": "https://prawakonsumenta.uokik.gov.pl/wp-content/uploads/2024/07/reklamacja-niezgodnosc-towaru-z-umowa-ulotka-uokik.pdf"
             },
             {
@@ -3171,7 +3214,9 @@
       "description": "What the buyer must see before purchase, how the withdrawal period is counted, and who handles the complaint when the seller is not the operator.",
       "track": "regulacje",
       "section": 2,
-      "sectionTitle": "Selling and money"
+      "sectionTitle": "Selling and money",
+      "seoTitle": "EU consumer law for marketplaces: returns",
+      "jurisdiction": "eu"
     },
     {
       "id": "10",
@@ -3373,21 +3418,21 @@
               "text": "Basis and sources: "
             },
             {
-              "text": "UOKiK - Omnibus Changes for Platforms",
+              "text": "UOKiK (Poland) - Omnibus Changes for Platforms",
               "href": "https://prawakonsumenta.uokik.gov.pl/zmiany-2023/"
             },
             {
               "text": "; "
             },
             {
-              "text": "UOKiK - Pricing and Information Obligations in E-commerce",
+              "text": "UOKiK (Poland) - Pricing and Information Obligations in E-commerce",
               "href": "https://uokik.gov.pl/omnibus-i-obowiazki-informacyjne-w-e-commerce-kolejne-dzialania-i-zarzuty-prezesa-uokik"
             },
             {
               "text": "; "
             },
             {
-              "text": "UOKiK - Penalties for Incorrect Lowest Price, 2026",
+              "text": "UOKiK (Poland) - Penalties for Incorrect Lowest Price, 2026",
               "href": "https://uokik.gov.pl/public/index.php/obnizka-jaka-jest-kazdy-widzi-niekoniecznie-najnizsza-cena-z-30-dni-przed-obnizka-kary-dla-zalando-i-temu"
             },
             {
@@ -3400,7 +3445,9 @@
       "description": "The 30-day lowest price on every reduction, disclosed ranking criteria, labelled ads and verified reviews. Four duties landing on one screen.",
       "track": "regulacje",
       "section": 2,
-      "sectionTitle": "Selling and money"
+      "sectionTitle": "Selling and money",
+      "seoTitle": "Omnibus for marketplaces: pricing and reviews",
+      "jurisdiction": "eu"
     },
     {
       "id": "11",
@@ -3632,7 +3679,9 @@
       "description": "Why a small marketplace needs a provider with a marketplace product: split payments, payout schedule, refunds, chargebacks and reconciliation.",
       "track": "regulacje",
       "section": 2,
-      "sectionTitle": "Selling and money"
+      "sectionTitle": "Selling and money",
+      "seoTitle": "Marketplace payments: payouts, VAT and invoices",
+      "jurisdiction": "eu"
     },
     {
       "id": "12",
@@ -4092,7 +4141,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "The process involves detection, containment, risk assessment, evidence preservation, and decision on notification. If a breach is likely to result in a risk to the rights and freedoms of individuals, the controller notifies the President of the Personal Data Protection Office (UODO) without undue delay, where feasible within 72 hours of becoming aware of it. In case of high risk, it also informs the individuals, unless a statutory exception applies."
+              "text": "The process involves detection, containment, risk assessment, evidence preservation, and decision on notification. If a breach is likely to result in a risk to the rights and freedoms of individuals, the controller notifies the competent supervisory authority (in Poland, the President of the Personal Data Protection Office, UODO) without undue delay, where feasible within 72 hours of becoming aware of it. In case of high risk, it also informs the individuals, unless a statutory exception applies."
             }
           ]
         },
@@ -4194,14 +4243,14 @@
               "text": "; "
             },
             {
-              "text": "UODO - Record of processing activities and exemption for entities with fewer than 250 persons",
+              "text": "UODO (Poland) - Record of processing activities and exemption for entities with fewer than 250 persons",
               "href": "https://uodo.gov.pl/data/filemanager_pl/690.pdf"
             },
             {
               "text": "; "
             },
             {
-              "text": "UODO - Data breaches",
+              "text": "UODO (Poland) - Data breaches",
               "href": "https://uodo.gov.pl/pl/525/2584"
             },
             {
@@ -4221,7 +4270,9 @@
       "description": "Accepting the terms is not GDPR consent. Account, order, payment and security each rest on their own legal basis, not on one shared tick box.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Data and compliance"
+      "sectionTitle": "Data and compliance",
+      "seoTitle": "GDPR for marketplaces: roles, bases and retention",
+      "jurisdiction": "eu"
     },
     {
       "id": "13",
@@ -4513,7 +4564,7 @@
           "type": "callout",
           "variant": "practice",
           "label": "PRACTICE",
-          "text": "Even if the bootstrap utilizes the exemption from Articles 30-32 DSA, it is advisable to collect company data, BDO, product roles, and self-certification from the outset. They are needed for other regulations and prevent costly migration upon growth."
+          "text": "Even if the bootstrap utilizes the exemption from Articles 30-32 DSA, it is advisable to collect company data, EPR registration, product roles, and self-certification from the outset. They are needed for other regulations and prevent costly migration upon growth."
         },
         {
           "type": "heading",
@@ -4562,7 +4613,9 @@
       "description": "A marketplace is usually a hosting service and an online platform. Being exempt by size does not mean having no DSA obligations at all.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Data and compliance"
+      "sectionTitle": "Data and compliance",
+      "seoTitle": "DSA for marketplaces: moderation and seller checks",
+      "jurisdiction": "eu"
     },
     {
       "id": "14",
@@ -4768,7 +4821,9 @@
       "description": "P2B protects business sellers against the operator: disclosed ranking criteria, a statement of reasons for suspension, and notice periods.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Data and compliance"
+      "sectionTitle": "Data and compliance",
+      "seoTitle": "P2B for marketplaces: terms and rules for sellers",
+      "jurisdiction": "eu"
     },
     {
       "id": "15",
@@ -4950,7 +5005,9 @@
       "description": "DAC7 is not a tax charged by the platform. It is due diligence, collection and verification of seller data, and annual reporting by the operator.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Data and compliance"
+      "sectionTitle": "Data and compliance",
+      "seoTitle": "DAC7 for marketplaces: reporting seller data",
+      "jurisdiction": "eu"
     },
     {
       "id": "16",
@@ -4961,7 +5018,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "The Polish Accessibility Act covers e-commerce services. A micro-entrepreneur providing the service is exempt, but a small or medium operator is not. Micro means fewer than 10 people and an annual turnover or balance sheet total not exceeding EUR 2 million, taking into account rules for affiliated enterprises."
+              "text": "The European Accessibility Act covers e-commerce services and each member state implements it in national law (in Poland, the Accessibility Act). A micro-entrepreneur providing the service is exempt, but a small or medium operator is not. Micro means fewer than 10 people and an annual turnover or balance sheet total not exceeding EUR 2 million, taking into account rules for affiliated enterprises."
             }
           ]
         },
@@ -5151,14 +5208,14 @@
               "text": "Basis and sources: "
             },
             {
-              "text": "Polish Accessibility Act - E-commerce Services",
+              "text": "Accessibility Act (Poland) - e-commerce services",
               "href": "https://www.gov.pl/web/dostepnosc-cyfrowa/polski-akt-o-dostepnosci--uslugi-handlu-elektronicznego"
             },
             {
               "text": "; "
             },
             {
-              "text": "Information obligations under the Polish Accessibility Act",
+              "text": "Information obligations under the Accessibility Act (Poland)",
               "href": "https://www.gov.pl/web/dostepnosc-cyfrowa/obowiazki-informacyjne-w-pad"
             },
             {
@@ -5185,12 +5242,14 @@
       "description": "The accessibility act covers e-commerce services. A micro-enterprise is exempt, a small or mid-sized operator is not. Where the line actually runs.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Data and compliance"
+      "sectionTitle": "Data and compliance",
+      "seoTitle": "E-commerce accessibility: the EAA for marketplaces",
+      "jurisdiction": "eu"
     },
     {
       "id": "17",
       "slug": "cybersecurity-nis2",
-      "title": "17. Cybersecurity and KSC/NIS2",
+      "title": "17. Cybersecurity and NIS2",
       "blocks": [
         {
           "type": "paragraph",
@@ -5291,7 +5350,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "business continuity plan and contact list for PSP, hosting, UODO, CSIRT, UOKiK, and product authorities."
+              "text": "business continuity plan and contact list for PSP, hosting, the data protection authority, CSIRT, the consumer protection authority, and product authorities."
             }
           ]
         },
@@ -5310,13 +5369,13 @@
         {
           "type": "heading",
           "level": 2,
-          "text": "When an average marketplace falls under KSC"
+          "text": "When an average marketplace falls under NIS2"
         },
         {
           "type": "paragraph",
           "segments": [
             {
-              "text": "The amendment to the KSC implementing NIS2 is effective from April 3, 2026. A provider of an online trading platform is located in the digital sector. An entity meeting size and sectoral criteria may be a significant entity. In simplified terms, a typical small and medium-sized enterprise – fewer than 250 people and revenue up to EUR 50 million or a balance sheet total up to EUR 43 million, but not meeting the criteria for a small enterprise – should conduct a formal self-identification. Affiliated entities and statutory exceptions are also considered."
+              "text": "Member states implement NIS2 in national law and the dates differ, so the applicable deadline has to be read from the law of the country of establishment. In Poland, the amendment implementing NIS2 is effective from 3 April 2026. A provider of an online trading platform sits in the digital sector. An entity meeting size and sectoral criteria may be a significant entity. In simplified terms, a typical small and medium-sized enterprise – fewer than 250 people and revenue up to EUR 50 million or a balance sheet total up to EUR 43 million, but not meeting the criteria for a small enterprise – should conduct a formal self-identification. Affiliated entities and statutory exceptions are also considered."
             }
           ]
         },
@@ -5324,7 +5383,7 @@
           "type": "callout",
           "variant": "deadline",
           "label": "DEADLINE",
-          "text": "An entity meeting the criteria on the date the amendment enters into force shall submit an application to the KSC Register by October 3, 2026, and implement the obligations and use of S46 by April 3, 2027. A new or growing entity checks deadlines calculated from the later fulfillment of the prerequisites."
+          "text": "In Poland, an entity meeting the criteria on the date the amendment enters into force submits an application to the KSC Register by 3 October 2026, and implements the obligations and the use of S46 by 3 April 2027. A new or growing entity checks deadlines calculated from the later fulfillment of the prerequisites."
         },
         {
           "type": "heading",
@@ -5399,7 +5458,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "registration, communication, and reporting through appropriate KSC/S46 channels."
+              "text": "registration, communication, and reporting through the national channels (in Poland, KSC and S46)."
             }
           ]
         },
@@ -5415,7 +5474,7 @@
           "type": "callout",
           "variant": "important",
           "label": "IMPORTANT",
-          "text": "The fact that KSC obligations are deferred until 2027 does not defer GDPR, payment security, or the obligation to reasonably secure the platform. The transition year is for implementation, not for waiting."
+          "text": "A deferred national deadline does not defer GDPR, payment security, or the obligation to reasonably secure the platform. The transition year is for implementation, not for waiting."
         },
         {
           "type": "paragraph",
@@ -5424,7 +5483,7 @@
               "text": "Basis and sources: "
             },
             {
-              "text": "KSC amendment - Journal of Laws 2026, item 252",
+              "text": "KSC amendment (Poland) - Journal of Laws 2026, item 252",
               "href": "https://eli.gov.pl/eli/DU/2026/252/ogl/pol"
             },
             {
@@ -5438,14 +5497,14 @@
               "text": "; "
             },
             {
-              "text": "Key KSC deadlines",
+              "text": "Key KSC deadlines (Poland)",
               "href": "https://www.gov.pl/web/cyfryzacja/nowelizacja-ustawy-o-krajowym-systemie-cyberbezpieczenstwa-ksc--najwazniejsze-terminy"
             },
             {
               "text": "; "
             },
             {
-              "text": "KSC FAQ",
+              "text": "KSC FAQ (Poland)",
               "href": "https://cyber.gov.pl/assets/pdf/faq-ksc.pdf"
             },
             {
@@ -5458,7 +5517,9 @@
       "description": "A marketplace holds seller identity data, customer addresses and compliance documents. Account takeover here is an incident, not just an IT problem.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Data and compliance"
+      "sectionTitle": "Data and compliance",
+      "seoTitle": "NIS2 in e-commerce: operator obligations",
+      "jurisdiction": "pl"
     },
     {
       "id": "18",
@@ -5552,7 +5613,9 @@
       "description": "There is no single „GDPR means five years” period. Each data group has its own purpose, legal basis and longest applicable retention period.",
       "track": "regulacje",
       "section": 3,
-      "sectionTitle": "Data and compliance"
+      "sectionTitle": "Data and compliance",
+      "seoTitle": "Marketplace data retention: how long to keep it",
+      "jurisdiction": "eu"
     },
     {
       "id": "19",
@@ -5787,7 +5850,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "re-verification of key seller data and BDO;"
+              "text": "re-verification of key seller data and EPR registration;"
             }
           ]
         },
@@ -5805,7 +5868,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "BDO reminders by the end of February and March 15;"
+              "text": "EPR reporting reminders on the national deadlines (in Poland, end of February and 15 March);"
             }
           ]
         },
@@ -5840,14 +5903,15 @@
           "type": "callout",
           "variant": "evidence",
           "label": "EVIDENCE",
-          "text": "The operator should be able to compile not only sales figures but also: compliance gaps, response times, overdue refunds, unanswered complaints, products without the required responsible person, sellers with DAC7/BDO deficiencies in their scope, and the result of the recall test. In MVP, saved queries and a controlled spreadsheet/periodic report are sufficient; a dashboard is convenient for scaling."
+          "text": "The operator should be able to compile not only sales figures but also: compliance gaps, response times, overdue refunds, unanswered complaints, products without the required responsible person, sellers with DAC7 or EPR deficiencies in their scope, and the result of the recall test. In MVP, saved queries and a controlled spreadsheet/periodic report are sufficient; a dashboard is convenient for scaling."
         }
       ],
       "order": 19,
       "description": "What to check daily, what monthly and what once a year, and who on the operator side owns each of those processes.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Launch and running it"
+      "sectionTitle": "Launch and running it",
+      "seoTitle": "Marketplace operating calendar: annual deadlines"
     },
     {
       "id": "20",
@@ -5863,7 +5927,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "Recommended start: only entrepreneurs from Poland/EU, no shipping from outside the EU, no operator fulfillment, no high-risk categories. The seller is the party to the sale, PSP handles payment separation."
+              "text": "Recommended start: only entrepreneurs from the EU, no shipping from outside the EU, no operator fulfillment, no high-risk categories. The seller is the party to the sale, PSP handles payment separation."
             }
           ]
         },
@@ -5880,7 +5944,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "onboarding of the manufacturer-artisan and their BDO/packaging;"
+              "text": "onboarding of the manufacturer-artisan and their EPR and packaging duties;"
             }
           ]
         },
@@ -5942,7 +6006,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "Do not allow at the start: cosmetics 'without papers', toys without CE marking, mugs without food-contact proof, dropshipping imports, and claims that 'handicrafts are not subject to GPSR/BDO'."
+              "text": "Do not allow at the start: cosmetics 'without papers', toys without CE marking, mugs without food-contact proof, dropshipping imports, and claims that 'handicrafts are not subject to GPSR or EPR'."
             }
           ]
         },
@@ -6026,7 +6090,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "own BDO obligations for goods/operator, independent of partners."
+              "text": "own EPR obligations for goods/operator, independent of partners."
             }
           ]
         },
@@ -6045,7 +6109,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "Do not launch 'everything' with a single control. The platform creates a category program with owners and risk levels. It automates DSA/DAC7 onboarding, document repository, BDO, moderation, pricing, recalls, and notifications."
+              "text": "Do not launch 'everything' with a single control. The platform creates a category program with owners and risk levels. It automates DSA/DAC7 onboarding, document repository, EPR, moderation, pricing, recalls, and notifications."
             }
           ]
         },
@@ -6053,7 +6117,7 @@
           "type": "paragraph",
           "segments": [
             {
-              "text": "Once the threshold is exceeded, readiness for full DSA platform obligations is required. As a medium-sized online platform operator, one must formally check KSC and the registration deadline. PAD applies unless a micro-enterprise exemption is in place. P2B requires a complaint/mediation system within the scope defined by the regulation."
+              "text": "Once the threshold is exceeded, readiness for full DSA platform obligations is required. As a medium-sized online platform operator, one must formally check the national NIS2 status and registration deadline. PAD applies unless a micro-enterprise exemption is in place. P2B requires a complaint/mediation system within the scope defined by the regulation."
             }
           ]
         },
@@ -6137,7 +6201,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "BDO/packaging assigned to the florist responsible for packing, or a fulfillment model described in the contract;"
+              "text": "EPR and packaging assigned to the florist responsible for packing, or a fulfillment model described in the contract;"
             }
           ]
         },
@@ -6154,14 +6218,15 @@
           "type": "callout",
           "variant": "practice",
           "label": "PRACTICE",
-          "text": "For 1000 storefronts, centralize rules, evidence, and deadlines, but do not mix responsibilities. One platform does not mean one seller, one BDO number, or one sales document."
+          "text": "For 1000 storefronts, centralize rules, evidence, and deadlines, but do not mix responsibilities. One platform does not mean one seller, one EPR registration, or one sales document."
         }
       ],
       "order": 20,
-      "description": "Four marketplace variants and the concrete consequences of each. Recommended start: sellers from Poland and the EU, no operator fulfilment.",
+      "description": "Four marketplace variants and the concrete consequences of each. Recommended start: sellers from the EU, no operator fulfilment.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Launch and running it"
+      "sectionTitle": "Launch and running it",
+      "seoTitle": "Marketplace business models: four variants"
     },
     {
       "id": "21",
@@ -6309,7 +6374,7 @@
           "ordered": true,
           "segments": [
             {
-              "text": "BDO/EPR declaration and evidence."
+              "text": "EPR declaration and evidence."
             }
           ]
         },
@@ -6368,7 +6433,7 @@
           "ordered": true,
           "segments": [
             {
-              "text": "RODO processing activity register, role map, retention policy, and processor list."
+              "text": "GDPR record of processing activities, role map, retention policy, and processor list."
             }
           ]
         },
@@ -6431,7 +6496,7 @@
           "ordered": true,
           "segments": [
             {
-              "text": "BDO/operator-seller-fulfillment procedure."
+              "text": "EPR operator-seller-fulfilment procedure."
             }
           ]
         },
@@ -6467,7 +6532,7 @@
           "ordered": true,
           "segments": [
             {
-              "text": "DSA/PAD/P2B/KSC self-identification updated annually."
+              "text": "DSA, PAD, P2B and NIS2 self-identification updated annually."
             }
           ]
         },
@@ -6497,7 +6562,8 @@
       "description": "Documents visible to customers, seller agreements and internal procedures. The list of what has to be ready before sales open.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Launch and running it"
+      "sectionTitle": "Launch and running it",
+      "seoTitle": "Marketplace documents and procedures: full list"
     },
     {
       "id": "22",
@@ -6536,7 +6602,7 @@
               "YES"
             ],
             [
-              "Does onboarding establish product roles, import, fulfilment and - only where applicable to the seller - BDO and DAC7?",
+              "Does onboarding establish product roles, import, fulfilment and - only where applicable to the seller - EPR and DAC7?",
               "YES",
               "YES"
             ],
@@ -6601,7 +6667,7 @@
               "YES"
             ],
             [
-              "Does the BDO model distinguish between private/unregistered sales and business sales, and does it establish packaging and fulfillment roles only where applicable?",
+              "Does the EPR model distinguish between private/unregistered sales and business sales, and does it establish packaging and fulfillment roles only where applicable?",
               "YES",
               "YES"
             ],
@@ -6611,7 +6677,7 @@
               "YES for an entity covered by PAD"
             ],
             [
-              "Has KSC self-identification been performed and a timeline established?",
+              "Has NIS2 self-identification been performed and a timeline established?",
               "YES for medium/qualified entities",
               "YES after the obligation takes effect"
             ],
@@ -6632,7 +6698,8 @@
       "description": "GO / NO-GO questions before opening sales. A „no” on an item marked as blocking stops the launch rather than raising a warning.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Launch and running it"
+      "sectionTitle": "Launch and running it",
+      "seoTitle": "Marketplace launch checklist: go or no-go"
     },
     {
       "id": "23",
@@ -6671,16 +6738,16 @@
               "The common minimum is short, and industry-specific fields are activated only for the relevant category. A clear photo of the label can convey some information, but key data and warnings must be visible and accessible."
             ],
             [
-              "\"Below 1 ton, there is no BDO.\"",
+              "\"Below one tonne there is no EPR obligation.\"",
               "A threshold may grant exemption from certain obligations upon meeting conditions, but it does not automatically remove the registration and reporting requirement."
             ],
             [
-              "\"Every seller must have a BDO.\"",
+              "\"Every seller needs an EPR registration.\"",
               "No. First, a distinction is made between private sales/unregistered activity and entrepreneurs, and only then between packaging role, import, and product group."
             ],
             [
               "\"Dropshipping means the wholesaler is responsible.\"",
-              "Dropshipping is a logistics method. The seller and the platform still need to determine the importer, the EU-based representative, VAT/customs, returns, and BDO."
+              "Dropshipping is a logistics method. The seller and the platform still need to determine the importer, the EU-based representative, VAT/customs, returns, and EPR."
             ],
             [
               "\"Since Stripe has an account, the platform must copy the IBAN.\"",
@@ -6717,7 +6784,8 @@
       "description": "The costliest myths: „the terms will say the seller is responsible”, „we are small, so DSA does not apply”, „compliance is a launch project”.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Launch and running it"
+      "sectionTitle": "Launch and running it",
+      "seoTitle": "Common marketplace mistakes before launch"
     },
     {
       "id": "24",
@@ -6782,7 +6850,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "UOKiK - Consumer Rights and Platform Changes",
+              "text": "UOKiK (Poland) - Consumer Rights and Platform Changes",
               "href": "https://prawakonsumenta.uokik.gov.pl/zmiany-2023/"
             }
           ]
@@ -6802,7 +6870,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "BDO - Official Service",
+              "text": "BDO (Poland) - national EPR register",
               "href": "https://bdo.mos.gov.pl/"
             }
           ]
@@ -6822,7 +6890,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "UODO - Guides and Decisions",
+              "text": "UODO (Poland) - Guides and Decisions",
               "href": "https://uodo.gov.pl/"
             }
           ]
@@ -6832,7 +6900,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "Ministry of Digital Affairs - Polish Accessibility Act",
+              "text": "Ministry of Digital Affairs (Poland) - Accessibility Act",
               "href": "https://www.gov.pl/web/dostepnosc-cyfrowa/polski-akt-o-dostepnosci--uslugi-handlu-elektronicznego"
             }
           ]
@@ -6842,7 +6910,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "Ministry of Digital Affairs - Amendment to KSC/NIS2",
+              "text": "Ministry of Digital Affairs (Poland) - NIS2 implementation",
               "href": "https://www.gov.pl/web/cyfryzacja/nowelizacja-ustawy-o-krajowym-systemie-cyberbezpieczenstwa-ksc---obowiazki-podmiotow-kluczowych-i-waznych"
             }
           ]
@@ -6919,42 +6987,15 @@
           "type": "callout",
           "variant": "important",
           "label": "IMPORTANT",
-          "text": "Each new country of delivery, seller type, fulfillment method, import, private label, regulated category, digital service, or significant payment change requires re-analysis. This guide serves as a basis for a Polish goods marketplace, not an automatic passport to any model."
+          "text": "Each new country of delivery, seller type, fulfillment method, import, private label, regulated category, digital service, or significant payment change requires re-analysis. This guide serves as a basis for an EU goods marketplace, not an automatic passport to any model."
         }
       ],
       "order": 24,
       "description": "Binding legal acts and materials from the competent authorities, not law firm blogs. Update rule: review changes at least once a quarter.",
       "track": "regulacje",
       "section": 4,
-      "sectionTitle": "Launch and running it"
-    },
-    {
-      "id": "legal",
-      "slug": "legal-notice",
-      "title": "Important Disclaimer Regarding the Nature of the Material",
-      "blocks": [
-        {
-          "type": "paragraph",
-          "segments": [
-            {
-              "text": "This material is for informational and educational purposes only. It contains the author's interpretation of general provisions, official materials, and practical ways to organise a marketplace based on the sources available as of the indicated date. It does not constitute legal, tax, accounting, technical or investment advice, or an individual assessment of product, seller or platform compliance. It does not guarantee completeness or compliance for a specific implementation, as obligations depend on the actual business model, product categories, party status, sales countries, and current authority practices."
-            }
-          ]
-        },
-        {
-          "type": "paragraph",
-          "segments": [
-            {
-              "text": "The material should not be the sole basis for business decisions, launching sales, approving products, or choosing settlement methods. Before implementing a solution in a specific business, verify the current legal position and - where the risk or business model requires it - obtain an individual assessment from a qualified lawyer, tax adviser, accountant, or product specialist. Publication or distribution of the material does not create an advisory relationship with its author. This disclaimer does not exclude liability that cannot be excluded under mandatory provisions."
-            }
-          ]
-        }
-      ],
-      "order": 25,
-      "description": "Informational and educational material, an author interpretation of the rules as of the stated date. It is not legal advice or a legal opinion.",
-      "track": "regulacje",
-      "section": 4,
-      "sectionTitle": "Launch and running it"
+      "sectionTitle": "Launch and running it",
+      "seoTitle": "Marketplace legal sources and update policy"
     },
     {
       "id": "0",
@@ -7249,7 +7290,8 @@
         }
       ],
       "section": 0,
-      "sectionTitle": "Before you start"
+      "sectionTitle": "Before you start",
+      "seoTitle": "Marketplace architecture: how to read this guide"
     },
     {
       "id": "1",
@@ -7653,7 +7695,8 @@
         }
       ],
       "section": 0,
-      "sectionTitle": "Before you start"
+      "sectionTitle": "Before you start",
+      "seoTitle": "Marketplace model before features: what to settle"
     },
     {
       "id": "2",
@@ -8010,7 +8053,8 @@
         }
       ],
       "section": 1,
-      "sectionTitle": "Data and catalogue"
+      "sectionTitle": "Data and catalogue",
+      "seoTitle": "Seller data model in a marketplace"
     },
     {
       "id": "3",
@@ -8366,7 +8410,8 @@
         }
       ],
       "section": 1,
-      "sectionTitle": "Data and catalogue"
+      "sectionTitle": "Data and catalogue",
+      "seoTitle": "Multi-seller catalogue: products and variants"
     },
     {
       "id": "4",
@@ -8784,7 +8829,8 @@
         }
       ],
       "section": 1,
-      "sectionTitle": "Data and catalogue"
+      "sectionTitle": "Data and catalogue",
+      "seoTitle": "Integrating seller shops with a marketplace"
     },
     {
       "id": "5",
@@ -9132,7 +9178,8 @@
         }
       ],
       "section": 1,
-      "sectionTitle": "Data and catalogue"
+      "sectionTitle": "Data and catalogue",
+      "seoTitle": "Marketplace stock: reservations and sync"
     },
     {
       "id": "6",
@@ -9528,7 +9575,8 @@
         }
       ],
       "section": 2,
-      "sectionTitle": "The transaction"
+      "sectionTitle": "The transaction",
+      "seoTitle": "Multi-seller cart and marketplace checkout"
     },
     {
       "id": "7",
@@ -9918,7 +9966,8 @@
         }
       ],
       "section": 2,
-      "sectionTitle": "The transaction"
+      "sectionTitle": "The transaction",
+      "seoTitle": "Marketplace order model: splitting across sellers"
     },
     {
       "id": "8",
@@ -10251,7 +10300,8 @@
         }
       ],
       "section": 2,
-      "sectionTitle": "The transaction"
+      "sectionTitle": "The transaction",
+      "seoTitle": "Marketplace shipping: costs and fulfilment"
     },
     {
       "id": "9",
@@ -10658,7 +10708,8 @@
         }
       ],
       "section": 3,
-      "sectionTitle": "Money"
+      "sectionTitle": "Money",
+      "seoTitle": "Marketplace payments: split payment and events"
     },
     {
       "id": "10",
@@ -11062,7 +11113,8 @@
         }
       ],
       "section": 3,
-      "sectionTitle": "Money"
+      "sectionTitle": "Money",
+      "seoTitle": "Seller payouts: balances, schedule and corrections"
     },
     {
       "id": "11",
@@ -11410,7 +11462,8 @@
         }
       ],
       "section": 3,
-      "sectionTitle": "Money"
+      "sectionTitle": "Money",
+      "seoTitle": "Marketplace commissions: charging and versioning"
     },
     {
       "id": "12",
@@ -11794,7 +11847,8 @@
         }
       ],
       "section": 3,
-      "sectionTitle": "Money"
+      "sectionTitle": "Money",
+      "seoTitle": "Marketplace promotions: who funds the discount"
     },
     {
       "id": "13",
@@ -12182,7 +12236,8 @@
         }
       ],
       "section": 3,
-      "sectionTitle": "Money"
+      "sectionTitle": "Money",
+      "seoTitle": "Marketplace returns and disputes: the flow"
     },
     {
       "id": "14",
@@ -12513,7 +12568,8 @@
         }
       ],
       "section": 4,
-      "sectionTitle": "Operations"
+      "sectionTitle": "Operations",
+      "seoTitle": "Marketplace moderation: decisions and audit trail"
     },
     {
       "id": "15",
@@ -12876,7 +12932,8 @@
         }
       ],
       "section": 4,
-      "sectionTitle": "Operations"
+      "sectionTitle": "Operations",
+      "seoTitle": "Marketplace operator panel: screens and roles"
     },
     {
       "id": "16",
@@ -13269,7 +13326,8 @@
         }
       ],
       "section": 4,
-      "sectionTitle": "Operations"
+      "sectionTitle": "Operations",
+      "seoTitle": "Marketplace events, notifications and recovery"
     },
     {
       "id": "17",
@@ -13651,7 +13709,8 @@
         }
       ],
       "section": 4,
-      "sectionTitle": "Operations"
+      "sectionTitle": "Operations",
+      "seoTitle": "Marketplace security: isolating seller data"
     },
     {
       "id": "18",
@@ -13974,7 +14033,8 @@
         }
       ],
       "section": 5,
-      "sectionTitle": "Putting it together"
+      "sectionTitle": "Putting it together",
+      "seoTitle": "Reversible and irreversible marketplace decisions"
     },
     {
       "id": "19",
@@ -14133,7 +14193,8 @@
         }
       ],
       "section": 5,
-      "sectionTitle": "Putting it together"
+      "sectionTitle": "Putting it together",
+      "seoTitle": "Marketplace maturity: manual or automated"
     },
     {
       "id": "20",
@@ -14197,7 +14258,7 @@
           "ordered": false,
           "segments": [
             {
-              "text": "selling to consumers in Poland and the EU."
+              "text": "selling to consumers in the EU."
             }
           ]
         },
@@ -14476,7 +14537,8 @@
         }
       ],
       "section": 5,
-      "sectionTitle": "Putting it together"
+      "sectionTitle": "Putting it together",
+      "seoTitle": "Marketplace MVP: the minimum scope to launch"
     }
   ],
   "tracks": [
@@ -14484,7 +14546,7 @@
       "key": "regulacje",
       "shortTitle": "Regulations",
       "title": "Marketplace operator obligations",
-      "subtitle": "What you have to meet in order to sell legally in Poland and the EU",
+      "subtitle": "What you have to meet in order to run a marketplace legally in the EU",
       "description": "GPSR, EPR, consumer law, GDPR, DSA, P2B, DAC7 and accessibility. Decision rules, the split of responsibility and a checklist before launch."
     },
     {
@@ -14494,5 +14556,6 @@
       "subtitle": "How to build it so you are not rewriting it a year from now",
       "description": "Order model, multi-seller cart, commissions, payouts and integrations. Which decisions are reversible and which ones cost a migration."
     }
-  ]
+  ],
+  "seoTitle": "Marketplace in the EU: duties and architecture"
 }

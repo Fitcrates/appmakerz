@@ -13,6 +13,14 @@ export type GuideBlock =
 
 export type GuideTrackKey = 'regulacje' | 'architektura';
 
+/**
+ * Two states on purpose. 'eu' means the substance of the obligation transfers
+ * to any EU market even if a directive is implemented nationally; 'pl' means
+ * the registers, thresholds and deadlines in the chapter are Polish. Chapters
+ * that are process rather than law carry neither.
+ */
+export type GuideJurisdiction = 'eu' | 'pl';
+
 export type GuideTrack = {
   key: GuideTrackKey;
   /** Pill label on the index. The full title heads the panel it opens. */
@@ -26,10 +34,14 @@ export type GuideChapter = {
   id: string;
   slug: string;
   title: string;
+  /** Search title. The H1 keeps the numbered heading, this answers the query. */
+  seoTitle?: string;
   description: string;
   order: number;
   /** Which of the two guides the chapter belongs to. */
   track: GuideTrackKey;
+  /** Whether the chapter's instructions transfer across the EU. */
+  jurisdiction?: GuideJurisdiction;
   /** Ordering key of the thematic group the chapter sits in. */
   section: number;
   /** Display name of that group, already localised. */
@@ -40,6 +52,8 @@ export type GuideChapter = {
 export type MarketplaceGuide = {
   language: Language;
   title: string;
+  /** Search title for the index, separate from the on-page H1. */
+  seoTitle?: string;
   subtitle: string;
   description: string;
   reviewedAt: string;

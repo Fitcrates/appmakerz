@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const path = '/marketplace-guide';
   const canonical = absoluteUrl(localizedPath(language, path));
   return {
-    title: guide.title,
+    title: guide.seoTitle ?? guide.title,
     description: guide.description,
     alternates: {
       canonical,
@@ -33,8 +33,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
     },
     robots: { index: true, follow: true },
-    openGraph: { type: 'website', url: canonical, title: guide.title, description: guide.description, siteName: 'AppCrates', images: [DEFAULT_SOCIAL_IMAGE], locale: language === 'pl' ? 'pl_PL' : 'en_US' },
-    twitter: { card: 'summary_large_image', title: guide.title, description: guide.description, images: [DEFAULT_SOCIAL_IMAGE] },
+    openGraph: { type: 'website', url: canonical, title: guide.seoTitle ?? guide.title, description: guide.description, siteName: 'AppCrates', images: [DEFAULT_SOCIAL_IMAGE], locale: language === 'pl' ? 'pl_PL' : 'en_US' },
+    twitter: { card: 'summary_large_image', title: guide.seoTitle ?? guide.title, description: guide.description, images: [DEFAULT_SOCIAL_IMAGE] },
   };
 }
 
@@ -99,6 +99,7 @@ export default async function MarketplaceGuideIndex({ params }: PageProps) {
                 slug: chapter.slug,
                 title: chapter.title,
                 description: chapter.description,
+                jurisdiction: chapter.jurisdiction,
               })),
             })),
           }))}

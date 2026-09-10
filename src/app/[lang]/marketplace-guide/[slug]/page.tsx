@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import GuideBody from '@/components/marketplace-guide/GuideBody';
 import GuideProgress from '@/components/marketplace-guide/GuideProgress';
 import GuideSearch from '@/components/marketplace-guide/GuideSearch';
+import JurisdictionBadge from '@/components/marketplace-guide/JurisdictionBadge';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import styles from '@/components/marketplace-guide/MarketplaceGuide.module.css';
 import { localizedPath } from '@/lib/i18n-routing';
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // The root layout already appends "| AppCrates" to a string title, so adding
     // a second suffix here produced titles like "13. DSA: ... | Przewodnik
     // marketplace | AppCrates" - 103 characters, of which Google shows about 60.
-    title: chapter.title,
+    title: chapter.seoTitle ?? chapter.title,
     description: chapter.description,
     alternates: {
       canonical,
@@ -58,8 +59,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     robots: MARKETPLACE_GUIDE_NOINDEX_SLUGS.has(chapter.slug)
       ? { index: false, follow: true }
       : { index: true, follow: true },
-    openGraph: { type: 'article', url: canonical, title: chapter.title, description: chapter.description, siteName: 'AppCrates', images: [DEFAULT_SOCIAL_IMAGE], locale: language === 'pl' ? 'pl_PL' : 'en_US', publishedTime: '2026-08-30', modifiedTime: '2026-08-30' },
-    twitter: { card: 'summary_large_image', title: chapter.title, description: chapter.description, images: [DEFAULT_SOCIAL_IMAGE] },
+    openGraph: { type: 'article', url: canonical, title: chapter.seoTitle ?? chapter.title, description: chapter.description, siteName: 'AppCrates', images: [DEFAULT_SOCIAL_IMAGE], locale: language === 'pl' ? 'pl_PL' : 'en_US', publishedTime: '2026-08-30', modifiedTime: '2026-08-30' },
+    twitter: { card: 'summary_large_image', title: chapter.seoTitle ?? chapter.title, description: chapter.description, images: [DEFAULT_SOCIAL_IMAGE] },
   };
 }
 
@@ -131,7 +132,10 @@ export default async function MarketplaceGuideChapterPage({ params }: PageProps)
             <span>{chapter.id === 'legal' ? '§' : chapter.id.padStart(2, '0')}</span>
           </nav>
           <header className={styles.articleHeader}>
-            <div className={styles.articleMeta}>{language === 'pl' ? 'Rozdział' : 'Chapter'} {chapter.id === 'legal' ? '§' : chapter.id.padStart(2, '0')}</div>
+            <div className={styles.articleMeta}>
+              {language === 'pl' ? 'Rozdział' : 'Chapter'} {chapter.id === 'legal' ? '§' : chapter.id.padStart(2, '0')}
+              <JurisdictionBadge jurisdiction={chapter.jurisdiction} language={language} />
+            </div>
             <h1>{cleanTitle}</h1>
           </header>
           <GuideBody blocks={chapter.blocks} language={language} slug={chapter.slug} />
