@@ -1,15 +1,15 @@
 export const privacyPolicyContent = {
   en: {
     title: 'Privacy Policy',
-    lastUpdated: 'Effective date: April 17, 2026',
+    lastUpdated: 'Effective date: 10 September 2026',
     legalLabel: 'Legal Information',
     backToHome: 'Back to Home',
     sections: [
       {
         title: '1. Data Controller',
         paragraphs: [
-          'The controller of your personal data processed through the appcrates.pl website is AppCrates (hereinafter referred to as the "Controller").',
-          'If you have any questions regarding data protection or wish to exercise your privacy rights, please contact us at: kontakt@appcrates.pl.',
+          'The controller of your personal data processed through the appcrates.pl website is Arkadiusz Wawrzyniak, a natural person running this site under the AppCrates brand (hereinafter referred to as the "Controller").',
+          'For anything related to data protection, or to exercise your rights, write to kontakt@appcrates.pl. That address is also the contact point for requests made in writing.',
         ],
       },
       {
@@ -73,15 +73,15 @@ export const privacyPolicyContent = {
   },
   pl: {
     title: 'Polityka Prywatności',
-    lastUpdated: 'Data wejścia w życie: 17 kwietnia 2026',
+    lastUpdated: 'Data wejścia w życie: 10 września 2026',
     legalLabel: 'Informacje Prawne',
     backToHome: 'Powrót do strony głównej',
     sections: [
       {
         title: '1. Administrator Danych Osobowych',
         paragraphs: [
-          'Administratorem Twoich danych osobowych przetwarzanych w ramach serwisu appcrates.pl jest AppCrates (dalej: "Administrator").',
-          'We wszystkich sprawach związanych z ochroną danych osobowych oraz realizacją Twoich praw możesz kontaktować się pod adresem e-mail: kontakt@appcrates.pl.',
+          'Administratorem Twoich danych osobowych przetwarzanych w ramach serwisu appcrates.pl jest Arkadiusz Wawrzyniak, osoba fizyczna prowadząca serwis pod marką AppCrates (dalej: "Administrator").',
+          'We wszystkich sprawach związanych z ochroną danych osobowych oraz realizacją Twoich praw możesz kontaktować się pod adresem e-mail: kontakt@appcrates.pl. Ten adres jest również punktem kontaktowym dla wniosków składanych na piśmie.',
         ],
       },
       {
