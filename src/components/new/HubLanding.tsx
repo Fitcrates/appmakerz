@@ -32,6 +32,8 @@ interface HubLandingProps {
   language: Language;
   relatedPosts: Post[];
   guideChapterLinks: Array<{ slug: string; title: string }>;
+  guideChapterCount: number;
+  guideTrackCount: number;
 }
 
 // The hub answers a different question than a service landing: not "buy this
@@ -43,6 +45,8 @@ export default function HubLanding({
   language,
   relatedPosts,
   guideChapterLinks,
+  guideChapterCount,
+  guideTrackCount,
 }: HubLandingProps) {
   const title = getLocalizedText(landing.title, language);
   const eyebrow = getLocalizedText(landing.eyebrow, language, language === 'pl' ? 'Technologia' : 'Technology');
@@ -166,7 +170,12 @@ export default function HubLanding({
       {slot('after-evidence')}
 
       {landing.guideCta?.enabled ? (
-        <GuideCtaSection chapters={guideChapterLinks} language={language} />
+        <GuideCtaSection
+          chapters={guideChapterLinks}
+          chapterCount={guideChapterCount}
+          trackCount={guideTrackCount}
+          language={language}
+        />
       ) : null}
 
       <TechChips technologies={technologies} language={language} />

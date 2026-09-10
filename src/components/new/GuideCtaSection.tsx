@@ -12,13 +12,19 @@ interface GuideChapterLink {
 
 interface GuideCtaSectionProps {
   chapters: GuideChapterLink[];
+  chapterCount: number;
+  trackCount: number;
   language: Language;
 }
 
 // Lifted out of uslugi/[slug]/page.tsx, where it was gated on a hardcoded slug
 // so no other landing could ever surface the guide. Both layouts now render it
 // from the guideCta field.
-export default function GuideCtaSection({ chapters, language }: GuideCtaSectionProps) {
+export default function GuideCtaSection({ chapters, chapterCount, trackCount, language }: GuideCtaSectionProps) {
+  const trackLabel = language === 'pl'
+    ? (trackCount === 2 ? 'dwóch ścieżkach' : `${trackCount} ścieżkach`)
+    : (trackCount === 2 ? 'two tracks' : `${trackCount} tracks`);
+
   return (
     <section className="border-t border-white/10 py-16 lg:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -30,13 +36,13 @@ export default function GuideCtaSection({ chapters, language }: GuideCtaSectionP
             </div>
             <h2 className="font-oxanium text-2xl font-light text-white sm:text-3xl">
               {language === 'pl'
-                ? 'Praktyczny przewodnik operacyjny dla marketplace'
-                : 'Practical marketplace operations guide'}
+                ? 'Przewodnik marketplace: obowiązki i architektura'
+                : 'Marketplace guide: obligations and architecture'}
             </h2>
             <p className="mt-4 max-w-2xl font-light leading-relaxed text-white/60">
               {language === 'pl'
-                ? '25 rozdziałów o odpowiedzialności, onboardingu sprzedawców, GPSR, DSA, płatnościach, DAC7, BDO i procesach potrzebnych przed uruchomieniem sprzedaży.'
-                : '25 chapters covering responsibility, seller onboarding, GPSR, DSA, payments, DAC7, packaging compliance, and the processes required before launch.'}
+                ? `${chapterCount} rozdziałów w ${trackLabel}: obowiązki operatora, od onboardingu sprzedawców przez GPSR, DSA i DAC7 po BDO, oraz architektura platformy od MVP do skali.`
+                : `${chapterCount} chapters across ${trackLabel}: operator obligations, from seller onboarding through GPSR, DSA and DAC7 to packaging compliance, and platform architecture from MVP to scale.`}
             </p>
             {chapters.length > 0 ? (
               <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2" role="list">

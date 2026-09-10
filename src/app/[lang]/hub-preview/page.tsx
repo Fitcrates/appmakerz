@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
 import HubLanding from '@/components/new/HubLanding';
-import { getMarketplaceGuideChapter } from '@/lib/marketplace-guide';
+import { getMarketplaceGuideChapter, getMarketplaceGuideTracks } from '@/lib/marketplace-guide';
 import { isLanguage, type Language } from '@/lib/language';
 
 export const dynamic = 'force-dynamic';
@@ -47,6 +47,8 @@ export default async function HubPreviewPage({ params }: { params: Promise<{ lan
     })
     .filter(Boolean) as Array<{ slug: string; title: string }>;
 
+  const guideTracks = getMarketplaceGuideTracks(language);
+
   return (
     <>
       <NextHeader />
@@ -55,6 +57,8 @@ export default async function HubPreviewPage({ params }: { params: Promise<{ lan
         language={language}
         relatedPosts={landing.relatedPosts ?? []}
         guideChapterLinks={guideChapterLinks}
+        guideChapterCount={guideTracks.reduce((total, track) => total + track.chapters.length, 0)}
+        guideTrackCount={guideTracks.length}
       />
       <NextFooter />
     </>
