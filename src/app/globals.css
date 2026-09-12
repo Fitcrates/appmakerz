@@ -301,6 +301,55 @@
   z-index: 20;
 }
 
+/* ── backdrop-filter shim for the Tailwind backdrop-blur-* utilities ──
+   Tailwind emits the prefixed and the standard property together in one rule.
+   The build's CSS transformer (Lightning CSS, via Turbopack) treats that pair
+   as redundant and keeps only `-webkit-backdrop-filter`, on the assumption
+   that every engine understanding the standard property also understands the
+   alias. Chromium 152 dropped the alias, and Firefox never had it, so those
+   utilities render with no blur at all in current browsers.
+
+   Re-declaring the standard property on its own is enough: written alone it is
+   not collapsed, and the transformer re-adds the prefix for the older Safari
+   versions that still need it. Each value mirrors Tailwind's own scale.
+
+   These override nothing else, so a utility combined with backdrop-saturate-*
+   or backdrop-brightness-* would lose that companion filter. Nothing in the
+   project does that today; if something starts to, drop the utility and use a
+   plain `backdrop-filter` declaration instead. */
+
+.backdrop-blur-none {
+  backdrop-filter: none;
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(8px);
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+}
+
+.backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+}
+
+.backdrop-blur-xl {
+  backdrop-filter: blur(24px);
+}
+
+.backdrop-blur-2xl {
+  backdrop-filter: blur(40px);
+}
+
+.backdrop-blur-3xl {
+  backdrop-filter: blur(64px);
+}
+
 .about-hero-img {
   filter: url("#aboutHeroDistortion");
 }
@@ -444,6 +493,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
   .hero-laser-field {
     display: none;
   }
@@ -480,6 +533,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .border-glow-offset,
   .border-glow-wrap:hover .border-glow-offset {
     transition: none;
@@ -516,7 +570,7 @@
 
 .border-glow-card::before,
 .border-glow-card::after,
-.border-glow-card > .edge-light {
+.border-glow-card>.edge-light {
   content: "";
   position: absolute;
   inset: 0;
@@ -527,7 +581,7 @@
 
 .border-glow-card:not(:hover):not(.sweep-active)::before,
 .border-glow-card:not(:hover):not(.sweep-active)::after,
-.border-glow-card:not(:hover):not(.sweep-active) > .edge-light {
+.border-glow-card:not(:hover):not(.sweep-active)>.edge-light {
   opacity: 0;
   transition: opacity 0.75s ease-in-out;
 }
@@ -548,21 +602,17 @@
     var(--gradient-base) border-box;
   opacity: calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
   -webkit-mask-image:
-    conic-gradient(
-      from var(--cursor-angle) at center,
+    conic-gradient(from var(--cursor-angle) at center,
       black calc(var(--cone-spread) * 1%),
       transparent calc((var(--cone-spread) + 15) * 1%),
       transparent calc((100 - var(--cone-spread) - 15) * 1%),
-      black calc((100 - var(--cone-spread)) * 1%)
-    );
+      black calc((100 - var(--cone-spread)) * 1%));
   mask-image:
-    conic-gradient(
-      from var(--cursor-angle) at center,
+    conic-gradient(from var(--cursor-angle) at center,
       black calc(var(--cone-spread) * 1%),
       transparent calc((var(--cone-spread) + 15) * 1%),
       transparent calc((100 - var(--cone-spread) - 15) * 1%),
-      black calc((100 - var(--cone-spread)) * 1%)
-    );
+      black calc((100 - var(--cone-spread)) * 1%));
 }
 
 /* Colour bleeding inward from the lit edge. */
@@ -591,7 +641,7 @@
 }
 
 /* Outer halo, painted with stacked inset/outset shadows. */
-.border-glow-card > .edge-light {
+.border-glow-card>.edge-light {
   inset: calc(var(--glow-padding) * -1);
   pointer-events: none;
   z-index: 1;
@@ -603,7 +653,7 @@
   mix-blend-mode: plus-lighter;
 }
 
-.border-glow-card > .edge-light::before {
+.border-glow-card>.edge-light::before {
   content: "";
   position: absolute;
   inset: var(--glow-padding);

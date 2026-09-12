@@ -1,0 +1,18 @@
+"use client";
+
+import { useCallback, useSyncExternalStore } from "react";
+
+/** Subscribe to preference/breakpoint changes without a resize listener. */
+export function useMediaQuery(query: string, serverValue = false) {
+  const subscribe = useCallback((notify: () => void) => {
+    const media = window.matchMedia(query);
+    media.addEventListener("change", notify);
+    return () => media.removeEventListener("change", notify);
+  }, [query]);
+
+  return useSyncExternalStore(
+    subscribe,
+    () => window.matchMedia(query).matches,
+    () => serverValue,
+  );
+}

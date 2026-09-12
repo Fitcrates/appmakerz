@@ -1,0 +1,35 @@
+.hero {
+  --hero-animation-state: paused;
+  --hero-will-change: auto;
+}
+
+.parallax { will-change: var(--hero-will-change); }
+
+.hero :global(.hero-laser-field) path {
+  animation-play-state: var(--hero-animation-state) !important;
+}
+
+.scrollArrow {
+  animation: scrollHint 2s ease-in-out infinite;
+  animation-play-state: var(--hero-animation-state);
+}
+
+@keyframes scrollHint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+@media (max-width: 1023px) {
+  .parallax { transform: none !important; will-change: auto; }
+  .iconGlow { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero *, .hero *::before, .hero *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .parallax { transform: none !important; will-change: auto; }
+  .scrollArrow { transform: none; }
+}

@@ -1,0 +1,157 @@
+.card {
+  position: relative;
+  min-width: 0;
+  border-radius: 24px;
+  transform: perspective(1100px) translateY(var(--lift, 0px))
+    rotateX(calc(var(--base-rx, 0deg) + var(--pointer-rx, 0deg)))
+    rotateY(calc(var(--base-ry, 0deg) + var(--pointer-ry, 0deg)))
+    rotateZ(var(--base-rz, 0deg));
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glow, .back, .rim, .cursor {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.glow {
+  inset: -12px -18px;
+  background: radial-gradient(ellipse at var(--light-x) 18%, #54edff55, transparent 54%),
+    radial-gradient(ellipse at 50% 100%, #697cff33, transparent 60%);
+  filter: blur(20px);
+  opacity: 0.7;
+}
+
+/* This face projects beyond the front at one side and below. The exposed
+   strip is the glass body, not an inset border around the text. */
+.back {
+  transform: translate(var(--depth-x), 7px);
+  background: linear-gradient(165deg, #c3faff66, #24445d66 24%, #162b5055 65%, #829cff99);
+  border: 1px solid #a0eaff66;
+  box-shadow: 0 24px 44px #02061780, inset 0 -2px 3px #a4c8ff66;
+}
+
+/* Light splits into tight cyan/white/violet bands through the exposed side
+   wall. The front face covers the inner part; nothing frames the content. */
+.back::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 7px;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse 12px 54px at var(--light-x) 20%, #f0fffff2, #6defff99 35%, transparent 75%),
+    radial-gradient(ellipse 10px 32px at var(--light-x) 76%, #b8bcffcc, transparent 75%),
+    radial-gradient(ellipse 65px 9px at 72% 100%, #e5ffffee, #59dcff88 35%, transparent 78%),
+    linear-gradient(118deg, transparent 12%, #6ee7ff44 17%, #ecffffd9 18%, #70edff99 19%, #a6a1ff77 21%, transparent 27%,
+      transparent 62%, #a99fff66 66%, #c4faffcc 68%, #5edcff88 69%, transparent 74%),
+    linear-gradient(0deg, #e2edffb3, #929fff88 2px, #49d8f080 4px, transparent 7px);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+.pane {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse at var(--light-x) 0%, #8ceeff30, transparent 52%),
+    linear-gradient(135deg, #1a2d4b99, #0b132bd9 48%, #152445b3);
+  backdrop-filter: blur(16px) saturate(135%);
+  -webkit-backdrop-filter: blur(16px) saturate(135%);
+  box-shadow: inset 0 1px 2px #ddffff66, inset 0 -2px 9px #8cafff33;
+}
+
+/* Match the back face's offset and radius, then sweep its silhouette to the
+   front. Clipping to the pane leaves only the inward-facing top/side walls,
+   including their curved corners. These walls stay sharp above the blur. */
+.pane::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transform: translate(var(--depth-x), 7px);
+  box-shadow:
+    calc(var(--depth-x) * -1) -7px 0 0 #b9f3ff24,
+    calc(var(--depth-x) * -0.66) -4.62px 0 0 #83cdef18,
+    calc(var(--depth-x) * -0.33) -2.31px 0 0 #cbc5ff14;
+}
+
+.pane::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, #d7faff13, transparent 28%, transparent 63%, #b3d9ff0d 79%, transparent),
+    radial-gradient(ellipse at var(--light-x) 95%, #8eaaff24, transparent 45%);
+}
+
+/* Outside the clipped face, so light can spill beyond the silhouette. */
+.rim {
+  padding: 1.5px;
+  background:
+    radial-gradient(ellipse at var(--light-x) 10%, #efffff 0%, #8ef8ff 12%, transparent 50%),
+    linear-gradient(165deg, #8eefff80, #8fb7ff26 40%, #9dabffbb);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 4px #59eaff99) drop-shadow(0 0 12px #40dfff55);
+}
+
+.cursor {
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), #c1faff24, transparent 75%);
+  opacity: var(--glass-active, 0);
+  transition: opacity 350ms ease;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 3px #030b1d99;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover { --lift: -5px; }
+}
+
+@media (max-width: 1023px) {
+  .card { transform: none; }
+  .pane {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background:
+      radial-gradient(ellipse at var(--light-x) 0%, #8ceeff30, transparent 52%),
+      linear-gradient(135deg, #23364de6, #111a35eb 48%, #263153e6);
+  }
+  .glow {
+    inset: -20px;
+    filter: none;
+    background: radial-gradient(ellipse closest-side, #5cdcff24, transparent);
+  }
+  .rim { filter: none; }
+  .cursor { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { transform: none; transition: none; }
+  .cursor { display: none; }
+}
+
+/* Avoid repeatedly filtering the animated hero backdrop in WebKit. */
+@supports (background: -webkit-named-image(i)) {
+  .pane {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .pane {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: linear-gradient(135deg, #192c46, #0b132b 65%, #1b2c4d);
+  }
+}
