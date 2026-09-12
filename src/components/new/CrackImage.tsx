@@ -1,5 +1,10 @@
-import React, { useCallback, useState, useEffect, useRef, useMemo } from 'react';
-import { motion } from 'framer-motion';
+"use client";
+
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import Image from 'next/image';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useElementActivity } from '@/hooks/useElementActivity';
+import styles from './CrackImage.module.css';
 
 interface CrackImageProps {
   src: string;
@@ -18,201 +23,86 @@ interface TileOffset {
   rotation: number;
 }
 
-const CrackImage: React.FC<CrackImageProps> = ({
-  src,
-  alt = '',
-  className = '',
-  gridSize = 4,
-  cycleInterval = 4000,
-  transitionDuration = 1.5,
-  bleed = 0.05,
-}) => {
+const ALIGNED: TileOffset = { imageX: 0, imageY: 0, scale: 1, rotation: 0 };
+
+function generateOffsets(count: number, intensity: number): TileOffset[] {
+  return Array.from({ length: count }, () => ({
+    imageX: (Math.random() - 0.5) * 2.5 * intensity,
+    imageY: (Math.random() - 0.5) * 2.5 * intensity,
+    scale: 1.18 + Math.random() * 0.20 * intensity,
+    rotation: (Math.random() - 0.5) * 15 * intensity,
+  }));
+}
+
+export default function CrackImage({
+  src, alt = '', className = '', gridSize = 4, cycleInterval = 4000,
+  transitionDuration = 1.5, bleed = 0.05,
+}: CrackImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [animationPhase, setAnimationPhase] = useState(0); // 0: aligned, 1: warped1, 2: warped2
-  const [offsets, setOffsets] = useState<TileOffset[]>([]);
-  const [offsets2, setOffsets2] = useState<TileOffset[]>([]);
+  const desktopMotion = useMediaQuery('(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)', true);
+  const active = useElementActivity(containerRef, !reducedMotion);
+  const [loadedImage, setLoadedImage] = useState<{ source: string; url: string } | null>(null);
+  const [frame, setFrame] = useState<{ phase: number; offsets: TileOffset[] }>({ phase: 0, offsets: [] });
+  const size = Math.max(1, Math.floor(gridSize));
+  const count = size * size;
+  const overscan = 1 + 2 * Math.max(0, bleed);
 
-  const totalTiles = gridSize * gridSize;
-
-  // Generate random offsets for warping effect - image shifts within fixed tiles
-  const generateOffsets = useCallback((intensity: number = 1) => {
-    const newOffsets: TileOffset[] = [];
-    for (let i = 0; i < totalTiles; i++) {
-      newOffsets.push({
-        // Shuffling shifts from -1.0 to 1.0
-        imageX: (Math.random() - 0.5) * 2.5 * intensity,
-        imageY: (Math.random() - 0.5) * 2.5 * intensity,
-        // Premium zoom/lens magnification to safely cover borders during high shifts
-        scale: 1.18 + Math.random() * 0.20 * intensity,
-        // Rotations between -5 and 5 degrees
-        rotation: (Math.random() - 0.5) * 15 * intensity,
-      });
-    }
-    return newOffsets;
-  }, [totalTiles]);
-
-  // Initialize offsets
+  // One update per phase, only while visible. CSS handles interpolation;
+  // no dimension reads, window resize handler, or per-tile Motion instances.
   useEffect(() => {
-    setOffsets(generateOffsets(1));
-    setOffsets2(generateOffsets(0.7));
-  }, [bleed, generateOffsets]);
-
-  // Update dimensions
-  useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef.current) {
-        setDimensions({
-          width: containerRef.current.offsetWidth,
-          height: containerRef.current.offsetHeight,
-        });
-      }
-    };
-
-    updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
-  }, []);
-
-  // Cycle through phases: aligned -> warped1 -> warped2 -> aligned
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAnimationPhase(prev => {
-        const nextPhase = (prev + 1) % 3;
-        if (nextPhase === 1) {
-          // Generate new random offsets for first warped state
-          setOffsets(generateOffsets(1));
-          setOffsets2(generateOffsets(0.7));
-        }
-        return nextPhase;
-      });
-    }, cycleInterval);
-
-    return () => clearInterval(interval);
-  }, [cycleInterval, generateOffsets]);
-
-  // Get current offset based on animation phase
-  const getCurrentOffset = (tileId: number): TileOffset => {
-    if (animationPhase === 0) {
-      return { imageX: 0, imageY: 0, scale: 1, rotation: 0 };
-    } else if (animationPhase === 1) {
-      return offsets[tileId] || { imageX: 0, imageY: 0, scale: 1, rotation: 0 };
-    } else {
-      return offsets2[tileId] || { imageX: 0, imageY: 0, scale: 1, rotation: 0 };
-    }
-  };
-
-  const tileWidth = dimensions.width / gridSize;
-  const tileHeight = dimensions.height / gridSize;
-
-  // Generate tiles
-  const tiles = useMemo(() => {
-    const result: Array<{ id: number; row: number; col: number; x: number; y: number }> = [];
-    for (let row = 0; row < gridSize; row++) {
-      for (let col = 0; col < gridSize; col++) {
-        const index = row * gridSize + col;
-        result.push({
-          id: index,
-          row,
-          col,
-          x: col * tileWidth,
-          y: row * tileHeight,
-        });
-      }
-    }
-    return result;
-  }, [gridSize, tileWidth, tileHeight]);
+    if (!active) return;
+    let phase = 0;
+    const timer = window.setInterval(() => {
+      phase = (phase + 1) % 3;
+      const offsets = phase ? generateOffsets(count, (phase === 1 ? 1 : 0.7) * (desktopMotion ? 1 : 0.35)) : [];
+      setFrame({ phase, offsets: desktopMotion ? offsets : offsets.map(offset => ({ ...offset, scale: 1.08, rotation: 0 })) });
+    }, Math.max(cycleInterval, transitionDuration * 1000));
+    return () => window.clearInterval(timer);
+  }, [active, count, cycleInterval, transitionDuration, desktopMotion]);
 
   return (
     <div
       ref={containerRef}
-      className={`relative overflow-hidden ${className}`}
+      className={`${styles.root} ${className}`}
       role={alt ? 'img' : undefined}
       aria-label={alt || undefined}
+      data-animated={active ? 'true' : 'false'}
+      data-detail={desktopMotion ? 'full' : 'compact'}
+      data-warped={active && frame.phase !== 0 ? 'true' : 'false'}
+      style={{
+        '--grid-size': size,
+        '--duration': `${Math.max(0, transitionDuration)}s`,
+        '--overscan': overscan,
+      } as CSSProperties}
     >
-      {/* Background placeholder */}
-      <div className="absolute inset-0 bg-indigo-900/20" />
+      {/* Tiles reuse the decoded responsive source rather than the full original. */}
+      <div className={styles.base}>
+        <Image src={src} alt="" fill sizes="(min-width: 1280px) 560px, (min-width: 1024px) 45vw, 100vw" className={styles.image}
+          onLoad={event => setLoadedImage({ source: src, url: event.currentTarget.currentSrc })} />
+      </div>
 
-      {/* Tiles with glass-like warping - tiles stay fixed, image shifts within */}
-      {tiles.map((tile) => {
-        const offset = getCurrentOffset(tile.id);
-        const isWarped = animationPhase !== 0;
-
+      {active && loadedImage?.source === src && Array.from({ length: count }, (_, id) => {
+        const col = id % size;
+        const row = Math.floor(id / size);
+        const offset = frame.offsets[id] ?? ALIGNED;
+        const extra = (overscan - 1) / 2;
         return (
-          <div
-            key={tile.id}
-            className="absolute overflow-hidden"
-            style={{
-              width: tileWidth,
-              height: tileHeight,
-              left: tile.x,
-              top: tile.y,
-            }}
-          >
-            {/* Image slice - shifts within the fixed tile creating glass refraction effect */}
-            <motion.div
-              className="absolute"
-              style={{
-                width: dimensions.width * (1 + 2 * bleed),
-                height: dimensions.height * (1 + 2 * bleed),
-                left: -tile.x - dimensions.width * bleed,
-                top: -tile.y - dimensions.height * bleed,
-                backgroundImage: `url(${src})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center center',
-                transformOrigin: `${tile.x + dimensions.width * bleed + tileWidth / 2}px ${tile.y + dimensions.height * bleed + tileHeight / 2}px`,
-              }}
-              initial={false}
-              animate={{
-                x: offset.imageX * dimensions.width * 0.08,
-                y: offset.imageY * dimensions.height * 0.08,
-                scale: offset.scale,
-                rotate: offset.rotation,
-              }}
-              transition={{
-                duration: transitionDuration,
-                ease: [0.25, 0.1, 0.25, 1],
-              }}
-            />
-
-            {/* Chromatic aberration effect when warped */}
-            <motion.div
-              className="absolute inset-0 pointer-events-none mix-blend-screen"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,0,100,0.15) 0%, transparent 50%, rgba(0,200,255,0.15) 100%)',
-              }}
-              animate={{
-                opacity: isWarped ? 0.4 : 0,
-              }}
-              transition={{
-                duration: transitionDuration * 0.5,
-              }}
-            />
+          <div key={id} className={styles.tile} aria-hidden="true" style={{
+            width: `${100 / size}%`, height: `${100 / size}%`,
+            left: `${col * 100 / size}%`, top: `${row * 100 / size}%`,
+          }}>
+            <div className={styles.slice} style={{
+              width: `${size * overscan * 100}%`, height: `${size * overscan * 100}%`,
+              left: `${-(col + size * extra) * 100}%`, top: `${-(row + size * extra) * 100}%`,
+              backgroundImage: `url(${JSON.stringify(loadedImage.url)})`,
+              transformOrigin: `${(col + size * extra + 0.5) / (size * overscan) * 100}% ${(row + size * extra + 0.5) / (size * overscan) * 100}%`,
+              transform: `translate(${offset.imageX * 8 / overscan}%, ${offset.imageY * 8 / overscan}%) scale(${offset.scale}) rotate(${offset.rotation}deg)`,
+            }} />
           </div>
         );
       })}
-
-      {/* Grid lines overlay */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(94, 234, 212, 0.15) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(94, 234, 212, 0.15) 1px, transparent 1px)
-          `,
-          backgroundSize: `${100 / gridSize}% ${100 / gridSize}%`,
-        }}
-        animate={{
-          opacity: animationPhase === 0 ? 0.1 : 0.4,
-        }}
-        transition={{
-          duration: transitionDuration * 0.5,
-        }}
-      />
-
-
+      <div className={styles.grid} aria-hidden="true" />
     </div>
   );
-};
-
-export default CrackImage;
+}

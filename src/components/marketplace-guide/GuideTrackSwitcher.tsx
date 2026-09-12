@@ -7,6 +7,7 @@ import { localizedPath } from '@/lib/i18n-routing';
 import type { Language } from '@/lib/language';
 import JurisdictionBadge from './JurisdictionBadge';
 import styles from './MarketplaceGuide.module.css';
+import selector from '@/components/next/PillSelector.module.css';
 
 import type { GuideJurisdiction } from '@/lib/marketplace-guide';
 
@@ -49,14 +50,14 @@ export default function GuideTrackSwitcher({
       {tracks.length > 1 ? (
         <div className={styles.trackSwitcherRow}>
           <div
-            className={`${styles.trackSwitcher} backdrop-blur-xl`}
+            className={`${selector.control} backdrop-blur-xl`}
             role="tablist"
             aria-label={language === 'pl' ? 'Wybierz przewodnik' : 'Choose a guide'}
             /* The teal pill is one element sliding under the labels rather than a
                background swapped per button, so the movement reads as one control. */
             style={{ '--track-count': tracks.length, '--track-active': activeIndex } as React.CSSProperties}
           >
-            <span aria-hidden="true" className={styles.trackThumb} />
+            <span aria-hidden="true" className={selector.thumb} />
             {tracks.map((track) => (
               <button
                 key={track.key}
@@ -65,11 +66,11 @@ export default function GuideTrackSwitcher({
                 id={`track-tab-${track.key}`}
                 aria-selected={track.key === active}
                 aria-controls={`track-panel-${track.key}`}
-                className={track.key === active ? styles.trackTabActive : styles.trackTab}
+                className={track.key === active ? selector.active : selector.option}
                 onClick={() => setActive(track.key)}
               >
                 {track.shortTitle}
-                <span className={styles.trackTabCount}>{track.chapterCount}</span>
+                <span className={selector.count}>{track.chapterCount}</span>
               </button>
             ))}
           </div>
