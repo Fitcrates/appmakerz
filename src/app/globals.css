@@ -684,3 +684,70 @@
   border-radius: max(0px, calc(var(--border-radius) - 1px));
   z-index: 1;
 }
+
+/* Touch devices keep the frame without full-size animated masks/blending. */
+.border-glow-wrap:is([data-effects="static"], [data-effects="compact"]) .border-glow-card {
+  transform: none;
+  border-color: rgb(94 234 212 / 25%);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 20%);
+}
+
+.border-glow-wrap:is([data-effects="static"], [data-effects="compact"]) .border-glow-card::before,
+.border-glow-wrap:is([data-effects="static"], [data-effects="compact"]) .border-glow-card::after,
+.border-glow-wrap:is([data-effects="static"], [data-effects="compact"]) .edge-light {
+  display: none;
+}
+
+.border-glow-wrap:is([data-effects="static"], [data-effects="compact"]) .border-glow-offset {
+  transition: none;
+  transform: translate(calc(var(--offset-shift, 14px) * -1), calc(var(--offset-shift, 14px) * -1));
+}
+
+/* Four narrow compositor-animated lights replace the full-image moving masks. */
+.border-glow-trails { display: none; }
+.border-glow-wrap[data-effects="compact"] .border-glow-trails {
+  display: block;
+  position: absolute;
+  inset: -1px;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.border-glow-trails i {
+  position: absolute;
+  width: 30%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #5eead4, #ddfffb, transparent);
+  animation: border-trail-x var(--orbit-duration, 9s) linear infinite both paused;
+}
+.border-glow-wrap[data-effects="compact"][data-animate="true"] .border-glow-trails i { animation-play-state: running; }
+.border-glow-trails i:nth-child(1) { left: 0; top: 0; }
+.border-glow-trails i:nth-child(3) { right: 0; bottom: 0; animation-name: border-trail-x-reverse; animation-delay: calc(var(--orbit-duration, 9s) * -0.5); }
+.border-glow-trails i:nth-child(2), .border-glow-trails i:nth-child(4) {
+  width: 2px;
+  height: 30%;
+  background: linear-gradient(transparent, #5eead4, #ddfffb, transparent);
+  animation-name: border-trail-y;
+}
+.border-glow-trails i:nth-child(2) { right: 0; top: 0; animation-delay: calc(var(--orbit-duration, 9s) * -0.75); }
+.border-glow-trails i:nth-child(4) { left: 0; bottom: 0; animation-name: border-trail-y-reverse; animation-delay: calc(var(--orbit-duration, 9s) * -0.25); }
+@keyframes border-trail-x {
+  0% { transform: translateX(-100%); }
+  25%, 100% { transform: translateX(434%); }
+}
+@keyframes border-trail-x-reverse {
+  0% { transform: translateX(100%); }
+  25%, 100% { transform: translateX(-434%); }
+}
+@keyframes border-trail-y {
+  0% { transform: translateY(-100%); }
+  25%, 100% { transform: translateY(434%); }
+}
+@keyframes border-trail-y-reverse {
+  0% { transform: translateY(100%); }
+  25%, 100% { transform: translateY(-434%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .border-glow-trails i { animation: none; }
+}

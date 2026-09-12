@@ -129,84 +129,8 @@
   margin: 0 0 3.25rem;
 }
 
-.trackSwitcher {
-  position: relative;
-  display: grid;
-  /* Equal columns, or the sliding thumb cannot match both labels. */
-  grid-template-columns: repeat(var(--track-count, 2), minmax(0, 1fr));
-  width: fit-content;
-  gap: 0.25rem;
-  padding: 0.3rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 18px 40px rgba(0, 0, 0, 0.28);
-}
-
-.trackThumb {
-  position: absolute;
-  z-index: 0;
-  top: 0.3rem;
-  bottom: 0.3rem;
-  left: 0.3rem;
-  width: calc((100% - 0.6rem - 0.25rem * (var(--track-count, 2) - 1)) / var(--track-count, 2));
-  border-radius: 999px;
-  background: #5eead4;
-  box-shadow: 0 0 28px rgba(94, 234, 212, 0.28);
-  transform: translateX(calc(var(--track-active, 0) * (100% + 0.25rem)));
-  transition: transform 320ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.trackTab,
-.trackTabActive {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.7rem 1.5rem;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  cursor: pointer;
-  font-family: 'Oxanium', system-ui, sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  transition: color 220ms ease;
-}
-
-.trackTab { color: rgba(255, 255, 255, 0.66); }
-.trackTab:hover { color: #fff; }
-.trackTabActive { color: #0b1020; }
-
-.trackTab:focus-visible,
-.trackTabActive:focus-visible {
-  outline: 2px solid rgba(94, 234, 212, 0.65);
-  outline-offset: 3px;
-}
-
-.trackTabCount {
-  /* 12px text, so it has to clear 4.5:1 against the glass. */
-  color: rgba(255, 255, 255, 0.62);
-  font-family: 'IBM Plex Sans', system-ui, sans-serif;
-  font-size: 0.75rem;
-  font-variant-numeric: tabular-nums;
-  transition: color 220ms ease;
-}
-
-.trackTabActive .trackTabCount { color: rgba(11, 16, 32, 0.6); }
-
-@media (prefers-reduced-motion: reduce) {
-  .trackThumb { transition: none; }
-}
-
 @media (max-width: 480px) {
   .trackSwitcherRow { display: block; }
-  .trackSwitcher { width: 100%; }
-  .trackTab,
-  .trackTabActive { justify-content: center; padding: 0.7rem 0.9rem; font-size: 0.95rem; }
 }
 
 .trackHeader {

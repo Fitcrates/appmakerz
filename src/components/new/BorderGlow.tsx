@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useCallback, useEffect } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useElementActivity } from "@/hooks/useElementActivity";
 
 type GlowVars = Record<string, string>;
 
@@ -85,6 +87,9 @@ export default function BorderGlow({
   const pointerRef = useRef(false);
   const rafRef = useRef(0);
   const lastTsRef = useRef(0);
+  const interactive = useMediaQuery("(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)", true);
+  const active = useElementActivity(cardRef, !reducedMotion);
 
   const readPointer = useCallback((el: HTMLElement, clientX: number, clientY: number) => {
     const rect = el.getBoundingClientRect();
@@ -108,6 +113,8 @@ export default function BorderGlow({
   }, []);
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    // Touch scrolling must never trigger geometry reads or repaint the masks.
+    if (e.pointerType !== "mouse" || !active || !interactive) return;
     const card = cardRef.current;
     if (!card) return;
     const { proximity, angle } = readPointer(card, e.clientX, e.clientY);
@@ -116,24 +123,21 @@ export default function BorderGlow({
     angleRef.current = angle;
     card.style.setProperty("--edge-proximity", proximity.toFixed(3));
     card.style.setProperty("--cursor-angle", `${angle.toFixed(3)}deg`);
-  }, [readPointer]);
+  }, [active, interactive, readPointer]);
 
   const handlePointerLeave = useCallback(() => {
     pointerRef.current = false;
     lastTsRef.current = 0;
-  }, []);
+    if (animated && active) cardRef.current?.style.setProperty("--edge-proximity", `${idleProximity}`);
+  }, [animated, active, idleProximity]);
 
   useEffect(() => {
     const card = cardRef.current;
-    if (!animated || !card) return;
+    if (!animated || !active || !interactive || !card) return;
 
     card.classList.add("sweep-active");
     card.style.setProperty("--edge-proximity", `${idleProximity}`);
     card.style.setProperty("--cursor-angle", `${angleRef.current}deg`);
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return () => card.classList.remove("sweep-active");
-    }
 
     const step = (ts: number) => {
       if (!lastTsRef.current) lastTsRef.current = ts;
@@ -143,7 +147,6 @@ export default function BorderGlow({
       if (!pointerRef.current) {
         angleRef.current = (angleRef.current + (360 * dt) / (orbitDuration * 1000)) % 360;
         card.style.setProperty("--cursor-angle", `${angleRef.current.toFixed(2)}deg`);
-        card.style.setProperty("--edge-proximity", `${idleProximity}`);
       }
       rafRef.current = requestAnimationFrame(step);
     };
@@ -153,13 +156,16 @@ export default function BorderGlow({
     return () => {
       cancelAnimationFrame(rafRef.current);
       lastTsRef.current = 0;
+      pointerRef.current = false;
       card.classList.remove("sweep-active");
     };
-  }, [animated, orbitDuration, idleProximity]);
+  }, [animated, active, interactive, orbitDuration, idleProximity]);
 
   return (
     <div
       className={`border-glow-wrap ${className}`}
+      data-effects={reducedMotion ? "static" : interactive ? "full" : "compact"}
+      data-animate={active && animated ? "true" : "false"}
       style={{
         "--card-bg": backgroundColor,
         "--edge-sensitivity": edgeSensitivity,
@@ -168,6 +174,7 @@ export default function BorderGlow({
         "--cone-spread": coneSpread,
         "--fill-opacity": fillOpacity,
         "--offset-shift": `${offsetShift}px`,
+        "--orbit-duration": `${orbitDuration}s`,
         ...buildGlowVars(glowColor, glowIntensity),
         ...buildGradientVars(colors),
       } as React.CSSProperties}
@@ -178,9 +185,11 @@ export default function BorderGlow({
         ref={cardRef}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
+        onPointerCancel={handlePointerLeave}
         className="border-glow-card"
       >
-        <span className="edge-light" />
+        <span className="edge-light" aria-hidden="true" />
+        <span className="border-glow-trails" aria-hidden="true"><i /><i /><i /><i /></span>
         <div className="border-glow-inner">{children}</div>
       </div>
     </div>

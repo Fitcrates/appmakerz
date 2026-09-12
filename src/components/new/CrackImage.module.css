@@ -1,0 +1,57 @@
+.root {
+  position: relative;
+  overflow: hidden;
+  contain: paint;
+  background: #312e8133;
+}
+
+.base {
+  position: absolute;
+  width: calc(var(--overscan) * 100%);
+  height: calc(var(--overscan) * 100%);
+  left: calc((1 - var(--overscan)) * 50%);
+  top: calc((1 - var(--overscan)) * 50%);
+}
+
+.image { object-fit: cover; }
+.tile { position: absolute; overflow: hidden; }
+
+.slice {
+  position: absolute;
+  background-size: cover;
+  background-position: center;
+  transition: transform var(--duration) cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* CSS interpolates the desktop tint; compact mode skips these blend layers. */
+.tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, #ff006426, transparent 50%, #00c8ff26);
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity calc(var(--duration) * 0.5);
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(to right, #5eead426 1px, transparent 1px),
+    linear-gradient(to bottom, #5eead426 1px, transparent 1px);
+  background-size: calc(100% / var(--grid-size)) calc(100% / var(--grid-size));
+  opacity: 0.1;
+  transition: opacity calc(var(--duration) * 0.5);
+}
+
+.root[data-warped="true"] .tile::after,
+.root[data-warped="true"] .grid { opacity: 0.4; }
+
+.root[data-detail="compact"] .tile::after { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tile { display: none; }
+  .grid { transition: none; }
+}
