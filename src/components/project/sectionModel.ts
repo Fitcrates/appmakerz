@@ -243,6 +243,8 @@ export const SECTION_WIDTH_CLASS: Record<SectionWidth, string> = {
 
 export const SECTION_TONE_CLASS: Record<SectionTone, string> = {
   plain: '',
-  panel: 'bg-white/[0.02] border-y border-white/[0.06]',
+  // The tinted band read as a stray stripe on the indigo page; the value is
+  // kept so documents that chose it still render, now as plain.
+  panel: '',
   accent: 'bg-teal-300/[0.035] border-y border-teal-300/10',
 };

@@ -29,11 +29,13 @@ export default function ProjectFactBar({ project, language }: ProjectFactBarProp
   return (
     <section className="border-y border-white/10 bg-indigo-950">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* auto-fit keeps the last row full - an odd number of facts never
-            leaves a dangling empty cell. */}
-        <dl className="grid grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] gap-px bg-white/[0.07]">
+        {/* Flex + grow, not grid auto-fit: auto-fit only collapses empty
+            tracks while everything fits in one row. Once the facts wrap, the
+            column count is fixed and a short last row left the gap-px tint
+            showing as an empty cell. Here the leftover facts stretch to fill it. */}
+        <dl className="flex flex-wrap gap-px bg-white/[0.07]">
           {facts.map((fact, index) => (
-            <div key={`${fact.label}-${index}`} className="bg-indigo-950 px-5 py-6 lg:px-6 lg:py-7">
+            <div key={`${fact.label}-${index}`} className="min-w-0 grow basis-44 bg-indigo-950 px-5 py-6 lg:px-6 lg:py-7">
               <dt className="font-plex text-[11px] uppercase tracking-[0.25em] text-white/35">{fact.label}</dt>
               <dd className="mt-2 font-oxanium text-base font-light text-white lg:text-lg">{fact.value}</dd>
             </div>

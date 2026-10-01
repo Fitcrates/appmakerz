@@ -26,21 +26,7 @@ interface Service {
 const getServices = (
   t: typeof translations.en.services
 ): Service[] => [
-    {
-      number: t.items.shopify.number,
-      title: t.items.shopify.title,
-      punchline: t.items.shopify.punchline,
-      description: t.items.shopify.description,
-      href: "/uslugi/shopify-development",
-    },
-    {
-      number: t.items.websites.number,
-      title: t.items.websites.title,
-      punchline: t.items.websites.punchline,
-      description: t.items.websites.description,
-      href: "/uslugi/professional-website-development",
-    },
-    {
+  {
       number: t.items.ecommerce.number,
       title: t.items.ecommerce.title,
       punchline: t.items.ecommerce.punchline,
@@ -54,6 +40,22 @@ const getServices = (
       description: t.items.marketplace.description,
       href: "/uslugi/marketplace-multi-vendor-medusa-js",
     },
+    {
+      number: t.items.websites.number,
+      title: t.items.websites.title,
+      punchline: t.items.websites.punchline,
+      description: t.items.websites.description,
+      href: "/uslugi/professional-website-development",
+    },
+    {
+      number: t.items.shopify.number,
+      title: t.items.shopify.title,
+      punchline: t.items.shopify.punchline,
+      description: t.items.shopify.description,
+      href: "/uslugi/shopify-development",
+    },
+    
+    
     {
       number: t.items.ai.number,
       title: t.items.ai.title,

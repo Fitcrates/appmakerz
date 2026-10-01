@@ -32,7 +32,9 @@ export async function generateMetadata({ params }: LocalizedHomePageProps): Prom
   const path = localizedPath(language, '/');
   const canonical = absoluteUrl(path);
   const title = t.hero.metaTitle;
-  const description = t.hero.subtitle;
+  // Not the hero subtitle: that is on-page copy, and the meta description is
+  // where search results read which stack the work is built on.
+  const description = t.hero.metaDescription;
 
   return {
     title,

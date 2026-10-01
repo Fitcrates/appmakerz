@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 
     // Używamy zweryfikowanej domeny AppCrates
     const fromEmail = 'kontakt@appcrates.pl';
-    const toEmail = process.env.EMAIL_USER || 'appcratesdev@gmail.com';
+    const toEmail = process.env.EMAIL_USER || 'kontakt@appcrates.pl';
 
     const data = await resend.emails.send({
       from: `AppCrates Form <${fromEmail}>`,

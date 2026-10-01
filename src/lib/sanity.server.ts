@@ -394,6 +394,7 @@ export async function getProject(slug: string) {
       projectUrl,
       githubUrl,
       blogUrl,
+      articleLinks[]{ _key, label { en, pl }, url },
       publishedAt,
       updatedAt,
       _updatedAt,

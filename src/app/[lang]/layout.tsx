@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     default: 'AppCrates',
     template: '%s | AppCrates',
   },
-  description: 'AppCrates builds high-performance websites, web applications, AI tools, and headless e-commerce platforms with Next.js and React.',
+  description: 'AppCrates builds high-performance websites, web applications, AI tools, and headless e-commerce stores and marketplaces with Next.js, React and Medusa.js.',
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -96,7 +96,7 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
     "name": "AppCrates",
     "url": "https://appcrates.pl",
     "logo": "https://appcrates.pl/media/android-chrome-512x512.png",
-    "image": "https://appcrates.pl/media/default-og-image.png",
+    "image": `${siteUrl}/media/default-og-image-v2.png`,
     "description": "Strony internetowe, landing pages, specjalistyczne wdrażanie aplikacji Web i rozwiązań AI (RAG) w firmach. Modernizacje i migracje systemów na architekturę Next.js i TanStack. Audytowanie pod kątem WCAG / GDPR oraz projektowanie potężnych platform ecommerce i marketplace na Medusa.js i platform typy Headless.",
     "address": {
       "@type": "PostalAddress",
@@ -118,7 +118,10 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
     "founder": {
       "@type": "Person",
       "name": "Arkadiusz Wawrzyniak",
-      "url": "https://appcrates.pl/pl/about-me",
+      // Was hardcoded to /pl/about-me, which pointed the English pages' founder
+      // entity at a Polish URL that hreflang already declares as the other
+      // language's version of the same page.
+      "url": `${siteUrl}/${language}/about-me`,
       "jobTitle": "Fullstack Developer",
       "worksFor": { "@type": "Organization", "name": "AppCrates" },
       "sameAs": [
@@ -127,6 +130,7 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
       ],
       "knowsAbout": [
         "Medusa.js",
+        "MercurJS",
         "Marketplace development",
         "Headless commerce",
         "Next.js",
@@ -145,7 +149,7 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
       "WCAG & GDPR Auditing"
     ],
     "knowsAbout": [
-      "Artificial Intelligence", "RAG", "LLM", "Next.js", "React", "TanStack", "Medusa.js",
+      "Artificial Intelligence", "RAG", "LLM", "Next.js", "React", "TanStack", "Medusa.js", "MercurJS",
       "Headless Commerce", "WCAG Web Accessibility", "Typescript", "Node.js"
     ]
   };

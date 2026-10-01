@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { urlFor } from '@/lib/sanity.image';
 import { getImageAlt } from '@/lib/image-alt';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Transition } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
-import { translations } from '../../translations/translations';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useImageLightbox, ZoomHint, type LightboxItem } from '@/components/media/ImageLightbox';
 
 interface GalleryImage {
   _key: string;
@@ -57,21 +56,6 @@ const slideTransition: Transition = {
 };
 
 /* ------------------------------------------------------------------ */
-/*  Lightbox image transition variants                                 */
-/* ------------------------------------------------------------------ */
-const lightboxSlideVariants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 300 : -300,
-    opacity: 0,
-  }),
-  center: { x: 0, opacity: 1 },
-  exit: (direction: number) => ({
-    x: direction > 0 ? -300 : 300,
-    opacity: 0,
-  }),
-};
-
-/* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 export default function PortableTextGallery({ value }: PortableTextGalleryProps) {
@@ -80,7 +64,6 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
   const params = useParams();
   const lang = (params?.lang as 'en' | 'pl') || 'pl';
 
-  const clickToZoomText = translations[lang]?.projects?.clickToZoom || (lang === 'pl' ? 'Kliknij, aby powiększyć' : 'Click to zoom');
   const galleryImageAlt = (image: GalleryImage, index: number, context: string) => getImageAlt(
     image,
     image.caption || `${context} ${index + 1}`,
@@ -92,26 +75,17 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
   const [isPaused, setIsPaused] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  /* ---- Lightbox state ---- */
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
-  const [lightboxDirection, setLightboxDirection] = useState(0);
-  const [mounted, setMounted] = useState(false);
-  const [scale, setScale] = useState(1);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const constraintsRef = useRef<HTMLDivElement>(null);
-  const thumbnailStripRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-    if (typeof window !== 'undefined') {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      const handleResize = () => {
-        setDimensions({ width: window.innerWidth, height: window.innerHeight });
-      };
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
-    }
-  }, []);
+  /* ---- Lightbox: the same zoom as the project pages ---- */
+  const lightboxItems = useMemo<LightboxItem[]>(
+    () =>
+      images.map((image, index) => ({
+        fullSrc: urlFor(image).width(2400).auto('format').quality(85).fit('max').url(),
+        alt: galleryImageAlt(image, index, 'Gallery image'),
+        caption: image.caption,
+      })),
+    [images]
+  );
+  const { open: openZoom, isOpen: lightboxOpen, lightbox } = useImageLightbox(lightboxItems, lang);
 
   /* ---- Carousel navigation ---- */
   const goTo = useCallback(
@@ -138,10 +112,12 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
 
   /* ---- Autoplay ---- */
   useEffect(() => {
-    if (display !== 'carousel' || images.length <= 1 || isPaused) return;
+    // Held while zoomed too: the slide must still be there for the zoom to
+    // shrink back into.
+    if (display !== 'carousel' || images.length <= 1 || isPaused || lightboxOpen) return;
     const timer = setInterval(goNext, 5000);
     return () => clearInterval(timer);
-  }, [display, images.length, isPaused, goNext]);
+  }, [display, images.length, isPaused, lightboxOpen, goNext]);
 
   /* ---- Keyboard navigation for carousel ---- */
   useEffect(() => {
@@ -158,54 +134,8 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
     return () => el.removeEventListener('keydown', handleKey);
   }, [display, goNext, goPrev]);
 
-  /* ---- Lightbox keyboard & escape ---- */
-  const handleLightboxPrev = useCallback(() => {
-    if (selectedImageIndex !== null && selectedImageIndex > 0) {
-      setLightboxDirection(-1);
-      setSelectedImageIndex(selectedImageIndex - 1);
-    }
-  }, [selectedImageIndex]);
-
-  const handleLightboxNext = useCallback(() => {
-    if (selectedImageIndex !== null && selectedImageIndex < images.length - 1) {
-      setLightboxDirection(1);
-      setSelectedImageIndex(selectedImageIndex + 1);
-    }
-  }, [selectedImageIndex, images.length]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setSelectedImageIndex(null);
-      if (e.key === 'ArrowLeft' && selectedImageIndex !== null) handleLightboxPrev();
-      if (e.key === 'ArrowRight' && selectedImageIndex !== null) handleLightboxNext();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedImageIndex, handleLightboxPrev, handleLightboxNext]);
-
-  useEffect(() => {
-    setScale(1);
-  }, [selectedImageIndex]);
-
-  /* ---- Scroll active thumbnail into view ---- */
-  useEffect(() => {
-    if (selectedImageIndex === null || !thumbnailStripRef.current) return;
-    const strip = thumbnailStripRef.current;
-    const thumb = strip.children[selectedImageIndex] as HTMLElement | undefined;
-    if (thumb) {
-      thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    }
-  }, [selectedImageIndex]);
-
   const openLightbox = (idx: number) => {
-    if (!zoom) return;
-    setLightboxDirection(0);
-    setSelectedImageIndex(idx);
-  };
-
-  const toggleZoom = (e: React.MouseEvent | React.TouchEvent) => {
-    e.stopPropagation();
-    setScale(s => s === 1 ? 2.5 : 1);
+    if (zoom) openZoom(idx);
   };
 
   /* ---- Helpers ---- */
@@ -333,8 +263,9 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
                   src={urlFor(images[activeIndex]).width(1200).auto('format').quality(80).url()}
                   alt={galleryImageAlt(images[activeIndex], activeIndex, 'Gallery image')}
                   fill
-                  className={`object-cover ${zoom ? 'cursor-pointer' : ''}`}
+                  className={`object-cover ${zoom ? 'cursor-zoom-in' : ''}`}
                   onClick={() => openLightbox(activeIndex)}
+                  data-zoom-src={zoom ? lightboxItems[activeIndex]?.fullSrc : undefined}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
                   priority={activeIndex === 0}
                 />
@@ -426,8 +357,9 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
               fill={aspectRatio !== 'auto'}
               width={aspectRatio === 'auto' ? 1200 : undefined}
               height={aspectRatio === 'auto' ? 900 : undefined}
-              className={`object-cover ${aspectRatio === 'auto' ? 'w-full h-auto block' : ''} ${zoom ? 'cursor-pointer hover:scale-[1.01] transition-transform duration-500' : ''}`}
+              className={`object-cover ${aspectRatio === 'auto' ? 'w-full h-auto block' : ''} ${zoom ? 'cursor-zoom-in hover:scale-[1.01] transition-transform duration-500' : ''}`}
               onClick={() => openLightbox(idx)}
+              data-zoom-src={zoom ? lightboxItems[idx]?.fullSrc : undefined}
               sizes={getGridSizes()}
             />
             {img.caption && (
@@ -441,14 +373,6 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
     );
   };
 
-  /* ---- Drag boundaries for lightbox zoom ---- */
-  const dragBoundaries = {
-    left: -((dimensions.width * scale - dimensions.width) / 2) - 80,
-    right: ((dimensions.width * scale - dimensions.width) / 2) + 80,
-    top: -((dimensions.height * scale - dimensions.height) / 2) - 80,
-    bottom: ((dimensions.height * scale - dimensions.height) / 2) + 80,
-  };
-
   /* ================================================================ */
   /*  MAIN RETURN                                                      */
   /* ================================================================ */
@@ -458,149 +382,10 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
         {renderMedia()}
 
         {/* Caption below the gallery telling the user they can click to zoom */}
-        {zoom && images.length > 0 && (
-          <div className="w-full text-center mt-[-10px] mb-8 text-xs sm:text-sm text-white/70 flex items-center justify-center gap-1.5 font-light">
-            <ZoomIn className="w-3.5 h-3.5" />
-            <span>{clickToZoomText}</span>
-          </div>
-        )}
+        {zoom && images.length > 0 && <ZoomHint language={lang} className="-mt-2.5 mb-8" />}
       </div>
 
-      {/* ============================================================ */}
-      {/*  LIGHTBOX MODAL (React Portal)                                */}
-      {/* ============================================================ */}
-      {mounted && createPortal(
-        <AnimatePresence>
-          {selectedImageIndex !== null && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-md flex flex-col items-center justify-center select-none touch-none"
-              onClick={() => setSelectedImageIndex(null)}
-            >
-              {/* Close and zoom controls at the top */}
-              <div className="absolute top-4 sm:top-6 right-4 sm:right-6 flex items-center gap-3 z-[100000]">
-                <button
-                  onClick={toggleZoom}
-                  className="p-2.5 sm:p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors border border-white/10"
-                  title={scale > 1 ? "Zoom Out" : "Zoom In"}
-                >
-                  {scale > 1 ? <ZoomOut className="w-5 h-5" /> : <ZoomIn className="w-5 h-5" />}
-                </button>
-                <button
-                  onClick={() => setSelectedImageIndex(null)}
-                  className="p-2.5 sm:p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors border border-white/10"
-                  title="Close"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Navigation arrows */}
-              {images.length > 1 && scale === 1 && (
-                <>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleLightboxPrev(); }}
-                    className={`absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 p-3.5 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-[100000] border border-white/5 ${selectedImageIndex === 0 ? 'opacity-20 cursor-not-allowed' : ''}`}
-                    disabled={selectedImageIndex === 0}
-                  >
-                    <ChevronLeft className="w-6 h-6" />
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); handleLightboxNext(); }}
-                    className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 p-3.5 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors z-[100000] border border-white/5 ${selectedImageIndex === images.length - 1 ? 'opacity-20 cursor-not-allowed' : ''}`}
-                    disabled={selectedImageIndex === images.length - 1}
-                  >
-                    <ChevronRight className="w-6 h-6" />
-                  </button>
-                </>
-              )}
-
-              {/* Main lightbox image with slide+fade transition */}
-              <div
-                ref={constraintsRef}
-                className="w-full flex-1 flex items-center justify-center overflow-hidden p-4 sm:p-12"
-              >
-                <AnimatePresence initial={false} custom={lightboxDirection} mode="popLayout">
-                  <motion.div
-                    key={selectedImageIndex}
-                    custom={lightboxDirection}
-                    variants={lightboxSlideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                    drag={scale > 1}
-                    dragConstraints={dragBoundaries}
-                    dragElastic={0.15}
-                    dragMomentum={false}
-                    style={{ scale }}
-                    className={`relative w-full h-full max-w-5xl max-h-[75vh] ${scale > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-zoom-in'}`}
-                    onClick={toggleZoom}
-                  >
-                    <Image
-                      src={urlFor(images[selectedImageIndex]).width(1920).auto('format').quality(90).url()}
-                      alt={galleryImageAlt(images[selectedImageIndex], selectedImageIndex, 'Zoomed gallery image')}
-                      fill
-                      className="object-contain pointer-events-none"
-                      priority
-                      sizes="100vw"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* Caption */}
-              {images[selectedImageIndex].caption && scale === 1 && (
-                <div className="absolute bottom-24 left-6 right-6 text-center z-[100000] pointer-events-none">
-                  <p className="text-white/80 bg-black/60 inline-block px-4 py-2 rounded-lg backdrop-blur-md text-sm border border-white/10 font-light">
-                    {images[selectedImageIndex].caption}
-                  </p>
-                </div>
-              )}
-
-              {/* Thumbnail strip */}
-              {images.length > 1 && scale === 1 && (
-                <div
-                  className="absolute bottom-0 inset-x-0 z-[100000] bg-gradient-to-t from-black/80 via-black/40 to-transparent pt-6 pb-4 px-4"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div
-                    ref={thumbnailStripRef}
-                    className="flex items-center justify-center gap-2 overflow-x-auto scrollbar-none max-w-3xl mx-auto pb-1"
-                  >
-                    {images.map((img, idx) => (
-                      <button
-                        key={img._key}
-                        onClick={() => {
-                          setLightboxDirection(idx > selectedImageIndex! ? 1 : -1);
-                          setSelectedImageIndex(idx);
-                        }}
-                        className={`relative flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden transition-all duration-300 border-2 ${
-                          idx === selectedImageIndex
-                            ? 'border-teal-300 shadow-[0_0_12px_rgba(94,234,212,0.35)] scale-105'
-                            : 'border-transparent opacity-50 hover:opacity-80 hover:border-white/20'
-                        }`}
-                        aria-label={`View image ${idx + 1}`}
-                      >
-                        <Image
-                          src={urlFor(img).width(120).height(120).auto('format').quality(60).fit('crop').url()}
-                          alt={galleryImageAlt(img, idx, 'Gallery thumbnail')}
-                          fill
-                          className="object-cover"
-                          sizes="64px"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
+      {lightbox}
     </>
   );
 }
