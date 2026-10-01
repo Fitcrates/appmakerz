@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import FaqAccordionList from '@/components/next/FaqAccordionList';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
@@ -14,6 +15,7 @@ import TechChips from '@/components/new/TechChips';
 import ServiceCtaNew from '@/components/new/ServiceCtaNew';
 import HubMedia from '@/components/new/HubMedia';
 import { urlFor } from '@/lib/sanity.server';
+import { getImageAlt } from '@/lib/image-alt';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
 import type { Language } from '@/lib/language';
@@ -66,6 +68,9 @@ export default function HubLanding({
   const integrations = getLocalizedArray<ServiceIntegration>(landing.integrations, language);
   const faq = getLocalizedArray<LocalizedFaqItem>(landing.faq, language);
   const technologies = Array.isArray(landing.technologies) ? landing.technologies : [];
+  const heroImageUrl = landing.heroImage?.asset ? urlFor(landing.heroImage).width(1600).auto('format').url() : '';
+  const heroImageAlt = getImageAlt(landing.heroImage, title);
+  const heroImageAspect = croppedAspect(landing.heroImage);
 
   // Sanity image refs are resolved once here, in the server component, so the
   // media slots stay plain presentational children.
@@ -82,66 +87,83 @@ export default function HubLanding({
 
   return (
     <main className="min-h-screen bg-indigo-950">
-      {/* No hero image: both service landings run one, so dropping it here is
-          what tells a returning visitor within a second that this page has a
-          different job. */}
+      {/* The hero image is shown whole beside the title, not as a dimmed
+          backdrop like on the service landings: on the hub it is a finished
+          illustration with its own lettering, which a backdrop would wash out
+          and set against the h1. */}
       <section className="relative flex items-end overflow-hidden pt-40 pb-20 lg:pt-48 lg:pb-28">
         <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/30 to-indigo-950" />
         <HeroPulsePath />
 
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 flex items-center gap-2 overflow-hidden font-plex text-sm text-white/70">
-            <PrefetchLink href={localizedPath(language, '/')} className="transition-colors hover:text-teal-300">
-              {language === 'pl' ? 'Strona główna' : 'Home'}
-            </PrefetchLink>
-            <span className="text-white/30">/</span>
-            <PrefetchLink href={localizedPath(language, '/#services')} className="transition-colors hover:text-teal-300">
-              {language === 'pl' ? 'Usługi' : 'Services'}
-            </PrefetchLink>
-            <span className="text-white/30">/</span>
-            <span className="max-w-[250px] truncate text-white/60 sm:max-w-none">{title}</span>
-          </div>
+          <div className={heroImageUrl ? 'grid items-center gap-12 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:gap-14' : ''}>
+            <div className="min-w-0">
+              <div className="mb-8 flex items-center gap-2 overflow-hidden font-plex text-sm text-white/70">
+                <PrefetchLink href={localizedPath(language, '/')} className="whitespace-nowrap transition-colors hover:text-teal-300">
+                  {language === 'pl' ? 'Strona główna' : 'Home'}
+                </PrefetchLink>
+                <span className="text-white/30">/</span>
+                <PrefetchLink href={localizedPath(language, '/#services')} className="whitespace-nowrap transition-colors hover:text-teal-300">
+                  {language === 'pl' ? 'Usługi' : 'Services'}
+                </PrefetchLink>
+                <span className="text-white/30">/</span>
+                <span className="max-w-[250px] truncate text-white/60 sm:max-w-none">{title}</span>
+              </div>
 
-          <span className="font-plex text-xs uppercase tracking-[0.3em] text-teal-300/80">{eyebrow}</span>
+              <span className="font-plex text-xs uppercase tracking-[0.3em] text-teal-300/80">{eyebrow}</span>
 
-          <div className="max-w-4xl">
-            <BurnSpotlightText
-              as="h1"
-              className="font-oxanium text-4xl font-light leading-tight text-white sm:text-5xl lg:text-7xl"
-              glowSize={200}
-              baseDelay={200}
-              charDelay={25}
-            >
-              {title}
-            </BurnSpotlightText>
-          </div>
+              <div className="max-w-4xl">
+                <BurnSpotlightText
+                  as="h1"
+                  className={`font-oxanium text-4xl font-light leading-tight text-white sm:text-5xl lg:text-7xl ${heroImageUrl ? 'xl:text-6xl' : ''}`}
+                  glowSize={200}
+                  baseDelay={200}
+                  charDelay={25}
+                >
+                  {title}
+                </BurnSpotlightText>
+              </div>
 
-          {intro ? (
-            <div className="mt-8 max-w-2xl">
-              <SpotlightText
-                as="p"
-                className="font-plex text-lg font-light leading-relaxed text-white/60 sm:text-xl"
-                glowSize={150}
-              >
-                {intro}
-              </SpotlightText>
+              {intro ? (
+                <div className="mt-8 max-w-2xl">
+                  <SpotlightText
+                    as="p"
+                    className="font-plex text-lg font-light leading-relaxed text-white/60 sm:text-xl"
+                    glowSize={150}
+                  >
+                    {intro}
+                  </SpotlightText>
+                </div>
+              ) : null}
+
+              {heroImageUrl ? (
+                <div className="mt-10 xl:hidden">
+                  <HubHeroImage src={heroImageUrl} alt={heroImageAlt} aspect={heroImageAspect} />
+                </div>
+              ) : null}
+
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+                <PrefetchLink
+                  href={localizedPath(language, '/#contact')}
+                  className="inline-block bg-teal-300 px-8 py-4 text-center font-normal text-indigo-950 transition-colors hover:bg-teal-200"
+                >
+                  {ctaLabel}
+                </PrefetchLink>
+                {ctaSecondaryLabel ? (
+                  <PrefetchLink
+                    href={localizedPath(language, '/#projects')}
+                    className="inline-block border border-white/15 px-8 py-4 text-center text-white transition-colors hover:border-teal-300/50 hover:text-teal-300"
+                  >
+                    {ctaSecondaryLabel}
+                  </PrefetchLink>
+                ) : null}
+              </div>
             </div>
-          ) : null}
 
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <PrefetchLink
-              href={localizedPath(language, '/#contact')}
-              className="inline-block bg-teal-300 px-8 py-4 text-center font-normal text-indigo-950 transition-colors hover:bg-teal-200"
-            >
-              {ctaLabel}
-            </PrefetchLink>
-            {ctaSecondaryLabel ? (
-              <PrefetchLink
-                href={localizedPath(language, '/#projects')}
-                className="inline-block border border-white/15 px-8 py-4 text-center text-white transition-colors hover:border-teal-300/50 hover:text-teal-300"
-              >
-                {ctaSecondaryLabel}
-              </PrefetchLink>
+            {heroImageUrl ? (
+              <div className="hidden min-w-0 xl:block">
+                <HubHeroImage src={heroImageUrl} alt={heroImageAlt} aspect={heroImageAspect} />
+              </div>
             ) : null}
           </div>
         </div>
@@ -213,5 +235,30 @@ export default function HubLanding({
         }
       />
     </main>
+  );
+}
+
+/**
+ * Width / height of the image as cropped in the Studio, read from the asset
+ * ref (image-<id>-<w>x<h>-<ext>). The frame takes that shape, so the crop the
+ * editor chose is shown as is instead of being cut down again to 16:9.
+ */
+function croppedAspect(image: unknown): number {
+  const value = image as
+    | { asset?: { _ref?: string }; crop?: { top?: number; bottom?: number; left?: number; right?: number } }
+    | undefined;
+  const match = value?.asset?._ref?.match(/-(\d+)x(\d+)-[a-z]+$/);
+  if (!match) return 16 / 9;
+  const crop = value?.crop ?? {};
+  const width = Number(match[1]) * (1 - (crop.left ?? 0) - (crop.right ?? 0));
+  const height = Number(match[2]) * (1 - (crop.top ?? 0) - (crop.bottom ?? 0));
+  return width > 0 && height > 0 ? width / height : 16 / 9;
+}
+
+function HubHeroImage({ src, alt, aspect }: { src: string; alt: string; aspect: number }) {
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-white/10" style={{ aspectRatio: aspect }}>
+      <Image src={src} alt={alt} unoptimized fill priority sizes="(max-width: 1279px) calc(100vw - 32px), 720px" className="object-cover" />
+    </div>
   );
 }
