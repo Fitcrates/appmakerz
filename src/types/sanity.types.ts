@@ -77,7 +77,15 @@ export interface Project {
   projectUrl?: string;
   githubUrl?: string;
   blogUrl?: string;
+  articleLinks?: ProjectArticleLink[];
   publishedAt: string;
+}
+
+/** A link to coverage published somewhere other than this site. */
+export interface ProjectArticleLink {
+  _key?: string;
+  label?: { en?: string; pl?: string };
+  url?: string;
 }
 
 // Portable Text component types

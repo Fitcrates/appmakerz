@@ -41,6 +41,7 @@
         "npm:lucide-react@0.575",
         "npm:netlify-cli@^26.0.2",
         "npm:next@^16.3.0",
+        "npm:playwright@^1.63.0",
         "npm:postcss@^8.5.10",
         "npm:prismjs@^1.30.0",
         "npm:react-dom@^19.2.4",

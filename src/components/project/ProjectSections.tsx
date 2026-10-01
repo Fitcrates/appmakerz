@@ -3,12 +3,15 @@ import { ArrowUpRight, Check, Quote as QuoteIcon } from 'lucide-react';
 import FaqAccordionList from '@/components/next/FaqAccordionList';
 import { createProjectPortableTextComponents } from '@/components/project/ProjectPortableText';
 import { TechBadgeList } from '@/components/project/TechBadge';
+import ZoomableImage, { type LightboxItem } from '@/components/media/ZoomableImage';
+import { ZoomHint } from '@/components/media/ImageLightbox';
 import {
   SECTION_TONE_CLASS,
   SECTION_WIDTH_CLASS,
   type ProjectSection,
   type SanityImageValue,
   type SectionItem,
+  type SectionWidth,
 } from '@/components/project/sectionModel';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { getImageAlt } from '@/lib/image-alt';
@@ -63,13 +66,14 @@ function SectionFrame({
 }) {
   const eyebrow = getLocalizedText(section.eyebrow, language);
   const heading = SELF_HEADED.has(section._type) ? '' : getLocalizedText(section.heading, language);
+  const width = atLeast(section.width, minimumWidth(section));
 
   return (
     <section
       id={section.anchor}
       className={`scroll-mt-24 py-14 lg:py-20 ${SECTION_TONE_CLASS[section.tone] || ''}`}
     >
-      <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${SECTION_WIDTH_CLASS[section.width] || SECTION_WIDTH_CLASS.narrow}`}>
+      <div className={`mx-auto px-4 sm:px-6 lg:px-8 ${SECTION_WIDTH_CLASS[width] || SECTION_WIDTH_CLASS.narrow}`}>
         {eyebrow || heading ? (
           <header className="mb-10 lg:mb-12">
             {eyebrow ? (
@@ -100,6 +104,52 @@ function SectionFrame({
       </div>
     </section>
   );
+}
+
+/**
+ * Layouts that split the row into columns. In the narrow reading measure
+ * (max-w-3xl) a screenshot next to text, or screenshots side by side, end up
+ * too small to read, so these get a wider container whatever the section was
+ * set to. A screenshot beside text and a row of three take the full width:
+ * dashboards are dense, and anything less shrinks them to thumbnails.
+ */
+function minimumWidth(section: ProjectSection): SectionWidth {
+  if (section._type === 'projectSplitFeature' && section.media?.asset?._ref) {
+    return 'full';
+  }
+  if (section._type === 'projectMediaBlock') {
+    if (section.columns === 3) return 'full';
+    if (section.columns === 2) return 'wide';
+  }
+  return 'narrow';
+}
+
+const WIDTH_ORDER: SectionWidth[] = ['narrow', 'wide', 'full'];
+
+function atLeast(width: SectionWidth, minimum: SectionWidth): SectionWidth {
+  return WIDTH_ORDER.indexOf(width) >= WIDTH_ORDER.indexOf(minimum) ? width : minimum;
+}
+
+/**
+ * Card rows drawn with 1px hairlines: the container's tint shows through a
+ * gap-px between cells. With a fixed CSS grid, a last row shorter than the
+ * column count left that tint showing as an empty, lighter cell. Flex with
+ * grow lets the leftover cards share the whole last row instead. Each basis
+ * subtracts the hairlines in its row (columns - 1 pixels).
+ */
+const HAIRLINE_ROW = 'flex flex-wrap gap-px';
+const HAIRLINE_CELL = 'min-w-0 grow';
+const HALF_BASIS = 'basis-full sm:basis-[calc((100%-1px)/2)]';
+const METRIC_LG_BASIS: Record<number, string> = {
+  2: 'lg:basis-[calc((100%-1px)/2)]',
+  3: 'lg:basis-[calc((100%-2px)/3)]',
+  4: 'lg:basis-[calc((100%-3px)/4)]',
+  5: 'lg:basis-[calc((100%-4px)/5)]',
+};
+
+/** Large rendition for the lightbox; only fetched once it opens. */
+function lightboxSrc(image: SanityImageValue): string {
+  return urlFor(image).width(2400).auto('format').quality(85).fit('max').url();
 }
 
 /* ── Dispatcher ─────────────────────────────────────────────────────────── */
@@ -179,28 +229,32 @@ function SplitFeatureSection({
   const body = getLocalizedArray<PortableTextBlock>(section.body, language);
   const hasMedia = Boolean(section.media?.asset?._ref);
   const mediaFirst = section.mediaPosition === 'left';
+  const alt = getImageAlt(section.media, getLocalizedText(section.heading, language));
 
   if (!hasMedia) {
     return body.length ? <PortableText value={body} components={components} /> : null;
   }
 
   return (
-    <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-      <div className={`lg:col-span-7 ${mediaFirst ? 'lg:order-2' : ''}`}>
+    // The screenshot gets the larger share: the text beside it is a short
+    // list, the picture is what has to be read.
+    <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+      <div className={`lg:col-span-5 ${mediaFirst ? 'lg:order-2' : ''}`}>
         <PortableText value={body} components={components} />
       </div>
 
-      <figure className={`lg:col-span-5 ${mediaFirst ? 'lg:order-1' : ''} ${section.sticky === false ? '' : 'lg:sticky lg:top-28'}`}>
-        <img
-          src={urlFor(section.media).width(900).auto('format').quality(80).fit('max').url()}
-          alt={getImageAlt(section.media, getLocalizedText(section.heading, language))}
-          className="w-full h-auto border border-white/10"
-          loading="lazy"
-          decoding="async"
+      <figure className={`lg:col-span-7 ${mediaFirst ? 'lg:order-1' : ''} ${section.sticky === false ? '' : 'lg:sticky lg:top-28'}`}>
+        <ZoomableImage
+          src={urlFor(section.media).width(1600).auto('format').quality(80).fit('max').url()}
+          alt={alt}
+          className="w-full h-auto rounded-xl border border-white/10"
+          language={language}
+          group={[{ fullSrc: lightboxSrc(section.media), alt, caption: section.media?.caption }]}
         />
         {section.media?.caption ? (
           <figcaption className="mt-3 text-sm text-white/45 font-plex">{section.media.caption}</figcaption>
         ) : null}
+        <ZoomHint language={language} className="mt-3" />
       </figure>
     </div>
   );
@@ -214,17 +268,21 @@ function BulletGridSection({ section, language }: { section: ProjectSection; lan
     return null;
   }
 
-  const columns = section.columns === 4 ? 'sm:grid-cols-2 lg:grid-cols-4' : section.columns === 3 ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2';
+  const itemBasis = section.columns === 4
+    ? `${HALF_BASIS} lg:basis-[calc((100%-3px)/4)]`
+    : section.columns === 3
+      ? `${HALF_BASIS} lg:basis-[calc((100%-2px)/3)]`
+      : HALF_BASIS;
 
   return (
     <>
       {intro ? <p className="mb-10 max-w-2xl text-white/70 font-light font-plex text-lg leading-relaxed">{intro}</p> : null}
 
-      <div className={`grid ${columns} gap-px bg-white/[0.06] border border-white/[0.06]`}>
+      <div className={`${HAIRLINE_ROW} bg-white/[0.06] border border-white/[0.06]`}>
         {items.map((item, index) => (
           <div
             key={item._key || index}
-            className="group relative bg-indigo-950 p-6 lg:p-8 transition-colors duration-500 hover:bg-white/[0.03]"
+            className={`group relative ${HAIRLINE_CELL} ${itemBasis} bg-indigo-950 p-6 lg:p-8 transition-colors duration-500 hover:bg-white/[0.03]`}
           >
             <div className="absolute top-0 left-0 h-px w-0 bg-teal-300/60 transition-all duration-500 group-hover:w-12" />
             <div className="absolute top-0 left-0 w-px h-0 bg-teal-300/60 transition-all duration-500 group-hover:h-12" />
@@ -256,8 +314,23 @@ function MediaSection({ section, language }: { section: ProjectSection; language
     : [];
   const caption = getLocalizedText(section.caption, language);
   const videoUrl: string = section.videoUrl || '';
-  const isInlineVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(videoUrl);
-  const columns = section.columns === 3 ? 'sm:grid-cols-3' : section.columns === 2 ? 'sm:grid-cols-2' : 'grid-cols-1';
+  const isInlineVideo = isInlineVideoUrl(videoUrl);
+  const videoMobileUrl: string = isInlineVideoUrl(section.videoMobileUrl) ? section.videoMobileUrl : '';
+  const posterUrl = section.videoPoster?.asset?._ref
+    ? urlFor(section.videoPoster).width(1600).auto('format').quality(80).fit('max').url()
+    : undefined;
+  // Flex + grow rather than a fixed grid: a last row with fewer images than
+  // columns stretches to fill it instead of leaving a hole (gap-4 = 1rem).
+  const itemBasis = section.columns === 3
+    ? 'basis-full sm:basis-[calc((100%-2rem)/3)]'
+    : section.columns === 2
+      ? 'basis-full sm:basis-[calc((100%-1rem)/2)]'
+      : 'basis-full';
+  const lightboxGroup: LightboxItem[] = images.map((image) => ({
+    fullSrc: lightboxSrc(image),
+    alt: getImageAlt(image, image?.caption || 'Project image'),
+    caption: image?.caption,
+  }));
 
   if (!images.length && !videoUrl) {
     return null;
@@ -266,20 +339,43 @@ function MediaSection({ section, language }: { section: ProjectSection; language
   return (
     <figure>
       {isInlineVideo ? (
-        <div className="border border-white/10 bg-black/40">
-          <video className="w-full" controls preload="metadata" playsInline>
-            <source src={videoUrl} />
+        <div className="overflow-hidden rounded-xl border border-white/10 bg-black/40">
+          {/* preload="none": no video byte is fetched until the visitor presses
+              play, the poster is all the page loads. aspect-video reserves the
+              box before the poster arrives, so the layout does not jump. */}
+          <video
+            className="aspect-video w-full object-contain"
+            controls
+            preload="none"
+            playsInline
+            poster={posterUrl}
+            aria-label={caption || getLocalizedText(section.heading, language) || undefined}
+          >
+            {videoMobileUrl ? (
+              <source src={videoMobileUrl} type={videoMimeType(videoMobileUrl)} media="(max-width: 767px)" />
+            ) : null}
+            <source src={videoUrl} type={videoMimeType(videoUrl)} />
           </video>
         </div>
       ) : null}
 
       {images.length ? (
-        <div className={`grid ${columns} gap-4 ${isInlineVideo ? 'mt-4' : ''}`}>
+        <div className={`flex flex-wrap gap-4 ${isInlineVideo ? 'mt-4' : ''}`}>
           {images.map((image, index) => (
-            <MediaFrame key={image._key || index} image={image} framed={section.frame === 'browser'} />
+            <div key={image._key || index} className={`min-w-0 grow ${itemBasis}`}>
+              <MediaFrame
+                image={image}
+                framed={section.frame === 'browser'}
+                language={language}
+                group={lightboxGroup}
+                index={index}
+              />
+            </div>
           ))}
         </div>
       ) : null}
+
+      {images.length ? <ZoomHint language={language} className="mt-4" /> : null}
 
       {!isInlineVideo && videoUrl ? (
         <a
@@ -298,20 +394,46 @@ function MediaSection({ section, language }: { section: ProjectSection; language
   );
 }
 
-function MediaFrame({ image, framed }: { image: SanityImageValue; framed: boolean }) {
+function isInlineVideoUrl(url: unknown): url is string {
+  return typeof url === 'string' && /\.(mp4|webm|ogg)(\?.*)?$/i.test(url);
+}
+
+/** Lets the browser skip a source it cannot play without fetching it first. */
+function videoMimeType(url: string): string {
+  const extension = url.split('?')[0].split('.').pop()?.toLowerCase();
+  return extension === 'webm' ? 'video/webm' : extension === 'ogg' ? 'video/ogg' : 'video/mp4';
+}
+
+function MediaFrame({
+  image,
+  framed,
+  language,
+  group,
+  index,
+}: {
+  image: SanityImageValue;
+  framed: boolean;
+  language: Language;
+  group: LightboxItem[];
+  index: number;
+}) {
   const img = (
-    <img
+    <ZoomableImage
       src={urlFor(image).width(1600).auto('format').quality(80).fit('max').url()}
-      alt={getImageAlt(image, image?.caption || 'Project image')}
+      alt={group[index]?.alt || getImageAlt(image, image?.caption || 'Project image')}
       className="w-full h-auto"
-      loading="lazy"
-      decoding="async"
+      rounded={false}
+      language={language}
+      group={group}
+      index={index}
     />
   );
 
+  // The frame carries the rounding, so the image meets the caption or the
+  // browser bar with a straight edge.
   if (!framed) {
     return (
-      <div className="border border-white/10">
+      <div className="overflow-hidden rounded-xl border border-white/10">
         {img}
         {image?.caption ? <p className="px-4 py-3 text-sm text-white/45 font-plex border-t border-white/10">{image.caption}</p> : null}
       </div>
@@ -319,7 +441,7 @@ function MediaFrame({ image, framed }: { image: SanityImageValue; framed: boolea
   }
 
   return (
-    <div className="border border-white/10 bg-white/[0.02]">
+    <div className="overflow-hidden rounded-xl border border-white/10">
       <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-2.5" aria-hidden="true">
         <span className="h-2 w-2 rounded-full bg-white/15" />
         <span className="h-2 w-2 rounded-full bg-white/15" />
@@ -339,12 +461,18 @@ function MetricSection({ section, language }: { section: ProjectSection; languag
     return null;
   }
 
-  const columns = items.length >= 4 ? 'grid-cols-2 lg:grid-cols-4' : items.length === 3 ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2';
+  // Desktop column count follows the item count (5 metrics sit in one row of 5,
+  // 6 in two rows of 3); anything left over stretches across the last row.
+  const count = items.length;
+  const lgColumns = count <= 4 ? count : count % 3 === 0 ? 3 : count === 5 ? 5 : 4;
+  const itemBasis = count === 1
+    ? 'basis-full'
+    : `basis-[calc((100%-1px)/2)] ${METRIC_LG_BASIS[lgColumns] || ''}`;
 
   return (
-    <div className={`grid ${columns} gap-px bg-white/[0.08] border border-white/[0.08]`}>
+    <div className={`${HAIRLINE_ROW} bg-white/[0.08] border border-white/[0.08]`}>
       {items.map((item, index) => (
-        <div key={item._key || index} className="bg-indigo-950 px-6 py-8 lg:py-10">
+        <div key={item._key || index} className={`${HAIRLINE_CELL} ${itemBasis} bg-indigo-950 px-6 py-8 lg:py-10`}>
           <p className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-teal-300 notranslate">
             {item.value}
           </p>

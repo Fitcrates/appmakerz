@@ -139,7 +139,11 @@ const projectMediaBlock = {
       name: 'images',
       title: 'Images',
       type: 'array',
-      validation: (Rule: RuleLike) => Rule.min(1).max(6),
+      // A block may be just a video: images are only required when there is no Video URL.
+      validation: (Rule: RuleLike) =>
+        Rule.max(6).custom((images: unknown[] | undefined, context: { parent?: { videoUrl?: string } }) =>
+          (images?.length || context.parent?.videoUrl) ? true : 'Add at least one image or a Video URL.'
+        ),
       of: [
         {
           type: 'image',
@@ -160,7 +164,29 @@ const projectMediaBlock = {
       name: 'videoUrl',
       title: 'Video URL',
       type: 'url',
-      description: 'Optional. An MP4/WebM file URL is embedded inline; anything else renders as a link.',
+      description: 'Optional. An MP4/WebM file URL is embedded inline; anything else renders as a link. Use the 1080p MP4: it plays everywhere, including older iPhones.',
+    },
+    {
+      name: 'videoMobileUrl',
+      title: 'Video URL (phones)',
+      type: 'url',
+      description: 'Optional lighter file (e.g. 720p) served on screens up to 767px wide instead of the one above. Leave empty to use the same file everywhere.',
+      hidden: ({ parent }: { parent?: { videoUrl?: string } }) => !parent?.videoUrl,
+    },
+    {
+      name: 'videoPoster',
+      title: 'Video poster',
+      type: 'image',
+      description: 'Frame shown before playback. Nothing of the video downloads until the visitor presses play, so without a poster the player is an empty box.',
+      hidden: ({ parent }: { parent?: { videoUrl?: string } }) => !parent?.videoUrl,
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          validation: (Rule: RuleLike) => Rule.required().warning('Describe what the poster frame shows.'),
+        },
+      ],
     },
     localizedText('caption', 'Caption', { rows: 2 }),
     {
@@ -186,11 +212,11 @@ const projectMediaBlock = {
     ...layoutFields({ width: 'wide' }),
   ],
   preview: {
-    select: { heading: 'heading.pl', headingEn: 'heading.en', media: 'images.0' },
+    select: { heading: 'heading.pl', headingEn: 'heading.en', media: 'images.0', poster: 'videoPoster' },
     prepare: (selection: any) => ({
       title: selection.heading || selection.headingEn || 'Media',
-      subtitle: 'Media',
-      media: selection.media,
+      subtitle: selection.poster && !selection.media ? 'Media · video' : 'Media',
+      media: selection.media || selection.poster,
     }),
   },
 };

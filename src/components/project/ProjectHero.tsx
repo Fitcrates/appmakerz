@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import Image from 'next/image';
-import { ArrowUpRight, Feather, Github, Globe } from 'lucide-react';
+import { ArrowUpRight, Feather, Github, Globe, Newspaper } from 'lucide-react';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import SpotlightText from '@/components/new/SpotlightText';
 import PrefetchLink from '@/components/next/PrefetchLink';
@@ -9,6 +9,7 @@ import { getImageAlt } from '@/lib/image-alt';
 import { getLocalizedText } from '@/lib/localize';
 import { localizedPath } from '@/lib/i18n-routing';
 import type { Language } from '@/lib/language';
+import type { ProjectArticleLink } from '@/types/sanity.types';
 
 interface ProjectHeroProps {
   project: ProjectHeroData;
@@ -24,6 +25,7 @@ interface ProjectHeroProps {
     liveDemo: string;
     sourceCode: string;
     blogPost: string;
+    externalArticle: string;
     moreTech: (count: number) => string;
   };
 }
@@ -36,6 +38,7 @@ interface ProjectHeroData {
   projectUrl?: string;
   githubUrl?: string;
   blogUrl?: string;
+  articleLinks?: ProjectArticleLink[];
 }
 
 /**
@@ -55,7 +58,13 @@ export default function ProjectHero({
   const category = getLocalizedText(project.category, language);
   const year = project.year ? String(project.year) : '';
   const technologies: string[] = Array.isArray(project.technologies) ? project.technologies : [];
-  const hasLinks = Boolean(project.projectUrl || project.githubUrl || project.blogUrl);
+  // An entry with no URL is an author halfway through adding one; rendering it
+  // would put a dead button in the hero.
+  const articleLinks = (Array.isArray(project.articleLinks) ? project.articleLinks : []).filter(
+    (link): link is ProjectArticleLink & { url: string } => Boolean(link?.url)
+  );
+  const hasLinks =
+    Boolean(project.projectUrl || project.githubUrl || project.blogUrl) || articleLinks.length > 0;
 
   return (
     <section className="relative isolate overflow-hidden border-b border-white/10 bg-indigo-950 pt-28 sm:pt-32 lg:pt-36">
@@ -133,23 +142,23 @@ export default function ProjectHero({
             ) : null}
 
             {hasLinks ? (
-              <div className="mt-10 flex flex-wrap gap-3 sm:gap-4">
+              // A grid rather than flex-wrap: every button gets the same track
+              // width, so the set lines up instead of each one shrinking to its
+              // own label. max-w-xl stops them stretching across the whole
+              // column on wide screens, where a button that wide stops reading
+              // as a button.
+              <div className="mt-10 grid max-w-xl grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                 {project.projectUrl ? (
-                  <a
+                  <HeroLink
                     href={project.projectUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative inline-flex items-center gap-3 overflow-hidden bg-teal-300 px-6 py-4 font-normal text-indigo-950 transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 sm:px-8"
-                  >
-                    <Globe className="relative z-10 h-4 w-4" />
-                    <span className="relative z-10">{labels.liveDemo}</span>
-                    <ArrowUpRight className="relative z-10 h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                    <span className="absolute inset-0 -translate-x-full bg-white transition-transform duration-500 group-hover:translate-x-0" />
-                  </a>
+                    label={labels.liveDemo}
+                    icon={<Globe className="h-4 w-4" />}
+                    variant="primary"
+                  />
                 ) : null}
 
                 {project.githubUrl ? (
-                  <HeroSecondaryLink
+                  <HeroLink
                     href={project.githubUrl}
                     label={labels.sourceCode}
                     icon={<Github className="h-4 w-4" />}
@@ -157,12 +166,21 @@ export default function ProjectHero({
                 ) : null}
 
                 {project.blogUrl ? (
-                  <HeroSecondaryLink
+                  <HeroLink
                     href={project.blogUrl}
                     label={labels.blogPost}
                     icon={<Feather className="h-4 w-4" />}
                   />
                 ) : null}
+
+                {articleLinks.map((link, index) => (
+                  <HeroLink
+                    key={link._key || `${link.url}-${index}`}
+                    href={link.url}
+                    label={getLocalizedText(link.label, language, labels.externalArticle)}
+                    icon={<Newspaper className="h-4 w-4" />}
+                  />
+                ))}
               </div>
             ) : null}
           </div>
@@ -198,18 +216,55 @@ function ProjectMockup({ imageUrl, alt, priority = false }: { imageUrl: string; 
   );
 }
 
-function HeroSecondaryLink({ href, label, icon }: { href: string; label: string; icon: ReactNode }) {
+/**
+ * One hero button. It fills its grid track, so the whole set keeps the same
+ * width whatever the labels say. The label sits in a truncating min-w-0 span:
+ * a long outlet name shortens rather than widening its track and dragging
+ * every other button out with it.
+ */
+function HeroLink({
+  href,
+  label,
+  icon,
+  variant = 'secondary',
+}: {
+  href: string;
+  label: string;
+  icon: ReactNode;
+  variant?: 'primary' | 'secondary';
+}) {
+  const primary = variant === 'primary';
+  // The teal fill is already the darkest-on-lightest pair in the set, so the
+  // primary button keeps its colours through hover; only the outlined variant
+  // flips to indigo as the teal sweep passes under it.
+  const hoverInk = primary ? '' : 'transition-colors duration-500 group-hover:text-indigo-950';
+
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group relative inline-flex items-center gap-3 overflow-hidden border border-white/20 px-6 py-4 font-normal text-white transition-colors duration-500 hover:border-teal-300 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 sm:px-8"
+      title={label}
+      // sm:last:odd:col-span-2: with an odd number of buttons the last one sits
+      // alone in its row, so it takes the whole row instead of half of it.
+      className={`group relative inline-flex w-full items-center gap-2.5 overflow-hidden px-4 py-4 sm:last:odd:col-span-2 font-normal transition-colors duration-500 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 sm:px-5 ${
+        primary
+          ? 'bg-teal-300 text-indigo-950 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)]'
+          : 'border border-white/20 text-white hover:border-teal-300'
+      }`}
     >
-      <span className="relative z-10 transition-colors duration-500 group-hover:text-indigo-950">{icon}</span>
-      <span className="relative z-10 transition-colors duration-500 group-hover:text-indigo-950">{label}</span>
-      <ArrowUpRight className="relative z-10 h-4 w-4 transition-all duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-indigo-950" />
-      <span className="absolute inset-0 -translate-x-full bg-teal-300 transition-transform duration-500 group-hover:translate-x-0" />
+      <span className={`relative z-10 shrink-0 ${hoverInk}`}>{icon}</span>
+      <span className={`relative z-10 min-w-0 flex-1 truncate ${hoverInk}`}>{label}</span>
+      <ArrowUpRight
+        className={`relative z-10 h-4 w-4 shrink-0 transition-all duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${
+          primary ? '' : 'group-hover:text-indigo-950'
+        }`}
+      />
+      <span
+        className={`absolute inset-0 -translate-x-full transition-transform duration-500 group-hover:translate-x-0 ${
+          primary ? 'bg-white' : 'bg-teal-300'
+        }`}
+      />
     </a>
   );
 }

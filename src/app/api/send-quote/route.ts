@@ -145,7 +145,7 @@ export async function POST(request: Request) {
     }
 
     const fromEmail = process.env.QUOTE_FROM_EMAIL || 'kontakt@appcrates.pl';
-    const toEmail = process.env.QUOTE_TO_EMAIL || process.env.EMAIL_USER || 'appcratesdev@gmail.com';
+    const toEmail = process.env.QUOTE_TO_EMAIL || process.env.EMAIL_USER || 'kontakt@appcrates.pl';
     const priceText = formatPrice(priceMin, priceMax, noPrice);
     const disclaimer = getQuoteDisclaimer(language);
 

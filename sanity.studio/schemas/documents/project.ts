@@ -246,6 +246,39 @@ export default {
       group: 'links',
     },
     {
+      name: 'articleLinks',
+      title: 'External Articles',
+      type: 'array',
+      group: 'links',
+      description: 'Coverage published somewhere other than this site: an interview, a write-up, a case study another outlet ran. Project URL, GitHub URL and Blog URL above already have their own buttons, so use this only for links that do not fit those three.',
+      validation: (Rule: any) => Rule.max(3).warning('Each entry is another button in the hero. Past three the row stops reading as a set of choices.'),
+      of: [
+        {
+          type: 'object',
+          name: 'articleLink',
+          fields: [
+            localizedString('label', 'Button label', {
+              required: true,
+              max: 16,
+              description: 'Name the outlet, not the project: the reader already knows which project they are on. "Wywiad w Forbes" beats "Artykul o Artovni". About 16 characters fit the button; past that the label truncates and the full text only shows on hover.',
+            }),
+            {
+              name: 'url',
+              title: 'URL',
+              type: 'url',
+              validation: (Rule: any) => Rule.required().uri({ scheme: ['http', 'https'] }),
+            },
+          ],
+          preview: {
+            select: { pl: 'label.pl', en: 'label.en', url: 'url' },
+            prepare({ pl, en, url }: { pl?: string; en?: string; url?: string }) {
+              return { title: pl || en || 'Untitled link', subtitle: url };
+            },
+          },
+        },
+      ],
+    },
+    {
       name: 'sections',
       title: 'Page Sections',
       type: 'array',

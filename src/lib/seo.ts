@@ -3,7 +3,14 @@ import { absoluteUrl } from '@/lib/site';
 
 export const SOCIAL_IMAGE_WIDTH = 1200;
 export const SOCIAL_IMAGE_HEIGHT = 630;
-export const DEFAULT_SOCIAL_IMAGE = absoluteUrl('/media/default-og-image.png');
+
+// The file has to actually be SOCIAL_IMAGE_WIDTH x SOCIAL_IMAGE_HEIGHT: og:image:width
+// and og:image:height are what LinkedIn, Facebook and Slack lay the card out from,
+// before the bytes arrive. default-og-image.png was 1635x962 while claiming 1200x630,
+// which is a 1.70:1 image declared as 1.91:1. Hence the -v2 name rather than new bytes
+// at the old path: /media/* is served immutable for a year, so a third-party image
+// cache that already holds the old file would never pick the replacement up.
+export const DEFAULT_SOCIAL_IMAGE = absoluteUrl('/media/default-og-image-v2.png');
 
 export function normalizeWhitespace(value: string) {
   return value.replace(/\s+/g, ' ').trim();

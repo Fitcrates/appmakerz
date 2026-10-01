@@ -75,20 +75,29 @@ const nextConfig: NextConfig = {
       .filter((entry) => entry.source && entry.destination && entry.source !== entry.destination);
 
     return [
+      // Straight to /pl rather than to "/", which would only redirect again: a
+      // chain costs an extra round trip and is one more hop for a scraper to
+      // give up on.
+      //
+      // statusCode: 301 rather than `permanent: true`. `permanent` emits 308,
+      // which Next.js picked so that a redirected POST stays a POST. This URL
+      // only ever takes GET, so that guarantee buys nothing and costs real
+      // breakage: social scrapers stop at the 308, which carries
+      // `Content-Type: text/plain` and no body, so they never reach the og:
+      // tags on the destination and fall back to whatever they last cached for
+      // the URL. 301 is the redirect every crawler has understood since
+      // HTTP/1.0. This one can stay permanent because, unlike "/", it has a
+      // single fixed destination.
       {
         source: '/index.html',
-        destination: '/',
-        permanent: true,
-      },
-      // "/" used to render its own copy of the homepage alongside /pl: two
-      // indexable pages, two self-canonicals and two conflicting hreflang
-      // clusters for one piece of content. /pl is the version in the sitemap,
-      // so it wins and "/" folds into it.
-      {
-        source: '/',
         destination: '/pl',
-        permanent: true,
+        statusCode: 301,
       },
+      // "/" is deliberately NOT here. Its target depends on the visitor's
+      // Accept-Language, and this list is checked before src/proxy.ts runs
+      // (headers, then redirects, then proxy), so a rule here would answer
+      // every request before the proxy ever saw the header. The homepage
+      // redirect lives in src/proxy.ts instead.
       ...cmsRedirects,
     ];
   },

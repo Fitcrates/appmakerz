@@ -96,7 +96,7 @@ i zostać przepięty później, przez model redirectów z 3.1.
 
 ### 2.5. Niespójność encji — email
 
-`ProfessionalService` deklarował `appcratesdev@gmail.com`, cała §22 opiera się
+`ProfessionalService` deklarował `kontakt@appcrates.pl`, cała §22 opiera się
 na `kontakt@appcrates.pl`. **Naprawione** (patrz 3.4).
 
 ### 2.6. Artovnia nie komunikuje Medusy

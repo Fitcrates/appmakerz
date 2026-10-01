@@ -185,6 +185,38 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
     ],
   };
 
+  // Coverage elsewhere (e.g. a vendor's case study) is what this work is the
+  // subject of; the hero renders the same list as buttons.
+  const articleLinks: Array<{ url: string; name: string }> = (
+    Array.isArray(project.articleLinks) ? project.articleLinks : []
+  )
+    .filter((link: { url?: string }) => link?.url)
+    .map((link: { url: string; label?: unknown }) => ({
+      url: link.url,
+      name: getLocalizedText(link.label, language) || t.externalArticle,
+    }));
+
+  // First inline video with a poster: Google needs a thumbnail and an upload
+  // date for a VideoObject, and a video without a poster is not worth one.
+  const videoSection = sections.find(
+    (section) =>
+      section._type === 'projectMediaBlock' &&
+      typeof section.videoUrl === 'string' &&
+      /\.(mp4|webm)(\?.*)?$/i.test(section.videoUrl) &&
+      section.videoPoster?.asset?._ref
+  );
+  const videoSchema = videoSection
+    ? {
+        '@type': 'VideoObject',
+        name: getLocalizedText(videoSection.heading, language) || title,
+        description: getLocalizedText(videoSection.caption, language) || description,
+        thumbnailUrl: urlFor(videoSection.videoPoster).width(1280).height(720).fit('crop').url(),
+        contentUrl: videoSection.videoUrl,
+        uploadDate: getPublishedDate(project),
+        inLanguage: language,
+      }
+    : null;
+
   const creativeWorkSchema = {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
@@ -197,6 +229,10 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
     dateModified: getModifiedDate(project),
     ...(heroImageUrl ? { image: heroImageUrl } : {}),
     ...(project.technologies?.length ? { keywords: project.technologies.join(', ') } : {}),
+    ...(articleLinks.length
+      ? { subjectOf: articleLinks.map((link) => ({ '@type': 'Article', url: link.url, name: link.name })) }
+      : {}),
+    ...(videoSchema ? { video: videoSchema } : {}),
     author: {
       '@type': 'Organization',
       name: 'AppCrates',
@@ -235,6 +271,7 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
             liveDemo: t.liveDemo,
             sourceCode: t.sourceCode,
             blogPost: t.blogPost,
+            externalArticle: t.externalArticle,
             moreTech: (count: number) => `+${count} ${t.moreTech}`,
           }}
         />
