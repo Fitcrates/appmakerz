@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     default: 'AppCrates',
     template: '%s | AppCrates',
   },
-  description: 'AppCrates builds high-performance websites, web applications, AI tools, and headless e-commerce stores and marketplaces with Next.js, React and Medusa.js.',
+  description: 'AppCrates builds online stores and multi-vendor marketplaces on Medusa.js, plus high-performance websites, web applications and AI tools on Next.js.',
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -86,7 +86,7 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
     "@type": "WebSite",
     "name": "AppCrates",
     "url": "https://appcrates.pl",
-    "description": "AppCrates: Websites, landing pages, custom AI Applications, RAG Implementation, Next.js / TanStack Migrations, Web Platforms, and Medusa.js eCommerce development.",
+    "description": "AppCrates: Medusa.js e-commerce stores and multi-vendor marketplaces, commerce integrations, websites and landing pages, custom AI applications and RAG, Next.js / TanStack migrations.",
     "inLanguage": ["en", "pl"]
   };
 
@@ -97,7 +97,10 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
     "url": "https://appcrates.pl",
     "logo": "https://appcrates.pl/media/android-chrome-512x512.png",
     "image": `${siteUrl}/media/default-og-image-v2.png`,
-    "description": "Strony internetowe, landing pages, specjalistyczne wdrażanie aplikacji Web i rozwiązań AI (RAG) w firmach. Modernizacje i migracje systemów na architekturę Next.js i TanStack. Audytowanie pod kątem WCAG / GDPR oraz projektowanie potężnych platform ecommerce i marketplace na Medusa.js i platform typy Headless.",
+    // Was a single Polish string served on the English pages as well.
+    "description": language === 'pl'
+      ? "Sklepy internetowe i marketplace multi-vendor na Medusa.js, integracje commerce i headless e-commerce. Do tego strony internetowe i aplikacje webowe na Next.js, wdrożenia AI (RAG), migracje na Next.js i TanStack oraz audyty WCAG / GDPR."
+      : "Online stores and multi-vendor marketplaces on Medusa.js, commerce integrations and headless e-commerce. Plus websites and web applications on Next.js, AI implementations (RAG), Next.js and TanStack migrations, and WCAG / GDPR audits.",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Wrocław",
@@ -122,7 +125,7 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
       // entity at a Polish URL that hreflang already declares as the other
       // language's version of the same page.
       "url": `${siteUrl}/${language}/about-me`,
-      "jobTitle": "Fullstack Developer",
+      "jobTitle": "Medusa.js & Fullstack Developer",
       "worksFor": { "@type": "Organization", "name": "AppCrates" },
       "sameAs": [
         "https://github.com/Fitcrates",
@@ -138,10 +141,12 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
       ]
     },
     "serviceType": [
+      "Medusa.js Development",
+      "Medusa.js E-Commerce Stores",
+      "Medusa.js Multi-vendor Marketplaces",
+      "Commerce Integrations",
       "AI Applications & RAG",
       "AI Automation & Implementation",
-      "Medusa.js E-Commerce Stores",
-      "Medusa.js Marketplaces",
       "Legacy to Next.js Migrations",
       "TanStack Architecture upgrades",
       "Custom Web Platforms",
@@ -149,8 +154,8 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
       "WCAG & GDPR Auditing"
     ],
     "knowsAbout": [
-      "Artificial Intelligence", "RAG", "LLM", "Next.js", "React", "TanStack", "Medusa.js", "MercurJS",
-      "Headless Commerce", "WCAG Web Accessibility", "Typescript", "Node.js"
+      "Medusa.js", "MercurJS", "Headless Commerce", "Marketplace development", "Stripe Connect",
+      "Next.js", "React", "TanStack", "Artificial Intelligence", "RAG", "LLM", "WCAG Web Accessibility", "Typescript", "Node.js"
     ]
   };
 

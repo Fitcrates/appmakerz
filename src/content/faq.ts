@@ -2,6 +2,7 @@ export const faqContent = {
   en: {
     title: 'Frequently Asked Questions',
     subtitle: 'Answers to help you understand what I do and how I can help your business grow.',
+    metaDescription: 'Questions about working together: Medusa.js stores and marketplaces, websites, web apps, AI, timelines, technology and support after launch.',
     searchPlaceholder: 'Search questions and answers...',
     emptyState: 'No matching questions found.',
     backToHome: 'Back to Home',
@@ -9,7 +10,7 @@ export const faqContent = {
     faqs: [
       {
         question: 'What exactly do you do?',
-        answer: 'I design and build premium web applications, modern marketing websites, and custom e-commerce platforms. I handle the full process end-to-end: strategy, UI/UX, front-end, back-end, integrations, optimization, and launch.'
+        answer: 'My specialisation is Medusa.js: online stores, multi-vendor marketplaces and commerce integrations. Beyond that I design and build web applications and modern business websites on Next.js. I handle the full process end-to-end: strategy, UI/UX, front-end, back-end, integrations, optimization, and launch.'
       },
       {
         question: 'How can you help my business?',
@@ -21,7 +22,11 @@ export const faqContent = {
       },
       {
         question: 'Can you build custom e-commerce or marketplace solutions?',
-        answer: 'Yes. If your business needs something beyond a standard template shop, I can build custom e-commerce systems and multivendor marketplace solutions tailored to your workflow, product structure, vendors, and growth goals.'
+        answer: 'Yes, and it is my main specialisation. If your business needs something beyond a standard template shop, I build online stores and multi-vendor marketplaces on Medusa.js, tailored to your workflow, product structure, vendors, payments and growth goals.'
+      },
+      {
+        question: 'Why Medusa.js and when does it make sense?',
+        answer: 'Medusa.js is an open-source commerce engine on Node.js. You own the code, pay no platform commission and can write any logic you need: custom checkout, B2B pricing, vendor accounts, commissions, split payments or integrations with your ERP, warehouse and couriers. It makes sense when a SaaS platform starts limiting how you sell. For a simple store that needs to launch quickly, Shopify is often enough, and I will say so.'
       },
       {
         question: 'Where are you based and do you work with international clients?',
@@ -45,7 +50,7 @@ export const faqContent = {
       },
       {
         question: 'What technologies and frameworks do you use?',
-        answer: 'My core stack is based on modern JavaScript and TypeScript. I mainly work with React, Next.js, Vite, Bun, Node.js, and headless CMS solutions such as Sanity. For polished interfaces and smooth interactions, I also use tools like Framer Motion and build custom UI systems tailored to the project.'
+        answer: 'My core stack is based on modern JavaScript and TypeScript. For e-commerce and marketplaces I work with Medusa.js on Node.js and PostgreSQL. Storefronts, websites and web apps are built with Next.js and React, along with Vite, Bun and headless CMS solutions such as Sanity. For polished interfaces and smooth interactions, I also use tools like Framer Motion and build custom UI systems tailored to the project.'
       },
       {
         question: 'Do you create custom UI/UX or work from ready-made templates?',
@@ -65,7 +70,7 @@ export const faqContent = {
       },
       {
         question: 'Can you improve or extend an existing application?',
-        answer: 'It depends on the technology stack. I work most efficiently with modern JavaScript/TypeScript-based applications (React, Next.js, Node.js). In those cases, I can improve architecture, add features, and optimize performance. For older stacks like PHP or Angular, I evaluate each project individually - sometimes it makes more sense to rebuild key parts instead of forcing changes into outdated architecture.'
+        answer: 'It depends on the technology stack. I work most efficiently with modern JavaScript/TypeScript-based applications (Medusa.js, React, Next.js, Node.js). In those cases, I can improve architecture, add features, and optimize performance. For older stacks like PHP or Angular, I evaluate each project individually - sometimes it makes more sense to rebuild key parts instead of forcing changes into outdated architecture.'
       },
       {
         question: 'Do you build admin panels or custom internal tools?',
@@ -88,6 +93,7 @@ export const faqContent = {
   pl: {
     title: 'Często zadawane pytania',
     subtitle: 'Odpowiedzi, które pomogą Ci zrozumieć czym się zajmuję i jak mogę pomóc Twojej firmie.',
+    metaDescription: 'Pytania o współpracę: sklepy i marketplace na Medusa.js, strony, aplikacje webowe, AI, terminy, technologie i opieka po wdrożeniu.',
     searchPlaceholder: 'Szukaj pytań i odpowiedzi...',
     emptyState: 'Nie znaleziono pasujących pytań.',
     backToHome: 'Wróć do strony głównej',
@@ -95,7 +101,7 @@ export const faqContent = {
     faqs: [
       {
         question: 'Czym dokładnie się zajmujesz?',
-        answer: 'Projektuję i tworzę nowoczesne strony internetowe, aplikacje webowe premium oraz dedykowane platformy e-commerce. Prowadzę cały proces end-to-end: od strategii i UI/UX, przez front-end i back-end, aż po integracje, optymalizację i wdrożenie.'
+        answer: 'Specjalizuję się w Medusa.js: sklepy internetowe, marketplace multi-vendor i integracje commerce. Poza tym projektuję i tworzę aplikacje webowe oraz nowoczesne strony firmowe na Next.js. Prowadzę cały proces end-to-end: od strategii i UI/UX, przez front-end i back-end, aż po integracje, optymalizację i wdrożenie.'
       },
       {
         question: 'W czym możesz pomóc mojej firmie?',
@@ -107,7 +113,11 @@ export const faqContent = {
       },
       {
         question: 'Czy możesz stworzyć dedykowany sklep internetowy albo marketplace?',
-        answer: 'Tak. Jeśli Twój biznes potrzebuje czegoś więcej niż gotowego szablonu sklepu, mogę zaprojektować i wdrożyć dedykowany e-commerce lub platformę marketplace dopasowaną do Twojego modelu działania, produktów, sprzedawców i planów rozwoju.'
+        answer: 'Tak, to moja główna specjalizacja. Jeśli Twój biznes potrzebuje czegoś więcej niż gotowego szablonu sklepu, buduję sklepy internetowe i marketplace multi-vendor na Medusa.js, dopasowane do Twojego modelu działania, produktów, sprzedawców, płatności i planów rozwoju.'
+      },
+      {
+        question: 'Dlaczego Medusa.js i kiedy ma sens?',
+        answer: 'Medusa.js to open-source silnik e-commerce na Node.js. Kod należy do Ciebie, nie płacisz prowizji platformie i możesz napisać dowolną logikę: własny checkout, cenniki B2B, konta sprzedawców, prowizje, podział płatności albo integracje z ERP, magazynem i kurierami. Ma sens, gdy platforma SaaS zaczyna ograniczać sposób, w jaki sprzedajesz. Przy prostym sklepie, który ma szybko wystartować, często wystarczy Shopify i wtedy to powiem.'
       },
       {
         question: 'Gdzie się znajdujesz i czy pracujesz z klientami zagranicznymi?',
@@ -131,7 +141,7 @@ export const faqContent = {
       },
       {
         question: 'Z jakich technologii i frameworków korzystasz?',
-        answer: 'Pracuję głównie w oparciu o nowoczesny ekosystem JavaScript i TypeScript. Najczęściej wykorzystuję React, Next.js, Vite, Bun, Node.js oraz rozwiązania Headless CMS, takie jak Sanity. Do dopracowanych interfejsów i płynnych mikrointerakcji używam też narzędzi takich jak Framer Motion oraz tworzę własne systemy UI pod konkretny projekt.'
+        answer: 'Pracuję głównie w oparciu o nowoczesny ekosystem JavaScript i TypeScript. Przy e-commerce i marketplace korzystam z Medusa.js na Node.js i PostgreSQL. Storefronty, strony i aplikacje webowe buduję w Next.js i React, a do tego Vite, Bun oraz rozwiązania Headless CMS, takie jak Sanity. Do dopracowanych interfejsów i płynnych mikrointerakcji używam też narzędzi takich jak Framer Motion oraz tworzę własne systemy UI pod konkretny projekt.'
       },
       {
         question: 'Czy projektujesz własny UI/UX, czy pracujesz na gotowych template’ach?',
@@ -151,7 +161,7 @@ export const faqContent = {
       },
       {
         question: 'Czy możesz wejść do istniejącego projektu i go rozwinąć?',
-        answer: 'To zależy od technologii. Najlepiej pracuję z nowoczesnymi aplikacjami opartymi o JavaScript/TypeScript (React, Next.js, Node.js). W takich projektach mogę rozwijać funkcje, poprawiać architekturę i wydajność. W przypadku starszych technologii, takich jak PHP czy Angular, każdy projekt oceniam indywidualnie - często bardziej opłaca się przebudować kluczowe elementy niż na siłę rozwijać przestarzałą strukturę.'
+        answer: 'To zależy od technologii. Najlepiej pracuję z nowoczesnymi aplikacjami opartymi o JavaScript/TypeScript (Medusa.js, React, Next.js, Node.js). W takich projektach mogę rozwijać funkcje, poprawiać architekturę i wydajność. W przypadku starszych technologii, takich jak PHP czy Angular, każdy projekt oceniam indywidualnie - często bardziej opłaca się przebudować kluczowe elementy niż na siłę rozwijać przestarzałą strukturę.'
       },
       {
         question: 'Czy tworzysz panele administracyjne i narzędzia wewnętrzne dla firm?',
@@ -177,6 +187,7 @@ export type FaqLocale = keyof typeof faqContent;
 export interface FaqContent {
   title: string;
   subtitle: string;
+  metaDescription: string;
   searchPlaceholder: string;
   emptyState: string;
   backToHome: string;

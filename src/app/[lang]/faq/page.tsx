@@ -27,10 +27,10 @@ export async function generateMetadata({ params }: LocalizedFaqPageProps): Promi
 
   return {
     title: content.title,
-    description: content.subtitle,
+    description: content.metaDescription,
     keywords: language === 'pl'
-      ? ['faq', 'często zadawane pytania', 'web development', 'appcrates']
-      : ['faq', 'frequently asked questions', 'web development', 'appcrates'],
+      ? ['faq', 'często zadawane pytania', 'medusa.js', 'sklepy internetowe', 'marketplace', 'appcrates']
+      : ['faq', 'frequently asked questions', 'medusa.js', 'online stores', 'marketplace', 'appcrates'],
     alternates: {
       canonical,
       languages: {
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: LocalizedFaqPageProps): Promi
       type: 'website',
       url: canonical,
       title: content.title,
-      description: content.subtitle,
+      description: content.metaDescription,
       siteName: 'AppCrates',
       images: [{
         url: DEFAULT_SOCIAL_IMAGE,
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: LocalizedFaqPageProps): Promi
     twitter: {
       card: 'summary_large_image',
       title: content.title,
-      description: content.subtitle,
+      description: content.metaDescription,
       images: [{ url: DEFAULT_SOCIAL_IMAGE, alt: content.title }],
     },
   };

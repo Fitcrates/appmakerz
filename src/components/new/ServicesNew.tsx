@@ -76,7 +76,8 @@ const ServiceItem: React.FC<{
   service: Service;
   index: number;
   language: 'en' | 'pl';
-}> = ({ service, index, language }) => {
+  moreLabel: string;
+}> = ({ service, index, language, moreLabel }) => {
   const itemRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(itemRef, {
     once: true,
@@ -126,7 +127,7 @@ const ServiceItem: React.FC<{
             <div className="mt-4 flex items-center gap-2 text-teal-300/0 group-hover:text-teal-300/80 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
               <ArrowUpRight className="w-4 h-4" />
               <span className="text-xs  tracking-wider uppercase">
-                {service.href ? "Zobacz więcej" : "More"}
+                {moreLabel}
               </span>
             </div>
           </div>
@@ -181,6 +182,18 @@ const ServicesNew: React.FC = () => {
           >
             {t.heading}
           </BurnSpotlightText>
+          {/* The hub is the page meant to rank for Medusa.js work, and without
+              this the homepage body never linked to it, only the header menu. */}
+          <p className="mt-8 max-w-2xl text-lg font-light leading-relaxed text-white/70">
+            {t.intro}{" "}
+            <PrefetchLink
+              href={localizedPath(language, "/uslugi/medusa-js-development")}
+              className="inline-flex items-center gap-1 text-teal-300 underline decoration-teal-300/40 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60 focus:outline-none focus:ring-2 focus:ring-teal-300/40 rounded"
+            >
+              {t.hubLink}
+              <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+            </PrefetchLink>
+          </p>
         </div>
 
         {/* ── Content: list left, sticky image right ── */}
@@ -194,6 +207,7 @@ const ServicesNew: React.FC = () => {
                   service={service}
                   index={index}
                   language={language}
+                  moreLabel={t.more}
                 />
               ))}
             </div>

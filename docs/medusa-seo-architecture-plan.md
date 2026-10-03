@@ -163,7 +163,12 @@ efekcie, przebudowa schematów dopiero gdy zacznie być potrzebna.
       (`destination` nie może być czyimś `source`)
 - [x] snapshot bazowy → `docs/url-baseline-2026-09-08.txt` (178 URL)
 - [ ] dogranie eksportu „Strony" z Search Console do snapshotu
-- [ ] decyzja w sprawie soft 404 (2.7)
+- [x] soft 404 (2.7) naprawione bez zmiany `dynamicParams`. Przyczyną był
+      `[lang]/loading.tsx`: jego Suspense zaczynał strumień, zanim strona zdążyła
+      wywołać `notFound()`, a po wysłaniu nagłówków statusu nie da się zmienić.
+      Plik renderował tylko niewidoczny tekst „Loading page" (animację przejścia
+      robi `RouteTransitionProvider`), więc został usunięty. Nowe dokumenty
+      z Sanity dalej działają bez rebuilda
 
 **Zasada:** mapa redirectów nie jest lustrem sitemapy. Zawiera wyłącznie pary
 `stary → nowy` dla URL-i faktycznie zmienionych. Dziś startuje pusta.
@@ -299,9 +304,20 @@ od MVP do skali**. Plan rozdziałów skonsolidowany z 25 w briefie do 21, żeby
 - [ ] Artovnia: Medusa.js w title / H1 / pierwszym akapicie, wyjęta z `+3 więcej`
 - [ ] Artovnia → CTA przewodnika
 - [ ] Artovnia → link do huba Medusa
-- [ ] homepage: Medusa jako widoczna specjalizacja w title i H1
-      (dziś: „Fullstack Web Developer tworzący strony, aplikacje AI…")
-- [ ] anchor „Zobacz więcej" w `ServicesNew.tsx:127` → opisowy
+- [x] homepage: Medusa jako widoczna specjalizacja w title, H1, meta description,
+      etykiecie hero i kolejności usług. Title celowo bez frazy „Medusa.js
+      developer", żeby nie kanibalizować huba, który ją targetuje
+- [x] homepage → link do huba Medusa z treści sekcji usług (wcześniej tylko z menu)
+- [x] „Zobacz więcej" w `ServicesNew.tsx` zlokalizowane (EN pokazywało polski tekst);
+      link obejmuje cały blok z tytułem usługi, więc anchor jest opisowy
+- [x] numeracja usług na stronie głównej (była 03, 04, 02, 01, 05, 06)
+- [x] structured data: opis `ProfessionalService` per język, Medusa na początku
+      `serviceType` i `knowsAbout`, `jobTitle` z Medusa.js
+- [x] FAQ: nowe pytanie „Dlaczego Medusa.js i kiedy ma sens?", Medusa w odpowiedziach
+      o stacku, osobny meta description zamiast podtytułu
+- [x] stopka, podtytuł bloga i kontekst czatu AI z Medusą jako specjalizacją
+- [ ] about-me (Sanity): zdublowany sufiks w tytule („– AppCrates | AppCrates"),
+      opis bez Medusy
 
 ### Faza F — dopiero teraz przebudowa CMS
 

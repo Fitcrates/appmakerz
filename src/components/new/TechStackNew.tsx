@@ -7,20 +7,20 @@ interface TechItem {
 
 const technologies: TechItem[] = [
   {
-    name: 'React',
-    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/react.svg',
+    name: 'Medusa.js',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/medusa.svg',
   },
   {
     name: 'Next.js',
     logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nextdotjs.svg',
   },
   {
-    name: 'TypeScript',
-    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/typescript.svg',
+    name: 'React',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/react.svg',
   },
   {
-    name: 'Medusa.js',
-    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/medusa.svg',
+    name: 'TypeScript',
+    logoUrl: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/typescript.svg',
   },
   {
     name: 'Stripe',

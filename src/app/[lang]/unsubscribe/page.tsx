@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import NextHeader from '@/components/next/NextHeader';
 import NextFooter from '@/components/next/NextFooter';
@@ -35,7 +36,12 @@ export default async function LocalizedUnsubscribePage({ params }: LocalizedUnsu
   return (
     <div className="min-h-screen bg-indigo-950">
       <NextHeader />
-      <UnsubscribePageClient />
+      {/* useSearchParams() needs its own boundary. It used to borrow the one
+          from [lang]/loading.tsx, which was removed because that boundary made
+          every page stream and answer unknown slugs with 200 instead of 404. */}
+      <Suspense fallback={null}>
+        <UnsubscribePageClient />
+      </Suspense>
       <NextFooter />
     </div>
   );

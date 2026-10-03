@@ -18,11 +18,10 @@ export const translations = {
 
     // Hero Section (HeroNew)
     hero: {
-      label: "Fullstack Web Developer",
       heading: "ELECTRIFY\nYOUR BUSINESS\nONLINE",
-      metaTitle: "React & Next.js websites, apps, shops and marketplaces",
-      metaDescription: "Websites, web apps, AI tools, online stores and marketplaces built with Next.js, React and Medusa.js, designed around your offer, your customers and the way you sell.",
-      seoHeading: "Fullstack Web Developer for React, Next.js, AI applications, websites, shops and marketplaces",
+      metaTitle: "Medusa.js stores & marketplaces, websites and AI apps",
+      metaDescription: "Online stores and multi-vendor marketplaces on Medusa.js, plus websites, web apps and AI tools on Next.js. Built around your offer and the way you sell.",
+      seoHeading: "Fullstack Medusa.js developer building online stores and multi-vendor marketplaces, plus websites and AI apps in Next.js",
       subtitle: "Not every technology makes sense. I only build systems that actually work. Modern websites, online stores and AI tools that help businesses sell and grow.",
       punchline: "Your business. Your rules. Your system.",
       cta: {
@@ -52,7 +51,7 @@ export const translations = {
       stack: {
         title: "What this means for you",
         items: [
-          { title: "STORES & MARKETPLACES", description: "Full control, zero SaaS platform limitations." },
+          { title: "STORES & MARKETPLACES", description: "Built on Medusa.js. Full control, zero SaaS platform limitations." },
           { title: "AI AUTOMATION", description: "AI integrations that save time and increase profits." },
           { title: "WEBSITES THAT SELL", description: "Fast, optimized, and built for conversion." },
           { title: "CUSTOM-TAILORED SYSTEMS", description: "Exactly what your business needs." },
@@ -70,7 +69,7 @@ export const translations = {
       label: "[ 01 - About ]",
       heading: "Solutions that\ngrow your\nbusiness",
       description: {
-        p1: "I help businesses succeed online. Whether you need an e-commerce shop to sell products, a landing page that converts visitors into customers, or AI-powered apps to automate your workflows - I deliver complete solutions from start to finish.",
+        p1: "I help businesses succeed online. Whether you need an online store or a marketplace on Medusa.js, a landing page that converts visitors into customers, or AI-powered apps to automate your workflows - I deliver complete solutions from start to finish.",
         p2: "You get a partner who understands your business goals. I handle everything: design, development, content management systems you can update yourself, and ongoing support. No technical knowledge needed on your end.",
       },
       stats: {
@@ -90,8 +89,8 @@ export const translations = {
       items: {
         artovnia: {
           title: "Artovnia E-Commerce",
-          category: "Web Development",
-          description: "Full-stack multi-vendor e-commerce marketplace built with Next.js and Node.js. Features advanced product management, rich features, secure Stripe payment processing, and a seamless checkout experience optimized for conversions.",
+          category: "Medusa.js marketplace",
+          description: "Multi-vendor e-commerce marketplace built on Medusa.js with a Next.js storefront. Features advanced product management, rich features, secure Stripe payment processing, and a seamless checkout experience optimized for conversions.",
         },
         animeSearch: {
           title: "Anime Search Platform",
@@ -136,32 +135,35 @@ export const translations = {
     services: {
       label: "[ 02 - Services ]",
       heading: "What I can build for you",
+      intro: "My specialisation is Medusa.js: online stores, multi-vendor marketplaces and commerce integrations written around your business model.",
+      hubLink: "How a Medusa.js project works",
+      more: "See details",
       cta: "Consult Your Project",
       items: {
         shopify: {
-          number: "01",
+          number: "04",
           title: "Shopify stores & custom storefronts",
           punchline: "Launch quickly today - without limiting tomorrow's growth.",
           description: "Shopify stores for every stage of growth: from focused theme-based launches to custom headless storefronts built with Next.js or TanStack, tailored integrations and conversion-focused UX.",
           href: "/services/shopify-development",
         },
         websites: {
-          number: "02",
+          number: "03",
           title: "Websites",
           punchline: "A site that brings in clients - not just looks good.",
           description: "Modern business websites and landing pages on Next.js: lightning-fast load times, solid SEO and high conversion - ready for traffic from day one.",
           href: "/services/professional-website-development",
         },
         ecommerce: {
-          number: "03",
-          title: "Headless e-commerce stores",
+          number: "01",
+          title: "Medusa.js online stores",
           punchline: "Full control over your store - no commissions, no growth ceiling.",
           description: "B2C and B2B online stores on Medusa.js: open-source commerce, flexible checkout, product logic and integrations without the limits of closed SaaS platforms.",
           href: "/services/e-commerce-shops-medusa-js",
         },
         marketplace: {
-          number: "04",
-          title: "Multi-vendor marketplaces",
+          number: "02",
+          title: "Medusa.js multi-vendor marketplaces",
           punchline: "A platform for many sellers, built around your business model.",
           description: "Marketplace platforms on Medusa.js with vendor accounts, commission logic, custom payments and operational flows designed for scalable multi-vendor commerce.",
           href: "/services/marketplace-multi-vendor-medusa-js",
@@ -197,15 +199,15 @@ export const translations = {
         },
         ecommerce: {
           number: "02",
-          title: "Shopify & Custom E-Commerce Stores",
+          title: "Medusa.js & Shopify Online Stores",
           problem: "Your platform starting to hold you back?",
-          description: "Shopify stores from fast theme-based launches to custom headless storefronts on Next.js or TanStack - plus Medusa.js when your commerce logic needs full open-source control.",
+          description: "Medusa.js when your sales logic needs full control and code you own, or Shopify, from a fast theme-based launch to a custom headless storefront on Next.js.",
         },
         marketplace: {
           number: "03",
           title: "Marketplaces & Multi-Vendor Platforms",
           problem: "Looking to build a platform for multiple sellers?",
-          description: "Marketplaces with custom commission logic, payments and vendor account management - tailored to your business model from the first line of code.",
+          description: "Medusa.js marketplaces with custom commission logic, split payments and vendor account management, tailored to your business model from the first line of code.",
         },
         webApps: {
           number: "04",
@@ -309,7 +311,7 @@ export const translations = {
         success: "Successfully subscribed!",
       },
       brand: {
-        description: "AppCrates - crafting exceptional digital experiences through modern web development.",
+        description: "AppCrates - online stores and marketplaces on Medusa.js, websites and web apps on Next.js, AI implementations.",
       },
       navigation: "Navigation",
       connect: "Connect",
@@ -331,11 +333,11 @@ export const translations = {
     // Blog (BlogNew)
     blog: {
       title: "Blog",
-      subtitle: "Thoughts, tutorials, and insights",
+      subtitle: "Notes from production: Medusa.js, marketplaces, e-commerce, Next.js and AI.",
       latestSection: {
         label: "[ 05 - Blog ]",
         heading: "Latest from the blog",
-        subtitle: "Fresh notes on web development, AI, e-commerce and the decisions behind modern digital products.",
+        subtitle: "Fresh notes on Medusa.js, e-commerce, AI and the decisions behind modern digital products.",
         cta: "View all posts",
       },
       search: "Search posts...",
@@ -454,11 +456,10 @@ export const translations = {
 
     // Hero Section (HeroNew)
     hero: {
-      label: "Next.js + Medusa.js Developer",
       heading: "ELEKTRYZUJ\nSWÓJ BIZNES\nW SIECI",
-      metaTitle: "Strony, aplikacje, sklepy i marketplace w React & Next.js",
-      metaDescription: "Strony internetowe, aplikacje webowe, narzędzia AI, sklepy i marketplace na Next.js, React i Medusa.js, budowane pod Twoją ofertę, Twoich klientów i sposób, w jaki sprzedajesz.",
-      seoHeading: "Fullstack Web Developer tworzący strony, aplikacje AI, sklepy i marketplace w React oraz Next.js",
+      metaTitle: "Sklepy i marketplace na Medusa.js, strony i aplikacje AI",
+      metaDescription: "Sklepy internetowe i marketplace multi-vendor na Medusa.js, a do tego strony, aplikacje webowe i narzędzia AI na Next.js. Budowane pod to, jak sprzedajesz.",
+      seoHeading: "Fullstack developer Medusa.js: sklepy, marketplace, strony i aplikacje AI w Next.js",
       subtitle: "Nie każda technologia ma sens. Buduję tylko te systemy, które naprawdę działają. Nowoczesne strony internetowe, sklepy online i narzędzia AI, które pomagają firmom sprzedawać i rosnąć.",
       punchline: "Twój biznes. Twoje zasady. Twój system.",
       cta: {
@@ -488,7 +489,7 @@ export const translations = {
       stack: {
         title: "Co to oznacza dla Ciebie",
         items: [
-          { title: "SKLEPY I MARKETPLACE", description: "Pełna kontrola, zero ograniczeń platform SaaS." },
+          { title: "SKLEPY I MARKETPLACE", description: "Na Medusa.js. Pełna kontrola, zero ograniczeń platform SaaS." },
           { title: "AUTOMATYZACJA Z AI", description: "Integracje AI, które oszczędzają czas i zwiększają zyski." },
           { title: "STRONY, KTÓRE SPRZEDAJĄ", description: "Szybkie, zoptymalizowane i tworzone pod konwersję." },
           { title: "SYSTEMY SZYTE NA MIARĘ", description: "Dokładnie takie, jakich potrzebuje Twój biznes." },
@@ -506,7 +507,7 @@ export const translations = {
       label: "[ 01 - O mnie ]",
       heading: "Rozwiązania, które\nrozwijają Twój\nbiznes",
       description: {
-        p1: "Pomagam firmom odnosić sukcesy w internecie. Czy potrzebujesz sklepu internetowego do sprzedaży produktów, landing page który zamienia odwiedzających w klientów, czy aplikacji AI automatyzujących procesy - dostarczam kompletne rozwiązania od początku do końca.",
+        p1: "Pomagam firmom odnosić sukcesy w internecie. Czy potrzebujesz sklepu albo marketplace na Medusa.js, landing page który zamienia odwiedzających w klientów, czy aplikacji AI automatyzujących procesy - dostarczam kompletne rozwiązania od początku do końca.",
         p2: "Zyskujesz partnera, który rozumie cele Twojego biznesu. Zajmuję się wszystkim: projektem, programowaniem, systemami zarządzania treścią które możesz sam aktualizować, oraz stałym wsparciem. Nie potrzebujesz wiedzy technicznej.",
       },
       stats: {
@@ -526,8 +527,8 @@ export const translations = {
       items: {
         artovnia: {
           title: "Artovnia E-Commerce",
-          category: "Web Development",
-          description: "Full-stack marketplace e-commerce zbudowany z Next.js i Node.js. Zaawansowane zarządzanie produktami, rozbudowane funkcje, bezpieczne płatności Stripe i płynna realizacja zamówień zoptymalizowana pod konwersje.",
+          category: "Marketplace Medusa.js",
+          description: "Marketplace multi-vendor zbudowany na Medusa.js ze storefrontem w Next.js. Zaawansowane zarządzanie produktami, rozbudowane funkcje, bezpieczne płatności Stripe i płynna realizacja zamówień zoptymalizowana pod konwersje.",
         },
         animeSearch: {
           title: "Platforma Wyszukiwania Anime",
@@ -573,32 +574,35 @@ export const translations = {
     services: {
       label: "[ 02 - Usługi ]",
       heading: "Co mogę dla Ciebie zbudować",
+      intro: "Specjalizuję się w Medusa.js: sklepy internetowe, marketplace multi-vendor i integracje commerce pisane pod Twój model biznesowy.",
+      hubLink: "Jak wygląda wdrożenie Medusa.js",
+      more: "Zobacz szczegóły",
       cta: "Skonsultuj Swój Projekt",
       items: {
         shopify: {
-          number: "01",
+          number: "04",
           title: "Sklepy Shopify i custom storefronty",
           punchline: "Szybki start dziś - bez ograniczania jutrzejszego wzrostu.",
           description: "Sklepy Shopify na każdy etap rozwoju: od sprawnych wdrożeń na motywie po customowe storefronty headless na Next.js lub TanStack, dedykowane integracje i UX nastawiony na konwersję.",
           href: "/uslugi/shopify-development",
         },
         websites: {
-          number: "02",
+          number: "03",
           title: "Strony internetowe",
           punchline: "Strona, która przyciąga klientów - nie tylko wygląda.",
           description: "Nowoczesne strony firmowe i landing page na Next.js: błyskawiczne ładowanie, solidne SEO i wysoka konwersja - gotowe na ruch od pierwszego dnia.",
           href: "/uslugi/professional-website-development",
         },
         ecommerce: {
-          number: "03",
-          title: "Sklepy headless e-commerce",
+          number: "01",
+          title: "Sklepy internetowe na Medusa.js",
           punchline: "Sklep z pełną kontrolą - bez prowizji, bez sufitu wzrostu.",
           description: "Sklepy B2C i B2B na Medusa.js: open-source commerce, elastyczny checkout, logika produktów i integracje bez ograniczeń zamkniętych platform SaaS.",
           href: "/uslugi/e-commerce-shops-medusa-js",
         },
         marketplace: {
-          number: "04",
-          title: "Marketplace multi-vendor",
+          number: "02",
+          title: "Marketplace multi-vendor na Medusa.js",
           punchline: "Platforma dla wielu sprzedawców, zbudowana pod Twój model biznesowy.",
           description: "Platformy marketplace na Medusa.js z kontami sprzedawców, logiką prowizji, płatnościami i procesami operacyjnymi dla skalowalnej sprzedaży multi-vendor.",
           href: "/uslugi/marketplace-multi-vendor-medusa-js",
@@ -634,15 +638,15 @@ export const translations = {
         },
         ecommerce: {
           number: "02",
-          title: "Sklepy Shopify i custom e-commerce",
+          title: "Sklepy na Medusa.js i Shopify",
           problem: "Platforma zaczyna ograniczać Twój rozwój?",
-          description: "Sklepy Shopify od szybkiego startu na motywie po custom headless na Next.js lub TanStack - oraz Medusa.js, gdy logika commerce wymaga pełnej kontroli open-source.",
+          description: "Medusa.js, gdy logika sprzedaży wymaga pełnej kontroli i własnego kodu, albo Shopify, od szybkiego startu na motywie po custom storefront headless na Next.js.",
         },
         marketplace: {
           number: "03",
           title: "Marketplace i Platformy Multi-Vendor",
           problem: "Chcesz zbudować platformę dla wielu sprzedawców?",
-          description: "Marketplace'y z własną logiką prowizji, płatności i zarządzania kontami sprzedawców - dopasowane do modelu biznesowego od pierwszej linii kodu.",
+          description: "Marketplace na Medusa.js z własną logiką prowizji, podziałem płatności i zarządzaniem kontami sprzedawców, dopasowany do modelu biznesowego od pierwszej linii kodu.",
         },
         webApps: {
           number: "04",
@@ -746,7 +750,7 @@ export const translations = {
         success: "Pomyślnie zasubskrybowano!",
       },
       brand: {
-        description: "AppCrates - tworzę wyjątkowe cyfrowe doświadczenia poprzez nowoczesny web development.",
+        description: "AppCrates - sklepy i marketplace na Medusa.js, strony i aplikacje webowe na Next.js, wdrożenia AI.",
       },
       navigation: "Nawigacja",
       connect: "Połącz się",
@@ -768,11 +772,11 @@ export const translations = {
     // Blog (BlogNew)
     blog: {
       title: "Blog",
-      subtitle: "Przemyślenia, tutoriale i spostrzeżenia",
+      subtitle: "Notatki z produkcji: Medusa.js, marketplace, e-commerce, Next.js i AI.",
       latestSection: {
         label: "[ 05 - Blog ]",
         heading: "Najnowsze wpisy z bloga",
-        subtitle: "Świeże notatki o web developmencie, AI, e-commerce i decyzjach stojących za nowoczesnymi produktami cyfrowymi.",
+        subtitle: "Świeże notatki o Medusa.js, e-commerce, AI i decyzjach stojących za nowoczesnymi produktami cyfrowymi.",
         cta: "Zobacz wszystkie wpisy",
       },
       search: "Szukaj wpisów...",

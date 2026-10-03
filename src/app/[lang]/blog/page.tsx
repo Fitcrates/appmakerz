@@ -36,8 +36,8 @@ export async function generateMetadata({ params }: LocalizedBlogPageProps): Prom
     title: t.title,
     description: t.subtitle,
     keywords: language === 'pl'
-      ? ['blog', 'web development', 'next.js', 'react', 'ai', 'aplikacje webowe', 'appcrates']
-      : ['blog', 'web development', 'next.js', 'react', 'ai', 'web applications', 'appcrates'],
+      ? ['blog', 'medusa.js', 'marketplace', 'e-commerce', 'next.js', 'ai', 'aplikacje webowe', 'appcrates']
+      : ['blog', 'medusa.js', 'marketplace', 'e-commerce', 'next.js', 'ai', 'web applications', 'appcrates'],
     alternates: {
       canonical,
       languages: {
