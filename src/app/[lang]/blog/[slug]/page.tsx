@@ -50,10 +50,10 @@ export async function generateMetadata({ params }: LocalizedBlogPostPageProps): 
   const post = await getPost(slug);
 
   if (!post?._id) {
-    // Next 16 answers an unknown param on a dynamicParams route with 200 even
-    // when the page calls notFound(), so the status cannot be fixed from here.
-    // What can be fixed is the indexing signal: noindex, and no canonical
-    // pointing at some other page as if this one were a variant of it.
+    // The page below calls notFound(), which now yields a real 404 (the 200 came
+    // from [lang]/loading.tsx starting the stream before it could). noindex and
+    // no canonical stay as a second line of defence, should a Suspense boundary
+    // ever wrap these pages again.
     return {
       title: translations[language].blog.post.backToBlog,
       robots: { index: false, follow: false },

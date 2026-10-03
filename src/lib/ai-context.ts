@@ -290,8 +290,8 @@ export async function buildAIContextIndex(language: Language = 'pl'): Promise<Co
 
   const chunks: ContextChunk[] = [];
   const appCratesDescription = language === 'pl'
-    ? 'AppCrates projektuje i wdraża nowoczesne strony internetowe, aplikacje webowe, rozwiązania AI/RAG, platformy e-commerce, marketplace, migracje Next.js/TanStack oraz audyty WCAG/GDPR.'
-    : 'AppCrates designs and builds modern websites, web applications, AI/RAG solutions, e-commerce platforms, marketplaces, Next.js/TanStack migrations, and WCAG/GDPR audits.';
+    ? 'AppCrates specjalizuje się w Medusa.js: sklepy internetowe, marketplace multi-vendor i integracje commerce. Poza tym projektuje i wdraża strony internetowe i aplikacje webowe na Next.js, rozwiązania AI/RAG, migracje Next.js/TanStack oraz audyty WCAG/GDPR.'
+    : 'AppCrates specialises in Medusa.js: online stores, multi-vendor marketplaces and commerce integrations. It also designs and builds websites and web applications on Next.js, AI/RAG solutions, Next.js/TanStack migrations, and WCAG/GDPR audits.';
 
   chunks.push(makeChunk({
     id: 'core-appcrates',

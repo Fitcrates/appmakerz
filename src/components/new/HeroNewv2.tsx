@@ -125,18 +125,18 @@ const HeroNewv2: React.FC = () => {
             style={{ y }}
             className={`${styles.parallax} order-1 lg:order-2 lg:col-span-6 flex flex-col items-center text-center`}
           >
-            <h1 className="sr-only">{t.seoHeading}</h1>
-
-            {/* Eyebrow */}
+            {/* The H1 sits in the eyebrow slot as small visible text. It used to
+                be sr-only, and the slogan below is the marketing line, not the
+                page's heading, so it stays a div at its full size. */}
             <motion.div
               initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="mb-8 lg:mb-4 xl:mb-6 2xl:mb-8 [@media(max-height:800px)]:mb-4"
             >
-              <span className="text-xs tracking-[0.3em] uppercase text-white/90">
-                {t.label}
-              </span>
+              <h1 className="max-w-xl mx-auto text-xs sm:text-sm lg:text-xs xl:text-sm font-normal leading-relaxed tracking-wide text-white/80">
+                {t.seoHeading}
+              </h1>
             </motion.div>
 
             {/* Heading */}
