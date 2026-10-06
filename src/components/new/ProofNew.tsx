@@ -1,9 +1,10 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { ArrowUpRight, Fingerprint, History, Inbox, RefreshCw, Scale, ShieldCheck, Star } from 'lucide-react';
+import { ArrowUpRight, Fingerprint, History, Inbox, RefreshCw, Scale, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import BurnSpotlightText from './BurnSpotlightText';
+import ReviewCard from './ReviewCard';
 import { useLanguage } from '../../context/LanguageContext';
 import { localizedPath } from '../../lib/i18n-routing';
 import { translations } from '../../translations/translations';
@@ -15,9 +16,15 @@ const MERCUR_CASE_STUDY_URL = 'https://www.mercurjs.com/case-studies/artovnia';
 // The cid opens the whole business profile, so the link keeps working as
 // reviews are added. The share links only point at a single review.
 const GOOGLE_REVIEWS_URL = 'https://maps.google.com/?cid=7009445637550924812';
-// Same order as the chips in translations: idempotency, retries, dead-letter,
-// reconciliation, audit trail, race conditions.
-const failureIcons = [Fingerprint, RefreshCw, Inbox, Scale, History, ShieldCheck];
+// Same order as the chips in translations, which follow the paragraph:
+// retries, idempotency, reconciliation, audit trail, then dead-letter and
+// race conditions as the deeper layer.
+const failureIcons = [RefreshCw, Fingerprint, Scale, History, Inbox, ShieldCheck];
+
+const reviewGridCols: Record<number, string> = {
+  2: 'md:grid-cols-2',
+  3: 'md:grid-cols-2 lg:grid-cols-3',
+};
 
 const fadeIn = (inView: boolean, delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -215,30 +222,21 @@ const ProofNew: React.FC = () => {
             {t.reviews.heading}
           </motion.h3>
 
-          <div className="mt-8 grid md:grid-cols-2 gap-6 lg:gap-10">
+          {/* Two reviews sit side by side, three get a column each from lg up.
+              Long ones are clamped in the card and open in full in a dialog. */}
+          <div className={`mt-8 grid gap-6 lg:gap-8 ${reviewGridCols[Math.min(t.reviews.items.length, 3)] ?? ''}`}>
             {t.reviews.items.map((review, index) => (
-              <motion.figure
+              <ReviewCard
                 key={review.author}
-                {...fadeIn(reviewsInView, 0.25 + index * 0.1)}
-                className="ac-card ac-card--sm flex flex-col p-6 sm:p-8"
-              >
-                <div className="flex items-center gap-1 text-teal-300" role="img" aria-label={t.reviews.ratingLabel}>
-                  {Array.from({ length: 5 }, (_, star) => (
-                    <Star key={star} className="w-4 h-4 fill-current" aria-hidden="true" />
-                  ))}
-                </div>
-                <blockquote className="mt-5 flex-1">
-                  <p className="font-light leading-relaxed text-white/80">
-                    {language === 'pl' ? `„${review.text}”` : `“${review.text}”`}
-                  </p>
-                </blockquote>
-                <figcaption className="mt-6 pt-5 border-t border-white/[0.08] flex flex-wrap items-baseline justify-between gap-2">
-                  <span className="font-oxanium text-white">{review.author}</span>
-                  <span className="text-[11px] tracking-[0.12em] uppercase text-white/60">
-                    {review.translated ? `Google · ${t.reviews.translated}` : 'Google'}
-                  </span>
-                </figcaption>
-              </motion.figure>
+                author={review.author}
+                text={review.text}
+                source={review.translated ? `Google · ${t.reviews.translated}` : 'Google'}
+                quote={(text) => (language === 'pl' ? `„${text}”` : `“${text}”`)}
+                ratingLabel={t.reviews.ratingLabel}
+                readMoreLabel={t.reviews.readMore}
+                closeLabel={t.reviews.close}
+                motionProps={fadeIn(reviewsInView, 0.25 + index * 0.1)}
+              />
             ))}
           </div>
 
