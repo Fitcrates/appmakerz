@@ -66,9 +66,9 @@ export const translations = {
 
     // Proof Section (ProofNew)
     proof: {
-      label: "[ In production ]",
-      heading: "What's already running",
-      intro: "I design and build commerce systems that handle real payments, orders and seller payouts.",
+      label: "[ Proof ]",
+      heading: "Proven in production",
+      intro: "I design and build commerce systems that handle real payments, orders, sellers and integrations.",
       bar: [
         { value: "Medusa.js", label: "Marketplace in production" },
         { value: "Stripe Connect", label: "Split payments and payouts" },
@@ -87,9 +87,9 @@ export const translations = {
           { title: "EU marketplace rules", description: "DAC7, DSA and the Omnibus Directive run as separate modules that can be updated as the law changes." },
         ],
         failure: {
-          heading: "And when something fails?",
-          body: "A payment is never charged twice, an order does not vanish when an integration or the network goes down, and each seller's balance matches what actually went through Stripe. Every money movement can be traced: who, what and when.",
-          chips: ["Idempotent payments", "Retries and queues", "Dead-letter handling", "Reconciliation", "Audit trail", "Race-condition safety"],
+          heading: "Robust by design",
+          body: "An integration stops responding? The operation can be safely retried. The same webhook arrives twice? It does not cause a second effect. A process breaks off halfway? The state can be reconciled and restored. Critical operations leave a trail that shows what actually happened.",
+          chips: ["Retries and queues", "Idempotent operations", "Reconciliation", "Audit trail", "Dead-letter handling", "Race-condition safety"],
         },
         cta: "See how it works",
         visit: "Visit artovnia.com",
@@ -102,9 +102,16 @@ export const translations = {
       reviews: {
         heading: "From people I have worked with",
         ratingLabel: "5 out of 5 stars",
+        readMore: "Read the full review",
+        close: "Close",
         translated: "Translated from Polish",
         link: "See reviews on Google",
         items: [
+          {
+            author: "Clara G.",
+            text: "I genuinely couldn't imagine a better person to design my landing page. What I found the most helpful was not just that Arkadiusz could develop the whole website, but he also has an astounding knowledge of B2B marketing. He knows the kind of solutions that actually reach customers. He proposes different approaches and is very transparent on which solution might be better even if it's cheaper. On the other hand, he presents great reasoning why sometimes the time and cost-consuming approach might be better if long-term it buys me peace of mind, and most importantly, more customers.\n\nI can already see the results - my landing page is doing great and I'm planning on cooperating with AppCrates more in the future, aiming at new target groups and maybe even building my main page infrastructure from the ground up.\n\nOh, and on top of that I loved how responsive Arkadiusz is! I usually receive his answers in a couple of hours (or faster) and he's the most professional expert I communicated with in a long time.\n\nThis is a lengthy review as you can see but it's just that I genuinely think he's that great to work with and he brings actual results. Couldn't recommend him more!!",
+            translated: false,
+          },
           {
             author: "David C.",
             text: "I've been working with Arkadiusz for some time and have had a great experience. He's reliable, easy to communicate with, and genuinely cares about the quality of his work. He understands what the business needs, suggests thoughtful solutions, and takes real ownership of the project. I'm very happy with our cooperation and would gladly recommend him.",
@@ -559,9 +566,9 @@ export const translations = {
 
     // Proof Section (ProofNew)
     proof: {
-      label: "[ Na produkcji ]",
-      heading: "Co już działa",
-      intro: "Projektuję i buduję systemy commerce, przez które przechodzą prawdziwe płatności, zamówienia i wypłaty dla sprzedawców.",
+      label: "[ Dowody ]",
+      heading: "Sprawdzone w produkcji",
+      intro: "Projektuję i buduję systemy commerce, które obsługują prawdziwe płatności, zamówienia, sprzedawców i integracje.",
       bar: [
         { value: "Medusa.js", label: "Marketplace na produkcji" },
         { value: "Stripe Connect", label: "Podział płatności i wypłaty" },
@@ -580,9 +587,9 @@ export const translations = {
           { title: "Wymogi prawne UE", description: "DAC7, DSA i dyrektywa Omnibus działają jako osobne moduły, które da się aktualizować razem z przepisami." },
         ],
         failure: {
-          heading: "A jeśli coś pójdzie nie tak?",
-          body: "Płatność nie pobierze się dwa razy, zamówienie nie zniknie, gdy padnie integracja albo sieć, a saldo każdego sprzedawcy zgadza się z tym, co faktycznie przeszło przez Stripe. Każdą operację na pieniądzach da się prześledzić: kto, co i kiedy.",
-          chips: ["Idempotentne płatności", "Ponawianie i kolejki", "Dead-letter queue", "Uzgadnianie rozliczeń", "Audit trail", "Ochrona przed race condition"],
+          heading: "Odporne na awarie z założenia",
+          body: "Integracja przestaje odpowiadać? Operacja może zostać bezpiecznie ponowiona. Ten sam webhook dociera drugi raz? Nie tworzy drugiego skutku. Proces urywa się w połowie? Stan można uzgodnić i odtworzyć. Krytyczne operacje pozostawiają ślad pozwalający sprawdzić, co faktycznie się wydarzyło.",
+          chips: ["Ponawianie i kolejki", "Idempotentne operacje", "Uzgadnianie stanu", "Audit trail", "Dead-letter queue", "Ochrona przed race condition"],
         },
         cta: "Zobacz, jak to działa",
         visit: "Wejdź na artovnia.com",
@@ -595,9 +602,16 @@ export const translations = {
       reviews: {
         heading: "Opinie ze współpracy",
         ratingLabel: "5 na 5 gwiazdek",
+        readMore: "Czytaj całą opinię",
+        close: "Zamknij",
         translated: "Przetłumaczone z angielskiego",
         link: "Zobacz opinie w Google",
         items: [
+          {
+            author: "Clara G.",
+            text: "Naprawdę nie wyobrażam sobie lepszej osoby do zaprojektowania mojego landing page'a. Najbardziej pomocne było nie tylko to, że Arkadiusz potrafił zbudować całą stronę, ale też jego imponująca wiedza o marketingu B2B. Wie, jakie rozwiązania faktycznie docierają do klientów. Proponuje różne podejścia i otwarcie mówi, które rozwiązanie może być lepsze, nawet jeśli jest tańsze. Z drugiej strony świetnie uzasadnia, dlaczego czasem bardziej czasochłonne i kosztowne podejście się opłaca, jeśli w dłuższej perspektywie daje spokój, a przede wszystkim więcej klientów.\n\nJuż widzę efekty - mój landing page radzi sobie świetnie i planuję dalszą współpracę z AppCrates: nowe grupy docelowe, a może nawet zbudowanie od podstaw infrastruktury mojej głównej strony.\n\nA do tego bardzo podoba mi się, jak szybko Arkadiusz odpowiada! Zwykle dostaję odpowiedź w ciągu kilku godzin (albo szybciej) i to najbardziej profesjonalny ekspert, z jakim od dawna mam kontakt.\n\nJak widać, to długa opinia, ale po prostu naprawdę uważam, że świetnie się z nim współpracuje i przynosi realne efekty. Polecam z całego serca!!",
+            translated: true,
+          },
           {
             author: "David C.",
             text: "Współpracuję z Arkadiuszem od jakiegoś czasu i mam świetne doświadczenia. Jest rzetelny, łatwo się z nim komunikować i naprawdę dba o jakość swojej pracy. Rozumie potrzeby firmy, proponuje przemyślane rozwiązania i bierze pełną odpowiedzialność za projekt. Jestem bardzo zadowolony z naszej współpracy i z przyjemnością go polecam.",
