@@ -1,0 +1,36 @@
+/* Same shape as the blog's category selector, flatter fill. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 1.05rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  font-family: 'Oxanium', system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  transition: border-color 220ms ease, color 220ms ease;
+}
+
+.pill:hover {
+  border-color: rgba(94, 234, 212, 0.4);
+  color: #fff;
+}
+
+/* Faint light behind the cut-out device mockup, so it does not sit on a
+   perfectly flat field. */
+.halo {
+  position: absolute;
+  inset: 12% 8% 6%;
+  background: radial-gradient(ellipse at 55% 45%, rgba(94, 234, 212, 0.08), transparent 65%);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+@media (max-width: 480px) {
+  .pill {
+    white-space: normal;
+  }
+}

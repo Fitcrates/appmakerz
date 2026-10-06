@@ -210,7 +210,7 @@ const SolutionsNew: React.FC = () => {
           transition={{ duration: 1 }}
           className="pt-20 lg:pt-24 mb-6 lg:mb-16"
         >
-          <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">
+          <span className="text-xs tracking-[0.3em] uppercase text-white/55 ">
             {t.label}
           </span>
         </motion.div>

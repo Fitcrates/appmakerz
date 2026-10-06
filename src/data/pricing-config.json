@@ -1,43 +1,7 @@
 {
   "services": {
-    "shopify": {
-      "label": "Sklep Shopify",
-      "steps": [],
-      "noPrice": true,
-      "ctaLabel": "Umów konsultację Shopify",
-      "base": {},
-      "features": {}
-    },
-    "website": {
-      "label": "Strona internetowa / landing page",
-      "steps": ["base", "cms", "features", "deadline"],
-      "base": {
-        "simple_landing": { "label": "Prosta strona ofertowa", "min": 1200, "max": 2500 },
-        "template": { "label": "Szybszy start na gotowym układzie", "min": 1800, "max": 3500 },
-        "custom": { "label": "Indywidualny projekt od zera", "min": 3500, "max": 7000 },
-        "have_design": { "label": "Mam gotowy projekt graficzny", "min": 1800, "max": 4000 }
-      },
-      "cms": {
-        "none": { "label": "Bez panelu edycji treści", "min": 0, "max": 0 },
-        "sanity_form": { "label": "Panel do edycji treści", "min": 900, "max": 2000 },
-        "sanity_visual": { "label": "Wygodniejsza edycja z podglądem", "min": 1800, "max": 3500 }
-      },
-      "features": {
-        "extra_pages": { "label": "Dodatkowe podstrony", "min": 300, "max": 800 },
-        "blog": { "label": "Blog / aktualności", "min": 700, "max": 1500 },
-        "contact_form": { "label": "Formularz kontaktowy", "min": 300, "max": 700 },
-        "newsletter": { "label": "Zbieranie adresów email", "min": 400, "max": 900 },
-        "i18n": { "label": "Więcej niż jeden język", "min": 1000, "max": 2500 },
-        "animations": { "label": "Animacje i efekt premium", "min": 600, "max": 1800 },
-        "seo_setup": { "label": "Podstawowa optymalizacja pod Google", "min": 500, "max": 1200 },
-        "analytics": { "label": "Statystyki odwiedzin", "min": 300, "max": 800 },
-        "cookie_banner": { "label": "Baner cookies / zgody", "min": 300, "max": 800 },
-        "performance": { "label": "Przyspieszenie strony", "min": 500, "max": 1500 }
-      }
-    },
-
-   "ecommerce": {
-  "label": "Sklep internetowy",
+    "ecommerce": {
+  "label": "Sklep na Medusa.js",
   "steps": ["base", "cms", "features", "deadline"],
   "base": {
     "medusa_basic": {
@@ -156,7 +120,41 @@
     }
   }
 },
-
+    "shopify": {
+      "label": "Sklep Shopify",
+      "steps": [],
+      "noPrice": true,
+      "ctaLabel": "Umów konsultację Shopify",
+      "base": {},
+      "features": {}
+    },
+    "website": {
+      "label": "Strona internetowa / landing page",
+      "steps": ["base", "cms", "features", "deadline"],
+      "base": {
+        "simple_landing": { "label": "Prosta strona ofertowa", "min": 1200, "max": 2500 },
+        "template": { "label": "Szybszy start na gotowym układzie", "min": 1800, "max": 3500 },
+        "custom": { "label": "Indywidualny projekt od zera", "min": 3500, "max": 7000 },
+        "have_design": { "label": "Mam gotowy projekt graficzny", "min": 1800, "max": 4000 }
+      },
+      "cms": {
+        "none": { "label": "Bez panelu edycji treści", "min": 0, "max": 0 },
+        "sanity_form": { "label": "Panel do edycji treści", "min": 900, "max": 2000 },
+        "sanity_visual": { "label": "Wygodniejsza edycja z podglądem", "min": 1800, "max": 3500 }
+      },
+      "features": {
+        "extra_pages": { "label": "Dodatkowe podstrony", "min": 300, "max": 800 },
+        "blog": { "label": "Blog / aktualności", "min": 700, "max": 1500 },
+        "contact_form": { "label": "Formularz kontaktowy", "min": 300, "max": 700 },
+        "newsletter": { "label": "Zbieranie adresów email", "min": 400, "max": 900 },
+        "i18n": { "label": "Więcej niż jeden język", "min": 1000, "max": 2500 },
+        "animations": { "label": "Animacje i efekt premium", "min": 600, "max": 1800 },
+        "seo_setup": { "label": "Podstawowa optymalizacja pod Google", "min": 500, "max": 1200 },
+        "analytics": { "label": "Statystyki odwiedzin", "min": 300, "max": 800 },
+        "cookie_banner": { "label": "Baner cookies / zgody", "min": 300, "max": 800 },
+        "performance": { "label": "Przyspieszenie strony", "min": 500, "max": 1500 }
+      }
+    },
     "marketplace": {
       "label": "Platforma marketplace",
       "steps": ["base", "features", "deadline"],

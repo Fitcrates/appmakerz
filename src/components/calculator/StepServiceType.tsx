@@ -1,12 +1,12 @@
-import { Globe, ShoppingCart, Store, Bot, Settings } from 'lucide-react';
-import { SiShopify } from 'react-icons/si';
+import { Globe, Store, Bot, Settings } from 'lucide-react';
+import { SiMedusa, SiShopify } from 'react-icons/si';
 import type { PricingConfig } from '@/lib/calculator/types';
 import type { PricingCopy } from '@/data/pricing-copy';
 
 const serviceIcons: Record<string, React.ReactNode> = {
   shopify: <SiShopify className="h-8 w-8 text-teal-300" />,
   website: <Globe className="h-8 w-8 text-teal-300" />,
-  ecommerce: <ShoppingCart className="h-8 w-8 text-teal-300" />,
+  ecommerce: <SiMedusa className="h-8 w-8 text-teal-300" />,
   marketplace: <Store className="h-8 w-8 text-teal-300" />,
   ai: <Bot className="h-8 w-8 text-teal-300" />,
   saas: <Settings className="h-8 w-8 text-teal-300" />,
@@ -28,7 +28,7 @@ export default function StepServiceType({ config, copy, selectedService, onSelec
           key={key}
           type="button"
           onClick={() => onSelect(key)}
-          className={`group relative min-h-[190px] border p-6 text-left transition-colors ${selectedService === key ? 'border-teal-300 bg-white/[0.06]' : 'border-white/10 bg-transparent hover:border-white/25 hover:bg-white/[0.03]'}`}
+          className={`ac-rounded group relative min-h-[190px] border p-6 text-left transition-colors ${selectedService === key ? 'border-teal-300 bg-white/[0.06]' : 'border-white/10 bg-transparent hover:border-white/25 hover:bg-white/[0.03]'}`}
         >
           <span className="mb-5 block" aria-hidden="true">{serviceIcons[key]}</span>
           <span className="block font-oxanium text-2xl font-light text-white transition-colors group-hover:text-teal-300">{copy[key]?.label || service.label}</span>

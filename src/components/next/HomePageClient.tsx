@@ -8,6 +8,7 @@ import HeroNewv2 from '@/components/new/HeroNewv2';
 import type { Post, Project } from '@/types/sanity.types';
 
 const TechStackNew = dynamic(() => import('@/components/new/TechStackNew'));
+const ProofNew = dynamic(() => import('@/components/new/ProofNew'));
 const AboutNew = dynamic(() => import('@/components/new/AboutNew'));
 const ServicesNew = dynamic(() => import('@/components/new/ServicesNew'));
 const ProjectsNew = dynamic(() => import('@/components/new/ProjectsNew'));
@@ -57,6 +58,7 @@ export default function HomePageClient({ projects, posts }: HomePageClientProps)
       <main>
         <HeroNewv2 />
         <TechStackNew />
+        <ProofNew />
         <AboutNew />
         <ServicesNew />
         <ProjectsNew sanityProjects={projects} />

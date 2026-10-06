@@ -1,5 +1,7 @@
 @import '../index.css';
 @import '../styles/new-design.css';
+/* Rounded-cards experiment, see the header of that file to undo. */
+@import '../styles/rounded-cards.css';
 
 :root {
   --route-transition-bg: rgb(49, 46, 129);

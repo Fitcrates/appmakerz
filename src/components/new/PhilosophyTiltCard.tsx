@@ -87,12 +87,11 @@ export default function PhilosophyTiltCard({
         className="relative h-full w-full"
       >
         <div
-          className={`group relative z-10 flex min-h-[220px] h-full flex-col overflow-hidden border border-teal-300/15 p-7 shadow-[0_22px_70px_rgba(0,0,0,0.28)] backdrop-blur-md transition-colors duration-500 sm:p-8 ${
-            isHovered ? 'border-teal-300/45 shadow-[0_26px_82px_rgba(0,0,0,0.34)]' : ''
+          className={`ac-card group relative z-10 flex min-h-[220px] h-full flex-col overflow-hidden p-7 sm:p-8 ${
+            isHovered ? '!border-teal-300/40' : ''
           }`}
           style={{ transform: 'translateZ(28px)' }}
         >
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-300/35 to-transparent" />
           <div
             className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500"
             style={{

@@ -19,7 +19,7 @@ export default function ServiceModelsNew({ models, language }: ServiceModelsNewP
   return (
     <section className="py-20 lg:py-28 bg-indigo-950 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <span className="text-xs tracking-[0.3em] uppercase text-white/30">
+        <span className="text-xs tracking-[0.3em] uppercase text-white/55">
           {language === 'pl' ? 'Dwie drogi' : 'Two routes'}
         </span>
         <div className="mt-4 mb-6 max-w-3xl">

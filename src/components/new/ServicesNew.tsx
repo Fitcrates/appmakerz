@@ -167,7 +167,7 @@ const ServicesNew: React.FC = () => {
           transition={{ duration: 1 }}
           className="mb-6"
         >
-          <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">
+          <span className="text-xs tracking-[0.3em] uppercase text-white/55 ">
             {t.label}
           </span>
         </motion.div>

@@ -29,7 +29,7 @@ export default function LatestBlogPostsSection({ posts = [] }: LatestBlogPostsSe
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 pt-12 lg:mb-16">
           <div>
-            <span className="text-xs uppercase tracking-[0.3em] text-white/30">
+            <span className="text-xs uppercase tracking-[0.3em] text-white/55">
               {t.label}
             </span>
             <h2 className="mt-6 max-w-3xl text-4xl font-light leading-tight text-white sm:text-5xl lg:text-6xl">
@@ -37,13 +37,13 @@ export default function LatestBlogPostsSection({ posts = [] }: LatestBlogPostsSe
                 {t.heading}
               </SpotlightText>
             </h2>
-            <SpotlightText as="p" className="mt-6 max-w-2xl text-base font-light leading-relaxed text-white/55 sm:text-lg">
+            <SpotlightText as="p" className="mt-6 max-w-2xl text-base font-light leading-relaxed text-white/70 sm:text-lg">
               {t.subtitle}
             </SpotlightText>
           </div>
         </div>
 
-        <div className="grid items-stretch sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {latestPosts.map((post) => {
             const title = getLocalizedText(post.title, language);
             const excerpt = getLocalizedText(post.excerpt, language);
@@ -52,7 +52,7 @@ export default function LatestBlogPostsSection({ posts = [] }: LatestBlogPostsSe
               : '';
 
             return (
-              <article key={post._id} className="group h-full border border-white/[0.07] bg-indigo-950">
+              <article key={post._id} className="ac-card group h-full overflow-hidden hover:border-teal-300/30">
                 <PrefetchLink href={localizedPath(language, `/blog/${post.slug.current}`)} className="flex h-full flex-col">
                   <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
                     {imageUrl ? (
@@ -69,7 +69,7 @@ export default function LatestBlogPostsSection({ posts = [] }: LatestBlogPostsSe
 
                   <div className="flex min-h-[22rem] flex-1 flex-col p-6 sm:p-7">
                     <div>
-                      <div className="mb-5 flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-white/35">
+                      <div className="mb-5 flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-white/60">
                         <CalendarDays className="h-4 w-4 text-teal-300/70" />
                         <time dateTime={post.publishedAt}>
                           {new Date(post.publishedAt).toLocaleDateString(language === 'pl' ? 'pl-PL' : 'en-US', {
@@ -87,13 +87,13 @@ export default function LatestBlogPostsSection({ posts = [] }: LatestBlogPostsSe
 
                     <div className="mt-auto pt-8">
                       {excerpt ? (
-                        <p className="line-clamp-4 min-h-[5.5rem] text-sm font-light leading-relaxed text-white/50">
+                        <p className="line-clamp-4 min-h-[5.5rem] text-sm font-light leading-relaxed text-white/70">
                           {excerpt}
                         </p>
                       ) : (
                         <div className="min-h-[5.5rem]" />
                       )}
-                      <span className="mt-5 inline-flex items-center gap-2 text-sm text-white/55 transition-colors group-hover:text-teal-300">
+                      <span className="mt-5 inline-flex items-center gap-2 text-sm text-white/70 transition-colors group-hover:text-teal-300">
                         {translations[language].blog.readMore}
                         <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                       </span>

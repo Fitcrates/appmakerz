@@ -93,7 +93,7 @@ export default async function LocalizedFaqPage({ params }: LocalizedFaqPageProps
             <span className="text-white/60 truncate max-w-[250px] sm:max-w-none">FAQ</span>
           </div>
           <div className="mb-16">
-            <span className="text-xs text-white/30 tracking-widest uppercase">{content.knowledgeBase}</span>
+            <span className="text-xs text-white/55 tracking-widest uppercase">{content.knowledgeBase}</span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-white mb-4 mt-6">{content.title}</h1>
             <p className="text-white/60 max-w-xl text-lg">{content.subtitle}</p>
           </div>

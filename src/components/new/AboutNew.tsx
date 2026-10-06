@@ -245,7 +245,7 @@ const AboutNew: React.FC = () => {
           transition={{ duration: 1 }}
           className="mb-6 lg:mb-16"
         >
-          <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">{t.label}</span>
+          <span className="text-xs tracking-[0.3em] uppercase text-white/55 ">{t.label}</span>
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
@@ -264,7 +264,7 @@ const AboutNew: React.FC = () => {
             </BorderGlow>
           </motion.div>
 
-          <div className="lg:pt-16">
+          <div className="lg:pt-8">
             <div className="mb-12">
               <BurnSpotlightText
                 as="h2"
@@ -313,12 +313,12 @@ const AboutNew: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="grid grid-cols-3 gap-8 pt-8 border-t border-white/10 items-center text-center lg:text-left"
               role="list"
-              aria-label="Experience statistics"
+              aria-label={language === 'pl' ? 'Jak wygląda współpraca' : 'How working together looks'}
             >
               {[
-                { value: t.stats.years.value, label: t.stats.years.label, description: 'Years of professional experience' },
-                { value: t.stats.projects.value, label: t.stats.projects.label, description: 'Completed projects' },
-                { value: t.stats.dedication.value, label: t.stats.dedication.label, description: 'Dedication to quality' },
+                { value: t.stats.years.value, label: t.stats.years.label },
+                { value: t.stats.projects.value, label: t.stats.projects.label },
+                { value: t.stats.dedication.value, label: t.stats.dedication.label },
               ].map((stat, index) => (
                 <motion.div
                   key={stat.label}
@@ -326,7 +326,6 @@ const AboutNew: React.FC = () => {
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.7 + index * 0.1 }}
                   role="listitem"
-                  aria-label={stat.description}
                 >
                   <div className="mb-2">
                     <SpotlightText as="span" className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium" glowSize={80}>

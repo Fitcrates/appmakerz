@@ -28,7 +28,7 @@ export default function GuideCtaSection({ chapters, chapterCount, trackCount, la
   return (
     <section className="border-t border-white/10 py-16 lg:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 border border-teal-300/20 bg-teal-300/[0.05] p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div className="ac-rounded grid gap-8 border border-teal-300/20 bg-teal-300/[0.05] p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
             <div className="mb-4 flex items-center gap-2 text-xs uppercase tracking-[0.24em] text-teal-300">
               <BookOpenCheck className="h-4 w-4" aria-hidden="true" />

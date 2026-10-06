@@ -32,7 +32,7 @@ export default function HubFit({ fitYes, fitNo, language }: HubFitProps) {
   return (
     <section className="py-20 lg:py-24 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <span className="text-xs tracking-[0.3em] uppercase text-white/30">
+        <span className="text-xs tracking-[0.3em] uppercase text-white/55">
           {language === 'pl' ? 'Zanim napiszesz' : 'Before you write'}
         </span>
         <div className="mt-4 mb-12 max-w-3xl lg:mb-16">
