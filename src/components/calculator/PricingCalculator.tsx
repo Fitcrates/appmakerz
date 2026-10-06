@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Globe, ShoppingCart, Store, Bot, Settings } from 'lucide-react';
+import { Globe, Store, Bot, Settings } from 'lucide-react';
+import { SiMedusa } from 'react-icons/si';
 import { useCalculator } from '@/lib/calculator/useCalculator';
 
 import { pricingCopy } from '@/data/pricing-copy';
@@ -20,7 +21,7 @@ import StepServiceType from './StepServiceType';
 function ServiceIcon({ keyName }: { keyName: string }) {
   const icons: Record<string, React.ReactNode> = {
     website: <Globe className="h-4 w-4 text-teal-300/60" />,
-    ecommerce: <ShoppingCart className="h-4 w-4 text-teal-300/60" />,
+    ecommerce: <SiMedusa className="h-4 w-4 text-teal-300/60" />,
     marketplace: <Store className="h-4 w-4 text-teal-300/60" />,
     ai: <Bot className="h-4 w-4 text-teal-300/60" />,
     saas: <Settings className="h-4 w-4 text-teal-300/60" />,
@@ -116,7 +117,7 @@ export default function PricingCalculator() {
     return (
       <div className="space-y-8">
         <ResultDisplay price={price} service={selectedService} disclaimer={optionCopy.disclaimer} label={t.result.label} noPriceTitle={t.result.noPriceTitle} />
-        <div className="border border-white/10 bg-transparent p-6">
+        <div className="ac-card p-6">
           <h3 className="mb-5 font-oxanium text-2xl font-light text-white">{t.result.formTitle}</h3>
           <StepContact service={selectedService} summary={summary} price={price} language={language} copy={t.form} />
         </div>
@@ -125,7 +126,7 @@ export default function PricingCalculator() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl border border-white/10 bg-indigo-950 p-5 sm:p-8 lg:p-10">
+    <div className="ac-card mx-auto w-full max-w-5xl p-5 sm:p-8 lg:p-10">
       <ProgressBar current={stepIndex} total={steps.length} label={t.progressLabel} />
       <div className="mt-8 min-h-[520px] sm:min-h-[440px]">
         <AnimatePresence mode="wait">

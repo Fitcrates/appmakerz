@@ -1,0 +1,29 @@
+/* A short bright dash travels each spoke from its label into the portrait.
+   pathLength="100" on the line makes the dash maths independent of the
+   rendered length, so one keyframe serves every spoke. */
+.pulse {
+  stroke-dasharray: 7 93;
+  stroke-dashoffset: 100;
+  stroke-linecap: round;
+  animation: mindmap-pulse 3.6s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(94, 234, 212, 0.8));
+}
+
+.pulseActive {
+  animation-duration: 1.8s;
+}
+
+@keyframes mindmap-pulse {
+  from { stroke-dashoffset: 100; opacity: 0; }
+  12% { opacity: 1; }
+  85% { opacity: 1; }
+  to { stroke-dashoffset: 0; opacity: 0; }
+}
+
+.spoke {
+  transition: stroke 400ms ease, stroke-width 400ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse { display: none; }
+}

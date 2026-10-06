@@ -403,7 +403,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
         {problems.length > 0 ? (
           <section className="py-20 lg:py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <span className="text-xs tracking-[0.3em] uppercase text-white/30">
+              <span className="text-xs tracking-[0.3em] uppercase text-white/55">
                 {language === 'pl' ? 'Brzmi znajomo?' : 'Sound familiar?'}
               </span>
               <div className="mt-4 mb-16 max-w-3xl">
@@ -518,7 +518,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
 
               <div className="grid gap-6 lg:grid-cols-3">
                 {otherServices.length > 0 ? (
-                  <section className="border border-white/10 p-6 sm:p-7">
+                  <section className="ac-card p-6 sm:p-7">
                     <SpotlightText as="h3" className="font-oxanium text-xl font-light text-white">
                       {language === 'pl' ? 'Pozostałe usługi' : 'Other services'}
                     </SpotlightText>
@@ -555,7 +555,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                 ) : null}
 
                 {relatedProjects.length > 0 ? (
-                  <section className="border border-white/10 p-6 sm:p-7">
+                  <section className="ac-card p-6 sm:p-7">
                     <SpotlightText as="h3" className="font-oxanium text-xl font-light text-white">
                       {language === 'pl' ? 'Powiązane projekty' : 'Related projects'}
                     </SpotlightText>
@@ -605,7 +605,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                 ) : null}
 
                 {relatedPosts.length > 0 ? (
-                  <section className="border border-white/10 p-6 sm:p-7">
+                  <section className="ac-card p-6 sm:p-7">
                     <SpotlightText as="h3" className="font-oxanium text-xl font-light text-white">
                       {language === 'pl' ? 'Powiązane wpisy' : 'Related articles'}
                     </SpotlightText>

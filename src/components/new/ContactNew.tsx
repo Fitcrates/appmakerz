@@ -62,7 +62,7 @@ const ContactNew: React.FC = () => {
           transition={{ duration: 1 }}
           className="mb-6 lg:mb-16"
         >
-          <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">
+          <span className="text-xs tracking-[0.3em] uppercase text-white/55 ">
             {t.label}
           </span>
         </motion.div>
@@ -161,7 +161,7 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   autoComplete="name"
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/20 focus:outline-none  transition-colors [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/40 focus:outline-none  transition-colors [color-scheme:dark]"
                   placeholder={t.form.name.placeholder}
                 />
               </div>
@@ -182,7 +182,7 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   autoComplete="email"
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/20 focus:outline-none transition-colors [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/40 focus:outline-none transition-colors [color-scheme:dark]"
                   placeholder={t.form.email.placeholder}
                 />
               </div>
@@ -202,7 +202,7 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   rows={4}
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/20 focus:outline-none transition-colors resize-none [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/40 focus:outline-none transition-colors resize-none [color-scheme:dark]"
                   placeholder={t.form.message.placeholder}
                 />
               </div>
@@ -226,7 +226,7 @@ const ContactNew: React.FC = () => {
                   </div>
                 </button>
 
-                <p className="text-xs text-white/20 ">
+                <p className="text-xs text-white/55 ">
                   {t.form.privacy.text}{' '}
                   <PrefetchLink href="/privacy-policy" className="text-white/70 hover:text-teal-300 transition-colors">
                     {t.form.privacy.link}

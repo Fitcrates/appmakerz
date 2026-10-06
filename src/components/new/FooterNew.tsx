@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUp, Mail, ArrowRight, Check } from 'lucide-react';
+import { ArrowUp, ArrowUpRight, Check } from 'lucide-react';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import { useLanguage } from '../../context/LanguageContext';
 import { localizedPath } from '../../lib/i18n-routing';
@@ -148,24 +148,24 @@ const FooterNew: React.FC = () => {
     <footer className="relative bg-indigo-950" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-16 lg:py-20">
+          {/* Same language as the contact form: eyebrow label, Oxanium
+              heading, underline field and the square arrow CTA. */}
           <div className="max-w-2xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center w-12 h-12 mb-6 bg-teal-300/10 rounded-full">
-              <Mail className="w-5 h-5 text-teal-300" />
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-light text-white mb-3">{t.newsletter.title}</h3>
-            <p className="text-white/70  mb-8">{t.newsletter.description}</p>
+            <span className="text-xs tracking-[0.3em] uppercase text-white/55">[ Newsletter ]</span>
+            <h3 className="mt-5 font-oxanium text-3xl sm:text-4xl font-light text-white">{t.newsletter.title}</h3>
+            <p className="mt-4 font-light text-white/70">{t.newsletter.description}</p>
 
             {isSubscribed ? (
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="inline-flex items-center gap-3 px-6 py-3 bg-teal-300/10 text-teal-300 "
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-10 inline-flex items-center gap-3 text-teal-300"
               >
                 <Check className="w-5 h-5" />
                 <span>{t.newsletter.success}</span>
               </motion.div>
             ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+              <form onSubmit={handleNewsletterSubmit} className="mt-10 flex flex-col sm:flex-row sm:items-end gap-6 max-w-lg mx-auto text-left">
                 <div className="flex-1 relative">
                   <input
                     type="email"
@@ -178,23 +178,27 @@ const FooterNew: React.FC = () => {
                     aria-label="Email address for newsletter"
                     aria-required="true"
                     autoComplete="email"
-                    className={`w-full px-4 py-3 bg-white/5 border text-white placeholder-white/30  focus:outline-none focus:ring-2 focus:ring-teal-300/30 transition-colors ${error && touched ? 'border-red-400/50 focus:border-red-400' : 'border-white/10 focus:border-teal-300/50'
+                    className={`w-full px-0 py-4 bg-transparent border-b text-white caret-white text-lg placeholder-white/40 focus:outline-none transition-colors [color-scheme:dark] ${error && touched ? 'border-red-400/60 focus:border-red-400' : 'border-white/20 focus:border-teal-300'
                       }`}
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={isSubmitting || !isEmailValid}
-                  className="group px-6 py-3 bg-teal-300 text-indigo-950  font-normal hover:bg-teal-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                  className="group inline-flex items-center gap-4 self-start sm:self-auto disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-950"
                   aria-label={isSubmitting ? 'Subscribing to newsletter...' : 'Subscribe to newsletter'}
                 >
-                  <span>{isSubmitting ? t.newsletter.subscribing : t.newsletter.button}</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <span className="font-oxanium text-lg font-light text-white transition-colors group-hover:text-teal-300">
+                    {isSubmitting ? t.newsletter.subscribing : t.newsletter.button}
+                  </span>
+                  <span className="w-12 h-12 border border-white/20 flex items-center justify-center transition-all duration-300 group-hover:border-teal-300 group-hover:bg-teal-300" aria-hidden="true">
+                    <ArrowUpRight className="w-5 h-5 text-white transition-colors group-hover:text-indigo-950" />
+                  </span>
                 </button>
               </form>
             )}
 
-            {error ? <p className="mt-3 text-red-400  text-sm">{error}</p> : null}
+            {error ? <p className="mt-3 text-red-400 text-sm">{error}</p> : null}
           </div>
         </div>
 
@@ -214,7 +218,7 @@ const FooterNew: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-8">
               <nav aria-label="Footer navigation">
-                <h4 className="text-xs text-white/30  tracking-widest uppercase mb-6">{t.navigation}</h4>
+                <h4 className="text-xs text-white/55  tracking-widest uppercase mb-6">{t.navigation}</h4>
                 <ul className="space-y-4" role="list">
                   {footerNavItems.map((link) => (
                     <li key={link.name}>
@@ -227,7 +231,7 @@ const FooterNew: React.FC = () => {
               </nav>
 
               <div>
-                <h4 className="text-xs text-white/30  tracking-widest uppercase mb-6">{t.connect}</h4>
+                <h4 className="text-xs text-white/55  tracking-widest uppercase mb-6">{t.connect}</h4>
                 <ul className="space-y-4" role="list">
                   <li>
                     <a
@@ -270,25 +274,25 @@ const FooterNew: React.FC = () => {
         </div>
 
         <div className="py-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/20 text-sm ">
+          <p className="text-white/55 text-sm ">
             {t.copyright.replace('{year}', `2024 – ${currentYear}`)}
           </p>
 
           <div className="flex items-center gap-8">
-            <PrefetchLink href={localizedPath(language, '/faq')} className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
+            <PrefetchLink href={localizedPath(language, '/faq')} className="text-white/55 text-sm  hover:text-teal-300 transition-colors">
               FAQ
             </PrefetchLink>
-            <PrefetchLink href={localizedPath(language, '/privacy-policy')} className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
+            <PrefetchLink href={localizedPath(language, '/privacy-policy')} className="text-white/55 text-sm  hover:text-teal-300 transition-colors">
               {t.legal.privacy}
             </PrefetchLink>
-            <PrefetchLink href={localizedPath(language, '/unsubscribe')} className="text-white/20 text-sm  hover:text-teal-300 transition-colors">
+            <PrefetchLink href={localizedPath(language, '/unsubscribe')} className="text-white/55 text-sm  hover:text-teal-300 transition-colors">
               {t.legal.unsubscribe}
             </PrefetchLink>
 
             <motion.button
               onClick={scrollToTop}
               whileHover={{ y: -2 }}
-              className="group flex items-center gap-2 text-white/20 text-sm  hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
+              className="group flex items-center gap-2 text-white/55 text-sm  hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
               aria-label="Scroll back to top of page"
             >
               <span>{t.backToTop}</span>

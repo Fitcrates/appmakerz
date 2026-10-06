@@ -1,0 +1,51 @@
+/* ============================================================================
+   ROUNDED CARDS (experiment started 2026-10-06)
+
+   Every content card on the site takes its shape from this file, so the
+   experiment can be judged and undone in one place.
+
+   - Find every use:     grep -rnE "ac-card|ac-rounded" src
+   - Back to square:     set --ac-card-radius and --ac-card-radius-sm to 0
+   - Remove completely:  delete this file, its import in src/app/globals.css,
+                         and revert the commit that introduced it
+
+   The rule it encodes: lists are hairlines, cards are rounded and flat,
+   CTA buttons stay square, tags and filters are pills. Cards carry no
+   shadows, blur or gradient rims; those belong to the hero only.
+
+   Not converted on purpose: components framed with corner brackets
+   (calculator result, unsubscribe card, cookie banner, project previews),
+   since a rounded box under square brackets reads as a mistake.
+   ========================================================================== */
+
+:root {
+  --ac-card-radius: 24px;
+  --ac-card-radius-sm: 20px;
+}
+
+/* Full card: shape, fill and hairline border. Do not combine with Tailwind
+   border-color or bg utilities in the base state; this file loads after
+   Tailwind and wins ties. Hover/state variants (hover:border-teal-300/40,
+   !border-...) still win. */
+.ac-card {
+  border-radius: var(--ac-card-radius);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background-color: rgba(255, 255, 255, 0.025);
+  transition: border-color 220ms ease;
+}
+
+.ac-card--sm {
+  border-radius: var(--ac-card-radius-sm);
+}
+
+/* Cards that are themselves a link. */
+a.ac-card:hover,
+.ac-card--link:hover {
+  border-color: rgba(94, 234, 212, 0.3);
+}
+
+/* Shape only, for elements that keep their own border and fill, such as
+   selectable calculator options with a selected state. */
+.ac-rounded {
+  border-radius: var(--ac-card-radius-sm);
+}

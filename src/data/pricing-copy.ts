@@ -28,9 +28,9 @@ export const pricingCopy: Record<Language, PricingCopy> = {
           'Dla firm, usług, marek osobistych i ofert, które mają wyglądać profesjonalnie i zdobywać zapytania.',
       },
       ecommerce: {
-        label: 'Sklep internetowy',
+        label: 'Sklep na Medusa.js',
         description:
-          'Dla sprzedaży produktów online z koszykiem, płatnościami, zamówieniami i wygodną obsługą sprzedaży.',
+          'Własny sklep bez abonamentu i prowizji platformy: koszyk, płatności, zamówienia i integracje pisane pod to, jak sprzedajesz.',
       },
       marketplace: {
         label: 'Platforma marketplace',
@@ -447,9 +447,9 @@ export const pricingCopy: Record<Language, PricingCopy> = {
           'For companies, services, personal brands and offers that need to look professional and generate enquiries.',
       },
       ecommerce: {
-        label: 'Online store',
+        label: 'Medusa.js store',
         description:
-          'For selling products online with a cart, payments, orders and convenient sales management.',
+          'Your own store with no platform subscription or sales fee: cart, payments, orders and integrations built around how you sell.',
       },
       marketplace: {
         label: 'Marketplace platform',

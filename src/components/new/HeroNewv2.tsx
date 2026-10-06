@@ -64,7 +64,7 @@ const HeroNewv2: React.FC = () => {
   const { y, cardsY, reducedMotion, desktopMotion } = useHeroMotion(containerRef);
 
   const scrollToNext = () => {
-    document.getElementById("about")?.scrollIntoView({ behavior: reducedMotion ? "instant" : "smooth" });
+    document.getElementById("proof")?.scrollIntoView({ behavior: reducedMotion ? "instant" : "smooth" });
   };
 
   return (
@@ -183,9 +183,8 @@ const HeroNewv2: React.FC = () => {
               className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-6 [@media(max-height:700px)]:gap-4"
             >
               <a
-                href="#about"
+                href="#proof"
                 className="group relative px-10 py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 bg-teal-300 text-indigo-950 font-normal rounded-none overflow-hidden transition-all duration-500 min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
-                aria-label="Find out more about me"
               >
                 <span className="relative z-10">{t.cta.viewWork}</span>
                 <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />

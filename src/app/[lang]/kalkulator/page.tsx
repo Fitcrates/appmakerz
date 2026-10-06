@@ -91,7 +91,7 @@ export default async function LocalizedCalculatorPage({ params }: LocalizedCalcu
           <PrefetchLink href={localizedPath(language, '/')} className="mb-12 inline-flex text-sm text-white/70 transition-colors hover:text-teal-300">
             {t.page.backHome}
           </PrefetchLink>
-          <span className="block text-xs uppercase tracking-[0.3em] text-white/30">{t.page.label}</span>
+          <span className="block text-xs uppercase tracking-[0.3em] text-white/55">{t.page.label}</span>
           <h1 className="mt-6 max-w-4xl font-oxanium text-4xl font-light leading-[1.15] text-white sm:text-6xl lg:text-7xl">
             {t.page.heading}
           </h1>

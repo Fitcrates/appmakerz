@@ -64,18 +64,73 @@ export const translations = {
       scroll: "Scroll down",
     },
 
+    // Proof Section (ProofNew)
+    proof: {
+      label: "[ In production ]",
+      heading: "What's already running",
+      intro: "I design and build commerce systems that handle real payments, orders and seller payouts.",
+      bar: [
+        { value: "Medusa.js", label: "Marketplace in production" },
+        { value: "Stripe Connect", label: "Split payments and payouts" },
+        { value: "Featured by Mercur", label: "External case study" },
+        { value: "5.0", label: "Google review rating" },
+      ],
+      flagship: {
+        eyebrow: "Artovnia · multi-vendor marketplace on Medusa.js",
+        title: "A marketplace I designed and built from the ground up",
+        body: "Architecture, backend, seller panel and storefront. Independent makers run their own shops here, and a buyer pays once for a cart filled from several of them.",
+        imageAlt: "Artovnia marketplace storefront with featured handmade products",
+        features: [
+          { title: "One cart, many sellers", description: "The buyer pays once and the order splits into the shops that fulfil it." },
+          { title: "Commissions and payouts", description: "Rates and payout holds are settings, not code. Every payment is attributed to the right seller." },
+          { title: "Sync with sellers' own shops", description: "Sellers already on Shopify, WooCommerce, PrestaShop, Shoper or BaseLinker keep them. Stock and orders match in both places." },
+          { title: "EU marketplace rules", description: "DAC7, DSA and the Omnibus Directive run as separate modules that can be updated as the law changes." },
+        ],
+        failure: {
+          heading: "And when something fails?",
+          body: "A payment is never charged twice, an order does not vanish when an integration or the network goes down, and each seller's balance matches what actually went through Stripe. Every money movement can be traced: who, what and when.",
+          chips: ["Idempotent payments", "Retries and queues", "Dead-letter handling", "Reconciliation", "Audit trail", "Race-condition safety"],
+        },
+        cta: "See how it works",
+        visit: "Visit artovnia.com",
+      },
+      mercur: {
+        label: "External case study",
+        body: "Mercur, a marketplace platform built for the Medusa.js ecosystem, wrote up Artovnia as one of its case studies, alongside projects like Skylum.",
+        link: "Read the case study",
+      },
+      reviews: {
+        heading: "From people I have worked with",
+        ratingLabel: "5 out of 5 stars",
+        translated: "Translated from Polish",
+        link: "See reviews on Google",
+        items: [
+          {
+            author: "David C.",
+            text: "I've been working with Arkadiusz for some time and have had a great experience. He's reliable, easy to communicate with, and genuinely cares about the quality of his work. He understands what the business needs, suggests thoughtful solutions, and takes real ownership of the project. I'm very happy with our cooperation and would gladly recommend him.",
+            translated: false,
+          },
+          {
+            author: "Weronika G.",
+            text: "I highly recommend it. My portfolio is exactly what I envisioned, including moving elements, animations, an English translation and the ability to add my own materials. Thanks!",
+            translated: true,
+          },
+        ],
+      },
+    },
+
     // About Section (AboutNew)
     about: {
       label: "[ 01 - About ]",
-      heading: "Solutions that\ngrow your\nbusiness",
+      heading: "You talk to\nthe person who\nbuilds your system",
       description: {
-        p1: "I help businesses succeed online. Whether you need an online store or a marketplace on Medusa.js, a landing page that converts visitors into customers, or AI-powered apps to automate your workflows - I deliver complete solutions from start to finish.",
-        p2: "You get a partner who understands your business goals. I handle everything: design, development, content management systems you can update yourself, and ongoing support. No technical knowledge needed on your end.",
+        p1: "No account manager and no hand-offs. The person who talks to you about your business model also designs the architecture, writes the backend and the storefront, and answers when something needs to change.",
+        p2: "We start with how you sell: who pays, who ships, who gets paid and when. The technology follows from those answers. You get the code, access to everything, and a panel where you edit content yourself.",
       },
       stats: {
-        years: { value: "80%", label: "Less manual work" },
-        projects: { value: "100%", label: "Headless" },
-        dedication: { value: "0", label: "Templates" },
+        years: { value: "1", label: "Person from first call to launch" },
+        projects: { value: "100%", label: "Of the code is yours" },
+        dedication: { value: "0%", label: "Platform fee on your sales" },
       },
     },
 
@@ -502,18 +557,73 @@ export const translations = {
       scroll: "Przewiń w dół",
     },
 
+    // Proof Section (ProofNew)
+    proof: {
+      label: "[ Na produkcji ]",
+      heading: "Co już działa",
+      intro: "Projektuję i buduję systemy commerce, przez które przechodzą prawdziwe płatności, zamówienia i wypłaty dla sprzedawców.",
+      bar: [
+        { value: "Medusa.js", label: "Marketplace na produkcji" },
+        { value: "Stripe Connect", label: "Podział płatności i wypłaty" },
+        { value: "Case study Mercur", label: "Zewnętrzna publikacja" },
+        { value: "5,0", label: "Średnia w opiniach Google" },
+      ],
+      flagship: {
+        eyebrow: "Artovnia · marketplace multi-vendor na Medusa.js",
+        title: "Marketplace, który zaprojektowałem i zbudowałem od podstaw",
+        body: "Architektura, backend, panel sprzedawcy i storefront. Twórcy prowadzą tu własne sklepy, a kupujący płaci raz za koszyk złożony u kilku z nich.",
+        imageAlt: "Strona główna marketplace Artovnia z wyróżnionymi produktami rękodzieła",
+        features: [
+          { title: "Jeden koszyk, wielu sprzedawców", description: "Klient płaci raz, a zamówienie rozdziela się na sklepy, które je realizują." },
+          { title: "Prowizje i wypłaty", description: "Stawki i okres wstrzymania wypłat to ustawienia, nie kod. Każda płatność trafia do właściwego sprzedawcy." },
+          { title: "Synchronizacja ze sklepami sprzedawców", description: "Kto sprzedaje już na Shopify, WooCommerce, PrestaShop, Shoperze czy przez BaseLinkera, nie zaczyna od zera. Stany i zamówienia zgadzają się w obu miejscach." },
+          { title: "Wymogi prawne UE", description: "DAC7, DSA i dyrektywa Omnibus działają jako osobne moduły, które da się aktualizować razem z przepisami." },
+        ],
+        failure: {
+          heading: "A jeśli coś pójdzie nie tak?",
+          body: "Płatność nie pobierze się dwa razy, zamówienie nie zniknie, gdy padnie integracja albo sieć, a saldo każdego sprzedawcy zgadza się z tym, co faktycznie przeszło przez Stripe. Każdą operację na pieniądzach da się prześledzić: kto, co i kiedy.",
+          chips: ["Idempotentne płatności", "Ponawianie i kolejki", "Dead-letter queue", "Uzgadnianie rozliczeń", "Audit trail", "Ochrona przed race condition"],
+        },
+        cta: "Zobacz, jak to działa",
+        visit: "Wejdź na artovnia.com",
+      },
+      mercur: {
+        label: "Zewnętrzne case study",
+        body: "Mercur, platforma marketplace zbudowana dla ekosystemu Medusa.js, opisał Artovnię w swoim case study, obok projektów takich jak Skylum.",
+        link: "Przeczytaj case study",
+      },
+      reviews: {
+        heading: "Opinie ze współpracy",
+        ratingLabel: "5 na 5 gwiazdek",
+        translated: "Przetłumaczone z angielskiego",
+        link: "Zobacz opinie w Google",
+        items: [
+          {
+            author: "David C.",
+            text: "Współpracuję z Arkadiuszem od jakiegoś czasu i mam świetne doświadczenia. Jest rzetelny, łatwo się z nim komunikować i naprawdę dba o jakość swojej pracy. Rozumie potrzeby firmy, proponuje przemyślane rozwiązania i bierze pełną odpowiedzialność za projekt. Jestem bardzo zadowolony z naszej współpracy i z przyjemnością go polecam.",
+            translated: true,
+          },
+          {
+            author: "Weronika G.",
+            text: "Bardzo polecam. Moje portfolio jest dokładnie takie, jak sobie wymarzyłam (łącznie z ruchomymi elementami, animacjami, tłumaczeniem na angielski, możliwością samodzielnego dodawania materiałów). Dzięki!",
+            translated: false,
+          },
+        ],
+      },
+    },
+
     // About Section (AboutNew)
     about: {
       label: "[ 01 - O mnie ]",
-      heading: "Rozwiązania, które\nrozwijają Twój\nbiznes",
+      heading: "Rozmawiasz z tym,\nkto pisze\nTwój system",
       description: {
-        p1: "Pomagam firmom odnosić sukcesy w internecie. Czy potrzebujesz sklepu albo marketplace na Medusa.js, landing page który zamienia odwiedzających w klientów, czy aplikacji AI automatyzujących procesy - dostarczam kompletne rozwiązania od początku do końca.",
-        p2: "Zyskujesz partnera, który rozumie cele Twojego biznesu. Zajmuję się wszystkim: projektem, programowaniem, systemami zarządzania treścią które możesz sam aktualizować, oraz stałym wsparciem. Nie potrzebujesz wiedzy technicznej.",
+        p1: "Nie ma tu account managera ani przekazywania projektu dalej. Ta sama osoba, która rozmawia z Tobą o modelu biznesowym, projektuje architekturę, pisze backend i storefront, a potem odpowiada, gdy trzeba coś zmienić.",
+        p2: "Zaczynamy od tego, jak sprzedajesz: kto płaci, kto wysyła, kto dostaje pieniądze i kiedy. Technologia wynika z tych odpowiedzi. Dostajesz kod, dostęp do wszystkiego i panel, w którym sam zmieniasz treści.",
       },
       stats: {
-        years: { value: "80%", label: "Mniej pracy ręcznej" },
-        projects: { value: "100%", label: "Headless" },
-        dedication: { value: "0", label: "Szablonów" },
+        years: { value: "1", label: "Osoba od rozmowy do wdrożenia" },
+        projects: { value: "100%", label: "Kodu należy do Ciebie" },
+        dedication: { value: "0%", label: "Prowizji platformy od sprzedaży" },
       },
     },
 

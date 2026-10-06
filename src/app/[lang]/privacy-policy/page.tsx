@@ -81,7 +81,7 @@ export default async function LocalizedPrivacyPolicyPage({ params }: LocalizedPr
             <span className=" text-sm">{content.backToHome}</span>
           </PrefetchLink>
           <div className="mb-16">
-            <span className="text-xs text-white/30 tracking-widest uppercase">{content.legalLabel}</span>
+            <span className="text-xs text-white/55 tracking-widest uppercase">{content.legalLabel}</span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl text-white font-oxanium font-light mb-4 mt-6">{content.title}</h1>
             <p className="text-white/70">{content.lastUpdated}</p>
           </div>

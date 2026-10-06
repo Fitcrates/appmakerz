@@ -8,7 +8,7 @@ export default function NotFound() {
       <NextHeader />
       <main className="pt-32 pb-24 min-h-[70vh] flex items-center justify-center px-4">
         <div className="text-center max-w-xl">
-          <p className="text-xs tracking-[0.3em] uppercase text-white/30 ">404</p>
+          <p className="text-xs tracking-[0.3em] uppercase text-white/55 ">404</p>
           <h1 className="mt-6 text-4xl lg:text-5xl font-light ">Page not found</h1>
           <p className="mt-6 text-white/60  font-light leading-relaxed">
             The page you are looking for does not exist or may have been moved.

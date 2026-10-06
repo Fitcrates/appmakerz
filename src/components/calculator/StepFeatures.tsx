@@ -19,7 +19,7 @@ export default function StepFeatures({ options, copy, selected, onToggle, priceP
   return (
     <div className="grid gap-3 md:grid-cols-2">
       {entries.map(([key, option]) => (
-        <label key={key} className={`group cursor-pointer border p-5 transition-colors ${selected.includes(key) ? 'border-teal-300 bg-white/[0.06]' : 'border-white/10 bg-transparent hover:border-white/25 hover:bg-white/[0.03]'}`}>
+        <label key={key} className={`ac-rounded group cursor-pointer border p-5 transition-colors ${selected.includes(key) ? 'border-teal-300 bg-white/[0.06]' : 'border-white/10 bg-transparent hover:border-white/25 hover:bg-white/[0.03]'}`}>
           <span className="flex items-start gap-3">
             <input type="checkbox" checked={selected.includes(key)} onChange={() => onToggle(key)} className="mt-1 h-4 w-4 accent-teal-300" />
             <span>

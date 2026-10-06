@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Image from 'next/image';
 import PrefetchLink from '@/components/next/PrefetchLink';
+import MindMap from '@/components/new/MindMap';
 import PhilosophyProcess from '@/components/new/PhilosophyProcess';
 import PhilosophyTiltCard from '@/components/new/PhilosophyTiltCard';
 import SpotlightText from '@/components/new/SpotlightText';
@@ -60,15 +61,6 @@ export interface CyberPhilosophyContent {
     secondaryButton?: string;
   };
 }
-
-const mindLabels = [
-  { label: 'Philosophy', className: 'left-[8%] top-[18%] md:left-[15%] md:top-[22%] items-start' },
-  { label: 'Technology', className: 'right-[8%] top-[18%] md:right-[15%] md:top-[22%] text-right items-end' },
-  { label: 'Psychology', className: 'left-[4%] top-[50%] md:left-[8%] md:top-[50%] -translate-y-1/2 items-start' },
-  { label: 'Management', className: 'right-[4%] top-[50%] md:right-[8%] md:top-[50%] -translate-y-1/2 text-right items-end' },
-  { label: 'Curiosity', className: 'left-[8%] bottom-[18%] md:left-[15%] md:bottom-[22%] items-start' },
-  { label: 'Performance', className: 'right-[8%] bottom-[18%] md:right-[15%] md:bottom-[22%] text-right items-end' },
-];
 
 const principles: PhilosophyCard[] = [
   {
@@ -141,8 +133,7 @@ function FounderStatement({ content }: { content?: CyberPhilosophyContent['found
   const callout = paragraphs[paragraphs.length - 1];
 
   return (
-    <div className="cyber-reveal relative z-10 mx-auto mt-8 max-w-3xl border border-teal-300/20 px-6 py-7 text-center shadow-[0_24px_80px_rgba(0,0,0,0.26)] backdrop-blur-md sm:px-10">
-      <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-teal-300/55 to-transparent" />
+    <div className="cyber-reveal ac-card relative z-10 mx-auto mt-8 max-w-3xl px-6 py-7 text-center sm:px-10">
       
       <div className="mx-auto max-w-2xl font-oxanium text-3xl font-light leading-tight text-white sm:text-4xl">
         <SpotlightText as="p" glowSize={200}>
@@ -172,81 +163,6 @@ function FounderStatement({ content }: { content?: CyberPhilosophyContent['found
             ) : null}
           </div>
         ) : null}
-      </div>
-    </div>
-  );
-}
-
-function MindMap({ labels, portrait, portraitAlt }: { labels?: string[]; portrait?: string; portraitAlt?: string }) {
-  const items = mindLabels.map((item, index) => ({ ...item, label: labels?.[index] || item.label }));
-
-  return (
-    <div className="cyber-reveal relative mx-auto mt-8 flex w-full max-w-6xl flex-col items-center justify-center gap-8 sm:mt-10 md:min-h-[480px]">
-      <svg className="absolute inset-0 z-0 hidden h-full w-full md:block" style={{ pointerEvents: 'none' }}>
-        <defs>
-          <linearGradient id="mindmap-grad-h" x1="12%" y1="50%" x2="88%" y2="50%" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="rgba(94,234,212,0)" />
-            <stop offset="15%" stopColor="rgba(94,234,212,0.3)" />
-            <stop offset="85%" stopColor="rgba(94,234,212,0.3)" />
-            <stop offset="100%" stopColor="rgba(94,234,212,0)" />
-          </linearGradient>
-          <linearGradient id="mindmap-grad-d1" x1="18%" y1="26%" x2="82%" y2="74%" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="rgba(94,234,212,0)" />
-            <stop offset="20%" stopColor="rgba(94,234,212,0.25)" />
-            <stop offset="80%" stopColor="rgba(94,234,212,0.25)" />
-            <stop offset="100%" stopColor="rgba(94,234,212,0)" />
-          </linearGradient>
-          <linearGradient id="mindmap-grad-d2" x1="18%" y1="74%" x2="82%" y2="26%" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="rgba(94,234,212,0)" />
-            <stop offset="20%" stopColor="rgba(94,234,212,0.25)" />
-            <stop offset="80%" stopColor="rgba(94,234,212,0.25)" />
-            <stop offset="100%" stopColor="rgba(94,234,212,0)" />
-          </linearGradient>
-        </defs>
-        <line x1="12%" y1="50%" x2="88%" y2="50%" stroke="url(#mindmap-grad-h)" strokeWidth="1" />
-        <line x1="18%" y1="26%" x2="82%" y2="74%" stroke="url(#mindmap-grad-d1)" strokeWidth="1" />
-        <line x1="18%" y1="74%" x2="82%" y2="26%" stroke="url(#mindmap-grad-d2)" strokeWidth="1" />
-      </svg>
-
-      <div className="relative z-20 h-44 w-44 rounded-full border border-teal-300/75 bg-indigo-950 p-2 shadow-[0_0_82px_rgba(94,234,212,0.34)] sm:h-52 sm:w-52 md:h-60 md:w-60">
-        <div className="absolute inset-[-9px] rounded-full border border-teal-300/35 shadow-[0_0_34px_rgba(94,234,212,0.22)]" />
-        <div className="relative h-full w-full overflow-hidden rounded-full bg-indigo-950">
-          <Image
-            src={portrait || '/media/about/arek5.webp'}
-            alt={portraitAlt || 'Arkadiusz Wawrzyniak'}
-            fill
-            className="scale-[1.1] object-cover object-[50%_20%]"
-            sizes="(max-width: 640px) 240px, (max-width: 768px) 288px, 320px"
-            quality={100}
-            unoptimized
-            priority
-          />
-        </div>
-      </div>
-
-      {items.map((item) => (
-        <div
-          key={item.label}
-          className={`absolute z-10 hidden font-plex text-[11px] uppercase tracking-[0.28em] text-teal-200/80 transition-colors hover:text-teal-200 md:flex md:flex-col ${item.className}`}
-        >
-          <span className="mb-2 block h-px w-8 bg-teal-300/40" />
-          <SpotlightText as="span" className="text-teal-200/80" glowSize={80}>
-            {item.label}
-          </SpotlightText>
-        </div>
-      ))}
-
-      <div className="relative z-10 grid w-full max-w-[22rem] grid-cols-2 gap-x-5 gap-y-3 px-4 sm:max-w-md sm:grid-cols-3 md:hidden">
-        {items.map((item) => (
-          <span
-            key={item.label}
-            className="border-b border-teal-300/20 px-1 pb-2 text-center font-plex text-[10px] uppercase tracking-[0.2em] text-teal-200/80"
-          >
-            <SpotlightText as="span" className="text-teal-200/80" glowSize={80}>
-              {item.label}
-            </SpotlightText>
-          </span>
-        ))}
       </div>
     </div>
   );
@@ -323,7 +239,7 @@ export default function CyberPhilosophyLayout({
             </div>
           </div>
 
-          <MindMap labels={hero?.mindLabels} portrait={hero?.portrait} portraitAlt={hero?.portraitAlt} />
+          <MindMap labels={hero?.mindLabels} portrait={hero?.portrait} portraitAlt={hero?.portraitAlt} language={language} />
           <FounderStatement content={content?.founderStatement} />
         </section>
 
@@ -370,7 +286,7 @@ export default function CyberPhilosophyLayout({
               {beyondCodeCards.map((item, index) => (
                 <article
                   key={`${item.title}-${index}`}
-                  className="cyber-reveal group overflow-hidden border border-teal-300/20 bg-indigo-950/75 shadow-[0_24px_80px_rgba(0,0,0,0.32)] transition-colors hover:border-teal-300/50"
+                  className="cyber-reveal ac-card group overflow-hidden hover:border-teal-300/40"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-indigo-950">
                     <Image

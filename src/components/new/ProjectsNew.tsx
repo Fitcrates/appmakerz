@@ -206,7 +206,7 @@ const ProjectsNew: React.FC<ProjectsNewProps> = ({ sanityProjects }) => {
           transition={{ duration: 1 }}
           className="mb-6 lg:mb-16"
         >
-          <span className="text-xs tracking-[0.3em] uppercase text-white/30 ">{t.label}</span>
+          <span className="text-xs tracking-[0.3em] uppercase text-white/55 ">{t.label}</span>
         </motion.div>
 
         <div className="mb-16">
