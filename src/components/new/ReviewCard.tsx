@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Star, X } from 'lucide-react';
+import styles from './ReviewCard.module.css';
 
 interface ReviewCardProps {
   author: string;
@@ -48,6 +49,16 @@ export default function ReviewCard({
     return () => observer.disconnect();
   }, [text]);
 
+  // Feeds the hover edge light. Only CSS variables change, so moving the
+  // cursor never re-renders the card.
+  const trackPointer = (event: React.PointerEvent<HTMLElement>) => {
+    if (event.pointerType !== 'mouse') return;
+    const el = event.currentTarget;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+    el.style.setProperty('--my', `${event.clientY - rect.top}px`);
+  };
+
   const open = () => dialogRef.current?.showModal();
   const close = () => dialogRef.current?.close();
 
@@ -55,7 +66,11 @@ export default function ReviewCard({
     // Subgrid: cards in one row share the parent's row tracks (stars, quote,
     // caption), so the divider above the author lines up across the row even
     // when one source label wraps to two lines and another does not.
-    <motion.figure {...motionProps} className="ac-card ac-card--sm row-span-3 grid grid-rows-[subgrid] gap-y-0 p-6 sm:p-8">
+    <motion.figure
+      {...motionProps}
+      className={`ac-card ac-card--sm ${styles.glow} row-span-3 grid grid-rows-[subgrid] gap-y-0 p-6 sm:p-8`}
+      onPointerMove={trackPointer}
+    >
       <Stars label={ratingLabel} />
       <blockquote className="mt-5 flex-1">
         <p ref={textRef} className="line-clamp-[8] whitespace-pre-line font-light leading-relaxed text-white/80">
