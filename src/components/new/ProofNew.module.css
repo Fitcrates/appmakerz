@@ -11,12 +11,23 @@
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.8);
   white-space: nowrap;
-  transition: border-color 220ms ease, color 220ms ease;
+  transition: border-color 220ms ease, color 220ms ease, background-color 220ms ease;
 }
 
+/* Same fill as the active pill in the blog selector. */
 .pill:hover {
-  border-color: rgba(94, 234, 212, 0.4);
-  color: #fff;
+  border-color: #5eead4;
+  background: #5eead4;
+  color: #0b1020;
+}
+
+.pill svg {
+  color: #5eead4;
+  transition: color 220ms ease;
+}
+
+.pill:hover svg {
+  color: #0b1020;
 }
 
 /* Faint light behind the cut-out device mockup, so it does not sit on a

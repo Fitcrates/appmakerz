@@ -4,6 +4,7 @@ import { ArrowUpRight, Fingerprint, History, Inbox, RefreshCw, Scale, ShieldChec
 import Image from 'next/image';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import BurnSpotlightText from './BurnSpotlightText';
+import SpotlightText from './SpotlightText';
 import ReviewCard from './ReviewCard';
 import { useLanguage } from '../../context/LanguageContext';
 import { localizedPath } from '../../lib/i18n-routing';
@@ -72,12 +73,11 @@ const ProofNew: React.FC = () => {
                 {t.heading}
               </BurnSpotlightText>
             </div>
-            <motion.p
-              {...fadeIn(headerInView, 0.3)}
-              className="lg:col-span-5 text-lg font-light leading-relaxed text-white/70"
-            >
-              {t.intro}
-            </motion.p>
+            <motion.div {...fadeIn(headerInView, 0.3)} className="lg:col-span-5">
+              <SpotlightText as="p" className="text-lg font-light leading-relaxed !text-white/70" glowSize={120}>
+                {t.intro}
+              </SpotlightText>
+            </motion.div>
           </div>
 
           {/* ── Proof bar ── */}
@@ -88,10 +88,10 @@ const ProofNew: React.FC = () => {
             {t.bar.map((item, index) => (
               <div
                 key={item.label}
-                className={`py-6 px-4 sm:px-6 flex flex-col-reverse gap-2 ${index % 2 === 1 ? 'border-l border-white/10' : ''} ${index >= 2 ? 'border-t border-white/10 lg:border-t-0' : ''} ${index === 2 ? 'lg:border-l' : ''}`}
+                className={`row-span-2 grid grid-rows-[subgrid] gap-y-2 py-6 px-4 sm:px-6 ${index % 2 === 1 ? 'border-l border-white/10' : ''} ${index >= 2 ? 'border-t border-white/10 lg:border-t-0' : ''} ${index === 2 ? 'lg:border-l' : ''}`}
               >
-                <dt className="text-[11px] tracking-[0.18em] uppercase text-white/65">{item.label}</dt>
-                <dd className="font-oxanium font-light text-2xl sm:text-3xl text-teal-300">{item.value}</dd>
+                <dt className="row-start-2 text-[11px] tracking-[0.18em] uppercase text-white/65">{item.label}</dt>
+                <dd className="row-start-1 self-start font-oxanium font-light text-2xl sm:text-3xl text-teal-300">{item.value}</dd>
               </div>
             ))}
           </motion.dl>
@@ -122,10 +122,16 @@ const ProofNew: React.FC = () => {
               <span className="block text-[11px] tracking-[0.18em] uppercase text-teal-300">
                 {t.flagship.eyebrow}
               </span>
-              <h3 className="mt-4 font-oxanium text-3xl sm:text-4xl font-light leading-tight text-white">
-                {t.flagship.title}
-              </h3>
-              <p className="mt-5 font-light leading-relaxed text-white/70">{t.flagship.body}</p>
+              <div className="mt-4">
+                <SpotlightText as="h3" className="font-oxanium text-3xl sm:text-4xl font-light leading-tight text-white" glowSize={140}>
+                  {t.flagship.title}
+                </SpotlightText>
+              </div>
+              <div className="mt-5">
+                <SpotlightText as="p" className="font-light leading-relaxed !text-white/70" glowSize={120}>
+                  {t.flagship.body}
+                </SpotlightText>
+              </div>
 
               <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
                 <PrefetchLink href={caseStudyHref} className="group inline-flex items-center gap-4">
@@ -159,8 +165,16 @@ const ProofNew: React.FC = () => {
                 <span className="font-oxanium text-sm font-light tabular-nums text-teal-300/60">
                   {String(index + 1).padStart(2, '0')}
                 </span>
-                <h4 className="mt-3 font-oxanium text-lg font-light leading-snug text-white">{feature.title}</h4>
-                <p className="mt-2 text-sm font-light leading-relaxed text-white/60">{feature.description}</p>
+                <div className="mt-3">
+                  <SpotlightText as="h4" className="font-oxanium text-lg font-light leading-snug text-white" glowSize={100}>
+                    {feature.title}
+                  </SpotlightText>
+                </div>
+                <div className="mt-2">
+                  <SpotlightText as="p" className="text-sm font-light leading-relaxed !text-white/60" glowSize={100}>
+                    {feature.description}
+                  </SpotlightText>
+                </div>
               </li>
             ))}
           </motion.ol>
@@ -172,8 +186,14 @@ const ProofNew: React.FC = () => {
           >
             <div className="relative grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               <div className="lg:col-span-5">
-                <h4 className="font-oxanium text-2xl sm:text-3xl font-light text-white">{t.flagship.failure.heading}</h4>
-                <p className="mt-4 font-light leading-relaxed text-white/70">{t.flagship.failure.body}</p>
+                <SpotlightText as="h4" className="font-oxanium text-2xl sm:text-3xl font-light text-white" glowSize={130}>
+                  {t.flagship.failure.heading}
+                </SpotlightText>
+                <div className="mt-4">
+                  <SpotlightText as="p" className="font-light leading-relaxed !text-white/70" glowSize={120}>
+                    {t.flagship.failure.body}
+                  </SpotlightText>
+                </div>
               </div>
               <ul className="lg:col-span-7 flex flex-wrap gap-3 lg:justify-end">
                 {t.flagship.failure.chips.map((chip, index) => {
@@ -193,34 +213,41 @@ const ProofNew: React.FC = () => {
         {/* ── External validation + client reviews ── */}
         <div ref={reviewsRef} className="mt-12 lg:mt-16">
           {/* The only outside source on a Medusa.js build, so the name carries
-              the weight here, not the label. */}
-          <motion.a
+              the weight here, not the label. Only the pill is a link: a card-wide
+              link swapped the cursor dot for the link ring, which then vanished
+              in the spotlight glow on the paragraph. */}
+          <motion.div
             {...fadeIn(reviewsInView)}
-            href={MERCUR_CASE_STUDY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`ac-card ac-card--sm group grid lg:grid-cols-12 gap-5 lg:gap-12 items-center p-6 sm:p-8 lg:px-10`}
+            className="ac-card ac-card--sm grid lg:grid-cols-12 gap-5 lg:gap-12 items-center p-6 sm:p-8 lg:px-10"
           >
             <div className="relative lg:col-span-3">
               <span className="block font-oxanium text-3xl sm:text-4xl font-light tracking-wide text-white">Mercur</span>
               <span className="mt-2 block text-[11px] tracking-[0.18em] uppercase text-teal-300">{t.mercur.label}</span>
             </div>
-            <p className="relative lg:col-span-6 font-light leading-relaxed text-white/75">{t.mercur.body}</p>
-            <span className={`${styles.pill} relative lg:col-span-3 justify-self-start lg:justify-self-end group-hover:border-teal-300/45 group-hover:text-white`}>
+            <div className="relative lg:col-span-6">
+              <SpotlightText as="p" className="font-light leading-relaxed !text-white/75" glowSize={120}>
+                {t.mercur.body}
+              </SpotlightText>
+            </div>
+            <a
+              href={MERCUR_CASE_STUDY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${styles.pill} group relative lg:col-span-3 justify-self-start lg:justify-self-end focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/60`}
+            >
               {t.mercur.link}
               <ArrowUpRight
-                className="w-4 h-4 text-teal-300 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                 aria-hidden="true"
               />
-            </span>
-          </motion.a>
+            </a>
+          </motion.div>
 
-          <motion.h3
-            {...fadeIn(reviewsInView, 0.15)}
-            className="mt-12 lg:mt-14 font-oxanium text-2xl sm:text-3xl font-light text-white"
-          >
-            {t.reviews.heading}
-          </motion.h3>
+          <motion.div {...fadeIn(reviewsInView, 0.15)} className="mt-12 lg:mt-14">
+            <SpotlightText as="h3" className="font-oxanium text-2xl sm:text-3xl font-light text-white" glowSize={130}>
+              {t.reviews.heading}
+            </SpotlightText>
+          </motion.div>
 
           {/* Two reviews sit side by side, three get a column each from lg up.
               Long ones are clamped in the card and open in full in a dialog. */}

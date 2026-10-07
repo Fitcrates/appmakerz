@@ -1,0 +1,58 @@
+/* Hover-only edge light, a lighter cousin of BorderGlow on the About photo.
+   BorderGlow wraps its content in extra layers, which would break the subgrid
+   that lines up the author dividers, so this draws on the card itself.
+   Both layers are absolutely positioned, so they never take a grid cell.
+   --mx / --my are written by ReviewCard on pointer move. */
+.glow {
+  position: relative;
+}
+
+/* The border lit near the cursor: a radial gradient clipped to a 1px ring. */
+.glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(94, 234, 212, 0.95),
+    rgba(94, 234, 212, 0.25) 40%,
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+/* Faint light inside the card, following the same point. */
+.glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    320px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(94, 234, 212, 0.07),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.glow:hover::before,
+.glow:hover::after {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .glow::before,
+  .glow::after {
+    display: none;
+  }
+}
