@@ -24,3 +24,60 @@
 .grab:active {
   cursor: grabbing;
 }
+
+/* Without hover there is no cursor glow, so the top card borrows the About
+   photo's touch treatment: a firmer border and one light running round the
+   edge (same construction as .border-glow-ring in globals.css: the border
+   clipped out with a mask, a conic gradient rotating inside it, one
+   compositor transform per frame). Below the top card nothing animates. */
+.ring {
+  display: none;
+}
+
+@media (hover: none), (max-width: 1023px) {
+  .card.top > * {
+    border-color: rgb(94 234 212 / 32%);
+  }
+
+  .ring {
+    display: block;
+    position: absolute;
+    inset: -1px;
+    z-index: 2;
+    padding: 1.5px;
+    border-radius: inherit;
+    overflow: hidden;
+    pointer-events: none;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+
+  .ring i {
+    position: absolute;
+    inset: -50%;
+    background: conic-gradient(from 0deg,
+      transparent 0 66%,
+      rgb(94 234 212 / 35%) 80%,
+      #5eead4 88%,
+      #ddfffb 91%,
+      transparent 100%);
+    animation: spin 8s linear infinite paused;
+    will-change: transform;
+  }
+
+  .ring[data-active="true"] i {
+    animation-play-state: running;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(1turn); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring i {
+    animation: none;
+  }
+}

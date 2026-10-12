@@ -691,7 +691,7 @@
 .border-glow-wrap:is([data-effects="static"], [data-effects="compact"]) .border-glow-card {
   transform: none;
   border-color: rgb(94 234 212 / 25%);
-  box-shadow: 0 12px 30px rgb(0 0 0 / 20%);
+  box-shadow: 0 12px 30px rgb(0 0 0 / 20%), 0 0 28px rgb(94 234 212 / 10%);
 }
 
 .border-glow-wrap:is([data-effects="static"], [data-effects="compact"]) .border-glow-card::before,
@@ -705,51 +705,43 @@
   transform: translate(calc(var(--offset-shift, 14px) * -1), calc(var(--offset-shift, 14px) * -1));
 }
 
-/* Four narrow compositor-animated lights replace the full-image moving masks. */
-.border-glow-trails { display: none; }
-.border-glow-wrap[data-effects="compact"] .border-glow-trails {
+/* One light running round the border replaces the full-image moving masks.
+   The ring is the border clipped out with a mask (so it follows the radius
+   exactly); inside it a conic gradient, rasterised once, only rotates. That is
+   a single compositor transform per frame, nothing is repainted. */
+.border-glow-ring { display: none; }
+.border-glow-wrap[data-effects="compact"] .border-glow-ring {
   display: block;
   position: absolute;
   inset: -1px;
   z-index: 2;
+  padding: 1.5px;
+  border-radius: inherit;
   overflow: hidden;
   pointer-events: none;
-  border-radius: inherit;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
 }
-.border-glow-trails i {
+/* Twice the box in each direction: still covers the corners mid-rotation on
+   cards up to about 1:2.4. */
+.border-glow-ring i {
   position: absolute;
-  width: 30%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #5eead4, #ddfffb, transparent);
-  animation: border-trail-x var(--orbit-duration, 9s) linear infinite both paused;
+  inset: -50%;
+  background: conic-gradient(from 0deg,
+    transparent 0 66%,
+    rgb(94 234 212 / 35%) 80%,
+    #5eead4 88%,
+    #ddfffb 91%,
+    transparent 100%);
+  animation: border-ring-spin var(--orbit-duration, 9s) linear infinite paused;
+  will-change: transform;
 }
-.border-glow-wrap[data-effects="compact"][data-animate="true"] .border-glow-trails i { animation-play-state: running; }
-.border-glow-trails i:nth-child(1) { left: 0; top: 0; }
-.border-glow-trails i:nth-child(3) { right: 0; bottom: 0; animation-name: border-trail-x-reverse; animation-delay: calc(var(--orbit-duration, 9s) * -0.5); }
-.border-glow-trails i:nth-child(2), .border-glow-trails i:nth-child(4) {
-  width: 2px;
-  height: 30%;
-  background: linear-gradient(transparent, #5eead4, #ddfffb, transparent);
-  animation-name: border-trail-y;
-}
-.border-glow-trails i:nth-child(2) { right: 0; top: 0; animation-delay: calc(var(--orbit-duration, 9s) * -0.75); }
-.border-glow-trails i:nth-child(4) { left: 0; bottom: 0; animation-name: border-trail-y-reverse; animation-delay: calc(var(--orbit-duration, 9s) * -0.25); }
-@keyframes border-trail-x {
-  0% { transform: translateX(-100%); }
-  25%, 100% { transform: translateX(434%); }
-}
-@keyframes border-trail-x-reverse {
-  0% { transform: translateX(100%); }
-  25%, 100% { transform: translateX(-434%); }
-}
-@keyframes border-trail-y {
-  0% { transform: translateY(-100%); }
-  25%, 100% { transform: translateY(434%); }
-}
-@keyframes border-trail-y-reverse {
-  0% { transform: translateY(100%); }
-  25%, 100% { transform: translateY(-434%); }
+.border-glow-wrap[data-effects="compact"][data-animate="true"] .border-glow-ring i { animation-play-state: running; }
+@keyframes border-ring-spin {
+  to { transform: rotate(1turn); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .border-glow-trails i { animation: none; }
+  .border-glow-ring i { animation: none; }
 }
