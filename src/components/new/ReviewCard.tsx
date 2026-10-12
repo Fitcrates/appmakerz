@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import { Star, X } from 'lucide-react';
 import styles from './ReviewCard.module.css';
 
@@ -11,7 +10,10 @@ interface ReviewCardProps {
   ratingLabel: string;
   readMoreLabel: string;
   closeLabel: string;
-  motionProps: Record<string, unknown>;
+  /** Layout box: size, padding, shape. The card fills it as a column. */
+  className?: string;
+  /** Lines of the review shown before the "read more" link takes over. */
+  clampLines?: number;
 }
 
 const Stars = ({ label }: { label: string }) => (
@@ -22,9 +24,21 @@ const Stars = ({ label }: { label: string }) => (
   </div>
 );
 
+// Feeds the hover edge light of styles.glow. Only CSS variables change, so
+// moving the cursor never re-renders the card. Exported so sibling cards in
+// the same deck (the Mercur write-up) light up the same way.
+export const trackPointer = (event: React.PointerEvent<HTMLElement>) => {
+  if (event.pointerType !== 'mouse') return;
+  const el = event.currentTarget;
+  const rect = el.getBoundingClientRect();
+  el.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+  el.style.setProperty('--my', `${event.clientY - rect.top}px`);
+};
+
 // Reviews vary from two lines to several paragraphs. The card clamps the
-// text so the row stays even, and only when it actually overflows offers the
-// full review in a native dialog (focus trap, Escape and backdrop for free).
+// text so every card in the deck is the same height, and only when it
+// actually overflows offers the full review in a native dialog (focus trap,
+// Escape and backdrop for free).
 export default function ReviewCard({
   author,
   text,
@@ -33,7 +47,8 @@ export default function ReviewCard({
   ratingLabel,
   readMoreLabel,
   closeLabel,
-  motionProps,
+  className = '',
+  clampLines = 8,
 }: ReviewCardProps) {
   const textRef = useRef<HTMLParagraphElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -49,31 +64,18 @@ export default function ReviewCard({
     return () => observer.disconnect();
   }, [text]);
 
-  // Feeds the hover edge light. Only CSS variables change, so moving the
-  // cursor never re-renders the card.
-  const trackPointer = (event: React.PointerEvent<HTMLElement>) => {
-    if (event.pointerType !== 'mouse') return;
-    const el = event.currentTarget;
-    const rect = el.getBoundingClientRect();
-    el.style.setProperty('--mx', `${event.clientX - rect.left}px`);
-    el.style.setProperty('--my', `${event.clientY - rect.top}px`);
-  };
-
   const open = () => dialogRef.current?.showModal();
   const close = () => dialogRef.current?.close();
 
   return (
-    // Subgrid: cards in one row share the parent's row tracks (stars, quote,
-    // caption), so the divider above the author lines up across the row even
-    // when one source label wraps to two lines and another does not.
-    <motion.figure
-      {...motionProps}
-      className={`ac-card ac-card--sm ${styles.glow} row-span-3 grid grid-rows-[subgrid] gap-y-0 p-6 sm:p-8`}
-      onPointerMove={trackPointer}
-    >
+    <figure className={`ac-card ac-card--sm ${styles.glow} flex flex-col ${className}`} onPointerMove={trackPointer}>
       <Stars label={ratingLabel} />
-      <blockquote className="mt-5 flex-1">
-        <p ref={textRef} className="line-clamp-[8] whitespace-pre-line font-light leading-relaxed text-white/80">
+      <blockquote className="mt-5 flex-1 min-h-0">
+        <p
+          ref={textRef}
+          className="whitespace-pre-line font-light leading-relaxed text-white/80"
+          style={{ display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: clampLines, overflow: 'hidden' }}
+        >
           {quote(text)}
         </p>
         {overflows ? (
@@ -121,6 +123,6 @@ export default function ReviewCard({
           </div>
         </dialog>
       ) : null}
-    </motion.figure>
+    </figure>
   );
 }

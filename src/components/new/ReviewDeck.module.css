@@ -1,0 +1,26 @@
+/* Cards overlap, so each one needs an opaque backing or the card behind shows
+   through ac-card's translucent fill. The backing sits on the drag layer under
+   the card, in the page colour, so the card keeps its usual tint on top. */
+.card {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--ac-card-radius-sm);
+  background-color: #1e1b4b;
+  will-change: transform;
+  /* iOS: horizontal drag belongs to the card, vertical pan to the page, and
+     the first touch must not flash the grey tap highlight over the card. */
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card > * {
+  height: 100%;
+}
+
+.grab {
+  cursor: grab;
+}
+
+.grab:active {
+  cursor: grabbing;
+}

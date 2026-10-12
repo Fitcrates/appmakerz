@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDown, ShoppingCart, Cpu, PanelsTopLeft, Blocks } from "lucide-react";
 import Image from "next/image";
@@ -18,23 +18,27 @@ const cardAngles = [14, 11, -11, -14];
 const cardRolls = [4, 2, -4, -3];
 const headingClassName = "text-4xl sm:text-6xl lg:text-[44px] xl:text-[56px] 2xl:text-[72px] [@media(max-height:800px)]:xl:text-[48px] [@media(max-height:700px)]:xl:text-[40px] font-light font-oxanium tracking-normal leading-[1.1] uppercase whitespace-pre-wrap";
 
+type StackItem = { title: string; description: string };
+
 type StackCardProps = {
-  item: { title: string; description: string };
+  item: StackItem;
   index: number;
+  /** Mobile rail: tighter box, smaller icon. */
+  compact?: boolean;
 };
 
-const StackCard: React.FC<StackCardProps> = ({ item, index }) => {
+const StackCard: React.FC<StackCardProps> = ({ item, index, compact = false }) => {
   const Icon = stackIcons[index];
   return (
     <GlassCard
       rotateY={cardAngles[index]}
       rotateX={index % 2 === 0 ? -4 : 3}
       rotateZ={cardRolls[index]}
-      className="p-6 xl:p-7 2xl:p-8 min-h-[190px] lg:min-h-[200px]"
-      contentClassName="flex flex-col gap-5"
+      className={compact ? "p-5 min-h-[150px] h-full" : "p-6 xl:p-7 2xl:p-8 min-h-[190px] lg:min-h-[200px]"}
+      contentClassName={compact ? "flex flex-col gap-4 h-full" : "flex flex-col gap-5"}
     >
       {/* Icon container */}
-      <div className="flex-shrink-0 w-10 h-10 text-cyan-100 flex items-center justify-center relative transition-colors duration-500">
+      <div className={`flex-shrink-0 ${compact ? "w-8 h-8" : "w-10 h-10"} text-cyan-100 flex items-center justify-center relative transition-colors duration-500`}>
         <Icon className="w-full h-full relative z-10 motion-safe:group-hover:scale-110 transition-transform duration-500" strokeWidth={1.5} />
         {/* Glowing effect behind icon */}
         <div className={`${styles.iconGlow} absolute inset-0 bg-teal-300/20 blur-xl rounded-full opacity-30 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -50,6 +54,89 @@ const StackCard: React.FC<StackCardProps> = ({ item, index }) => {
         </p>
       </div>
     </GlassCard>
+  );
+};
+
+type CardRailProps = {
+  items: StackItem[];
+  label: string;
+  reducedMotion: boolean;
+};
+
+// Below lg the four cards would stack to a full screen of glass under the
+// CTAs. Here they share one row the reader swipes through; the next card
+// peeks in from the right so the row reads as scrollable without a hint.
+// Snapping is CSS; the script only keeps the dots in step with the scroll.
+const CardRail: React.FC<CardRailProps> = ({ items, label, reducedMotion }) => {
+  const railRef = useRef<HTMLUListElement>(null);
+  const frame = useRef(0);
+  const [active, setActive] = useState(0);
+
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
+
+  const onScroll = () => {
+    if (frame.current) return;
+    frame.current = requestAnimationFrame(() => {
+      frame.current = 0;
+      const rail = railRef.current;
+      if (!rail) return;
+      const centre = rail.scrollLeft + rail.clientWidth / 2;
+      let nearest = 0;
+      let best = Infinity;
+      Array.from(rail.children).forEach((child, index) => {
+        const card = child as HTMLElement;
+        const distance = Math.abs(card.offsetLeft + card.offsetWidth / 2 - centre);
+        if (distance < best) {
+          best = distance;
+          nearest = index;
+        }
+      });
+      setActive(nearest);
+    });
+  };
+
+  const scrollTo = (index: number) => {
+    const rail = railRef.current;
+    const card = rail?.children[index] as HTMLElement | undefined;
+    if (!rail || !card) return;
+    rail.scrollTo({
+      left: card.offsetLeft - parseFloat(getComputedStyle(rail).paddingLeft),
+      behavior: reducedMotion ? "instant" : "smooth",
+    });
+  };
+
+  return (
+    <div className="order-2 lg:hidden -mx-4 sm:-mx-6">
+      <ul
+        ref={railRef}
+        onScroll={onScroll}
+        aria-label={label}
+        className={`${styles.rail} relative flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-pl-4 sm:scroll-pl-6 px-4 sm:px-6 py-5`}
+      >
+        {items.map((item, index) => (
+          <li key={item.title} className="grid snap-start shrink-0 w-[76vw] sm:w-[52vw] md:w-[40vw] max-w-[360px]">
+            <StackCard item={item} index={index} compact />
+          </li>
+        ))}
+      </ul>
+      <div className="mt-1 flex justify-center gap-2" role="tablist" aria-label={label}>
+        {items.map((item, index) => (
+          <button
+            key={item.title}
+            type="button"
+            role="tab"
+            aria-selected={index === active}
+            aria-label={item.title}
+            onClick={() => scrollTo(index)}
+            className="p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/60"
+          >
+            <span
+              className={`block h-1.5 rounded-full transition-all duration-300 ${index === active ? "w-6 bg-teal-300" : "w-1.5 bg-white/30"}`}
+            />
+          </button>
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -99,9 +186,9 @@ const HeroNewv2: React.FC = () => {
       <HeroPulsePath />
 
       {/* ── Main content ── */}
-      <div className="relative z-20 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-32 lg:py-24 xl:py-0 lg:min-h-screen lg:flex lg:items-center">
+      <div className="relative z-20 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 sm:py-32 lg:py-24 xl:py-0 lg:min-h-screen lg:flex lg:items-center">
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 xl:gap-10 2xl:gap-16 items-center lg:items-stretch w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-8 xl:gap-10 2xl:gap-16 items-center lg:items-stretch w-full">
 
           {/* ── Left stack ──
                No opacity in the entry animation, on this column or the one
@@ -113,12 +200,14 @@ const HeroNewv2: React.FC = () => {
             initial={desktopMotion ? { x: -24 } : false}
             animate={{ x: 0 }}
             transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className={`${styles.parallax} order-2 lg:order-1 lg:col-span-3 flex flex-col justify-center gap-8 lg:gap-14 xl:gap-16`}
+            className={`${styles.parallax} hidden lg:flex order-2 lg:order-1 lg:col-span-3 flex-col justify-center gap-8 lg:gap-14 xl:gap-16`}
           >
             {tV2.stack.items.slice(0, 2).map((item, index) => (
               <StackCard key={item.title} item={item} index={index} />
             ))}
           </motion.div>
+
+          <CardRail items={tV2.stack.items} label={tV2.stack.title} reducedMotion={reducedMotion} />
 
           {/* ── Centre: Monumental Headline + Copy + CTA (from v1) ── */}
           <motion.div
@@ -132,7 +221,7 @@ const HeroNewv2: React.FC = () => {
               initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="mb-8 lg:mb-4 xl:mb-6 2xl:mb-8 [@media(max-height:800px)]:mb-4"
+              className="mb-6 sm:mb-8 lg:mb-4 xl:mb-6 2xl:mb-8 [@media(max-height:800px)]:mb-4"
             >
               <h1 className="max-w-xl mx-auto text-xs sm:text-sm lg:text-xs xl:text-sm font-normal leading-relaxed tracking-wide text-white/80">
                 {t.seoHeading}
@@ -141,7 +230,7 @@ const HeroNewv2: React.FC = () => {
 
             {/* Heading */}
             <div
-              className="mb-8 lg:mb-4 xl:mb-6 2xl:mb-8 [@media(max-height:800px)]:mb-4"
+              className="mb-6 sm:mb-8 lg:mb-4 xl:mb-6 2xl:mb-8 [@media(max-height:800px)]:mb-4"
               aria-hidden="true"
             >
               {!desktopMotion ? <div className={headingClassName}>{t.heading}</div> : <BurnSpotlightText
@@ -161,16 +250,16 @@ const HeroNewv2: React.FC = () => {
               initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 2.35 }}
-              className="max-w-xl mx-auto mb-12 lg:mb-6 xl:mb-8 2xl:mb-12 [@media(max-height:800px)]:mb-6 [@media(max-height:700px)]:mb-4 flex flex-col gap-5"
+              className="max-w-xl mx-auto mb-8 sm:mb-12 lg:mb-6 xl:mb-8 2xl:mb-12 [@media(max-height:800px)]:mb-6 [@media(max-height:700px)]:mb-4 flex flex-col gap-4 sm:gap-5"
             >
               <SpotlightText
                 as="p"
-                className="text-lg sm:text-xl lg:text-sm xl:text-base 2xl:text-xl [@media(max-height:700px)]:text-xs font-light text-white/80"
+                className="text-base sm:text-xl lg:text-sm xl:text-base 2xl:text-xl [@media(max-height:700px)]:text-xs font-light text-white/80"
                 glowSize={100}
               >
                 {t.subtitle}
               </SpotlightText>
-              <p className="text-lg sm:text-xl lg:text-sm xl:text-base 2xl:text-xl [@media(max-height:700px)]:text-xs font-medium text-teal-300">
+              <p className="text-base sm:text-xl lg:text-sm xl:text-base 2xl:text-xl [@media(max-height:700px)]:text-xs font-medium text-teal-300">
                 {t.punchline}
               </p>
             </motion.div>
@@ -180,11 +269,11 @@ const HeroNewv2: React.FC = () => {
               initial={false}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 2.8 }}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-6 [@media(max-height:700px)]:gap-4"
+              className="w-full sm:w-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-6 [@media(max-height:700px)]:gap-4"
             >
               <a
                 href="#proof"
-                className="group relative px-10 py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 bg-teal-300 text-indigo-950 font-normal rounded-none overflow-hidden transition-all duration-500 min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
+                className="group relative px-10 py-4 sm:py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 bg-teal-300 text-indigo-950 font-normal rounded-none overflow-hidden transition-all duration-500 min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
               >
                 <span className="relative z-10">{t.cta.viewWork}</span>
                 <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
@@ -192,7 +281,7 @@ const HeroNewv2: React.FC = () => {
 
               <a
                 href="#contact"
-                className="group px-10 py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 border border-white/20 text-white font-normal rounded-none hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
+                className="group px-10 py-4 sm:py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 border border-white/20 text-white font-normal rounded-none hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
                 aria-label="Contact me to discuss your project"
               >
                 <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
@@ -209,7 +298,7 @@ const HeroNewv2: React.FC = () => {
             initial={desktopMotion ? { x: 24 } : false}
             animate={{ x: 0 }}
             transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className={`${styles.parallax} order-3 lg:col-span-3 flex flex-col justify-center gap-8 lg:gap-14 xl:gap-16`}
+            className={`${styles.parallax} hidden lg:flex order-3 lg:col-span-3 flex-col justify-center gap-8 lg:gap-14 xl:gap-16`}
           >
             {tV2.stack.items.slice(2, 4).map((item, index) => (
               <StackCard key={item.title} item={item} index={index + 2} />

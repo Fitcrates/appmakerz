@@ -1,8 +1,7 @@
 /* Hover-only edge light, a lighter cousin of BorderGlow on the About photo.
-   BorderGlow wraps its content in extra layers, which would break the subgrid
-   that lines up the author dividers, so this draws on the card itself.
-   Both layers are absolutely positioned, so they never take a grid cell.
-   --mx / --my are written by ReviewCard on pointer move. */
+   BorderGlow wraps its content in extra layers, which would fight the deck's
+   drag transform, so this draws on the card itself.
+   --mx / --my are written by trackPointer (ReviewCard) on pointer move. */
 .glow {
   position: relative;
 }

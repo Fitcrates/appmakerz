@@ -40,6 +40,80 @@
   pointer-events: none;
 }
 
+/* Proof bar entries are anchors into the section. */
+.anchor {
+  transition: background-color 220ms ease;
+}
+
+.anchor:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Capability deck. Each card is sticky with a top offset that grows by
+   --peek per card, so while the column scrolls the cards slide over one
+   another and settle into a stack where only the header band of each covered
+   card stays visible. Pure CSS: no scroll listeners, nothing to tear down.
+
+   --head is the height reserved for the title cell: two lines where the
+   column is narrow enough for titles to wrap, one line from xl up. Card
+   padding (1.5rem) + --head must not exceed --peek, or the card on top cuts
+   the title mid-glyph. */
+.stack {
+  --stack-top: 5.5rem;
+  --peek: 4.5rem;
+  --head: 3rem;
+  display: grid;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* ac-card's fill is translucent, which is right for a card on the page
+   background and wrong for a card covering another card. Same tint, mixed to
+   an opaque colour. Nested selector so it outranks .ac-card regardless of
+   stylesheet order. */
+.stack .stackCard {
+  position: sticky;
+  top: calc(var(--stack-top) + var(--i) * var(--peek));
+  scroll-margin-top: calc(var(--stack-top) + var(--i) * var(--peek));
+  background-color: #242150; /* Safari < 16.2: no color-mix */
+  background-color: color-mix(in srgb, #fff 3%, #1e1b4b);
+}
+
+.stackTitle {
+  min-height: var(--head);
+}
+
+@media (min-width: 1024px) {
+  .stack {
+    --stack-top: 7rem;
+    --peek: 5rem;
+    --head: 3.5rem;
+    gap: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .stack {
+    --peek: 3.5rem;
+    --head: 1.75rem;
+  }
+}
+
+/* overflow-x: hidden would switch position: sticky off for the whole section
+   (mockup, deck), so the section clips instead. Safari < 16 has no clip and
+   falls back to hidden: no sticky there, but no sideways scroll either when a
+   review card flies out of the deck. */
+.section {
+  overflow-x: hidden;
+}
+
+@supports (overflow: clip) {
+  .section {
+    overflow-x: clip;
+  }
+}
+
 @media (max-width: 480px) {
   .pill {
     white-space: normal;
