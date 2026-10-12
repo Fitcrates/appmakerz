@@ -89,6 +89,7 @@ export const translations = {
         failure: {
           heading: "Robust by design",
           body: "An integration stops responding? The operation can be safely retried. The same webhook arrives twice? It does not cause a second effect. A process breaks off halfway? The state can be reconciled and restored. Critical operations leave a trail that shows what actually happened.",
+          chipsHeading: "Under the hood",
           chips: ["Retries and queues", "Idempotent operations", "Reconciliation", "Audit trail", "Dead-letter handling", "Race-condition safety"],
         },
         cta: "See how it works",
@@ -106,6 +107,9 @@ export const translations = {
         close: "Close",
         translated: "Translated from Polish",
         link: "See reviews on Google",
+        prev: "Previous",
+        next: "Next",
+        dragHint: "Drag the card or use the arrows",
         items: [
           {
             author: "Clara G.",
@@ -589,6 +593,7 @@ export const translations = {
         failure: {
           heading: "Odporne na awarie z założenia",
           body: "Integracja przestaje odpowiadać? Operacja może zostać bezpiecznie ponowiona. Ten sam webhook dociera drugi raz? Nie tworzy drugiego skutku. Proces urywa się w połowie? Stan można uzgodnić i odtworzyć. Krytyczne operacje pozostawiają ślad pozwalający sprawdzić, co faktycznie się wydarzyło.",
+          chipsHeading: "Pod maską",
           chips: ["Ponawianie i kolejki", "Idempotentne operacje", "Uzgadnianie stanu", "Audit trail", "Dead-letter queue", "Ochrona przed race condition"],
         },
         cta: "Zobacz, jak to działa",
@@ -606,6 +611,9 @@ export const translations = {
         close: "Zamknij",
         translated: "Przetłumaczone z angielskiego",
         link: "Zobacz opinie w Google",
+        prev: "Poprzednia",
+        next: "Następna",
+        dragHint: "Przeciągnij kartę albo użyj strzałek",
         items: [
           {
             author: "Clara G.",

@@ -118,7 +118,10 @@
 }
 
 @media (max-width: 1023px) {
+  /* Flat card, so the slab is only as thick as it needs to be to read as
+     glass; the full offset reads as a doubled edge at this size. */
   .card { transform: none; }
+  .back, .pane::before { transform: translate(calc(var(--depth-x) * 0.57), 4px); }
   .pane {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;

@@ -19,6 +19,19 @@
   50% { transform: translateY(8px); }
 }
 
+/* Mobile card rail: the cards are the scroll hint (the next one peeks in), so
+   no scrollbar. overscroll-behavior keeps a flick at the end of the rail from
+   turning into browser back/forward navigation on iOS. */
+.rail {
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
 @media (max-width: 1023px) {
   .parallax { transform: none !important; will-change: auto; }
   .iconGlow { display: none; }
