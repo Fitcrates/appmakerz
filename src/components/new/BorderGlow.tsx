@@ -189,7 +189,7 @@ export default function BorderGlow({
         className="border-glow-card"
       >
         <span className="edge-light" aria-hidden="true" />
-        <span className="border-glow-trails" aria-hidden="true"><i /><i /><i /><i /></span>
+        <span className="border-glow-ring" aria-hidden="true"><i /></span>
         <div className="border-glow-inner">{children}</div>
       </div>
     </div>

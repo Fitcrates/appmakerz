@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useMotionValue, useReducedMotion, useTransform, type PanInfo, type Transition } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useElementActivity } from '@/hooks/useElementActivity';
 import styles from './ReviewDeck.module.css';
 
 export interface DeckCard {
@@ -39,7 +40,10 @@ const exitTransition: Transition = { duration: 0.38, ease: [0.4, 0, 0.6, 1] };
 
 interface DragLayerProps {
   children: React.ReactNode;
+  isTop: boolean;
   draggable: boolean;
+  /** Whether the deck is on screen; gates the edge lights on the top card. */
+  active: boolean;
   exitDir: 1 | -1 | null;
   transition: Transition;
   onDragEnd: (event: unknown, info: PanInfo) => void;
@@ -48,12 +52,12 @@ interface DragLayerProps {
 
 // The drag layer tilts with the pointer: rotation is derived from x, so the
 // card leans into a drag and keeps leaning as it flies off.
-function DragLayer({ children, draggable, exitDir, transition, onDragEnd, onExited }: DragLayerProps) {
+function DragLayer({ children, isTop, draggable, active, exitDir, transition, onDragEnd, onExited }: DragLayerProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-320, 320], [-9, 9]);
   return (
     <motion.div
-      className={`${styles.card} ${draggable ? styles.grab : ''}`}
+      className={`${styles.card} ${isTop ? styles.top : ''} ${draggable ? styles.grab : ''}`}
       style={{ x, rotate }}
       drag={draggable ? 'x' : false}
       dragSnapToOrigin
@@ -70,6 +74,9 @@ function DragLayer({ children, draggable, exitDir, transition, onDragEnd, onExit
       }}
     >
       {children}
+      {isTop ? (
+        <span className={styles.ring} data-active={active} aria-hidden="true"><i /></span>
+      ) : null}
     </motion.div>
   );
 }
@@ -79,6 +86,8 @@ function DragLayer({ children, draggable, exitDir, transition, onDragEnd, onExit
 // to the bottom of the stack and the rest spring forward one place.
 export default function ReviewDeck({ cards, prevLabel, nextLabel, hint, className = '' }: ReviewDeckProps) {
   const reduceMotion = useReducedMotion();
+  const deckRef = useRef<HTMLDivElement>(null);
+  const active = useElementActivity(deckRef, !reduceMotion);
   const [order, setOrder] = useState(() => cards.map((card) => card.id));
   const [exit, setExit] = useState<{ id: string; dir: 1 | -1 } | null>(null);
 
@@ -115,7 +124,7 @@ export default function ReviewDeck({ cards, prevLabel, nextLabel, hint, classNam
   return (
     <div className={className}>
       <div className="relative" style={{ paddingBottom: `${VISIBLE_DEPTH * 16}px` }}>
-        <div className="relative h-[27rem]">
+        <div ref={deckRef} className="relative h-[27rem]">
           {cards.map((card) => {
             const depth = order.indexOf(card.id);
             const isTop = depth === 0;
@@ -134,6 +143,8 @@ export default function ReviewDeck({ cards, prevLabel, nextLabel, hint, classNam
                 inert={!isTop}
               >
                 <DragLayer
+                  isTop={isTop}
+                  active={active}
                   draggable={isTop && !exit}
                   exitDir={isExiting ? exit.dir : null}
                   transition={transition}
