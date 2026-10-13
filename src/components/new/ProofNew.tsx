@@ -3,9 +3,10 @@ import { motion, useInView } from 'framer-motion';
 import { ArrowDown, ArrowUpRight, Fingerprint, History, Inbox, RefreshCw, Scale, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 import PrefetchLink from '@/components/next/PrefetchLink';
+import BorderGlow from './BorderGlow';
 import BurnSpotlightText from './BurnSpotlightText';
 import SpotlightText from './SpotlightText';
-import ReviewCard, { trackPointer } from './ReviewCard';
+import ReviewCard, { Stars, trackPointer } from './ReviewCard';
 import ReviewDeck from './ReviewDeck';
 import reviewStyles from './ReviewCard.module.css';
 import { useLanguage } from '../../context/LanguageContext';
@@ -251,11 +252,28 @@ const ProofNew: React.FC = () => {
               <SpotlightText as="h3" className="font-oxanium text-3xl sm:text-4xl font-light leading-tight text-white" glowSize={140}>
                 {t.reviews.heading}
               </SpotlightText>
+
+              {/* The rating on the same glowing plate as the About portrait
+                  and the services image, with the About stats' type: a light
+                  white figure over a teal label. Desktop only; on mobile the
+                  column sits above the deck and every card carries its stars. */}
+              <div className="hidden lg:block mt-14 ml-[14px] max-w-xs aspect-[4/3]">
+                <BorderGlow animated>
+                  <div className="flex h-full flex-col justify-center px-8">
+                    <SpotlightText as="span" className="text-7xl font-light font-oxanium leading-none" glowSize={100}>
+                      {t.reviews.average.value}
+                    </SpotlightText>
+                    <Stars label={t.reviews.ratingLabel} className="mt-5 w-5 h-5" />
+                    <span className="mt-5 text-xs text-teal-300 tracking-widest uppercase">{t.reviews.average.label}</span>
+                  </div>
+                </BorderGlow>
+              </div>
+
               <a
                 href={GOOGLE_REVIEWS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-2 text-sm text-teal-300 hover:text-teal-200 transition-colors"
+                className="mt-6 lg:mt-8 inline-flex items-center gap-2 text-sm text-teal-300 hover:text-teal-200 transition-colors"
               >
                 {t.reviews.link}
                 <ArrowUpRight className="w-4 h-4" aria-hidden="true" />

@@ -110,6 +110,7 @@ export const translations = {
         prev: "Previous",
         next: "Next",
         dragHint: "Drag the card or use the arrows",
+        average: { value: "5.0", label: "Average Google rating" },
         items: [
           {
             author: "Clara G.",
@@ -614,6 +615,7 @@ export const translations = {
         prev: "Poprzednia",
         next: "Następna",
         dragHint: "Przeciągnij kartę albo użyj strzałek",
+        average: { value: "5,0", label: "Średnia ocena w Google" },
         items: [
           {
             author: "Clara G.",
