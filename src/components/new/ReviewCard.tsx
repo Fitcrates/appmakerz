@@ -16,10 +16,11 @@ interface ReviewCardProps {
   clampLines?: number;
 }
 
-const Stars = ({ label }: { label: string }) => (
+// Exported so the rating plate beside the deck uses the same stars as the cards.
+export const Stars = ({ label, className = 'w-4 h-4' }: { label: string; className?: string }) => (
   <div className="flex items-center gap-1 text-teal-300" role="img" aria-label={label}>
     {Array.from({ length: 5 }, (_, star) => (
-      <Star key={star} className="w-4 h-4 fill-current" aria-hidden="true" />
+      <Star key={star} className={`${className} fill-current`} aria-hidden="true" />
     ))}
   </div>
 );
