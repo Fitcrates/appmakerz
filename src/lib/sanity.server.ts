@@ -559,6 +559,28 @@ export async function getServiceLandings() {
   return landings.map(normalizeServiceLandingPayload);
 }
 
+// The site-wide slide-in panel. Fetched in the [lang] layout on every page, so
+// it is one small cached document; the webhook purges the tag on any edit.
+export async function getPromoPopout() {
+  return fetchSanity<any>(
+    `*[_type == "promoPopout" && enabled == true] | order(_updatedAt desc)[0]{
+      _id,
+      image { en { asset, alt, crop, hotspot }, pl { asset, alt, crop, hotspot } },
+      eyebrow { en, pl },
+      title { en, pl },
+      body { en, pl },
+      ctaLabel { en, pl },
+      href,
+      tabLabel { en, pl },
+      hideOn,
+      delaySeconds,
+      snoozeDays
+    }`,
+    {},
+    ['promo-popout']
+  );
+}
+
 export async function getAboutMe(slug: string = 'about-me') {
   return fetchSanity<any>(
     `*[_type == "aboutMe" && slug.current == $slug][0]{

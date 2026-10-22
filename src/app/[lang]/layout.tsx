@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import NextProviders from '@/components/next/NextProviders';
 import CookieConsentNew from '@/components/new/CookieConsentNew';
+import PromoPopout from '@/components/new/PromoPopout';
+import { getPromoPopoutProps } from '@/lib/promo-popout';
 import ScrollBlurOverlay from '@/components/new/ScrollBlurOverlay';
 import CursorAura from '@/components/next/CursorAura';
 import DeferredChatWidget from '@/components/next/DeferredChatWidget';
@@ -80,6 +82,7 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
   // unknown one still 404s — it just does so inside valid markup.
   const language = isLanguage(lang) ? (lang as Language) : DEFAULT_LANGUAGE;
   const googleTagId = process.env.NEXT_PUBLIC_GOOGLE_TAG_ID;
+  const promoPopout = await getPromoPopoutProps();
 
   const websiteSchema = {
     "@context": "https://schema.org",
@@ -173,6 +176,7 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
         <NextProviders initialLanguage={language}>
           {children}
           <CookieConsentNew />
+          {promoPopout ? <PromoPopout {...promoPopout} /> : null}
           <ScrollBlurOverlay />
           <CursorAura />
           <DeferredChatWidget />

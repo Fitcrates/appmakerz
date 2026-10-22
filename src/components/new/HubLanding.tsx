@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { PortableText, type PortableTextBlockComponent, type PortableTextComponents } from '@portabletext/react';
 import PrefetchLink from '@/components/next/PrefetchLink';
 import FaqAccordionList from '@/components/next/FaqAccordionList';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
@@ -14,6 +15,7 @@ import GuideCtaSection from '@/components/new/GuideCtaSection';
 import TechChips from '@/components/new/TechChips';
 import ServiceCtaNew from '@/components/new/ServiceCtaNew';
 import HubMedia from '@/components/new/HubMedia';
+import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { urlFor } from '@/lib/sanity.server';
 import { getImageAlt } from '@/lib/image-alt';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
@@ -42,6 +44,17 @@ interface HubLandingProps {
 // one thing" but "can this person build what I need, and where do I go next".
 // So the order is proof → routing → scope, and the page links out of itself all
 // the way down instead of funnelling into a single offer.
+const hubContentComponents: PortableTextComponents = {
+  ...portableTextComponentsServer,
+  block: {
+    // The shared map defines block as an object of styles, never a function.
+    ...(portableTextComponentsServer.block as Record<string, PortableTextBlockComponent>),
+    h3: ({ children }) => (
+      <h2 className="text-3xl lg:text-4xl font-light font-oxanium text-white mt-14 mb-5">{children}</h2>
+    ),
+  },
+};
+
 export default function HubLanding({
   landing,
   language,
@@ -67,6 +80,7 @@ export default function HubLanding({
   const fitNo = getLocalizedArray<string>(landing.fitNo, language);
   const integrations = getLocalizedArray<ServiceIntegration>(landing.integrations, language);
   const faq = getLocalizedArray<LocalizedFaqItem>(landing.faq, language);
+  const richContent = getLocalizedArray<any>(landing.content, language);
   const technologies = Array.isArray(landing.technologies) ? landing.technologies : [];
   const heroImageUrl = landing.heroImage?.asset ? urlFor(landing.heroImage).width(1600).auto('format').url() : '';
   const heroImageAlt = getImageAlt(landing.heroImage, title);
@@ -186,6 +200,17 @@ export default function HubLanding({
       <HubIntegrations integrations={integrations} language={language} />
 
       {slot('after-integrations')}
+
+      {/* Free-form copy from the CMS. It carries its own headings, so the
+          section adds none and promotes h3 to h2: they are top-level topics
+          on this page. The promo popout links here. */}
+      {richContent.length > 0 ? (
+        <section id="hub-content" className="scroll-mt-28 border-t border-white/10 py-20 lg:py-24">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 prose prose-invert [&>*:first-child]:mt-0">
+            <PortableText value={richContent} components={hubContentComponents} />
+          </div>
+        </section>
+      ) : null}
 
       <HubEvidence posts={relatedPosts} language={language} />
 

@@ -206,11 +206,13 @@ const FooterNew: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
             <div>
               <PrefetchLink href={localizedPath(language, '/#hero')} className="inline-block mb-8">
-                <div className="flex items-center gap-2">
-                  <span className="text-3xl font-light font-oxanium text-white">
+                <div className="flex flex-col items-center gap-2">
+                  
+                  <img src="/media/Neonowy filozof i obwody przyszłości-artovnia2.webp" alt="AppCrates Logo" className="w-90 h-90 object-contain hidden md:block" />
+                <span className="text-3xl font-light font-oxanium text-white">
                     App<span className="text-teal-300">Crates</span>
                   </span>
-                  <img src="/media/AppcratesLogoSmaller.webp" alt="AppCrates Logo" className="w-10 h-10 object-contain hidden md:block" />
+                
                 </div>
               </PrefetchLink>
               <p className="text-white/70  font-light max-w-md text-lg leading-relaxed">{t.brand.description}</p>

@@ -133,6 +133,10 @@ export async function POST(request: NextRequest) {
       revalidatePath('/[lang]/about-me', 'page');
       revalidateLocalizedPath('/about-me');
       localizedAbsoluteUrls('/about-me').forEach((url) => indexNowUrls.add(url));
+    } else if (docType === 'promoPopout') {
+      // Rendered by the [lang] layout, so every page carries it.
+      expireTag('promo-popout');
+      revalidatePath('/[lang]', 'layout');
     } else if (docType === 'category') {
       expireTag('post-categories');
       expireTag('posts');
