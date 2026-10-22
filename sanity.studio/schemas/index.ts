@@ -11,6 +11,7 @@ import serviceLanding from './documents/serviceLanding';
 import aboutMe from './documents/aboutMe';
 import category from './documents/category';
 import redirect from './documents/redirect';
+import promoPopout from './documents/promoPopout';
 import { projectSectionTypes } from './objects/project/sections';
 
 export const schemaTypes: SchemaTypeDefinition[] = [
@@ -24,6 +25,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   aboutMe,
   category,
   redirect,
+  promoPopout,
   // Objects
   blockContent,
   blogTable,
