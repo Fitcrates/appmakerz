@@ -60,7 +60,7 @@ export default function HubFit({ fitYes, fitNo, language }: HubFitProps) {
                 {column.items.map((item, itemIndex) => (
                   <li
                     key={`fit-${index}-${itemIndex}`}
-                    className="border-b border-white/[0.06] py-3 font-light leading-relaxed text-white/60"
+                    className="border-b border-white/6 py-3 font-light leading-relaxed text-white/60"
                   >
                     {item}
                   </li>

@@ -69,7 +69,7 @@ export default function BlogPostLocalizedContent({ post, postContext }: BlogPost
                 sizes="(max-width: 768px) 100vw, 1200px"
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/70 to-indigo-950/20 pointer-events-none" />
+              <div className="absolute inset-0 bg-linear-to-t from-indigo-950 via-indigo-950/70 to-indigo-950/20 pointer-events-none" />
             </div>
           </div>
         ) : null}
@@ -83,7 +83,7 @@ export default function BlogPostLocalizedContent({ post, postContext }: BlogPost
               <span className="text-white/60 truncate max-w-[200px]">{title}</span>
             </div>
 
-            <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white  leading-tight mb-8">
+            <h1 className="text-4xl lg:text-5xl/none xl:text-6xl/none font-light text-white  leading-tight mb-8">
               <BurnSpotlightText as="span" className="font-inherit text-inherit" glowSize={150}>
                 {title}
               </BurnSpotlightText>
@@ -181,12 +181,12 @@ export default function BlogPostLocalizedContent({ post, postContext }: BlogPost
             <div className="mt-16 pt-16 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-8 overflow-hidden">
               {previousPost ? (
                 <PrefetchLink href={localizedPath(language, `/blog/${previousPost.slug.current}`)} className="group flex min-w-0 max-w-full items-center gap-4">
-                  <div className="w-12 h-12 border border-white/10 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300 flex-shrink-0">
+                  <div className="w-12 h-12 border border-white/10 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300 shrink-0">
                     <ArrowLeft className="w-5 h-5 text-white/50 group-hover:text-indigo-950 transition-colors" />
                   </div>
                   <div className="min-w-0 max-w-full">
                     <p className="text-xs text-white/55  tracking-widest uppercase mb-1">{language === 'pl' ? 'Poprzedni' : 'Previous'}</p>
-                    <p className="text-white  group-hover:text-teal-300 transition-colors font-oxanium leading-snug line-clamp-3 break-words">{getLocalizedText(previousPost.title, language)}</p>
+                    <p className="text-white  group-hover:text-teal-300 transition-colors font-oxanium leading-snug line-clamp-3 wrap-break-word">{getLocalizedText(previousPost.title, language)}</p>
                   </div>
                 </PrefetchLink>
               ) : <div className="hidden sm:block" />}
@@ -195,9 +195,9 @@ export default function BlogPostLocalizedContent({ post, postContext }: BlogPost
                 <PrefetchLink href={localizedPath(language, `/blog/${nextPost.slug.current}`)} className="group flex min-w-0 max-w-full items-center justify-end gap-4 text-right">
                   <div className="min-w-0 max-w-full">
                     <p className="text-xs text-white/55  tracking-widest uppercase mb-1">{language === 'pl' ? 'Następny' : 'Next'}</p>
-                    <p className="text-white  group-hover:text-teal-300 transition-colors font-oxanium leading-snug line-clamp-3 break-words">{getLocalizedText(nextPost.title, language)}</p>
+                    <p className="text-white  group-hover:text-teal-300 transition-colors font-oxanium leading-snug line-clamp-3 wrap-break-word">{getLocalizedText(nextPost.title, language)}</p>
                   </div>
-                  <div className="w-12 h-12 border border-white/10 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300 flex-shrink-0">
+                  <div className="w-12 h-12 border border-white/10 flex items-center justify-center group-hover:border-teal-300 group-hover:bg-teal-300 transition-all duration-300 shrink-0">
                     <ArrowRight className="w-5 h-5 text-white/50 group-hover:text-indigo-950 transition-colors" />
                   </div>
                 </PrefetchLink>

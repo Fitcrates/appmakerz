@@ -1,6 +1,5 @@
 import { createClient } from '@sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { createImageUrlBuilder, type SanityImageSource } from '@sanity/image-url';
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.VITE_SANITY_PROJECT_ID || process.env.SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || process.env.VITE_SANITY_DATASET || process.env.SANITY_DATASET;
@@ -16,7 +15,7 @@ const client = createClient({
   apiVersion: '2024-02-20',
 });
 
-const builder = imageUrlBuilder({
+const builder = createImageUrlBuilder({
   projectId,
   dataset,
 });

@@ -252,7 +252,7 @@ const AboutNew: React.FC = () => {
           <motion.div
             ref={imageRef}
             style={{ y: imageY, scale: imageScale, willChange: 'transform' }}
-            className="group relative aspect-[4/5] lg:sticky lg:top-32"
+            className="group relative aspect-4/5 lg:sticky lg:top-32"
           >
             <BorderGlow animated>
               <NoiseRevealImage
@@ -268,7 +268,7 @@ const AboutNew: React.FC = () => {
             <div className="mb-12">
               <BurnSpotlightText
                 as="h2"
-                className="text-4xl sm:text-5xl lg:text-6xl font-light font-oxanium leading-[1.3] mb-2"
+                className="text-4xl sm:text-5xl/none lg:text-6xl/none font-light font-oxanium leading-[1.3] mb-2"
                 glowSize={150}
                 baseDelay={300}
                 charDelay={35}

@@ -48,9 +48,9 @@ export default function PortableTextBlogTable({ value }: PortableTextBlogTablePr
                   <th
                     key={cellIndex}
                     scope="col"
-                    className="min-w-[11rem] border-r border-white/10 px-4 py-3 align-top last:border-r-0 sm:min-w-[13rem] sm:px-6 sm:py-4"
+                    className="min-w-44 border-r border-white/10 px-4 py-3 align-top last:border-r-0 sm:min-w-52 sm:px-6 sm:py-4"
                   >
-                    <span className="block whitespace-pre-wrap break-words">{cell}</span>
+                    <span className="block whitespace-pre-wrap wrap-break-word">{cell}</span>
                   </th>
                 ))}
               </tr>
@@ -65,9 +65,9 @@ export default function PortableTextBlogTable({ value }: PortableTextBlogTablePr
                 {row.cells.map((cell, cellIndex) => (
                   <td
                     key={cellIndex}
-                    className="min-w-[11rem] border-r border-white/10 px-4 py-3 align-top last:border-r-0 sm:min-w-[13rem] sm:px-6 sm:py-4"
+                    className="min-w-44 border-r border-white/10 px-4 py-3 align-top last:border-r-0 sm:min-w-52 sm:px-6 sm:py-4"
                   >
-                    <span className="block whitespace-pre-wrap break-words">
+                    <span className="block whitespace-pre-wrap wrap-break-word">
                       {cell}
                     </span>
                   </td>

@@ -1,0 +1,22 @@
+.track {
+  width: max-content;
+  backface-visibility: hidden;
+  animation: marquee 64s linear infinite paused;
+}
+
+.track[data-active="true"] {
+  animation-play-state: running;
+  will-change: transform;
+}
+
+@keyframes marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+    transform: none;
+  }
+}

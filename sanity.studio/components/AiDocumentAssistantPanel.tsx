@@ -80,19 +80,19 @@ export function AiDocumentAssistantPanel(props: AiDocumentAssistantPanelProps) {
   }
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {props.renderDefault(props)}
       <Card border padding={3} radius={2} tone="transparent">
-        <Stack space={4}>
+        <Stack gap={4}>
           <Flex align="center" justify="space-between" gap={3}>
-            <Stack space={2}>
+            <Stack gap={2}>
               <Text weight="semibold" size={2}>Asystent AI</Text>
               <Text size={1} muted>Głównym briefem jest pole „Kontekst i wytyczne AI”. Instrukcja poniżej dotyczy tylko tej jednej operacji.</Text>
             </Stack>
             {loading ? <Spinner size={1} /> : null}
           </Flex>
 
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text size={1} weight="semibold">Preset</Text>
             <Select value={preset} onChange={(event) => setPreset(event.currentTarget.value)} disabled={loading}>
               {presets.map((entry) => <option key={entry.name} value={entry.name}>{entry.name}</option>)}
@@ -102,7 +102,7 @@ export function AiDocumentAssistantPanel(props: AiDocumentAssistantPanelProps) {
 
           {preset === 'custom' ? (
             <Card border padding={3} radius={2}>
-              <Stack space={2}>
+              <Stack gap={2}>
                 {fields.map((field) => (
                   <Flex key={field.path} align="center" gap={2}>
                     <Checkbox checked={customFields.includes(field.path)} onChange={() => toggleCustomField(field.path)} />
@@ -113,7 +113,7 @@ export function AiDocumentAssistantPanel(props: AiDocumentAssistantPanelProps) {
             </Card>
           ) : null}
 
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text size={1} weight="semibold">Dodatkowa instrukcja</Text>
             <TextArea value={instruction} onChange={(event) => setInstruction(event.currentTarget.value)} rows={3} disabled={loading} placeholder="Np. Napisz post techniczny dla właścicieli małych firm, ton konkretny i praktyczny." />
           </Stack>
@@ -125,7 +125,7 @@ export function AiDocumentAssistantPanel(props: AiDocumentAssistantPanelProps) {
 
           {assistantMessage ? (
             <Card border padding={3} radius={2} tone={pendingPatch ? 'caution' : 'positive'}>
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text size={1} style={{ whiteSpace: 'pre-wrap' }}>{assistantMessage}</Text>
                 {pendingPatch ? <Box><Text size={1} muted>Zmiany nie są zapisane, dopóki nie klikniesz „Zastosuj zmiany”.</Text></Box> : null}
               </Stack>

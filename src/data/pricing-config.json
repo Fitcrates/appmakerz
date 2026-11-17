@@ -132,10 +132,10 @@
       "label": "Strona internetowa / landing page",
       "steps": ["base", "cms", "features", "deadline"],
       "base": {
-        "simple_landing": { "label": "Prosta strona ofertowa", "min": 1200, "max": 2500 },
-        "template": { "label": "Szybszy start na gotowym układzie", "min": 1800, "max": 3500 },
-        "custom": { "label": "Indywidualny projekt od zera", "min": 3500, "max": 7000 },
-        "have_design": { "label": "Mam gotowy projekt graficzny", "min": 1800, "max": 4000 }
+        "simple_landing": { "label": "Prosta strona ofertowa", "min": 2000, "max": 3000 },
+        "template": { "label": "Szybszy start na gotowym układzie", "min": 2000, "max": 3500 },
+        "custom": { "label": "Indywidualny projekt od zera", "min": 2000, "max": 7000 },
+        "have_design": { "label": "Mam gotowy projekt graficzny", "min": 2000, "max": 4000 }
       },
       "cms": {
         "none": { "label": "Bez panelu edycji treści", "min": 0, "max": 0 },

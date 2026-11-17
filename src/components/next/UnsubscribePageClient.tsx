@@ -104,7 +104,7 @@ export default function UnsubscribePageClient() {
         transition={{ duration: 0.5 }}
         className="relative w-full max-w-md"
       >
-        <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 p-8 sm:p-12">
+        <div className="relative bg-white/5 backdrop-blur-xs border border-white/10 p-8 sm:p-12">
           <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-teal-300/50" />
           <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-teal-300/50" />
 
@@ -157,7 +157,7 @@ export default function UnsubscribePageClient() {
                     onChange={(event) => setEmail(event.target.value)}
                     required
                     placeholder={t.title.line3}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white placeholder-white/30  focus:border-teal-300/50 focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 text-white placeholder-white/30  focus:border-teal-300/50 focus:outline-hidden transition-colors"
                   />
                 </div>
 

@@ -15,6 +15,7 @@ const ProjectsNew = dynamic(() => import('@/components/new/ProjectsNew'));
 const SolutionsNew = dynamic(() => import('@/components/new/SolutionsNew'));
 const LatestBlogPostsSection = dynamic(() => import('@/components/next/LatestBlogPostsSection'));
 const ContactNew = dynamic(() => import('@/components/new/ContactNew'));
+const ProjectBudgetNew = dynamic(() => import('@/components/new/ProjectBudgetNew'));
 
 interface HomePageClientProps {
   projects?: Project[];
@@ -64,6 +65,7 @@ export default function HomePageClient({ projects, posts }: HomePageClientProps)
         <ProjectsNew sanityProjects={projects} />
         <SolutionsNew />
         <LatestBlogPostsSection posts={posts} />
+        <ProjectBudgetNew />
         <ContactNew />
       </main>
       <NextFooter />

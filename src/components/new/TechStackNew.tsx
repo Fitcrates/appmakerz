@@ -1,4 +1,7 @@
 import { memo, useEffect, useRef } from 'react';
+import { useElementActivity } from '@/hooks/useElementActivity';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import styles from './TechStackNew.module.css';
 
 interface TechItem {
   name: string;
@@ -102,7 +105,7 @@ const Badge = memo(({ name, logoUrl }: TechItem) => (
   <div
     data-badge
     data-lit="0"
-    className="flex flex-shrink-0 items-center gap-2.5 px-6 py-2 text-white/35 opacity-70 transition-all duration-300 [&[data-lit='1']]:text-white [&[data-lit='1']]:opacity-100"
+    className="flex shrink-0 items-center gap-2.5 px-6 py-2 text-white/35 opacity-70 transition-[color,opacity] duration-300 data-[lit='1']:text-white data-[lit='1']:opacity-100"
   >
     <img
       src={logoUrl}
@@ -120,79 +123,58 @@ const Badge = memo(({ name, logoUrl }: TechItem) => (
 const TechStackNew = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)', true);
+  const active = useElementActivity(trackRef, !reducedMotion);
 
   useEffect(() => {
     const slider = sliderRef.current;
     const track = trackRef.current;
-    if (!slider || !track) return;
+    if (!active || !slider || !track) return;
 
-    let badges: HTMLElement[] = [];
+    const badges = Array.from(slider.querySelectorAll<HTMLElement>('[data-badge]'));
     let raf = 0;
-    let lastHL = 0;
+    let timer = 0;
 
-    const measure = () => {
-      badges = Array.from(slider.querySelectorAll<HTMLElement>('[data-badge]'));
+    const updateHighlights = () => {
+      const trackRect = track.getBoundingClientRect();
+      const cx = trackRect.left + trackRect.width / 2;
+      // Finish every geometry read before changing styles on any badge.
+      const states = badges.map((badge) => {
+        const rect = badge.getBoundingClientRect();
+        return Math.abs(rect.left + rect.width / 2 - cx) < 110 ? '1' : '0';
+      });
+      badges.forEach((badge, index) => {
+        if (badge.dataset.lit !== states[index]) badge.dataset.lit = states[index];
+      });
+      timer = window.setTimeout(() => {
+        raf = requestAnimationFrame(updateHighlights);
+      }, 50);
     };
 
-    const tick = (now: number) => {
-      if (now - lastHL > 50) {
-        lastHL = now;
-        const trackRect = track.getBoundingClientRect();
-        const cx = trackRect.left + trackRect.width / 2;
-        badges.forEach((badge) => {
-          const rect = badge.getBoundingClientRect();
-          const center = rect.left + rect.width / 2;
-          badge.dataset.lit = Math.abs(center - cx) < 110 ? '1' : '0';
-        });
-      }
-
-      raf = requestAnimationFrame(tick);
-    };
-
-    measure();
-    window.addEventListener('resize', measure);
-    raf = requestAnimationFrame(tick);
+    raf = requestAnimationFrame(updateHighlights);
 
     return () => {
-      window.removeEventListener('resize', measure);
+      window.clearTimeout(timer);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [active]);
 
   return (
     <section id="tech" className="relative overflow-hidden bg-indigo-950 py-3">
-      <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-400/60 to-transparent" />
-
-      <style>{`
-        @keyframes tech-marquee {
-          from { transform: translate3d(0, 0, 0); }
-          to { transform: translate3d(-50%, 0, 0); }
-        }
-
-        .tech-marquee-track {
-          animation: tech-marquee 64s linear infinite;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .tech-marquee-track {
-            animation: none !important;
-            transform: translate3d(0, 0, 0) !important;
-          }
-        }
-      `}</style>
+      <div className="absolute left-0 right-0 top-0 h-px bg-linear-to-r from-transparent via-teal-400/60 to-transparent" />
 
       <div ref={trackRef} className="overflow-hidden">
         <div
           ref={sliderRef}
-          className="tech-marquee-track flex items-center"
-          style={{ width: 'max-content', willChange: 'transform', backfaceVisibility: 'hidden' }}
+          className={`${styles.track} flex items-center`}
+          data-active={active}
         >
-          <div className="flex flex-shrink-0">
+          <div className="flex shrink-0">
             {LOGICAL_SET.map((tech, index) => (
               <Badge key={`${tech.name}-${index}`} {...tech} />
             ))}
           </div>
-          <div className="flex flex-shrink-0">
+          <div className="flex shrink-0">
             {LOGICAL_SET.map((tech, index) => (
               <Badge key={`${tech.name}-2-${index}`} {...tech} />
             ))}
@@ -200,9 +182,9 @@ const TechStackNew = () => {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-20 bg-gradient-to-r from-indigo-950 to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-20 bg-gradient-to-l from-indigo-950 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-20 bg-linear-to-r from-indigo-950 to-transparent" />
+      <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-20 bg-linear-to-l from-indigo-950 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 };

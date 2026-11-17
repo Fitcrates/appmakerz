@@ -106,7 +106,7 @@ export default function HubLanding({
           illustration with its own lettering, which a backdrop would wash out
           and set against the h1. */}
       <section className="relative flex items-end overflow-hidden pt-40 pb-20 lg:pt-48 lg:pb-28">
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/30 to-indigo-950" />
+        <div className="absolute inset-0 bg-linear-to-b from-indigo-900/30 to-indigo-950" />
         <HeroPulsePath />
 
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -129,7 +129,7 @@ export default function HubLanding({
               <div className="max-w-4xl">
                 <BurnSpotlightText
                   as="h1"
-                  className={`font-oxanium text-4xl font-light leading-tight text-white sm:text-5xl lg:text-7xl ${heroImageUrl ? 'xl:text-6xl' : ''}`}
+                  className={`font-oxanium text-4xl font-light leading-tight text-white sm:text-5xl/none lg:text-7xl/none ${heroImageUrl ? 'xl:text-6xl/none' : ''}`}
                   glowSize={200}
                   baseDelay={200}
                   charDelay={25}
@@ -142,7 +142,7 @@ export default function HubLanding({
                 <div className="mt-8 max-w-2xl">
                   <SpotlightText
                     as="p"
-                    className="font-plex text-lg font-light leading-relaxed text-white/60 sm:text-xl"
+                    className="font-plex text-lg font-light leading-relaxed text-white/60 sm:text-xl/7"
                     glowSize={150}
                   >
                     {intro}

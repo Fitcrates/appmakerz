@@ -66,7 +66,10 @@ The assistant should always explain:
 ## Basic Landing Page
 
 Typical range:
-500 PLN – 3000 PLN
+500 PLN – 2000 PLN (net, excluding VAT)
+
+The 500 PLN end is a very basic generated one-page site with no additional
+features. A simple custom Next.js website starts at 2000 PLN.
 
 Usually includes:
 - simple responsive website
@@ -90,7 +93,7 @@ Usually does NOT include:
 ## Professional Business Website
 
 Typical range:
-3000 PLN – 10000 PLN+
+2000 PLN – 10000 PLN+ (net, excluding VAT)
 
 May include:
 - CMS integration
@@ -250,7 +253,7 @@ Marketplaces are significantly more complex than regular e-commerce stores.
 # AI Integrations & Automation
 
 Typical range:
-2000 PLN – 30000 PLN+
+4000 PLN – 30000 PLN+ (net, excluding VAT)
 
 Examples:
 - AI chat systems

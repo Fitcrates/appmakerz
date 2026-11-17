@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Globe, Store, Bot, Settings } from 'lucide-react';
 import { SiMedusa } from 'react-icons/si';
 import { useCalculator } from '@/lib/calculator/useCalculator';
+import { calculatorPrefillFromQuery } from '@/lib/calculator/prefill';
 
 import { pricingCopy } from '@/data/pricing-copy';
 import { useLanguage } from '@/context/LanguageContext';
@@ -34,6 +35,7 @@ export default function PricingCalculator() {
   const t = translations[language].calculator;
   const optionCopy = pricingCopy[language];
   const calculator = useCalculator(language);
+  const prefillApplied = useRef(false);
   const {
     config,
     selection,
@@ -76,21 +78,19 @@ export default function PricingCalculator() {
   }, [currentStep, selection]);
 
   useEffect(() => {
-    const rawPrefill = sessionStorage.getItem('calculatorPrefill');
-
-    if (!rawPrefill) {
-      return;
-    }
+    if (prefillApplied.current) return;
+    prefillApplied.current = true;
+    const queryPrefill = calculatorPrefillFromQuery(new URLSearchParams(window.location.search));
 
     try {
-      const parsed = JSON.parse(rawPrefill);
-      setPrefill(parsed);
-    } catch {
+      const rawPrefill = sessionStorage.getItem('calculatorPrefill');
       sessionStorage.removeItem('calculatorPrefill');
-      return;
+      if (queryPrefill) setPrefill(queryPrefill);
+      else if (rawPrefill) setPrefill(JSON.parse(rawPrefill));
+    } catch {
+      // Query links also work when browser storage is unavailable.
+      if (queryPrefill) setPrefill(queryPrefill);
     }
-
-    sessionStorage.removeItem('calculatorPrefill');
   }, [setPrefill]);
 
   const renderStep = () => {
@@ -116,7 +116,15 @@ export default function PricingCalculator() {
 
     return (
       <div className="space-y-8">
-        <ResultDisplay price={price} service={selectedService} disclaimer={optionCopy.disclaimer} label={t.result.label} noPriceTitle={t.result.noPriceTitle} />
+        <ResultDisplay price={price} service={selectedService} disclaimer={optionCopy.disclaimer} label={t.result.label} noPriceTitle={t.result.noPriceTitle} priceSuffix={t.result.priceSuffix} fromLabel={t.result.fromLabel} />
+        <div className="border-y border-white/10 py-6">
+          <h3 className="font-oxanium text-xl font-light text-white">{t.result.scopeTitle}</h3>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {[summary.baseLabel, summary.cmsLabel, ...summary.featuresLabels, summary.deadlineLabel]
+              .filter((item): item is string => Boolean(item))
+              .map((item, index) => <li key={`${item}-${index}`} className="rounded-lg border border-white/10 px-3 py-2 text-sm text-white/70">{item}</li>)}
+          </ul>
+        </div>
         <div className="ac-card p-6">
           <h3 className="mb-5 font-oxanium text-2xl font-light text-white">{t.result.formTitle}</h3>
           <StepContact service={selectedService} summary={summary} price={price} language={language} copy={t.form} />

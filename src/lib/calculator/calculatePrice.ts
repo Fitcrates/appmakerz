@@ -1,6 +1,7 @@
 import pricingConfig from '@/data/pricing-config.json';
 import { pricingCopy } from '@/data/pricing-copy';
 import type { Language } from '@/lib/language';
+import { SERVICE_MINIMUM_BUDGET } from '@/lib/pricing';
 import type { PriceResult, PricingConfig, Selection } from './types';
 
 const config = pricingConfig as PricingConfig;
@@ -41,10 +42,9 @@ export function calculatePrice(selection: Selection): PriceResult {
   const serviceMultipliers = config.multipliers.deadline[selection.service];
   const multiplier = serviceMultipliers?.[selection.deadline]?.value ?? 1;
 
-  return {
-    min: roundToHundreds(min * multiplier),
-    max: roundToHundreds(max * multiplier),
-  };
+  const minimumBudget = SERVICE_MINIMUM_BUDGET[selection.service] ?? 0;
+  const priceMin = Math.max(minimumBudget, roundToHundreds(min * multiplier));
+  return { min: priceMin, max: Math.max(priceMin, roundToHundreds(max * multiplier)) };
 }
 
 export function getQuoteSelectionSummary(selection: Selection, language: Language = 'pl') {

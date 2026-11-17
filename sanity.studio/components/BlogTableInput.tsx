@@ -171,9 +171,9 @@ export function BlogTableInput(props: ObjectInputProps) {
   }
 
   return (
-    <Stack space={4}>
-      <Stack space={3}>
-        <Stack space={2}>
+    <Stack gap={4}>
+      <Stack gap={3}>
+        <Stack gap={2}>
           <Text size={1} weight="semibold">
             Podpis tabeli
           </Text>
@@ -196,12 +196,12 @@ export function BlogTableInput(props: ObjectInputProps) {
       </Stack>
 
       <Card padding={3} border radius={2} tone="transparent">
-        <Stack space={3}>
+        <Stack gap={3}>
           <Flex align="center" justify="space-between" gap={3} wrap="wrap">
             <Text size={1} weight="semibold">
               Edytor tabeli
             </Text>
-            <Inline space={2}>
+            <Inline gap={2}>
               <Button mode="ghost" text="Dodaj wiersz" onClick={addRow} />
               <Button mode="ghost" text="Dodaj kolumnę" onClick={addColumn} />
             </Inline>
@@ -263,7 +263,7 @@ export function BlogTableInput(props: ObjectInputProps) {
       </Card>
 
       <Card padding={3} border radius={2} tone="caution">
-        <Stack space={3}>
+        <Stack gap={3}>
           <Text size={1} weight="semibold">
             Wklej z arkusza albo HTML
           </Text>
@@ -276,7 +276,7 @@ export function BlogTableInput(props: ObjectInputProps) {
             onChange={(event) => setPasteValue(event.currentTarget.value)}
             placeholder={'Technika\tEfekt wizualny\tTrwałość\nOlej\tGłęboki\tBardzo wysoka'}
           />
-          <Inline space={2}>
+          <Inline gap={2}>
             <Button
               tone="primary"
               text="Wstaw wklejoną tabelę"

@@ -224,7 +224,7 @@ const SolutionsNew: React.FC = () => {
         >
           <BurnSpotlightText
             as="h2"
-            className="text-4xl sm:text-5xl lg:text-6xl font-light font-oxanium leading-[1.3]"
+            className="text-4xl sm:text-5xl/none lg:text-6xl/none font-light font-oxanium leading-[1.3]"
             glowSize={150}
             baseDelay={200}
             charDelay={40}
@@ -239,8 +239,8 @@ const SolutionsNew: React.FC = () => {
         <div ref={sceneRef} className="solutions-scene relative" id="process">
           {!isMobileLayout ? (
             <div className="solutions-scene__desktop hidden md:block">
-              <div className="solutions-scene__sticky-wrap grid grid-cols-2 min-h-[100svh] bg-indigo-950 rounded-lg overflow-hidden">
-                <div className="solutions-scene__left h-[100svh] flex flex-col justify-center px-8 lg:px-12 z-10 bg-indigo-950">
+              <div className="solutions-scene__sticky-wrap grid grid-cols-2 min-h-svh bg-indigo-950 rounded-lg overflow-hidden">
+                <div className="solutions-scene__left h-svh flex flex-col justify-center px-8 lg:px-12 z-10 bg-indigo-950">
                   {solutions.map((solution, i) => (
                     <article
                       key={solution.number}
@@ -266,7 +266,7 @@ const SolutionsNew: React.FC = () => {
 
                 <div className="solutions-scene__right relative  ">
                   {solutions.map((solution) => (
-                    <div key={`panel-${solution.number}`} className="solutions-scene__image-panel h-[100svh] relative overflow-hidden">
+                    <div key={`panel-${solution.number}`} className="solutions-scene__image-panel h-svh relative overflow-hidden">
                       <Image
                         src={solution.mobileImage}
                         alt={solution.title}
@@ -275,8 +275,8 @@ const SolutionsNew: React.FC = () => {
                         className="solutions-scene__image object-cover"
                         sizes="50vw"
                       />
-                      <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-r from-indigo-950 via-indigo-950/65 to-transparent pointer-events-none z-[1]" />
-                      <div className="solutions-scene__image-overlay absolute inset-0 bg-gradient-to-l from-indigo-950 via-transparent to-transparent pointer-events-none z-[2]" />
+                      <div className="solutions-scene__image-overlay absolute inset-0 bg-linear-to-r from-indigo-950 via-indigo-950/65 to-transparent pointer-events-none z-1" />
+                      <div className="solutions-scene__image-overlay absolute inset-0 bg-linear-to-l from-indigo-950 via-transparent to-transparent pointer-events-none z-2" />
                     </div>
                   ))}
                 </div>
@@ -289,7 +289,7 @@ const SolutionsNew: React.FC = () => {
               style={{ height: `${solutions.length * 100}svh` }}
             >
               <div
-                className="left-0 right-0 h-[100svh] overflow-hidden"
+                className="left-0 right-0 h-svh overflow-hidden"
                 style={{
                   position: mobilePinState === 'during' ? 'fixed' : 'absolute',
                   top: mobilePinState === 'after' ? 'auto' : 0,
@@ -323,11 +323,11 @@ const SolutionsNew: React.FC = () => {
                           className="object-cover"
                           sizes="(max-width: 768px) 100vw, 50vw"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/75 to-transparent z-[1] pointer-events-none" />
-                        <div className="absolute inset-0 bg-gradient-to-b from-indigo-950 via-transparent to-transparent z-[1] pointer-events-none" />
+                        <div className="absolute inset-0 bg-linear-to-t from-indigo-950 via-indigo-950/75 to-transparent z-1 pointer-events-none" />
+                        <div className="absolute inset-0 bg-linear-to-b from-indigo-950 via-transparent to-transparent z-1 pointer-events-none" />
                       </div>
 
-                      <div className="absolute bottom-0 left-0 w-full px-4 sm:px-6 pb-[clamp(4rem,12vh,8rem)] z-[2]">
+                      <div className="absolute bottom-0 left-0 w-full px-4 sm:px-6 pb-[clamp(4rem,12vh,8rem)] z-2">
                         <span className="notranslate text-[0.65rem] font-medium tracking-[0.2em] uppercase text-teal-300 mb-4 block" aria-hidden="true">
                           {solution.number}
                         </span>
@@ -360,7 +360,7 @@ const SolutionsNew: React.FC = () => {
         >
           <a
             href="#contact"
-            className="group inline-flex items-center gap-4 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 rounded"
+            className="group inline-flex items-center gap-4 focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 rounded-sm"
             aria-label="Contact me to discuss your project"
           >
             <SpotlightText glowSize={100}>

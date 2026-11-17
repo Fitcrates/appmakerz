@@ -13,10 +13,10 @@ export function AiContextInput(props: AiContextInputProps) {
   const preferences = useAiDocumentPreferences(docType)
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {props.renderDefault(props)}
       <Card border padding={3} radius={2} tone="primary">
-        <Stack space={3}>
+        <Stack gap={3}>
           <Text size={1} weight="semibold">Model AI dla całej schemy</Text>
           <AiModelPicker value={preferences.modelId} onChange={preferences.setModelId} />
           <Text size={1} muted>Ten model jest używany przez przyciski przy polach i przez Asystenta AI. Brief jest zapisywany w polu dokumentu, nie w localStorage.</Text>

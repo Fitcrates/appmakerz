@@ -49,7 +49,7 @@ export const AIGeneratorInput = (props: AIGeneratorInputProps) => {
   }, [currentDocument, documentType, fieldDefinition?.title, onChange, preferences.modelId, targetFieldPath])
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {props.renderDefault(props)}
       <Button
         onClick={generate}

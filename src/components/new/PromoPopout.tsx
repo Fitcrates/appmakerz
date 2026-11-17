@@ -116,7 +116,7 @@ export default function PromoPopout({ id, href, hideOn, delaySeconds, snoozeDays
   return (
     <aside
       aria-label={t.title}
-      className={`fixed right-0 top-1/2 z-40 flex items-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${open ? '-translate-y-1/2' : '-translate-y-1/2 translate-x-[var(--panel-w)]'}`}
+      className={`fixed right-0 top-1/2 z-40 flex items-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${open ? '-translate-y-1/2' : '-translate-y-1/2 translate-x-(--panel-w)'}`}
       style={{ '--panel-w': 'min(20rem, calc(100vw - 3.5rem))' } as React.CSSProperties}
       onKeyDown={(event) => {
         if (event.key === 'Escape' && open) close();
@@ -130,7 +130,7 @@ export default function PromoPopout({ id, href, hideOn, delaySeconds, snoozeDays
         aria-expanded={open}
         aria-controls="promo-popout-panel"
         aria-label={open ? ui.close : `${ui.open}: ${t.tabLabel}`}
-        className="flex w-10 shrink-0 flex-col items-center gap-3 rounded-l-xl border border-r-0 border-white/10 bg-[#242150] py-4 text-white/80 transition-colors hover:text-teal-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-300/60"
+        className="flex w-10 shrink-0 flex-col items-center gap-3 rounded-l-xl border border-r-0 border-white/10 bg-[#242150] py-4 text-white/80 transition-colors hover:text-teal-300 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-300/60"
       >
         {open ? <ChevronRight className="h-4 w-4" aria-hidden="true" /> : <ChevronLeft className="h-4 w-4" aria-hidden="true" />}
         <span className="font-oxanium text-[11px] uppercase tracking-[0.18em] [writing-mode:vertical-rl]">{t.tabLabel}</span>
@@ -139,7 +139,7 @@ export default function PromoPopout({ id, href, hideOn, delaySeconds, snoozeDays
       <div
         id="promo-popout-panel"
         inert={!open}
-        className="relative flex max-h-[calc(100dvh-11rem)] w-[var(--panel-w)] flex-col overflow-y-auto overscroll-contain rounded-l-xl border border-r-0 border-white/10 bg-[#242150] shadow-[0_20px_60px_rgba(0,0,0,0.35)]"
+        className="relative flex max-h-[calc(100dvh-11rem)] w-(--panel-w) flex-col overflow-y-auto overscroll-contain rounded-l-xl border border-r-0 border-white/10 bg-[#242150] shadow-[0_20px_60px_rgba(0,0,0,0.35)]"
       >
         {/* On a short screen the graphic gives way, not the text: it shrinks
             (letterboxed, never cropped, since it carries its own lettering) so
@@ -148,7 +148,7 @@ export default function PromoPopout({ id, href, hideOn, delaySeconds, snoozeDays
         <LinkTag
           href={target}
           {...linkProps}
-          className="relative block min-h-0 w-full shrink focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-300/60"
+          className="relative block min-h-0 w-full shrink focus:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-300/60"
           style={{ aspectRatio: `${t.imageWidth} / ${t.imageHeight}` }}
         >
           {opened && t.imageUrl ? (
@@ -169,7 +169,7 @@ export default function PromoPopout({ id, href, hideOn, delaySeconds, snoozeDays
           type="button"
           onClick={close}
           aria-label={ui.close}
-          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-indigo-950/70 text-white/80 backdrop-blur-sm transition-colors hover:border-teal-300 hover:bg-teal-300 hover:text-indigo-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/60"
+          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-indigo-950/70 text-white/80 backdrop-blur-xs transition-colors hover:border-teal-300 hover:bg-teal-300 hover:text-indigo-950 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300/60"
         >
           <X className="h-4 w-4" aria-hidden="true" />
         </button>
@@ -184,7 +184,7 @@ export default function PromoPopout({ id, href, hideOn, delaySeconds, snoozeDays
             <LinkTag
               href={target}
               {...linkProps}
-              className="mt-4 block bg-teal-300 px-5 py-3 text-center text-sm text-indigo-950 transition-colors hover:bg-teal-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#242150]"
+              className="mt-4 block bg-teal-300 px-5 py-3 text-center text-sm text-indigo-950 transition-colors hover:bg-teal-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#242150]"
             >
               {t.ctaLabel}
             </LinkTag>

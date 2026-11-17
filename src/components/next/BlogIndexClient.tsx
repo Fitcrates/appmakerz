@@ -241,7 +241,7 @@ export default function BlogIndexClient({ posts, featuredPosts = [], categories 
                       </div>
 
                       {imageUrl ? (
-                        <div className="relative order-first aspect-[16/9] overflow-hidden bg-white/5 md:order-none md:aspect-[4/3]">
+                        <div className="relative order-first aspect-video overflow-hidden bg-white/5 md:order-0 md:aspect-4/3">
                           <img
                             src={imageUrl}
                             alt={postTitle}

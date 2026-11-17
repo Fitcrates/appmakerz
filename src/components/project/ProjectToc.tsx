@@ -102,11 +102,11 @@ export default function ProjectToc({ entries, label }: ProjectTocProps) {
   return (
     <>
       <div
-        className="fixed inset-x-0 top-0 z-[110] h-[2px] bg-transparent pointer-events-none"
+        className="fixed inset-x-0 top-0 z-110 h-[2px] bg-transparent pointer-events-none"
         aria-hidden="true"
       >
         <div
-          className="h-full origin-left bg-gradient-to-r from-teal-300/60 to-teal-300"
+          className="h-full origin-left bg-linear-to-r from-teal-300/60 to-teal-300"
           style={{ transform: `scaleX(${progress})` }}
         />
       </div>
@@ -141,7 +141,7 @@ export default function ProjectToc({ entries, label }: ProjectTocProps) {
                     {/* Labels stay hidden until the rail is hovered, so they
                         never sit on top of the content at narrower desktops. */}
                     <span
-                      className={`max-w-[15rem] truncate border border-white/10 bg-indigo-950/90 px-2.5 py-1 font-plex opacity-0 backdrop-blur-sm transition-all duration-300 -translate-x-1 group-hover/rail:translate-x-0 group-hover/rail:opacity-100 ${
+                      className={`max-w-60 truncate border border-white/10 bg-indigo-950/90 px-2.5 py-1 font-plex opacity-0 backdrop-blur-xs transition-all duration-300 -translate-x-1 group-hover/rail:translate-x-0 group-hover/rail:opacity-100 ${
                         entry.level === 2 ? 'text-[11px]' : 'text-xs'
                       } ${isActive ? 'border-teal-300/30 text-teal-300' : 'text-white/60'}`}
                     >

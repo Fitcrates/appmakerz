@@ -9,6 +9,7 @@ import CursorAura from '@/components/next/CursorAura';
 import DeferredChatWidget from '@/components/next/DeferredChatWidget';
 import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES, isLanguage, type Language } from '@/lib/language';
 import { siteUrl } from '@/lib/site';
+import { WEBSITE_STARTING_PRICE } from '@/lib/pricing';
 import { DEFAULT_SOCIAL_IMAGE, SOCIAL_IMAGE_HEIGHT, SOCIAL_IMAGE_WIDTH } from '@/lib/seo';
 import '../globals.css';
 
@@ -112,7 +113,8 @@ export default async function LanguageLayout({ children, params }: LanguageLayou
     "email": "kontakt@appcrates.pl",
     "location": "Wrocław, Poland",
     "telephone": "+48733433230",
-    "priceRange": "$$",
+    // A real starting amount tells more than "$$"; work is quoted net of VAT.
+    "priceRange": `PLN ${WEBSITE_STARTING_PRICE}+`,
     "areaServed": "Worldwide",
     // sameAs is how Google reconciles this entity with the same operator's
     // profiles elsewhere; founder ties the technical writing on the blog to the

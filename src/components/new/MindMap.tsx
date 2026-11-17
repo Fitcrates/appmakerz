@@ -96,7 +96,7 @@ export default function MindMap({ labels, portrait, portraitAlt, language }: Min
     : 'Hover or tap a word to see what it means for your project.';
 
   const caption = (
-    <div className="relative mx-auto min-h-[5.5rem] max-w-md px-4 text-center" aria-live={userChose ? 'polite' : 'off'}>
+    <div className="relative mx-auto min-h-22 max-w-md px-4 text-center" aria-live={userChose ? 'polite' : 'off'}>
       <AnimatePresence mode="wait">
         <motion.div
           key={current?.label ?? 'hint'}
@@ -181,7 +181,7 @@ export default function MindMap({ labels, portrait, portraitAlt, language }: Min
             onFocus={() => choose(index)}
             onClick={() => choose(index)}
             aria-pressed={isActive}
-            className={`absolute z-10 hidden font-plex text-[11px] uppercase tracking-[0.28em] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/60 rounded-sm md:flex md:flex-col ${item.className} ${isActive ? 'text-teal-200' : 'text-teal-200/70 hover:text-teal-200'}`}
+            className={`absolute z-10 hidden font-plex text-[11px] uppercase tracking-[0.28em] transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300/60 rounded-xs md:flex md:flex-col ${item.className} ${isActive ? 'text-teal-200' : 'text-teal-200/70 hover:text-teal-200'}`}
           >
             <span className={`mb-2 block h-px transition-all duration-500 ${isActive ? 'w-14 bg-teal-300' : 'w-8 bg-teal-300/40'}`} />
             <SpotlightText as="span" className={isActive ? 'text-teal-100' : 'text-teal-200/80'} glowSize={80}>
@@ -196,7 +196,7 @@ export default function MindMap({ labels, portrait, portraitAlt, language }: Min
       <div className="absolute left-1/2 top-[calc(50%+150px)] z-20 hidden w-full max-w-md -translate-x-1/2 md:block">{caption}</div>
 
       {/* Mobile: the labels become a tappable grid with the caption below. */}
-      <div className="relative z-10 grid w-full max-w-[22rem] grid-cols-2 gap-x-5 gap-y-3 px-4 sm:max-w-md sm:grid-cols-3 md:hidden">
+      <div className="relative z-10 grid w-full max-w-88 grid-cols-2 gap-x-5 gap-y-3 px-4 sm:max-w-md sm:grid-cols-3 md:hidden">
         {items.map((item, index) => {
           const isActive = active === index;
           return (

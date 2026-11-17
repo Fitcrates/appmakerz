@@ -28,7 +28,7 @@ export default function StepServiceType({ config, copy, selectedService, onSelec
           key={key}
           type="button"
           onClick={() => onSelect(key)}
-          className={`ac-rounded group relative min-h-[190px] border p-6 text-left transition-colors ${selectedService === key ? 'border-teal-300 bg-white/[0.06]' : 'border-white/10 bg-transparent hover:border-white/25 hover:bg-white/[0.03]'}`}
+          className={`ac-rounded group relative min-h-[190px] border p-6 text-left transition-colors ${selectedService === key ? 'border-teal-300 bg-white/6' : 'border-white/10 bg-transparent hover:border-white/25 hover:bg-white/3'}`}
         >
           <span className="mb-5 block" aria-hidden="true">{serviceIcons[key]}</span>
           <span className="block font-oxanium text-2xl font-light text-white transition-colors group-hover:text-teal-300">{copy[key]?.label || service.label}</span>

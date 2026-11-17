@@ -43,7 +43,7 @@ const SCROLL_CLOSE_THRESHOLD = 60;
 
 /** Round control, the same in every corner of the lightbox. */
 const CONTROL_CLASS =
-  'flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white backdrop-blur-md transition-colors hover:border-teal-300/60 hover:bg-white/20 hover:text-teal-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300';
+  'flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/10 text-white backdrop-blur-md transition-colors hover:border-teal-300/60 hover:bg-white/20 hover:text-teal-300 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300';
 
 interface View {
   index: number;

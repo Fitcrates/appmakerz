@@ -83,13 +83,13 @@ export default function ReviewCard({
           <button
             type="button"
             onClick={open}
-            className="mt-3 text-sm text-teal-300 underline decoration-teal-300/40 underline-offset-4 transition-colors hover:text-teal-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/60 rounded-sm"
+            className="mt-3 text-sm text-teal-300 underline decoration-teal-300/40 underline-offset-4 transition-colors hover:text-teal-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300/60 rounded-xs"
           >
             {readMoreLabel}
           </button>
         ) : null}
       </blockquote>
-      <figcaption className="mt-6 pt-5 border-t border-white/[0.08] flex flex-col gap-1.5">
+      <figcaption className="mt-6 pt-5 border-t border-white/8 flex flex-col gap-1.5">
         <span className="font-oxanium text-white">{author}</span>
         <span className="text-[11px] tracking-[0.12em] uppercase text-white/60">{source}</span>
       </figcaption>
@@ -102,7 +102,7 @@ export default function ReviewCard({
             // A click on the dialog element itself is a click on the backdrop.
             if (event.target === dialogRef.current) close();
           }}
-          className="m-auto w-[min(42rem,calc(100vw-2rem))] max-h-[85vh] overflow-y-auto rounded-[var(--ac-card-radius)] border border-white/10 bg-indigo-950 p-0 text-white backdrop:bg-indigo-950/80 backdrop:backdrop-blur-sm"
+          className="m-auto w-[min(42rem,calc(100vw-2rem))] max-h-[85vh] overflow-y-auto rounded-(--ac-card-radius) border border-white/10 bg-indigo-950 p-0 text-white backdrop:bg-indigo-950/80 backdrop:backdrop-blur-xs"
         >
           <div className="p-6 sm:p-10">
             <div className="flex items-start justify-between gap-6">
@@ -111,13 +111,13 @@ export default function ReviewCard({
                 type="button"
                 onClick={close}
                 aria-label={closeLabel}
-                className="-mr-2 -mt-2 p-2 text-white/60 transition-colors hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/60 rounded-sm"
+                className="-mr-2 -mt-2 p-2 text-white/60 transition-colors hover:text-white focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300/60 rounded-xs"
               >
                 <X className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
             <p className="mt-6 whitespace-pre-line font-light leading-relaxed text-white/85">{quote(text)}</p>
-            <div className="mt-8 pt-5 border-t border-white/[0.08] flex flex-wrap items-baseline justify-between gap-2">
+            <div className="mt-8 pt-5 border-t border-white/8 flex flex-wrap items-baseline justify-between gap-2">
               <span className="font-oxanium text-white">{author}</span>
               <span className="text-[11px] tracking-[0.12em] uppercase text-white/60">{source}</span>
             </div>

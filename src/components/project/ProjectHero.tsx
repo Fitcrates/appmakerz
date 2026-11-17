@@ -103,7 +103,7 @@ export default function ProjectHero({
             <div className="mt-4 max-w-4xl">
               <BurnSpotlightText
                 as="h1"
-                className="font-oxanium text-4xl font-light leading-[1.08] text-white sm:text-5xl xl:text-[3.25rem]"
+                className="font-oxanium text-4xl font-light leading-[1.08] text-white sm:text-5xl/none xl:text-[3.25rem]"
                 glowSize={200}
                 baseDelay={200}
                 charDelay={25}
@@ -116,7 +116,7 @@ export default function ProjectHero({
               <div className="mt-6 max-w-2xl">
                 <SpotlightText
                   as="p"
-                  className="font-plex text-lg font-light leading-relaxed text-white/65 sm:text-xl"
+                  className="font-plex text-lg font-light leading-relaxed text-white/65 sm:text-xl/7"
                   glowSize={150}
                 >
                   {description}
@@ -201,7 +201,7 @@ function ProjectMockup({ imageUrl, alt, priority = false }: { imageUrl: string; 
     <figure className="relative">
       {/* 16:9 matches the screenshots and device mockups coming out of Sanity,
           so `contain` fills the frame instead of letterboxing it. */}
-      <div className="relative aspect-[16/9] overflow-hidden">
+      <div className="relative aspect-video overflow-hidden">
         <Image
           src={imageUrl}
           alt={alt}
@@ -247,7 +247,7 @@ function HeroLink({
       title={label}
       // sm:last:odd:col-span-2: with an odd number of buttons the last one sits
       // alone in its row, so it takes the whole row instead of half of it.
-      className={`group relative inline-flex w-full items-center gap-2.5 overflow-hidden px-4 py-4 sm:last:odd:col-span-2 font-normal transition-colors duration-500 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 sm:px-5 ${
+      className={`group relative inline-flex w-full items-center gap-2.5 overflow-hidden px-4 py-4 sm:last:odd:col-span-2 font-normal transition-colors duration-500 focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 sm:px-5 ${
         primary
           ? 'bg-teal-300 text-indigo-950 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)]'
           : 'border border-white/20 text-white hover:border-teal-300'

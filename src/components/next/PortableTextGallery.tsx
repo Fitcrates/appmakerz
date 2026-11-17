@@ -142,9 +142,9 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
   const getAspectRatioClass = () => {
     switch (aspectRatio) {
       case 'square': return 'aspect-square';
-      case '4/3': return 'aspect-[4/3]';
+      case '4/3': return 'aspect-4/3';
       case '16/9': return 'aspect-video';
-      case '3/4': return 'aspect-[3/4]';
+      case '3/4': return 'aspect-3/4';
       default: return '';
     }
   };
@@ -171,10 +171,10 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
 
   const carouselAspectClass = (() => {
     if (aspectRatio === 'square') return 'aspect-square';
-    if (aspectRatio === '4/3') return 'aspect-[4/3]';
+    if (aspectRatio === '4/3') return 'aspect-4/3';
     if (aspectRatio === '16/9') return 'aspect-video';
-    if (aspectRatio === '3/4') return 'aspect-[3/4]';
-    return 'aspect-[16/10]';
+    if (aspectRatio === '3/4') return 'aspect-3/4';
+    return 'aspect-16/10';
   })();
 
   /* ================================================================ */
@@ -225,7 +225,7 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
         <div
           ref={carouselRef}
           tabIndex={0}
-          className="w-full mb-8 outline-none group relative"
+          className="w-full mb-8 outline-hidden group relative"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onFocus={() => setIsPaused(true)}
@@ -239,7 +239,7 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
           </div>
 
           {/* Main slide area */}
-          <div className={`relative w-full ${carouselAspectClass} rounded-xl overflow-hidden border border-white/[0.08] bg-indigo-950/30`}>
+          <div className={`relative w-full ${carouselAspectClass} rounded-xl overflow-hidden border border-white/8 bg-indigo-950/30`}>
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.div
                 key={activeIndex}
@@ -287,7 +287,7 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.3 }}
-                className="absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10"
+                className="absolute bottom-0 inset-x-0 p-5 bg-linear-to-t from-black/80 via-black/40 to-transparent z-10"
               >
                 <p className="text-sm sm:text-base text-white/90 font-light max-w-2xl">{images[activeIndex].caption}</p>
               </motion.div>
@@ -298,14 +298,14 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
               <>
                 <button
                   onClick={(e) => { e.stopPropagation(); goPrev(); }}
-                  className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 p-2.5 sm:p-3 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-md text-white/80 hover:text-white transition-all duration-300 border border-white/[0.08] hover:border-white/20 opacity-0 group-hover:opacity-100 sm:opacity-70 hover:scale-105"
+                  className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 p-2.5 sm:p-3 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-md text-white/80 hover:text-white transition-all duration-300 border border-white/8 hover:border-white/20 opacity-0 group-hover:opacity-100 sm:opacity-70 hover:scale-105"
                   aria-label="Previous slide"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); goNext(); }}
-                  className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 p-2.5 sm:p-3 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-md text-white/80 hover:text-white transition-all duration-300 border border-white/[0.08] hover:border-white/20 opacity-0 group-hover:opacity-100 sm:opacity-70 hover:scale-105"
+                  className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 p-2.5 sm:p-3 rounded-full bg-black/30 hover:bg-black/50 backdrop-blur-md text-white/80 hover:text-white transition-all duration-300 border border-white/8 hover:border-white/20 opacity-0 group-hover:opacity-100 sm:opacity-70 hover:scale-105"
                   aria-label="Next slide"
                 >
                   <ChevronRight className="w-5 h-5" />
@@ -363,7 +363,7 @@ export default function PortableTextGallery({ value }: PortableTextGalleryProps)
               sizes={getGridSizes()}
             />
             {img.caption && (
-              <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
+              <div className="absolute bottom-0 inset-x-0 p-4 bg-linear-to-t from-black/90 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-300">
                 <p className="text-sm text-white/90 font-light">{img.caption}</p>
               </div>
             )}

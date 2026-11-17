@@ -147,7 +147,7 @@ const TailwindConnectMap: React.FC = () => {
   return (
     <div className="relative w-full h-full overflow-hidden" ref={containerRef}>
       {/* Dark background with subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 to-black/70"></div>
+      <div className="absolute inset-0 bg-linear-to-b from-gray-900/50 to-black/70"></div>
       
       {/* 3D Grid */}
       <div 
@@ -217,7 +217,7 @@ const TailwindConnectMap: React.FC = () => {
             
             {/* Pointer beam */}
             <div 
-              className="pointer-beam absolute w-px bg-gradient-to-b from-cyan-400 to-transparent left-1.5 -bottom-3"
+              className="pointer-beam absolute w-px bg-linear-to-b from-cyan-400 to-transparent left-1.5 -bottom-3"
               style={{ 
                 height: '0px',
                 opacity: 0,
@@ -230,7 +230,7 @@ const TailwindConnectMap: React.FC = () => {
       </div>
       
       {/* Add some atmosphere */}
-      <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/5 to-transparent mix-blend-overlay"></div>
+      <div className="absolute inset-0 bg-linear-to-t from-cyan-900/5 to-transparent mix-blend-overlay"></div>
     </div>
   );
 };

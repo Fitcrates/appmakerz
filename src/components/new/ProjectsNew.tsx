@@ -114,11 +114,11 @@ const ProjectRow = memo<{ project: Project; index: number; language: 'en' | 'pl'
           <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors duration-300" />
 
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-start gap-4">
-            <span className="text-xs text-teal-300  tracking-widest lg:w-12 flex-shrink-0" aria-hidden="true">
+            <span className="text-xs text-teal-300  tracking-widest lg:w-12 shrink-0" aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </span>
 
-            <div className="lg:w-72 flex-shrink-0">
+            <div className="lg:w-72 shrink-0">
               <h3 className="text-2xl sm:text-3xl font-oxanium font-light  text-white group-hover:text-teal-300 transition-colors duration-300">
                 {project.title}
               </h3>
@@ -131,17 +131,17 @@ const ProjectRow = memo<{ project: Project; index: number; language: 'en' | 'pl'
               <p className=" font-light leading-relaxed text-white/70">{project.description}</p>
             </div>
 
-            <div className="hidden lg:flex items-center flex-shrink-0">
+            <div className="hidden lg:flex items-center shrink-0">
               <ArrowUpRight className="w-6 h-6 text-teal-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true" />
             </div>
           </div>
 
-          <div className="flex lg:hidden items-center justify-end gap-2 flex-shrink-0 mt-4">
+          <div className="flex lg:hidden items-center justify-end gap-2 shrink-0 mt-4">
             <span className="text-[11px] uppercase tracking-[0.16em] text-white/55 ">{mobileActionLabel}</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-teal-300/80" aria-hidden="true" />
           </div>
 
-          <div className="absolute right-24 top-1/2 -translate-y-1/2 w-[480px] h-[336px] pointer-events-none hidden lg:block z-[100] opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-300">
+          <div className="absolute right-24 top-1/2 -translate-y-1/2 w-[480px] h-[336px] pointer-events-none hidden lg:block z-100 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 transition-all duration-300">
             <div className="w-full h-full bg-indigo-950 border border-teal-300/30 overflow-hidden shadow-2xl">
               <img
                 src={project.image}
@@ -231,7 +231,7 @@ const ProjectsNew: React.FC<ProjectsNewProps> = ({ sanityProjects }) => {
         >
           <a
             href="#contact"
-            className="group inline-flex items-center gap-4 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 rounded"
+            className="group inline-flex items-center gap-4 focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 rounded-sm"
             aria-label="Contact me to work together"
           >
             <span className="text-lg text-white  group-hover:text-teal-300 transition-colors font-oxanium font-oxanium font-light">{t.cta}</span>

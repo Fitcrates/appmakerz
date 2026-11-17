@@ -12,6 +12,7 @@ export const translations = {
       services: "Services",
       solutions: "Solutions",
       blog: "Blog",
+      pricing: "Pricing",
       contact: "Contact",
       letsTalk: "Let's Talk",
     },
@@ -148,7 +149,7 @@ export const translations = {
 
     // Projects Section (ProjectsNew)
     projects: {
-      label: "[ 02 - Work ]",
+      label: "[ 03 - Work ]",
       heading: "Selected Projects",
       viewAction: "View",
       cta: "Want to work together?",
@@ -293,7 +294,7 @@ export const translations = {
 
     // Contact Section (ContactNew)
     contact: {
-      label: "[ 06 - Contact ]",
+      label: "[ 07 - Contact ]",
       heading: "Let's work together",
       info: {
         email: { label: "Email", value: "kontakt@appcrates.pl" },
@@ -346,6 +347,9 @@ export const translations = {
       },
       result: {
         label: "Estimated budget",
+        priceSuffix: "PLN excl. VAT",
+        fromLabel: "From",
+        scopeTitle: "Your project scope",
         noPriceTitle: "This type of project needs a short consultation",
         formTitle: "Send this summary to me",
       },
@@ -517,6 +521,7 @@ export const translations = {
       services: "Usługi",
       solutions: "Rozwiązania",
       blog: "Blog",
+      pricing: "Cennik",
       contact: "Kontakt",
       letsTalk: "Porozmawiajmy",
     },
@@ -799,7 +804,7 @@ export const translations = {
 
     // Contact Section (ContactNew)
     contact: {
-      label: "[ 06 - Kontakt ]",
+      label: "[ 07 - Kontakt ]",
       heading: "Pracujmy razem",
       info: {
         email: { label: "Email", value: "kontakt@appcrates.pl" },
@@ -852,6 +857,9 @@ export const translations = {
       },
       result: {
         label: "Orientacyjny budżet",
+        priceSuffix: "zł netto",
+        fromLabel: "Od",
+        scopeTitle: "Zakres Twojego projektu",
         noPriceTitle: "Ten typ projektu wymaga krótkiej konsultacji",
         formTitle: "Wyślij mi to podsumowanie",
       },

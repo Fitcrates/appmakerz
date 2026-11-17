@@ -124,7 +124,7 @@ export default function ReviewDeck({ cards, prevLabel, nextLabel, hint, classNam
   return (
     <div className={className}>
       <div className="relative" style={{ paddingBottom: `${VISIBLE_DEPTH * 16}px` }}>
-        <div ref={deckRef} className="relative h-[27rem]">
+        <div ref={deckRef} className="relative h-108">
           {cards.map((card) => {
             const depth = order.indexOf(card.id);
             const isTop = depth === 0;
@@ -172,7 +172,7 @@ export default function ReviewDeck({ cards, prevLabel, nextLabel, hint, classNam
             onClick={prev}
             disabled={Boolean(exit)}
             aria-label={prevLabel}
-            className="w-11 h-11 border border-white/20 flex items-center justify-center text-white transition-all hover:bg-teal-300 hover:border-teal-300 hover:text-indigo-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300 disabled:opacity-50"
+            className="w-11 h-11 border border-white/20 flex items-center justify-center text-white transition-all hover:bg-teal-300 hover:border-teal-300 hover:text-indigo-950 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300 disabled:opacity-50"
           >
             <ArrowLeft className="w-4 h-4" aria-hidden="true" />
           </button>
@@ -181,7 +181,7 @@ export default function ReviewDeck({ cards, prevLabel, nextLabel, hint, classNam
             onClick={() => next(1)}
             disabled={Boolean(exit)}
             aria-label={nextLabel}
-            className="w-11 h-11 border border-white/20 flex items-center justify-center text-white transition-all hover:bg-teal-300 hover:border-teal-300 hover:text-indigo-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300 disabled:opacity-50"
+            className="w-11 h-11 border border-white/20 flex items-center justify-center text-white transition-all hover:bg-teal-300 hover:border-teal-300 hover:text-indigo-950 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300 disabled:opacity-50"
           >
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
           </button>

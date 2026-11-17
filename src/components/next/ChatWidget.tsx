@@ -323,7 +323,7 @@ export default function ChatWidget() {
                 <div className="max-w-[86%]">
                   <div className={`rounded-2xl px-3 py-2 text-sm leading-relaxed ${message.role === 'user'
                     ? 'bg-teal-300 text-indigo-950'
-                    : 'border border-white/10 bg-white/[0.06] text-white/80'}`}
+                    : 'border border-white/10 bg-white/6 text-white/80'}`}
                   >
                     {message.content}
                   </div>
@@ -363,7 +363,7 @@ export default function ChatWidget() {
 
             {loading ? (
               <div className="flex justify-start">
-                <div className="rounded-2xl border border-white/10 bg-white/[0.06] px-3 py-2 text-sm text-white/45">{copy.typing}</div>
+                <div className="rounded-2xl border border-white/10 bg-white/6 px-3 py-2 text-sm text-white/45">{copy.typing}</div>
               </div>
             ) : null}
             <div ref={endRef} />
@@ -386,7 +386,7 @@ export default function ChatWidget() {
               maxLength={500}
               disabled={loading}
               rows={1}
-              className="min-w-0 flex-1 resize-none rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3 text-sm text-white placeholder:text-white/35 outline-none transition-colors focus:border-teal-300/70 disabled:cursor-not-allowed disabled:opacity-60"
+              className="min-w-0 flex-1 resize-none rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-sm text-white placeholder:text-white/35 outline-hidden transition-colors focus:border-teal-300/70 disabled:cursor-not-allowed disabled:opacity-60"
             />
             <button
               type="submit"
@@ -406,7 +406,7 @@ export default function ChatWidget() {
       <button
         type="button"
         onClick={() => setIsOpen((value) => !value)}
-        className={`relative flex h-14 w-14 items-center justify-center rounded-full bg-indigo-950 text-indigo-950 shadow-lg shadow-teal-950/40 transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 ${isOpen ? 'hidden sm:flex' : 'flex'}`}
+        className={`relative flex h-14 w-14 items-center justify-center rounded-full bg-indigo-950 text-indigo-950 shadow-lg shadow-teal-950/40 transition-transform hover:scale-105 focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 ${isOpen ? 'hidden sm:flex' : 'flex'}`}
         aria-label={isOpen ? copy.closeChat : copy.openChat}
       >
         {isOpen ? (
@@ -429,10 +429,10 @@ export default function ChatWidget() {
 
             {/* Electric border - outside the button */}
             <span
-              className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-teal-300/70 animate-[electricPulse_2s_ease-in-out_infinite]"
+              className="pointer-events-none absolute inset-[-2px] rounded-full border-2 border-teal-300/70 animate-[electricPulse_2s_ease-in-out_infinite]"
               style={{ filter: 'url(#electric-turbulence)' }}
             />
-            <span className="pointer-events-none absolute -inset-[2px] rounded-full border-2 border-teal-300/30" style={{ filter: 'blur(4px)' }} />
+            <span className="pointer-events-none absolute inset-[-2px] rounded-full border-2 border-teal-300/30" style={{ filter: 'blur(4px)' }} />
             <span className="pointer-events-none absolute -inset-2 sm:-inset-6 rounded-full bg-teal-300/10 blur-xl sm:blur-2xl animate-[electricGlow_3s_ease-in-out_infinite]" />
 
             <svg width="0" height="0" className="absolute top-0 left-0 pointer-events-none" aria-hidden="true" style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>

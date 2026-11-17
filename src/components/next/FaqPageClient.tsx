@@ -20,7 +20,7 @@ function AccordionItem({ question, answer }: { question: string; answer: string 
         className="w-full py-6 flex items-center justify-between gap-4 text-left group"
       >
         <h3 className="text-white  text-lg group-hover:text-teal-300 transition-colors font-oxanium font-light">{question}</h3>
-        <ChevronDown className={`w-5 h-5 text-white/70 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-5 h-5 text-white/70 shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
       <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
         <div className="overflow-hidden">

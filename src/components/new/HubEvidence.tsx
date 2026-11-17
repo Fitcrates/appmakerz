@@ -76,7 +76,7 @@ export default function HubEvidence({ posts, language }: HubEvidenceProps) {
                       {category}
                     </span>
                   ) : null}
-                  <h3 className="mt-2 font-oxanium text-lg font-light leading-snug text-white transition-colors group-hover:text-teal-300 sm:text-xl">
+                  <h3 className="mt-2 font-oxanium text-lg font-light leading-snug text-white transition-colors group-hover:text-teal-300 sm:text-xl/7">
                     {title}
                   </h3>
                   {excerpt ? (

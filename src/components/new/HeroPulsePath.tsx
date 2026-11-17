@@ -136,7 +136,7 @@ const HeroPulsePath: React.FC = () => {
 
         {/* Glowing beams. The filter is applied once to the whole group; the
             class (not a `filter` attribute) carries it so that Safari can swap
-            in a GPU-accelerated drop-shadow via @supports in globals.css. */}
+            in a GPU-accelerated drop-shadow-sm via @supports in globals.css. */}
         <g className="laser-glow-group">
           {BEAMS.map((beam, index) => (
             <path

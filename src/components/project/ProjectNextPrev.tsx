@@ -58,7 +58,7 @@ function AdjacentCard({
   return (
     <PrefetchLink
       href={localizedPath(language, `/project/${project.slug.current}`)}
-      className={`group flex items-center gap-5 bg-indigo-950 px-6 py-8 transition-colors duration-500 hover:bg-white/[0.03] lg:px-8 lg:py-10 ${
+      className={`group flex items-center gap-5 bg-indigo-950 px-6 py-8 transition-colors duration-500 hover:bg-white/3 lg:px-8 lg:py-10 ${
         direction === 'next' ? 'sm:flex-row-reverse sm:text-right' : ''
       }`}
     >
@@ -67,7 +67,7 @@ function AdjacentCard({
           src={thumbnail}
           alt=""
           aria-hidden="true"
-          className="hidden h-16 w-24 flex-shrink-0 border border-white/10 object-cover opacity-60 transition-opacity duration-500 group-hover:opacity-100 sm:block"
+          className="hidden h-16 w-24 shrink-0 border border-white/10 object-cover opacity-60 transition-opacity duration-500 group-hover:opacity-100 sm:block"
           loading="lazy"
           decoding="async"
         />
