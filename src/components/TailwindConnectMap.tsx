@@ -63,7 +63,7 @@ const TailwindConnectMap: React.FC = () => {
         ref={containerRef}
       >
         {/* Dark background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/80 to-black/90"></div>
+        <div className="absolute inset-0 bg-linear-to-b from-gray-900/80 to-black/90"></div>
         
         {/* 3D perspective container */}
         <div className="absolute inset-0" style={{ perspective: '1000px' }}>
@@ -91,7 +91,7 @@ const TailwindConnectMap: React.FC = () => {
                 ></div>
                 
                 {/* Overlay gradient for better visibility */}
-                <div className="absolute inset-0 bg-gradient-to-b from-cyan-900/5 to-black/40 mix-blend-overlay"></div>
+                <div className="absolute inset-0 bg-linear-to-b from-cyan-900/5 to-black/40 mix-blend-overlay"></div>
               </div>
               
               {/* Central point of interest */}
@@ -132,7 +132,7 @@ const TailwindConnectMap: React.FC = () => {
                 
                 {/* Beam */}
                 <div 
-                  className="map-beam absolute w-px bg-gradient-to-b from-cyan-400 to-transparent left-2 -bottom-3"
+                  className="map-beam absolute w-px bg-linear-to-b from-cyan-400 to-transparent left-2 -bottom-3"
                   style={{ 
                     height: '0px',
                     opacity: 0,
@@ -147,8 +147,8 @@ const TailwindConnectMap: React.FC = () => {
         
         {/* Additional atmosphere effects */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-black/30 to-transparent"></div>
-          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-black/30 to-transparent"></div>
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-linear-to-t from-black/30 to-transparent"></div>
+          <div className="absolute top-0 inset-x-0 h-40 bg-linear-to-b from-black/30 to-transparent"></div>
         </div>
         
         {/* Custom CSS for animations */}

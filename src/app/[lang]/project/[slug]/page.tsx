@@ -285,7 +285,7 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
         {!hasAuthoredCta ? (
           <section className="border-t border-white/10 bg-teal-300/[0.035] py-16 lg:py-24">
             <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-              <p className="font-oxanium text-2xl font-light leading-tight text-white sm:text-3xl lg:text-4xl">
+              <p className="font-oxanium text-2xl font-light leading-tight text-white sm:text-3xl/9 lg:text-4xl/10">
                 {t.closingTitle}
               </p>
               <p className="mx-auto mt-5 max-w-2xl font-plex text-lg font-light leading-relaxed text-white/65">
@@ -293,7 +293,7 @@ export default async function LocalizedProjectPage({ params }: LocalizedProjectP
               </p>
               <a
                 href={localizedPath(language, '/#contact')}
-                className="group relative mt-10 inline-flex min-w-[230px] items-center justify-center overflow-hidden bg-teal-300 px-10 py-5 text-center font-normal text-indigo-950 transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                className="group relative mt-10 inline-flex min-w-[230px] items-center justify-center overflow-hidden bg-teal-300 px-10 py-5 text-center font-normal text-indigo-950 transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
                 aria-label={t.contactCta}
               >
                 <span className="relative z-10">{t.contactCta}</span>

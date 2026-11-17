@@ -32,12 +32,12 @@ export default function LatestBlogPostsSection({ posts = [] }: LatestBlogPostsSe
             <span className="text-xs uppercase tracking-[0.3em] text-white/55">
               {t.label}
             </span>
-            <h2 className="mt-6 max-w-3xl text-4xl font-light leading-tight text-white sm:text-5xl lg:text-6xl">
+            <h2 className="mt-6 max-w-3xl text-4xl font-light leading-tight text-white sm:text-5xl/none lg:text-6xl/none">
               <SpotlightText as="span" className="font-oxanium" glowSize={160}>
                 {t.heading}
               </SpotlightText>
             </h2>
-            <SpotlightText as="p" className="mt-6 max-w-2xl text-base font-light leading-relaxed text-white/70 sm:text-lg">
+            <SpotlightText as="p" className="mt-6 max-w-2xl text-base font-light leading-relaxed text-white/70 sm:text-lg/7">
               {t.subtitle}
             </SpotlightText>
           </div>
@@ -54,7 +54,7 @@ export default function LatestBlogPostsSection({ posts = [] }: LatestBlogPostsSe
             return (
               <article key={post._id} className="ac-card group h-full overflow-hidden hover:border-teal-300/30">
                 <PrefetchLink href={localizedPath(language, `/blog/${post.slug.current}`)} className="flex h-full flex-col">
-                  <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
+                  <div className="relative aspect-16/10 overflow-hidden bg-white/5">
                     {imageUrl ? (
                       <Image
                         src={imageUrl}
@@ -64,10 +64,10 @@ export default function LatestBlogPostsSection({ posts = [] }: LatestBlogPostsSe
                         className="object-cover opacity-80 transition duration-700 group-hover:scale-105 group-hover:opacity-100"
                       />
                     ) : null}
-                    <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-indigo-950/10 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-indigo-950/80 via-indigo-950/10 to-transparent" />
                   </div>
 
-                  <div className="flex min-h-[22rem] flex-1 flex-col p-6 sm:p-7">
+                  <div className="flex min-h-88 flex-1 flex-col p-6 sm:p-7">
                     <div>
                       <div className="mb-5 flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-white/60">
                         <CalendarDays className="h-4 w-4 text-teal-300/70" />
@@ -87,11 +87,11 @@ export default function LatestBlogPostsSection({ posts = [] }: LatestBlogPostsSe
 
                     <div className="mt-auto pt-8">
                       {excerpt ? (
-                        <p className="line-clamp-4 min-h-[5.5rem] text-sm font-light leading-relaxed text-white/70">
+                        <p className="line-clamp-4 min-h-22 text-sm font-light leading-relaxed text-white/70">
                           {excerpt}
                         </p>
                       ) : (
-                        <div className="min-h-[5.5rem]" />
+                        <div className="min-h-22" />
                       )}
                       <span className="mt-5 inline-flex items-center gap-2 text-sm text-white/70 transition-colors group-hover:text-teal-300">
                         {translations[language].blog.readMore}
@@ -108,7 +108,7 @@ export default function LatestBlogPostsSection({ posts = [] }: LatestBlogPostsSe
         <div className="mt-12 flex justify-center lg:justify-start">
           <PrefetchLink
             href={localizedPath(language, '/blog')}
-            className="group inline-flex items-center gap-4 rounded focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+            className="group inline-flex items-center gap-4 rounded-sm focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
           >
             <SpotlightText glowSize={100}>
               <span className="font-oxanium text-lg font-light text-white transition-colors group-hover:text-teal-300">

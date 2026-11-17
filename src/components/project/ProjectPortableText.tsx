@@ -44,12 +44,12 @@ export function createProjectPortableTextComponents(anchors: Map<string, string>
         </h4>
       ),
       normal: ({ children }) => (
-        <p className="mb-6 leading-[1.75] text-white/75 font-light font-plex text-[1.0625rem] lg:text-lg">
+        <p className="mb-6 leading-[1.75] text-white/75 font-light font-plex text-[1.0625rem] lg:text-lg/7">
           {children}
         </p>
       ),
       blockquote: ({ children }) => (
-        <blockquote className="my-10 border-l-2 border-teal-300 bg-white/[0.03] py-5 pl-6 pr-4 text-white/70 font-light italic">
+        <blockquote className="my-10 border-l-2 border-teal-300 bg-white/3 py-5 pl-6 pr-4 text-white/70 font-light italic">
           {children}
         </blockquote>
       ),

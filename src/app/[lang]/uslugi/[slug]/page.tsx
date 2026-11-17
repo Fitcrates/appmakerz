@@ -23,6 +23,7 @@ import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
 import { localizedPath } from '@/lib/i18n-routing';
+import { startingPriceForServicePath } from '@/data/project-budget';
 import { getMarketplaceGuideChapter, getMarketplaceGuideTracks } from '@/lib/marketplace-guide';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
 import { getImageAlt } from '@/lib/image-alt';
@@ -292,6 +293,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
     })),
   } : null;
 
+  const startingPrice = startingPriceForServicePath(path);
   const serviceSchema = {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -306,6 +308,20 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
     ...(heroImageUrl ? { image: heroImageUrl } : {}),
     ...(landing.serviceType ? { serviceType: landing.serviceType } : {}),
     ...(landing.city ? { areaServed: { '@type': 'City', name: landing.city } } : {}),
+    // Same starting price the pricing section and calculator show.
+    ...(startingPrice ? {
+      offers: {
+        '@type': 'Offer',
+        url: absoluteUrl(localizedPath(language, path)),
+        priceCurrency: 'PLN',
+        priceSpecification: {
+          '@type': 'PriceSpecification',
+          minPrice: startingPrice,
+          priceCurrency: 'PLN',
+          valueAddedTaxIncluded: false,
+        },
+      },
+    } : {}),
   };
 
   const webPageSchema = {
@@ -344,10 +360,10 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
           {heroImageUrl ? (
             <div className="absolute inset-0 z-0">
               <Image src={heroImageUrl} alt={getImageAlt(landing.heroImage, title)} unoptimized fill priority sizes="100vw" className="object-cover opacity-25" aria-hidden="true" />
-              <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/95 via-indigo-950/60 to-indigo-950/40" />
+              <div className="absolute inset-0 bg-linear-to-t from-indigo-950/95 via-indigo-950/60 to-indigo-950/40" />
             </div>
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/30 to-indigo-950" />
+            <div className="absolute inset-0 bg-linear-to-b from-indigo-900/30 to-indigo-950" />
           )}
 
           <HeroPulsePath />
@@ -362,13 +378,13 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
             </div>
             <span className="text-xs tracking-[0.3em] uppercase text-teal-300/80 font-plex">{eyebrow}</span>
             <div className="max-w-4xl">
-              <BurnSpotlightText as="h1" className="text-4xl sm:text-5xl lg:text-7xl font-light font-oxanium text-white leading-tight" glowSize={200} baseDelay={200} charDelay={25}>
+              <BurnSpotlightText as="h1" className="text-4xl sm:text-5xl/none lg:text-7xl/none font-light font-oxanium text-white leading-tight" glowSize={200} baseDelay={200} charDelay={25}>
                 {title}
               </BurnSpotlightText>
             </div>
             {intro ? (
               <div className="mt-8 max-w-2xl">
-                <SpotlightText as="p" className="text-white/60 text-lg sm:text-xl font-light font-plex leading-relaxed" glowSize={150}>
+                <SpotlightText as="p" className="text-white/60 text-lg sm:text-xl/7 font-light font-plex leading-relaxed" glowSize={150}>
                   {intro}
                 </SpotlightText>
               </div>
@@ -376,14 +392,14 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
             <div className="flex flex-col sm:flex-row gap-4 mt-10">
               <PrefetchLink
                 href={localizedPath(language, '/#contact')}
-                className="group relative px-10 py-5 bg-teal-300 text-indigo-950 font-normal overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                className="group relative px-10 py-5 bg-teal-300 text-indigo-950 font-normal overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] text-center focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
               >
                 <span className="relative z-10">{ctaLabel}</span>
                 <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
               </PrefetchLink>
               <PrefetchLink
                 href={localizedPath(language, '/#projects')}
-                className="group px-10 py-5 border border-white/20 text-white font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden text-center focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+                className="group px-10 py-5 border border-white/20 text-white font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden text-center focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
               >
                 <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
                   {ctaSecondaryLabel}
@@ -420,11 +436,11 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                 </BurnSpotlightText>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-px bg-white/[0.06] overflow-hidden">
+              <div className="grid sm:grid-cols-2 gap-px bg-white/6 overflow-hidden">
                 {problems.map((item: string, index: number) => (
                   <div
                     key={`prob-${index}`}
-                    className="group relative bg-indigo-950 pt-4 pb-4 sm:p-8  hover:bg-white/[0.03] transition-all duration-700"
+                    className="group relative bg-indigo-950 pt-4 pb-4 sm:p-8  hover:bg-white/3 transition-all duration-700"
                   >
                     {/* Animated corner accents */}
                     <div className="absolute top-0 left-0 w-0 h-px bg-red-400/60 group-hover:w-16 transition-all duration-500" />
@@ -434,7 +450,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
 
                     {/* Number with red glow pulse */}
                     <span className="relative text-5xl font-extralight notranslate mb-5 block w-fit bg-red-600 bg-clip-text text-transparent group-hover:animate-pulse">
-                      <span className="absolute inset-0 bg-red-600 bg-clip-text text-transparent blur-sm opacity-0 group-hover:opacity-60 transition-opacity duration-700" aria-hidden="true">
+                      <span className="absolute inset-0 bg-red-600 bg-clip-text text-transparent blur-xs opacity-0 group-hover:opacity-60 transition-opacity duration-700" aria-hidden="true">
                         {String(index + 1).padStart(2, '0')}
                       </span>
                       {String(index + 1).padStart(2, '0')}
@@ -450,7 +466,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
 
                     {/* Bottom glow on hover */}
                     <div
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-red-400/0 to-transparent group-hover:via-red-400/40 transition-all duration-700"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-linear-to-r from-transparent via-red-400/0 to-transparent group-hover:via-red-400/40 transition-all duration-700"
                       aria-hidden="true"
                     />
                   </div>
@@ -506,7 +522,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
           <section className="py-20 lg:py-24 border-t border-white/10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="mb-12 flex flex-col items-center justify-center text-center lg:mb-16">
-                <SpotlightText as="h2" className="mt-6 max-w-3xl text-center text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-white leading-tight">
+                <SpotlightText as="h2" className="mt-6 max-w-3xl text-center text-3xl sm:text-4xl/10 lg:text-5xl/none font-light font-oxanium text-white leading-tight">
                   {language === 'pl' ? 'Jeśli chcesz zobaczyć jak to wygląda w praktyce' : 'If you want to see how this looks in practice'}
                 </SpotlightText>
                 <SpotlightText as="p" className="mt-5 max-w-2xl text-center text-white/50 font-light leading-relaxed">

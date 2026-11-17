@@ -102,7 +102,7 @@ export default function BlogShareSidebar({ language, title, variant = 'desktop' 
               rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
               aria-label={link.label}
               title={link.label}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/55 transition-colors duration-200 hover:border-teal-300 hover:bg-teal-300 hover:text-indigo-950"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/3 text-white/55 transition-colors duration-200 hover:border-teal-300 hover:bg-teal-300 hover:text-indigo-950"
             >
               {link.icon}
             </a>
@@ -114,8 +114,8 @@ export default function BlogShareSidebar({ language, title, variant = 'desktop' 
 
   const sidebarPositionClass = {
     relative: 'relative',
-    fixed: 'fixed left-[max(2rem,calc(50%_-_38rem))] top-28 z-30 w-[4.5rem]',
-    bottom: 'absolute bottom-0 left-0 w-[4.5rem]',
+    fixed: 'fixed left-[max(2rem,calc(50%-38rem))] top-28 z-30 w-18',
+    bottom: 'absolute bottom-0 left-0 w-18',
   }[position];
 
   return (
@@ -133,7 +133,7 @@ export default function BlogShareSidebar({ language, title, variant = 'desktop' 
               rel={link.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
               aria-label={link.label}
               title={link.label}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/55 transition-colors duration-200 hover:border-teal-300 hover:bg-teal-300 hover:text-indigo-950"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/3 text-white/55 transition-colors duration-200 hover:border-teal-300 hover:bg-teal-300 hover:text-indigo-950"
             >
               {link.icon}
             </a>

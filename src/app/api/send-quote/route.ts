@@ -39,7 +39,7 @@ function formatPrice(priceMin: number, priceMax: number, noPrice: boolean) {
     return 'Wycena indywidualna po konsultacji';
   }
 
-  return `${priceMin.toLocaleString('pl-PL')} – ${priceMax.toLocaleString('pl-PL')} zł`;
+  return `${priceMin.toLocaleString('pl-PL')} – ${priceMax.toLocaleString('pl-PL')} zł netto (+ VAT)`;
 }
 
 function isLanguage(value: unknown): value is Language {

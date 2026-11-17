@@ -31,7 +31,7 @@ export function ProcessStepsBody({ eyebrow, heading, items }: ProcessStepsBodyPr
           </span>
           <BurnSpotlightText
             as="h2"
-            className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-white leading-tight"
+            className="text-3xl sm:text-4xl/10 lg:text-5xl/none font-light font-oxanium text-white leading-tight"
             glowSize={180}
             baseDelay={100}
             charDelay={30}
@@ -54,13 +54,13 @@ export function ProcessStepsBody({ eyebrow, heading, items }: ProcessStepsBodyPr
                 className="group grid grid-cols-[auto_1fr] gap-6 sm:gap-8"
               >
                 <div className="flex flex-col items-center">
-                  <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-white/[0.08] bg-indigo-950/40 font-oxanium text-xs tracking-widest text-teal-200/85 shadow-[0_4px_14px_rgba(0,0,0,0.25)] backdrop-blur-md transition-all duration-500 group-hover:border-teal-300/30 group-hover:bg-indigo-950/60 group-hover:text-teal-200 group-hover:shadow-[0_0_22px_rgba(94,234,212,0.18)] sm:h-12 sm:w-12">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-indigo-950/40 font-oxanium text-xs tracking-widest text-teal-200/85 shadow-[0_4px_14px_rgba(0,0,0,0.25)] backdrop-blur-md transition-all duration-500 group-hover:border-teal-300/30 group-hover:bg-indigo-950/60 group-hover:text-teal-200 group-hover:shadow-[0_0_22px_rgba(94,234,212,0.18)] sm:h-12 sm:w-12">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   {!isLast ? (
                     <span
                       aria-hidden="true"
-                      className="my-3 w-px flex-1 bg-gradient-to-b from-white/[0.16] to-white/[0.04]"
+                      className="my-3 w-px flex-1 bg-linear-to-b from-white/16 to-white/4"
                     />
                   ) : null}
                 </div>
@@ -87,7 +87,7 @@ export function ProcessStepsBody({ eyebrow, heading, items }: ProcessStepsBodyPr
                   ) : (
                     <SpotlightText
                       as="p"
-                      className="text-white/70 font-plex font-light text-lg sm:text-xl leading-relaxed group-hover:text-white/90 transition-colors duration-500"
+                      className="text-white/70 font-plex font-light text-lg sm:text-xl/7 leading-relaxed group-hover:text-white/90 transition-colors duration-500"
                       glowSize={150}
                     >
                       {item.text}

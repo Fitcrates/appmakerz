@@ -36,7 +36,7 @@ export default function ZoomableImage({
         onClick={() => open(index)}
         aria-label={alt}
         aria-haspopup="dialog"
-        className={`group/zoom block w-full cursor-zoom-in overflow-hidden ${rounded ? 'rounded-xl' : ''} focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-950`}
+        className={`group/zoom block w-full cursor-zoom-in overflow-hidden ${rounded ? 'rounded-xl' : ''} focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-950`}
       >
         <img
           src={src}

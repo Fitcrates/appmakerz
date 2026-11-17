@@ -32,7 +32,7 @@ export default function HubCapabilities({ capabilities, language }: HubCapabilit
             </span>
             <BurnSpotlightText
               as="h2"
-              className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-white leading-tight"
+              className="text-3xl sm:text-4xl/10 lg:text-5xl/none font-light font-oxanium text-white leading-tight"
               glowSize={200}
               baseDelay={100}
               charDelay={30}

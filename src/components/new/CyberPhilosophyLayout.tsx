@@ -112,7 +112,7 @@ function SectionHeading({ eyebrow, title, accent }: { eyebrow: string; title: st
       <SpotlightText as="p" className="mb-4 font-plex text-xs uppercase tracking-[0.35em] text-teal-300/60" glowSize={100}>
         {eyebrow}
       </SpotlightText>
-      <h2 className="font-oxanium text-3xl font-light leading-tight text-white sm:text-4xl md:text-5xl">
+      <h2 className="font-oxanium text-3xl font-light leading-tight text-white sm:text-4xl/10 md:text-5xl/none">
         <SpotlightText as="span" className="text-white" glowSize={160}>
           {title}
         </SpotlightText>{' '}
@@ -135,7 +135,7 @@ function FounderStatement({ content }: { content?: CyberPhilosophyContent['found
   return (
     <div className="cyber-reveal ac-card relative z-10 mx-auto mt-8 max-w-3xl px-6 py-7 text-center sm:px-10">
       
-      <div className="mx-auto max-w-2xl font-oxanium text-3xl font-light leading-tight text-white sm:text-4xl">
+      <div className="mx-auto max-w-2xl font-oxanium text-3xl font-light leading-tight text-white sm:text-4xl/10">
         <SpotlightText as="p" glowSize={200}>
           {headline}
         </SpotlightText>
@@ -144,7 +144,7 @@ function FounderStatement({ content }: { content?: CyberPhilosophyContent['found
         </SpotlightText>
       </div>
       
-      <div className="mx-auto mt-8 flex max-w-2xl flex-col gap-6 font-plex text-base font-light leading-relaxed text-white/70 sm:text-lg">
+      <div className="mx-auto mt-8 flex max-w-2xl flex-col gap-6 font-plex text-base font-light leading-relaxed text-white/70 sm:text-lg/7">
         {bodyParagraphs.map((paragraph) => (
           <SpotlightText key={paragraph} as="p" glowSize={160}>
             {paragraph}
@@ -221,7 +221,7 @@ export default function CyberPhilosophyLayout({
             <SpotlightText as="p" className="mb-5 font-plex text-xs uppercase tracking-[0.38em] text-teal-300/60" glowSize={100}>
               {hero?.eyebrow || 'Founder operating system'}
             </SpotlightText>
-            <h1 className="mx-auto max-w-5xl font-oxanium text-4xl font-light leading-[1.05] tracking-normal text-white sm:text-6xl lg:text-7xl">
+            <h1 className="mx-auto max-w-5xl font-oxanium text-4xl font-light leading-[1.05] tracking-normal text-white sm:text-6xl/none lg:text-7xl/none">
               <SpotlightText as="span" className="text-white" glowSize={220}>
                 {hero?.title || 'Enter the Mind of'}
               </SpotlightText>{' '}
@@ -229,7 +229,7 @@ export default function CyberPhilosophyLayout({
                 {hero?.accent || 'AppCrates'}
               </SpotlightText>
             </h1>
-            <div className="mx-auto mt-7 max-w-2xl font-plex text-lg font-light leading-relaxed text-white/60 sm:text-xl">
+            <div className="mx-auto mt-7 max-w-2xl font-plex text-lg font-light leading-relaxed text-white/60 sm:text-xl/7">
               <SpotlightText as="p" glowSize={140}>
                 {hero?.subtitle || 'Behind every system I build is one question:'}
               </SpotlightText>
@@ -288,7 +288,7 @@ export default function CyberPhilosophyLayout({
                   key={`${item.title}-${index}`}
                   className="cyber-reveal ac-card group overflow-hidden hover:border-teal-300/40"
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-indigo-950">
+                  <div className="relative aspect-4/3 overflow-hidden bg-indigo-950">
                     <Image
                       src={item.img || beyondCode[index]?.img || beyondCode[0].img || '/media/about/sleza.webp'}
                       alt={item.alt || item.title}
@@ -296,7 +296,7 @@ export default function CyberPhilosophyLayout({
                       className="object-cover opacity-[0.74] saturate-[0.75] transition duration-700 group-hover:scale-105 group-hover:opacity-100 group-hover:saturate-100"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/10 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-indigo-950 via-indigo-950/10 to-transparent" />
                   </div>
                   <div className="p-7 sm:p-8">
                     <SpotlightText as="h3" className="font-oxanium text-2xl font-light text-white" glowSize={120}>
@@ -314,7 +314,7 @@ export default function CyberPhilosophyLayout({
 
         <section className="relative overflow-hidden bg-indigo-950 px-4 py-24 sm:px-6 md:py-32 lg:px-8">
           <div className="cyber-reveal relative z-10 mx-auto max-w-4xl text-center">
-            <div className="font-oxanium text-4xl font-light leading-tight text-white sm:text-5xl lg:text-6xl">
+            <div className="font-oxanium text-4xl font-light leading-tight text-white sm:text-5xl/none lg:text-6xl/none">
               {ctaHeadlineLines.map((line) => (
                 <SpotlightText key={line} as="p" glowSize={220}>
                   {line}
@@ -365,14 +365,14 @@ export default function CyberPhilosophyLayout({
             <div className="mt-12 flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-center">
               <PrefetchLink
                 href={localizedPath(language, '/#contact')}
-                className="group relative min-w-[230px] overflow-hidden bg-teal-300 px-10 py-5 text-center font-plex font-normal text-black transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300"
+                className="group relative min-w-[230px] overflow-hidden bg-teal-300 px-10 py-5 text-center font-plex font-normal text-black transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-hidden focus:ring-2 focus:ring-teal-300"
               >
                 <span className="relative z-10 uppercase "> {content?.ctaSection?.primaryButton || 'Start a project'} </span>
                 <div className="absolute inset-0 -translate-x-full bg-white transition-transform duration-500 group-hover:translate-x-0" />
               </PrefetchLink>
               <PrefetchLink
                 href={localizedPath(language, '/#projects')}
-                className="group relative min-w-[230px] overflow-hidden border border-white/20 px-10 py-5 text-center font-plex font-normal text-white transition-all duration-500 hover:border-teal-300 focus:outline-none focus:ring-2 focus:ring-teal-300"
+                className="group relative min-w-[230px] overflow-hidden border border-white/20 px-10 py-5 text-center font-plex font-normal text-white transition-all duration-500 hover:border-teal-300 focus:outline-hidden focus:ring-2 focus:ring-teal-300"
               >
                 <span className="relative z-10 uppercase transition-colors duration-500 group-hover:text-indigo-950">
                   {content?.ctaSection?.secondaryButton || 'See my work'}

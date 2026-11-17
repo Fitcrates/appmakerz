@@ -94,10 +94,10 @@ const ServiceItem: React.FC<{
     >
       <PrefetchLink
         href={localizedPath(language, service.href)}
-        className="block focus:outline-none focus:ring-2 focus:ring-teal-300/40 rounded"
+        className="block focus:outline-hidden focus:ring-2 focus:ring-teal-300/40 rounded-sm"
       >
         <div className="flex items-start gap-6">
-          <span className="text-xs text-teal-300  tracking-widest flex-shrink-0 pt-1">
+          <span className="text-xs text-teal-300  tracking-widest shrink-0 pt-1">
             {service.number}
           </span>
 
@@ -188,7 +188,7 @@ const ServicesNew: React.FC = () => {
             {t.intro}{" "}
             <PrefetchLink
               href={localizedPath(language, "/uslugi/medusa-js-development")}
-              className="inline-flex items-center gap-1 text-teal-300 underline decoration-teal-300/40 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60 focus:outline-none focus:ring-2 focus:ring-teal-300/40 rounded"
+              className="inline-flex items-center gap-1 text-teal-300 underline decoration-teal-300/40 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60 focus:outline-hidden focus:ring-2 focus:ring-teal-300/40 rounded-sm"
             >
               {t.hubLink}
               <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
@@ -220,7 +220,7 @@ const ServicesNew: React.FC = () => {
             >
               <a
                 href="#contact"
-                className="group inline-flex items-center gap-4 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 rounded"
+                className="group inline-flex items-center gap-4 focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950 rounded-sm"
                 aria-label="Contact me to discuss your project"
               >
                 <span className="text-lg text-white  group-hover:text-teal-300 transition-colors font-oxanium font-oxanium font-light">
@@ -239,7 +239,7 @@ const ServicesNew: React.FC = () => {
           {/* Right - image centered once within the complete services list */}
           <div className="lg:flex lg:items-center">
             <div className="w-full">
-              <div className="group relative w-full aspect-[3/4]">
+              <div className="group relative w-full aspect-3/4">
                 <BorderGlow animated>
                   <CrackImage
                     src="/media/servicesgreek.webp"

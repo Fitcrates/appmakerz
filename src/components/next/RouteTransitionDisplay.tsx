@@ -22,7 +22,7 @@ export default function RouteTransitionDisplay({
   return (
     <div
       aria-hidden="true"
-      className={`route-transition-overlay route-transition-overlay--${phase} pointer-events-none fixed inset-0 z-[120] overflow-hidden`}
+      className={`route-transition-overlay route-transition-overlay--${phase} pointer-events-none fixed inset-0 z-120 overflow-hidden`}
     >
       {snapshotMarkup ? (
         <div className="route-transition-snapshot-shell absolute inset-0">

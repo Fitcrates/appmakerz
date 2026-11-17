@@ -1,8 +1,24 @@
+import { budgetStartingPrice } from '@/data/project-budget';
+import {
+  AI_STARTING_PRICE,
+  LARGE_PROJECT_BUDGET_EXAMPLE,
+  ONE_PAGE_STARTING_PRICE,
+  SAAS_STARTING_PRICE,
+  WEBSITE_STARTING_PRICE,
+} from '@/lib/pricing';
+
+// Amounts come from the pricing config, the same source as the pricing
+// section, the calculator and structured data, so the FAQ cannot drift.
+const pln = (amount: number) => `${new Intl.NumberFormat('pl-PL', { useGrouping: 'always' }).format(amount)} zł`;
+const plnEn = (amount: number) => `PLN ${new Intl.NumberFormat('en-GB', { useGrouping: 'always' }).format(amount)}`;
+const STORE_PRICE = budgetStartingPrice('ecommerce') ?? 0;
+const MARKETPLACE_PRICE = budgetStartingPrice('marketplace') ?? 0;
+
 export const faqContent = {
   en: {
     title: 'Frequently Asked Questions',
     subtitle: 'Answers to help you understand what I do and how I can help your business grow.',
-    metaDescription: 'Questions about working together: Medusa.js stores and marketplaces, websites, web apps, AI, timelines, technology and support after launch.',
+    metaDescription: 'Questions about working together: prices of websites, stores, marketplaces, SaaS and AI, Medusa.js, timelines, technology and support after launch.',
     searchPlaceholder: 'Search questions and answers...',
     emptyState: 'No matching questions found.',
     backToHome: 'Back to Home',
@@ -77,6 +93,30 @@ export const faqContent = {
         answer: 'Yes. Not every valuable product is public-facing. I also build internal systems, panels, and process-oriented tools that help companies save time, reduce repetitive work, and organize operations more efficiently.'
       },
       {
+        question: 'How much does a website cost?',
+        answer: `A simple, custom-designed Next.js website starts at ${plnEn(WEBSITE_STARTING_PRICE)} excluding VAT. The most basic one-page site without additional features can start at ${plnEn(ONE_PAGE_STARTING_PRICE)}. The price depends on the number of pages, the design, content editing (CMS), a blog, language versions and integrations.`
+      },
+      {
+        question: 'How much does an online store or a marketplace cost?',
+        answer: `An online store on Medusa.js starts at ${plnEn(STORE_PRICE)} excluding VAT, and a multi-vendor marketplace at ${plnEn(MARKETPLACE_PRICE)}. The budget grows with integrations (warehouse, ERP, couriers, invoicing), a custom checkout and selling in several markets, and for a marketplace also with split payments, commissions and seller payouts. Large platforms can require a budget of several hundred thousand PLN, even ${plnEn(LARGE_PROJECT_BUDGET_EXAMPLE)}. Shopify implementations are quoted individually.`
+      },
+      {
+        question: 'How much does a SaaS application or an AI implementation cost?',
+        answer: `A SaaS application starts at ${plnEn(SAAS_STARTING_PRICE)} excluding VAT, and an AI implementation at ${plnEn(AI_STARTING_PRICE)}. For SaaS the cost depends on user roles, workflows, payments and subscriptions, and integrations. For AI it depends on the process, the quality of your data and the systems it has to work with. Model and infrastructure fees are separate from the implementation budget.`
+      },
+      {
+        question: 'Is the quote free, and are your prices net?',
+        answer: 'The quote is free and non-binding. We start with your goals and needs, agree on the scope of the first stage, and then you get a specific price and timeline. All amounts are net, with VAT added on top. You can check an approximate amount earlier in the calculator on the website.'
+      },
+      {
+        question: 'Can I start with a smaller budget and grow the project in stages?',
+        answer: 'Yes, and it is often the best approach. The first release covers what you need to launch and start earning, and further features are planned for later stages, once real users show what is worth building next. That keeps the starting budget lower and money goes where it actually helps.'
+      },
+      {
+        question: 'What costs come after launch?',
+        answer: 'Besides the delivery budget there are running costs: hosting, the domain, third-party services, payment provider fees and, if you want it, ongoing support. We go through them while scoping, so you know the monthly costs before the project starts, not after launch.'
+      },
+      {
         question: 'How long does a custom web project usually take?',
         answer: 'It depends on scope and complexity. A premium landing page or company website may take around 2–4 weeks. A more advanced web application, marketplace, or custom e-commerce system can take anywhere from several weeks to a few months. Before development starts, I estimate the scope as precisely as possible.'
       },
@@ -93,7 +133,7 @@ export const faqContent = {
   pl: {
     title: 'Często zadawane pytania',
     subtitle: 'Odpowiedzi, które pomogą Ci zrozumieć czym się zajmuję i jak mogę pomóc Twojej firmie.',
-    metaDescription: 'Pytania o współpracę: sklepy i marketplace na Medusa.js, strony, aplikacje webowe, AI, terminy, technologie i opieka po wdrożeniu.',
+    metaDescription: 'Pytania o współpracę: ceny stron, sklepów, marketplace, aplikacji SaaS i wdrożeń AI, Medusa.js, terminy, technologie i opieka po wdrożeniu.',
     searchPlaceholder: 'Szukaj pytań i odpowiedzi...',
     emptyState: 'Nie znaleziono pasujących pytań.',
     backToHome: 'Wróć do strony głównej',
@@ -166,6 +206,30 @@ export const faqContent = {
       {
         question: 'Czy tworzysz panele administracyjne i narzędzia wewnętrzne dla firm?',
         answer: 'Tak. Nie każdy wartościowy produkt jest skierowany do klienta końcowego. Tworzę również systemy wewnętrzne, dashboardy i narzędzia operacyjne, które pomagają firmom oszczędzać czas, ograniczać powtarzalną pracę i lepiej organizować procesy.'
+      },
+      {
+        question: 'Ile kosztuje strona internetowa?',
+        answer: `Prosta, indywidualnie projektowana strona na Next.js kosztuje od ${pln(WEBSITE_STARTING_PRICE)} netto. Najprostsza strona jednostronicowa, bez dodatkowych funkcji, może kosztować już od ${pln(ONE_PAGE_STARTING_PRICE)} netto. Na cenę wpływają liczba podstron, projekt graficzny, panel do edycji treści (CMS), blog, wersje językowe i integracje.`
+      },
+      {
+        question: 'Ile kosztuje sklep internetowy albo marketplace?',
+        answer: `Sklep internetowy na Medusa.js kosztuje od ${pln(STORE_PRICE)} netto, a marketplace z wieloma sprzedawcami od ${pln(MARKETPLACE_PRICE)} netto. Budżet rośnie razem z integracjami (magazyn, ERP, kurierzy, faktury), własnym procesem zakupu i sprzedażą na kilka rynków, a w marketplace także z podziałem płatności, prowizjami i wypłatami dla sprzedawców. Rozbudowane platformy mogą wymagać budżetu rzędu kilkuset tysięcy złotych, nawet ${pln(LARGE_PROJECT_BUDGET_EXAMPLE)} netto. Wdrożenia Shopify wyceniam indywidualnie.`
+      },
+      {
+        question: 'Ile kosztuje aplikacja SaaS albo wdrożenie AI?',
+        answer: `Aplikacja SaaS kosztuje od ${pln(SAAS_STARTING_PRICE)} netto, a wdrożenie AI od ${pln(AI_STARTING_PRICE)} netto. W SaaS koszt zależy od liczby ról i procesów, płatności i subskrypcji oraz integracji. W AI od procesu, jakości danych i systemów, z którymi rozwiązanie ma współpracować. Opłaty za modele AI i infrastrukturę są osobne od budżetu wdrożenia.`
+      },
+      {
+        question: 'Czy wycena jest płatna i czy ceny są netto?',
+        answer: 'Wycena jest bezpłatna i do niczego nie zobowiązuje. Najpierw rozmawiamy o celu i potrzebach, potem ustalamy zakres pierwszego etapu, a na końcu dostajesz konkretną cenę i termin. Wszystkie kwoty są netto, doliczam do nich VAT. Orientacyjną kwotę możesz wcześniej sprawdzić w kalkulatorze na stronie.'
+      },
+      {
+        question: 'Czy mogę zacząć od mniejszego budżetu i rozwijać projekt etapami?',
+        answer: 'Tak, i często to najlepsza droga. Pierwsza wersja obejmuje to, co potrzebne do startu i zarabiania, a kolejne funkcje planujemy na następne etapy, kiedy prawdziwi użytkownicy pokażą, co warto rozbudować. Dzięki temu budżet startowy jest niższy, a pieniądze idą tam, gdzie naprawdę pomagają.'
+      },
+      {
+        question: 'Jakie koszty pojawiają się po wdrożeniu?',
+        answer: 'Poza budżetem realizacji są koszty działania: hosting, domena, usługi zewnętrzne, opłaty operatorów płatności i, jeśli chcesz, stała opieka techniczna. Omawiamy je przy wycenie, więc miesięczne koszty znasz przed startem projektu, a nie po wdrożeniu.'
       },
       {
         question: 'Ile czasu trwa realizacja strony lub aplikacji?',

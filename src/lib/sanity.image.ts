@@ -1,5 +1,4 @@
-import imageUrlBuilder from '@sanity/image-url';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { createImageUrlBuilder, type SanityImageSource } from '@sanity/image-url';
 
 const projectId =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||
@@ -14,7 +13,7 @@ if (!projectId || !dataset) {
   throw new Error('Missing Sanity image configuration. Set NEXT_PUBLIC_SANITY_PROJECT_ID and NEXT_PUBLIC_SANITY_DATASET.');
 }
 
-const builder = imageUrlBuilder({
+const builder = createImageUrlBuilder({
   projectId,
   dataset,
 });

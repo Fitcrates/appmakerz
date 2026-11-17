@@ -50,7 +50,7 @@ export const portableTextComponentsClient: PortableTextComponents = {
   listItem: {
     bullet: ({ children }) => (
       <li className="flex items-start gap-3 text-white/70  font-light">
-        <span className="w-1.5 h-1.5 bg-teal-300 rounded-full mt-2.5 flex-shrink-0" />
+        <span className="w-1.5 h-1.5 bg-teal-300 rounded-full mt-2.5 shrink-0" />
         <span>{children}</span>
       </li>
     ),

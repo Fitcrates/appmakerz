@@ -19,7 +19,7 @@ export default function ServiceDeliverablesNew({ deliverables, language }: Servi
             <span className="text-xs tracking-[0.3em] uppercase text-teal-300/80 mb-4 block">
               {language === 'pl' ? 'W pakiecie' : "What's included"}
             </span>
-            <BurnSpotlightText as="h2" className="text-4xl sm:text-5xl lg:text-6xl font-light font-oxanium text-white leading-tight mb-8" glowSize={200} baseDelay={100} charDelay={30} activateOnMount>
+            <BurnSpotlightText as="h2" className="text-4xl sm:text-5xl/none lg:text-6xl/none font-light font-oxanium text-white leading-tight mb-8" glowSize={200} baseDelay={100} charDelay={30} activateOnMount>
               {language === 'pl' ? 'Co dostajesz' : 'What you get'}
             </BurnSpotlightText>
             <SpotlightText as="p" className="text-white/50 font-light font-plex text-lg max-w-md leading-relaxed" glowSize={100}>
@@ -37,7 +37,7 @@ export default function ServiceDeliverablesNew({ deliverables, language }: Servi
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 key={`deliv-${index}`}
-                className="group relative flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-12 py-8 border-b border-white/10 hover:bg-white/[0.02] transition-colors duration-500 px-4 sm:px-6 -mx-4 sm:-mx-6"
+                className="group relative flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-12 py-8 border-b border-white/10 hover:bg-white/2 transition-colors duration-500 px-4 sm:px-6 -mx-4 sm:-mx-6"
               >
                 {/* Accent vertical line on hover */}
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-teal-300 scale-y-0 group-hover:scale-y-100 transition-transform duration-500 origin-top" />
@@ -46,7 +46,7 @@ export default function ServiceDeliverablesNew({ deliverables, language }: Servi
                   {String(index + 1).padStart(2, '0')}
                 </div>
 
-                <SpotlightText as="p" className="text-white/80 font-light font-plex text-lg sm:text-xl leading-relaxed flex-grow" glowSize={150}>
+                <SpotlightText as="p" className="text-white/80 font-light font-plex text-lg sm:text-xl/7 leading-relaxed grow" glowSize={150}>
                   {item}
                 </SpotlightText>
 

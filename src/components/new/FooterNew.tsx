@@ -16,6 +16,7 @@ const getFooterNavItems = (t: typeof translations.en.nav, marketplaceGuideLabel:
   { name: t.projects, href: '/#projects' },
   { name: t.services, href: '/#services' },
   { name: t.solutions, href: '/#systems' },
+  { name: t.pricing, href: '/#pricing' },
   { name: t.contact, href: '/#contact' },
 ];
 
@@ -178,14 +179,14 @@ const FooterNew: React.FC = () => {
                     aria-label="Email address for newsletter"
                     aria-required="true"
                     autoComplete="email"
-                    className={`w-full px-0 py-4 bg-transparent border-b text-white caret-white text-lg placeholder-white/40 focus:outline-none transition-colors [color-scheme:dark] ${error && touched ? 'border-red-400/60 focus:border-red-400' : 'border-white/20 focus:border-teal-300'
+                    className={`w-full px-0 py-4 bg-transparent border-b text-white caret-white text-lg placeholder-white/40 focus:outline-hidden transition-colors scheme-dark ${error && touched ? 'border-red-400/60 focus:border-red-400' : 'border-white/20 focus:border-teal-300'
                       }`}
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={isSubmitting || !isEmailValid}
-                  className="group inline-flex items-center gap-4 self-start sm:self-auto disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-950"
+                  className="group inline-flex items-center gap-4 self-start sm:self-auto disabled:opacity-50 disabled:cursor-not-allowed focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300 focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-950"
                   aria-label={isSubmitting ? 'Subscribing to newsletter...' : 'Subscribe to newsletter'}
                 >
                   <span className="font-oxanium text-lg font-light text-white transition-colors group-hover:text-teal-300">
@@ -294,7 +295,7 @@ const FooterNew: React.FC = () => {
             <motion.button
               onClick={scrollToTop}
               whileHover={{ y: -2 }}
-              className="group flex items-center gap-2 text-white/55 text-sm  hover:text-teal-300 transition-colors focus:outline-none focus:text-teal-300"
+              className="group flex items-center gap-2 text-white/55 text-sm  hover:text-teal-300 transition-colors focus:outline-hidden focus:text-teal-300"
               aria-label="Scroll back to top of page"
             >
               <span>{t.backToTop}</span>

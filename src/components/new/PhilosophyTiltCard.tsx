@@ -88,7 +88,7 @@ export default function PhilosophyTiltCard({
       >
         <div
           className={`ac-card group relative z-10 flex min-h-[220px] h-full flex-col overflow-hidden p-7 sm:p-8 ${
-            isHovered ? '!border-teal-300/40' : ''
+            isHovered ? 'border-teal-300/40!' : ''
           }`}
           style={{ transform: 'translateZ(28px)' }}
         >
@@ -104,7 +104,7 @@ export default function PhilosophyTiltCard({
             <span className="font-oxanium text-sm tracking-[0.28em] text-teal-300/70">
               {number}
             </span>
-            <span className="h-px flex-1 bg-gradient-to-r from-teal-300/25 to-transparent" />
+            <span className="h-px flex-1 bg-linear-to-r from-teal-300/25 to-transparent" />
           </div>
 
           <div className="relative z-10">

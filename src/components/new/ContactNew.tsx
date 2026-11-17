@@ -77,7 +77,7 @@ const ContactNew: React.FC = () => {
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
-                <BurnSpotlightText as="h2" className="text-4xl sm:text-5xl lg:text-7xl font-light font-oxanium leading-[1.1] pb-2" glowSize={150} baseDelay={300} charDelay={35}>
+                <BurnSpotlightText as="h2" className="text-4xl sm:text-5xl/none lg:text-7xl/none font-light font-oxanium leading-[1.1] pb-2" glowSize={150} baseDelay={300} charDelay={35}>
                   {t.heading}
                 </BurnSpotlightText>
               </motion.div>
@@ -161,7 +161,7 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   autoComplete="name"
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/40 focus:outline-none  transition-colors [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/40 focus:outline-hidden  transition-colors scheme-dark"
                   placeholder={t.form.name.placeholder}
                 />
               </div>
@@ -182,7 +182,7 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   autoComplete="email"
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/40 focus:outline-none transition-colors [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/40 focus:outline-hidden transition-colors scheme-dark"
                   placeholder={t.form.email.placeholder}
                 />
               </div>
@@ -202,7 +202,7 @@ const ContactNew: React.FC = () => {
                   disabled={isSubmitting}
                   aria-required="true"
                   rows={4}
-                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/40 focus:outline-none transition-colors resize-none [color-scheme:dark]"
+                  className="w-full px-0 py-4 bg-transparent border-b border-white/20 text-white caret-white text-lg  placeholder-white/40 focus:outline-hidden transition-colors resize-none scheme-dark"
                   placeholder={t.form.message.placeholder}
                 />
               </div>
@@ -211,7 +211,7 @@ const ContactNew: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group inline-flex items-center gap-4 disabled:opacity-50 focus:outline-none rounded"
+                  className="group inline-flex items-center gap-4 disabled:opacity-50 focus:outline-hidden rounded-sm"
                   aria-label={isSubmitting ? 'Sending message...' : 'Send message'}
                 >
                   <span className="text-lg text-white  group-hover:text-teal-300 transition-colors font-oxanium font-oxanium font-light">

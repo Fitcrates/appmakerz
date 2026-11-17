@@ -37,7 +37,7 @@ export default function HubMedia({ entries, slot, language, urls }: HubMediaProp
             >
               {/* `contain` so a device mockup or a tall screenshot is never
                   cropped just to fill the frame. */}
-              <div className="relative aspect-[16/9] overflow-hidden">
+              <div className="relative aspect-video overflow-hidden">
                 <Image
                   src={url}
                   alt={alt}

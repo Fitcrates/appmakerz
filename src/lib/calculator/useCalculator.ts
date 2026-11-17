@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import pricingConfig from '@/data/pricing-config.json';
 import type { Language } from '@/lib/language';
 import { calculatePrice, getQuoteSelectionSummary } from './calculatePrice';
+import { normalizeCalculatorPrefill } from './prefill';
 import type { CalculatorStep, PricingConfig, Selection } from './types';
 
 const config = pricingConfig as PricingConfig;
@@ -38,6 +39,7 @@ export function useCalculator(language: Language = 'pl') {
   const summary = useMemo(() => getQuoteSelectionSummary(selection, language), [language, selection]);
 
   const selectService = (serviceKey: string) => {
+    if (!Object.hasOwn(config.services, serviceKey)) return;
     const service = config.services[serviceKey];
 
     setSelection({
@@ -69,14 +71,9 @@ export function useCalculator(language: Language = 'pl') {
     setSelection(initialSelection);
     setStepIndex(0);
   };
-  const setPrefill = (prefill: Partial<Selection>) => {
-    const newSelection: Selection = {
-      service: typeof prefill.service === 'string' ? prefill.service : '',
-      base: typeof prefill.base === 'string' ? prefill.base : undefined,
-      cms: typeof prefill.cms === 'string' ? prefill.cms : undefined,
-      features: Array.isArray(prefill.features) ? prefill.features.filter((feature): feature is string => typeof feature === 'string') : [],
-      deadline: typeof prefill.deadline === 'string' ? prefill.deadline : 'standard',
-    };
+  const setPrefill = useCallback((prefill: unknown) => {
+    const newSelection = normalizeCalculatorPrefill(prefill);
+    if (!newSelection) return;
     setSelection(newSelection);
 
     const flowSteps = getFlowSteps(newSelection);
@@ -100,7 +97,7 @@ export function useCalculator(language: Language = 'pl') {
         targetStep = i + 1;
         continue;
       }
-      if (step === 'deadline' && newSelection.deadline) {
+      if (step === 'deadline' && typeof (prefill as Partial<Selection>).deadline === 'string') {
         targetStep = i + 1;
         continue;
       }
@@ -110,7 +107,7 @@ export function useCalculator(language: Language = 'pl') {
     }
 
     setStepIndex(Math.min(targetStep, flowSteps.length - 1));
-  };
+  }, []);
 
   return {
     config,

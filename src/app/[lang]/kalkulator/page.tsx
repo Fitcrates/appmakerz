@@ -92,7 +92,7 @@ export default async function LocalizedCalculatorPage({ params }: LocalizedCalcu
             {t.page.backHome}
           </PrefetchLink>
           <span className="block text-xs uppercase tracking-[0.3em] text-white/55">{t.page.label}</span>
-          <h1 className="mt-6 max-w-4xl font-oxanium text-4xl font-light leading-[1.15] text-white sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 max-w-4xl font-oxanium text-4xl font-light leading-[1.15] text-white sm:text-6xl/none lg:text-7xl/none">
             {t.page.heading}
           </h1>
           <p className="mt-6 max-w-2xl text-lg font-light leading-relaxed text-white/60">

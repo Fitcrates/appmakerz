@@ -40,7 +40,7 @@ export default function ServiceCtaNew({ ctaLabel, language, heading, body }: Ser
         </div>
         <PrefetchLink
           href={localizedPath(language, '/#contact')}
-          className="group relative inline-block px-12 py-5 bg-teal-300 text-indigo-950 font-normal overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+          className="group relative inline-block px-12 py-5 bg-teal-300 text-indigo-950 font-normal overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
         >
           <span className="relative z-10">{ctaLabel}</span>
           <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />

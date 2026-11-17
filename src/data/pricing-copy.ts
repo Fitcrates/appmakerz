@@ -431,7 +431,7 @@ export const pricingCopy: Record<Language, PricingCopy> = {
     },
 
     disclaimer:
-      'To orientacyjny zakres budżetu, a nie finalna oferta. Dokładną cenę, termin i plan działania ustalimy po krótkiej rozmowie o Twoim biznesie.',
+      'Kwoty są orientacyjne, netto — należy doliczyć VAT. Dokładną cenę, termin i plan działania ustalimy po rozmowie o zakresie projektu.',
   },
 
   en: {
@@ -850,6 +850,6 @@ export const pricingCopy: Record<Language, PricingCopy> = {
     },
 
     disclaimer:
-      'This is an estimated budget range, not a final offer. The exact price, timeline and plan will be confirmed after a short conversation about your business.',
+      'Amounts are estimates excluding VAT. The final price, timeline and delivery plan follow a conversation about your project scope.',
   },
 };

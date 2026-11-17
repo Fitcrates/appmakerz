@@ -16,7 +16,7 @@ import styles from "./HeroNewv2.module.css";
 const stackIcons = [ShoppingCart, Cpu, PanelsTopLeft, Blocks];
 const cardAngles = [14, 11, -11, -14];
 const cardRolls = [4, 2, -4, -3];
-const headingClassName = "text-4xl sm:text-6xl lg:text-[44px] xl:text-[56px] 2xl:text-[72px] [@media(max-height:800px)]:xl:text-[48px] [@media(max-height:700px)]:xl:text-[40px] font-light font-oxanium tracking-normal leading-[1.1] uppercase whitespace-pre-wrap";
+const headingClassName = "text-4xl sm:text-6xl/none lg:text-[44px] xl:text-[56px] 2xl:text-[72px] [@media(max-height:800px)]:xl:text-[48px] [@media(max-height:700px)]:xl:text-[40px] font-light font-oxanium tracking-normal leading-[1.1] uppercase whitespace-pre-wrap";
 
 type StackItem = { title: string; description: string };
 
@@ -38,7 +38,7 @@ const StackCard: React.FC<StackCardProps> = ({ item, index, compact = false }) =
       contentClassName={compact ? "flex flex-col gap-4 h-full" : "flex flex-col gap-5"}
     >
       {/* Icon container */}
-      <div className={`flex-shrink-0 ${compact ? "w-8 h-8" : "w-10 h-10"} text-cyan-100 flex items-center justify-center relative transition-colors duration-500`}>
+      <div className={`shrink-0 ${compact ? "w-8 h-8" : "w-10 h-10"} text-cyan-100 flex items-center justify-center relative transition-colors duration-500`}>
         <Icon className="w-full h-full relative z-10 motion-safe:group-hover:scale-110 transition-transform duration-500" strokeWidth={1.5} />
         {/* Glowing effect behind icon */}
         <div className={`${styles.iconGlow} absolute inset-0 bg-teal-300/20 blur-xl rounded-full opacity-30 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -128,7 +128,7 @@ const CardRail: React.FC<CardRailProps> = ({ items, label, reducedMotion }) => {
             aria-selected={index === active}
             aria-label={item.title}
             onClick={() => scrollTo(index)}
-            className="p-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/60"
+            className="p-1.5 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300/60"
           >
             <span
               className={`block h-1.5 rounded-full transition-all duration-300 ${index === active ? "w-6 bg-teal-300" : "w-1.5 bg-white/30"}`}
@@ -223,7 +223,7 @@ const HeroNewv2: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="mb-6 sm:mb-8 lg:mb-4 xl:mb-6 2xl:mb-8 [@media(max-height:800px)]:mb-4"
             >
-              <h1 className="max-w-xl mx-auto text-xs sm:text-sm lg:text-xs xl:text-sm font-normal leading-relaxed tracking-wide text-white/80">
+              <h1 className="max-w-xl mx-auto text-xs sm:text-sm/5 lg:text-xs/4 xl:text-sm/5 font-normal leading-relaxed tracking-wide text-white/80">
                 {t.seoHeading}
               </h1>
             </motion.div>
@@ -273,7 +273,7 @@ const HeroNewv2: React.FC = () => {
             >
               <a
                 href="#proof"
-                className="group relative px-10 py-4 sm:py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 bg-teal-300 text-indigo-950 font-normal rounded-none overflow-hidden transition-all duration-500 min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
+                className="group relative px-10 py-4 sm:py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 bg-teal-300 text-indigo-950 font-normal rounded-none overflow-hidden transition-all duration-500 min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] hover:shadow-[0_0_60px_rgba(94,234,212,0.5)] focus:outline-hidden focus:ring-2 focus:ring-teal-300 text-center"
               >
                 <span className="relative z-10">{t.cta.viewWork}</span>
                 <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
@@ -281,7 +281,7 @@ const HeroNewv2: React.FC = () => {
 
               <a
                 href="#contact"
-                className="group px-10 py-4 sm:py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 border border-white/20 text-white font-normal rounded-none hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] focus:outline-none focus:ring-2 focus:ring-teal-300 text-center"
+                className="group px-10 py-4 sm:py-5 lg:py-4 xl:py-5 2xl:py-5 [@media(max-height:700px)]:py-3 border border-white/20 text-white font-normal rounded-none hover:border-teal-300 transition-all duration-500 relative overflow-hidden min-w-[230px] lg:min-w-[160px] xl:min-w-[200px] 2xl:min-w-[230px] focus:outline-hidden focus:ring-2 focus:ring-teal-300 text-center"
                 aria-label="Contact me to discuss your project"
               >
                 <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
@@ -314,7 +314,7 @@ const HeroNewv2: React.FC = () => {
         initial={reducedMotion ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 3.5 }}
-        className="absolute bottom-12 [@media(max-height:800px)]:bottom-6 left-1/2 -translate-x-1/2 z-20 hidden sm:flex [@media(max-height:700px)]:!hidden flex-col items-center gap-3 text-white/30 hover:text-teal-300 transition-colors cursor-pointer group focus:outline-none focus:text-teal-300"
+        className="absolute bottom-12 [@media(max-height:800px)]:bottom-6 left-1/2 -translate-x-1/2 z-20 hidden sm:flex [@media(max-height:700px)]:hidden! flex-col items-center gap-3 text-white/30 hover:text-teal-300 transition-colors cursor-pointer group focus:outline-hidden focus:text-teal-300"
         aria-label={t.scroll}
       >
         <span className="text-[10px] tracking-[0.3em] uppercase">

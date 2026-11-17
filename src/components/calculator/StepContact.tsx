@@ -83,7 +83,7 @@ export default function StepContact({ service, summary, price, language, copy }:
             required
             autoComplete="name"
             disabled={status === 'submitting'}
-            className="w-full border-0 border-b border-white/20 bg-transparent px-0 py-4 text-white outline-none transition-colors [color-scheme:dark] focus:border-teal-300 disabled:opacity-60"
+            className="w-full border-0 border-b border-white/20 bg-transparent px-0 py-4 text-white outline-hidden transition-colors scheme-dark focus:border-teal-300 disabled:opacity-60"
           />
         </div>
         <div>
@@ -97,7 +97,7 @@ export default function StepContact({ service, summary, price, language, copy }:
             required
             autoComplete="email"
             disabled={status === 'submitting'}
-            className="w-full border-0 border-b border-white/20 bg-transparent px-0 py-4 text-white outline-none transition-colors [color-scheme:dark] focus:border-teal-300 disabled:opacity-60"
+            className="w-full border-0 border-b border-white/20 bg-transparent px-0 py-4 text-white outline-hidden transition-colors scheme-dark focus:border-teal-300 disabled:opacity-60"
           />
         </div>
       </div>
@@ -110,7 +110,7 @@ export default function StepContact({ service, summary, price, language, copy }:
           onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))}
           autoComplete="tel"
           disabled={status === 'submitting'}
-            className="w-full border-0 border-b border-white/20 bg-transparent px-0 py-4 text-white outline-none transition-colors [color-scheme:dark] focus:border-teal-300 disabled:opacity-60"
+            className="w-full border-0 border-b border-white/20 bg-transparent px-0 py-4 text-white outline-hidden transition-colors scheme-dark focus:border-teal-300 disabled:opacity-60"
         />
       </div>
       <div>
@@ -122,7 +122,7 @@ export default function StepContact({ service, summary, price, language, copy }:
           onChange={(event) => setForm((current) => ({ ...current, message: event.target.value }))}
           rows={4}
           disabled={status === 'submitting'}
-          className="w-full resize-none border-0 border-b border-white/20 bg-transparent px-0 py-4 text-white outline-none transition-colors [color-scheme:dark] focus:border-teal-300 disabled:opacity-60"
+          className="w-full resize-none border-0 border-b border-white/20 bg-transparent px-0 py-4 text-white outline-hidden transition-colors scheme-dark focus:border-teal-300 disabled:opacity-60"
         />
       </div>
       <button

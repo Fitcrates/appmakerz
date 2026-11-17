@@ -89,8 +89,8 @@ export default function BlogLatestPostsSidebar({ language, posts, toc = [] }: Bl
 
   const sidebarPositionClass = {
     relative: 'relative',
-    fixed: 'fixed right-[max(2rem,calc(50%_-_38rem))] top-28 z-30 w-[17.5rem]',
-    bottom: 'absolute bottom-0 right-0 w-[17.5rem]',
+    fixed: 'fixed right-[max(2rem,calc(50%-38rem))] top-28 z-30 w-70',
+    bottom: 'absolute bottom-0 right-0 w-70',
   }[position];
 
   return (

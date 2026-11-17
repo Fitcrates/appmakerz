@@ -106,7 +106,7 @@ const ProofNew: React.FC = () => {
             <div className="lg:col-span-7">
               <BurnSpotlightText
                 as="h2"
-                className="text-4xl sm:text-5xl lg:text-6xl font-light font-oxanium leading-[1.15]"
+                className="text-4xl sm:text-5xl/none lg:text-6xl/none font-light font-oxanium leading-[1.15]"
                 glowSize={150}
                 baseDelay={200}
                 charDelay={40}
@@ -115,7 +115,7 @@ const ProofNew: React.FC = () => {
               </BurnSpotlightText>
             </div>
             <motion.div {...fadeIn(headerInView, 0.3)} className="lg:col-span-5">
-              <SpotlightText as="p" className="text-lg font-light leading-relaxed !text-white/70" glowSize={120}>
+              <SpotlightText as="p" className="text-lg font-light leading-relaxed text-white/70!" glowSize={120}>
                 {t.intro}
               </SpotlightText>
             </motion.div>
@@ -131,7 +131,7 @@ const ProofNew: React.FC = () => {
                 key={item.label}
                 href={`#${barTargets[index]}`}
                 onClick={scrollToTarget}
-                className={`${styles.anchor} group row-span-2 grid grid-rows-[subgrid] gap-y-2 py-6 px-4 sm:px-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-300/60 ${index % 2 === 1 ? 'border-l border-white/10' : ''} ${index >= 2 ? 'border-t border-white/10 lg:border-t-0' : ''} ${index === 2 ? 'lg:border-l' : ''}`}
+                className={`${styles.anchor} group row-span-2 grid grid-rows-subgrid gap-y-2 py-6 px-4 sm:px-6 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-300/60 ${index % 2 === 1 ? 'border-l border-white/10' : ''} ${index >= 2 ? 'border-t border-white/10 lg:border-t-0' : ''} ${index === 2 ? 'lg:border-l' : ''}`}
               >
                 <span className="row-start-1 flex items-start justify-between gap-3">
                   <span className="font-oxanium font-light text-2xl sm:text-3xl text-teal-300">{item.value}</span>
@@ -157,7 +157,7 @@ const ProofNew: React.FC = () => {
             <motion.div {...fadeIn(flagshipInView)} className="lg:col-span-6 lg:sticky lg:top-28">
               <PrefetchLink
                 href={caseStudyHref}
-                className="group relative block rounded-3xl focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300"
+                className="group relative block rounded-3xl focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300"
                 aria-label={t.flagship.cta}
               >
                 <div className={styles.halo} aria-hidden="true" />
@@ -176,12 +176,12 @@ const ProofNew: React.FC = () => {
                   {t.flagship.eyebrow}
                 </span>
                 <div className="mt-4">
-                  <SpotlightText as="h3" className="font-oxanium text-3xl sm:text-4xl font-light leading-tight text-white" glowSize={140}>
+                  <SpotlightText as="h3" className="font-oxanium text-3xl sm:text-4xl/10 font-light leading-tight text-white" glowSize={140}>
                     {t.flagship.title}
                   </SpotlightText>
                 </div>
                 <div className="mt-5">
-                  <SpotlightText as="p" className="font-light leading-relaxed !text-white/70" glowSize={120}>
+                  <SpotlightText as="p" className="font-light leading-relaxed text-white/70!" glowSize={120}>
                     {t.flagship.body}
                   </SpotlightText>
                 </div>
@@ -224,13 +224,13 @@ const ProofNew: React.FC = () => {
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   <div className={styles.stackTitle}>
-                    <SpotlightText as="h4" className="font-oxanium text-lg lg:text-xl font-light leading-6 lg:leading-7 text-white" glowSize={110}>
+                    <SpotlightText as="h4" className="font-oxanium text-lg lg:text-xl/7 font-light leading-6 lg:leading-7 text-white" glowSize={110}>
                       {card.title}
                     </SpotlightText>
                   </div>
                   {card.body ? (
                     <div className="col-start-2 mt-3 lg:mt-4">
-                      <SpotlightText as="p" className="font-light leading-relaxed !text-white/65" glowSize={110}>
+                      <SpotlightText as="p" className="font-light leading-relaxed text-white/65!" glowSize={110}>
                         {card.body}
                       </SpotlightText>
                       {card.chips === 'desktop' ? <div className="mt-6 hidden lg:block">{chips}</div> : null}
@@ -249,7 +249,7 @@ const ProofNew: React.FC = () => {
         <div id="proof-reviews" ref={reviewsRef} className="mt-16 lg:mt-24 scroll-mt-28">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             <motion.div {...fadeIn(reviewsInView)} className="lg:col-span-5 lg:sticky lg:top-28">
-              <SpotlightText as="h3" className="font-oxanium text-3xl sm:text-4xl font-light leading-tight text-white" glowSize={140}>
+              <SpotlightText as="h3" className="font-oxanium text-3xl sm:text-4xl/10 font-light leading-tight text-white" glowSize={140}>
                 {t.reviews.heading}
               </SpotlightText>
 
@@ -257,7 +257,7 @@ const ProofNew: React.FC = () => {
                   and the services image, with the About stats' type: a light
                   white figure over a teal label. Desktop only; on mobile the
                   column sits above the deck and every card carries its stars. */}
-              <div className="hidden lg:block mt-14 ml-[14px] max-w-xs aspect-[4/3]">
+              <div className="hidden lg:block mt-14 ml-[14px] max-w-xs aspect-4/3">
                 <BorderGlow animated>
                   <div className="flex h-full flex-col justify-center px-8">
                     <SpotlightText as="span" className="text-7xl font-light font-oxanium leading-none" glowSize={100}>
@@ -300,7 +300,7 @@ const ProofNew: React.FC = () => {
                       >
                         <span className="text-[11px] tracking-[0.18em] uppercase text-teal-300">{t.mercur.label}</span>
                         <span className="mt-5 block font-oxanium text-4xl font-light tracking-wide text-white">Mercur</span>
-                        <SpotlightText as="p" className="mt-5 font-light leading-relaxed !text-white/75" glowSize={120}>
+                        <SpotlightText as="p" className="mt-5 font-light leading-relaxed text-white/75!" glowSize={120}>
                           {t.mercur.body}
                         </SpotlightText>
                         <div className="mt-auto pt-6">
@@ -308,7 +308,7 @@ const ProofNew: React.FC = () => {
                             href={MERCUR_CASE_STUDY_URL}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`${styles.pill} group focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300/60`}
+                            className={`${styles.pill} group focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300/60`}
                           >
                             {t.mercur.link}
                             <ArrowUpRight

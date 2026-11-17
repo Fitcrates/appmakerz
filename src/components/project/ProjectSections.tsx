@@ -90,11 +90,11 @@ function SectionFrame({
                       {String(index).padStart(2, '0')}
                     </span>
                   ) : null}
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light font-oxanium text-white leading-tight">
+                  <h2 className="text-2xl sm:text-3xl/9 lg:text-4xl/10 font-light font-oxanium text-white leading-tight">
                     {heading}
                   </h2>
                 </div>
-                <div className="mt-5 h-px bg-gradient-to-r from-teal-300/40 via-white/10 to-transparent" />
+                <div className="mt-5 h-px bg-linear-to-r from-teal-300/40 via-white/10 to-transparent" />
               </>
             ) : null}
           </header>
@@ -207,7 +207,7 @@ function RichTextSection({
   }
 
   const leadClass = section.lead
-    ? '[&>p:first-child]:text-xl [&>p:first-child]:lg:text-[1.375rem] [&>p:first-child]:text-white/85 [&>p:first-child]:leading-relaxed [&>p:first-child]:mb-8'
+    ? '[&>p:first-child]:text-xl lg:[&>p:first-child]:text-[1.375rem] [&>p:first-child]:text-white/85 [&>p:first-child]:leading-relaxed [&>p:first-child]:mb-8'
     : '';
 
   return (
@@ -278,11 +278,11 @@ function BulletGridSection({ section, language }: { section: ProjectSection; lan
     <>
       {intro ? <p className="mb-10 max-w-2xl text-white/70 font-light font-plex text-lg leading-relaxed">{intro}</p> : null}
 
-      <div className={`${HAIRLINE_ROW} bg-white/[0.06] border border-white/[0.06]`}>
+      <div className={`${HAIRLINE_ROW} bg-white/6 border border-white/6`}>
         {items.map((item, index) => (
           <div
             key={item._key || index}
-            className={`group relative ${HAIRLINE_CELL} ${itemBasis} bg-indigo-950 p-6 lg:p-8 transition-colors duration-500 hover:bg-white/[0.03]`}
+            className={`group relative ${HAIRLINE_CELL} ${itemBasis} bg-indigo-950 p-6 lg:p-8 transition-colors duration-500 hover:bg-white/3`}
           >
             <div className="absolute top-0 left-0 h-px w-0 bg-teal-300/60 transition-all duration-500 group-hover:w-12" />
             <div className="absolute top-0 left-0 w-px h-0 bg-teal-300/60 transition-all duration-500 group-hover:h-12" />
@@ -470,7 +470,7 @@ function MetricSection({ section, language }: { section: ProjectSection; languag
     : `basis-[calc((100%-1px)/2)] ${METRIC_LG_BASIS[lgColumns] || ''}`;
 
   return (
-    <div className={`${HAIRLINE_ROW} bg-white/[0.08] border border-white/[0.08]`}>
+    <div className={`${HAIRLINE_ROW} bg-white/8 border border-white/8`}>
       {items.map((item, index) => (
         <div key={item._key || index} className={`${HAIRLINE_CELL} ${itemBasis} bg-indigo-950 px-6 py-8 lg:py-10`}>
           <p className="text-3xl sm:text-4xl lg:text-5xl font-light font-oxanium text-teal-300 notranslate">
@@ -497,7 +497,7 @@ function TimelineSection({ section, language }: { section: ProjectSection; langu
       {steps.map((step, index) => (
         <li key={step._key || index} className="group relative pl-8 pb-10 last:pb-0">
           <span
-            className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rotate-45 border border-teal-300/60 bg-indigo-950 transition-colors duration-500 group-hover:bg-teal-300"
+            className="absolute left-[-5px] top-1.5 h-2.5 w-2.5 rotate-45 border border-teal-300/60 bg-indigo-950 transition-colors duration-500 group-hover:bg-teal-300"
             aria-hidden="true"
           />
           <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
@@ -565,7 +565,7 @@ function QuoteSection({ section, language }: { section: ProjectSection; language
   return (
     <figure className="relative">
       <QuoteIcon className="h-8 w-8 text-teal-300/30 mb-6" aria-hidden="true" />
-      <blockquote className="text-xl sm:text-2xl lg:text-3xl font-light font-oxanium text-white/90 leading-snug">
+      <blockquote className="text-xl sm:text-2xl/8 lg:text-3xl/9 font-light font-oxanium text-white/90 leading-snug">
         {quote}
       </blockquote>
 
@@ -617,7 +617,7 @@ function CtaSection({ section, language }: { section: ProjectSection; language: 
   return (
     <div className="text-center">
       {heading ? (
-        <p className="text-2xl sm:text-3xl lg:text-4xl font-light font-oxanium text-white leading-tight">{heading}</p>
+        <p className="text-2xl sm:text-3xl/9 lg:text-4xl/10 font-light font-oxanium text-white leading-tight">{heading}</p>
       ) : null}
       {text ? (
         <p className="mt-5 mx-auto max-w-2xl text-white/65 font-light font-plex text-lg leading-relaxed">{text}</p>
@@ -627,7 +627,7 @@ function CtaSection({ section, language }: { section: ProjectSection; language: 
         href={href}
         target={isExternal ? '_blank' : undefined}
         rel={isExternal ? 'noopener noreferrer' : undefined}
-        className="group relative mt-10 inline-flex min-w-[230px] items-center justify-center overflow-hidden bg-teal-300 px-10 py-5 text-center font-normal text-indigo-950 transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
+        className="group relative mt-10 inline-flex min-w-[230px] items-center justify-center overflow-hidden bg-teal-300 px-10 py-5 text-center font-normal text-indigo-950 transition-all duration-500 hover:shadow-[0_0_60px_rgba(94,234,212,0.4)] focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
       >
         <span className="relative z-10">{label}</span>
         <div className="absolute inset-0 -translate-x-full bg-white transition-transform duration-500 group-hover:translate-x-0" />

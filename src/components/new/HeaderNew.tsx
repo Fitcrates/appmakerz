@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState, type MouseEvent } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,6 +20,7 @@ const getNavItems = (t: typeof translations.en.nav) => [
   { label: t.projects, href: '/#projects' },
   { label: t.about, href: '/#about' },
   { label: t.blog, href: '/blog' },
+  { label: t.pricing, href: '/#pricing' },
   { label: 'FAQ', href: '/faq' },
   { label: t.contact, href: '/#contact' },
 ];
@@ -124,6 +125,141 @@ const getServiceLandingLinks = (language: string): ServiceLink[] => [
   },
 ];
 
+type NavItem = { label: string; href: string };
+type ServiceGroup = { key: ServiceGroupKey; label: string; entries: { item: ServiceLink; index: number }[] };
+
+interface MobileMenuProps {
+  open: boolean;
+  servicesLabel: string;
+  serviceGroups: ServiceGroup[];
+  items: NavItem[];
+  contact?: NavItem;
+  onClose: () => void;
+  onNavClick: (event: MouseEvent<HTMLAnchorElement>, href: string) => void;
+}
+
+/**
+ * Mobile navigation panel.
+ *
+ * Performance notes, each one fixed a visible stutter on phones:
+ * - It stays mounted and is only hidden, so opening it does not first mount
+ *   two dozen links before the animation can start.
+ * - The slide and the dim are CSS transitions on translate and opacity, which
+ *   the compositor runs even while the page underneath keeps the main thread
+ *   busy. framer-motion drove the slide from JavaScript, frame by frame.
+ * - It starts below the header instead of sliding under it, so the header's
+ *   backdrop blur is not recomputed on every frame.
+ * - It is memoised and gets stable props, so header re-renders (scroll state,
+ *   desktop hover) do not touch it, and the services accordion animates
+ *   grid-template-rows in CSS rather than height in JavaScript.
+ */
+const MobileMenu = memo(function MobileMenu({ open, servicesLabel, serviceGroups, items, contact, onClose, onNavClick }: MobileMenuProps) {
+  const [servicesOpen, setServicesOpen] = useState(false);
+
+  return (
+    <div
+      className="fixed inset-x-0 top-20 bottom-0 z-60 lg:hidden"
+      inert={!open}
+      // Hidden only once the slide-out has finished, so the closed panel is
+      // never painted but still animates out.
+      style={{ visibility: open ? 'visible' : 'hidden', transition: open ? 'visibility 0s' : 'visibility 0s linear 300ms' }}
+    >
+      <div
+        className={`absolute inset-0 bg-indigo-950/95 transition-opacity duration-300 motion-reduce:transition-none ${open ? 'opacity-100' : 'opacity-0'}`}
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      <nav
+        id="mobile-menu"
+        aria-label="Mobile navigation"
+        className={`absolute inset-0 flex flex-col bg-indigo-950 will-change-transform transition-transform duration-300 ease-out motion-reduce:transition-none ${open ? 'translate-x-0' : 'translate-x-full'}`}
+        // Collapse the accordion once the panel is off screen, where the
+        // reflow costs nothing visible.
+        onTransitionEnd={(event) => {
+          if (event.target === event.currentTarget && !open) setServicesOpen(false);
+        }}
+      >
+      <div className="flex-1 overflow-y-auto overscroll-contain px-6 pt-2 pb-6">
+        <div className="border-b border-white/[0.08]">
+          <button
+            type="button"
+            onClick={() => setServicesOpen((value) => !value)}
+            aria-expanded={servicesOpen}
+            aria-controls="mobile-services"
+            className="flex w-full items-center justify-between py-3.5 text-left text-xl font-light text-white focus:outline-hidden focus-visible:text-teal-300"
+          >
+            {servicesLabel}
+            <ChevronDown
+              className={`h-5 w-5 text-teal-300 transition-transform duration-300 ${servicesOpen ? 'rotate-180' : ''}`}
+              aria-hidden="true"
+            />
+          </button>
+
+          <div
+            id="mobile-services"
+            className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${servicesOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+          >
+            {/* inert keeps the collapsed links out of the tab order and screen readers. */}
+            <div className="min-h-0 overflow-hidden" inert={!servicesOpen}>
+              <div
+                className={`space-y-5 pb-5 transition-opacity duration-300 motion-reduce:transition-none ${servicesOpen ? 'opacity-100' : 'opacity-0'}`}
+              >
+                {serviceGroups.map((group) => (
+                  <div key={group.key}>
+                    <p className="mb-1.5 font-plex text-[11px] uppercase tracking-[0.2em] text-white/40">
+                      {group.label}
+                    </p>
+                    {group.entries.map(({ item }) => {
+                      const Icon = item.icon;
+                      return (
+                        <PrefetchLink
+                          key={item.href}
+                          href={item.href}
+                          onClick={onClose}
+                          className="flex items-center gap-3 py-2 text-[15px] font-light text-white/80 transition-colors hover:text-teal-300 focus:outline-hidden focus-visible:text-teal-300"
+                        >
+                          <Icon className="h-4 w-4 shrink-0 text-teal-300/70" aria-hidden="true" />
+                          <span>{item.label}</span>
+                        </PrefetchLink>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {items.map((item) => (
+          <div key={item.label} className="border-b border-white/[0.08]">
+            <PrefetchLink
+              href={item.href}
+              onClick={(event) => onNavClick(event, item.href)}
+              className="block py-3.5 text-xl font-light text-white transition-colors hover:text-teal-300 focus:outline-hidden focus-visible:text-teal-300"
+            >
+              {item.label}
+            </PrefetchLink>
+          </div>
+        ))}
+      </div>
+
+      {contact ? (
+        <div className="border-t border-white/[0.08] px-6 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+          <PrefetchLink
+            href={contact.href}
+            onClick={(event) => onNavClick(event, contact.href)}
+            className="flex w-full items-center justify-between bg-teal-300 px-5 py-4 font-oxanium text-lg font-normal tracking-wide text-indigo-950 transition-colors hover:bg-teal-200 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
+          >
+            {contact.label}
+            <ArrowUpRight className="h-5 w-5" aria-hidden="true" />
+          </PrefetchLink>
+        </div>
+      ) : null}
+      </nav>
+    </div>
+  );
+});
+
 const HeaderNew: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -137,31 +273,30 @@ const HeaderNew: React.FC = () => {
   const { beginNavigation } = useRouteTransition();
   const { language } = useLanguage();
   const t = translations[language].nav;
-  const navItems = getNavItems(t).map((item) => ({
+  // Memoised on language: the mobile panel is memo()ed and these are its props.
+  const navItems = useMemo(() => getNavItems(t).map((item) => ({
     ...item,
     href: localizedPath(language, item.href),
-  }));
-  // On mobile the menu is a vertical list reached with the thumb, so Contact
-  // goes to the top instead of the bottom of a six-item scroll. The desktop bar
-  // keeps the conventional order, with Contact last.
-  const mobileNavItems = [
-    ...navItems.filter((item) => item.label === t.contact),
-    ...navItems.filter((item) => item.label !== t.contact),
-  ];
-  const serviceLandingLinks = getServiceLandingLinks(language).map((item) => ({
+  })), [t, language]);
+  // On mobile, Contact leaves the list and becomes the button pinned to the
+  // bottom of the panel, where the thumb already is. The desktop bar keeps the
+  // conventional order, with Contact last.
+  const mobileNavItems = useMemo(() => navItems.filter((item) => item.label !== t.contact), [navItems, t]);
+  const mobileContact = useMemo(() => navItems.find((item) => item.label === t.contact), [navItems, t]);
+  const serviceLandingLinks = useMemo(() => getServiceLandingLinks(language).map((item) => ({
     ...item,
     href: localizedPath(language, item.href),
-  }));
+  })), [language]);
   // Grouped for display only. The flat array stays the source of truth because
   // activeServiceHoverIndex indexes into it to drive the preview panel.
-  const serviceGroups = getServiceGroups(language)
+  const serviceGroups = useMemo(() => getServiceGroups(language)
     .map((group) => ({
       ...group,
       entries: serviceLandingLinks
         .map((item, index) => ({ item, index }))
         .filter(({ item }) => item.group === group.key),
     }))
-    .filter((group) => group.entries.length > 0);
+    .filter((group) => group.entries.length > 0), [language, serviceLandingLinks]);
 
 
   useEffect(() => {
@@ -205,10 +340,10 @@ const HeaderNew: React.FC = () => {
     };
   }, [isMobileMenuOpen]);
 
-  const closeMobileMenu = () => {
+  const closeMobileMenu = useCallback(() => {
     setIsMobileMenuOpen(false);
     mobileMenuButtonRef.current?.blur();
-  };
+  }, []);
 
   const openServicesMenu = () => {
     if (servicesMenuCloseTimerRef.current) {
@@ -230,7 +365,7 @@ const HeaderNew: React.FC = () => {
     }, 180);
   };
 
-  const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = useCallback((event: MouseEvent<HTMLAnchorElement>, href: string) => {
     closeMobileMenu();
 
     const url = new URL(href, 'https://appcrates.local');
@@ -257,7 +392,7 @@ const HeaderNew: React.FC = () => {
     const headerOffset = 92;
     const targetTop = element.getBoundingClientRect().top + window.scrollY - headerOffset;
     window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
-  };
+  }, [closeMobileMenu, language, pathname, beginNavigation, router]);
 
   const handleMouseEnterService = (index: number) => {
     if (hoverTimeoutRef.current) {
@@ -271,7 +406,7 @@ const HeaderNew: React.FC = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full backdrop-blur-sm z-[100] shadow-sm transition-all duration-300 ${isScrolled ? 'bg-indigo-950/95 border-b border-white/5' : ''
+        className={`fixed top-0 left-0 w-full backdrop-blur-xs z-100 shadow-xs transition-all duration-300 ${isScrolled || isMobileMenuOpen ? 'bg-indigo-950/95 border-b border-white/5' : ''
           }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -300,7 +435,7 @@ const HeaderNew: React.FC = () => {
               >
                 <button
                   type="button"
-                  className="inline-flex items-center gap-2 text-white/90  font-light text-sm hover:text-white transition-colors focus:outline-none focus:text-teal-300"
+                  className="inline-flex items-center gap-2 text-white/90  font-light text-sm hover:text-white transition-colors focus:outline-hidden focus:text-teal-300"
                   aria-haspopup="true"
                   aria-expanded={isServicesMenuOpen}
                   aria-label={t.services}
@@ -340,11 +475,11 @@ const HeaderNew: React.FC = () => {
                                   onClick={() => setIsServicesMenuOpen(false)}
                                   onMouseEnter={() => handleMouseEnterService(index)}
                                   className={`group/service-card flex min-w-0 items-center gap-4 rounded-xl transition-all duration-300 p-2.5 ${isActive
-                                    ? 'border border-teal-300/30 bg-white/[0.04] shadow-[0_0_20px_rgba(45,212,191,0.05)]'
-                                    : 'border border-transparent hover:border-white/10 hover:bg-white/[0.02]'
+                                    ? 'border border-teal-300/30 bg-white/4 shadow-[0_0_20px_rgba(45,212,191,0.05)]'
+                                    : 'border border-transparent hover:border-white/10 hover:bg-white/2'
                                     }`}
                                 >
-                                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isActive
+                                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300 ${isActive
                                     ? 'bg-teal-300/10 border border-teal-300/30 text-teal-300 shadow-[0_0_15px_rgba(45,212,191,0.1)]'
                                     : 'bg-white/5 border border-white/10 text-white/60 group-hover/service-card:bg-white/10 group-hover/service-card:text-white/90'
                                     }`}>
@@ -371,8 +506,8 @@ const HeaderNew: React.FC = () => {
                         <div className="col-span-7 relative overflow-hidden rounded-2xl border border-white/5 bg-indigo-950/20 group/preview">
                           {/* Static Overlays - optymalizacja wydajności */}
                           <div className="absolute inset-0 bg-indigo-950/30 z-10 pointer-events-none" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-indigo-950 via-indigo-950/80 to-transparent z-10 pointer-events-none" />
-                          <div className="absolute inset-0 bg-gradient-to-r from-indigo-950/90 via-indigo-950/40 to-transparent z-10 pointer-events-none" />
+                          <div className="absolute inset-0 bg-linear-to-t from-indigo-950 via-indigo-950/80 to-transparent z-10 pointer-events-none" />
+                          <div className="absolute inset-0 bg-linear-to-r from-indigo-950/90 via-indigo-950/40 to-transparent z-10 pointer-events-none" />
 
                           {/* Pre-rendered images - zmiana tylko opacity by odciążyć przeglądarkę */}
                           {isServicesMenuOpen
@@ -441,7 +576,7 @@ const HeaderNew: React.FC = () => {
                   key={item.label}
                   href={item.href}
                   onClick={(event) => handleNavClick(event, item.href)}
-                  className="relative text-white/90  font-light text-sm hover:text-white transition-colors group focus:outline-none focus:text-teal-300"
+                  className="relative text-white/90  font-light text-sm hover:text-white transition-colors group focus:outline-hidden focus:text-teal-300"
                 >
                   {item.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-px bg-teal-300 group-hover:w-full transition-all duration-300" />
@@ -459,7 +594,7 @@ const HeaderNew: React.FC = () => {
                 ref={mobileMenuButtonRef}
                 type="button"
                 onClick={() => setIsMobileMenuOpen((value) => !value)}
-                className="relative z-10 w-10 h-10 flex items-center justify-center text-white rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300"
+                className="relative z-10 w-10 h-10 flex items-center justify-center text-white rounded-sm focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300"
                 aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-menu"
@@ -471,89 +606,15 @@ const HeaderNew: React.FC = () => {
         </div>
       </header>
 
-      <AnimatePresence>
-        {isMobileMenuOpen ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[60] lg:hidden"
-          >
-            <div className="absolute inset-0 bg-indigo-950/95 backdrop-blur-lg" onClick={closeMobileMenu} />
-
-            <motion.nav
-              id="mobile-menu"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'tween', duration: 0.3 }}
-              className="absolute inset-0 bg-indigo-950 flex flex-col px-6 pb-10 pt-24 z-50"
-              aria-label="Mobile navigation"
-            >
-              <button
-                type="button"
-                onClick={closeMobileMenu}
-                className="absolute right-4 top-6 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-300"
-                aria-label="Close navigation menu"
-              >
-                <X className="w-6 h-6" />
-              </button>
-
-              <div className="space-y-4 overflow-y-auto">
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0 }}
-                  className="pb-4 border-b border-white/10"
-                >
-                  <p className="text-xs uppercase tracking-[0.2em] text-white  mb-4">{t.services}</p>
-                  <div className="space-y-4">
-                    {serviceGroups.map((group) => (
-                      <div key={group.key} className="space-y-2">
-                        <p className="font-plex text-[10px] uppercase tracking-[0.22em] text-white/35">
-                          {group.label}
-                        </p>
-                        {group.entries.map(({ item }) => {
-                          const Icon = item.icon;
-                          return (
-                            <PrefetchLink
-                              key={item.href}
-                              href={item.href}
-                              onClick={closeMobileMenu}
-                              className="flex items-center gap-3 py-1 text-base  font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
-                            >
-                              <Icon className="w-4 h-4 text-teal-300/60" />
-                              <span>{item.label}</span>
-                            </PrefetchLink>
-                          );
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-
-                {mobileNavItems.map((item, index) => (
-                  <motion.div
-                    key={item.label}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (index + 1) * 0.1 }}
-                  >
-                    <PrefetchLink
-                      href={item.href}
-                      onClick={(event) => handleNavClick(event, item.href)}
-                      className="block text-2xl  font-light text-white hover:text-teal-300 transition-colors focus:outline-none focus-visible:text-teal-300"
-                    >
-                      {item.label}
-                    </PrefetchLink>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.nav>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      <MobileMenu
+        open={isMobileMenuOpen}
+        servicesLabel={t.services}
+        serviceGroups={serviceGroups}
+        items={mobileNavItems}
+        contact={mobileContact}
+        onClose={closeMobileMenu}
+        onNavClick={handleNavClick}
+      />
     </>
   );
 };

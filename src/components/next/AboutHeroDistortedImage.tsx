@@ -7,7 +7,7 @@ interface AboutHeroDistortedImageProps {
 
 export default function AboutHeroDistortedImage({ src, alt }: AboutHeroDistortedImageProps) {
   return (
-    <div className="about-hero-distortion relative w-full max-w-xs mx-auto lg:max-w-none aspect-[3/4] overflow-hidden">
+    <div className="about-hero-distortion relative w-full max-w-xs mx-auto lg:max-w-none aspect-3/4 overflow-hidden">
       <svg className="absolute size-0" aria-hidden="true">
         <filter id="aboutHeroDistortion">
           <feTurbulence
