@@ -17,13 +17,14 @@ import ServiceStatsNew from '@/components/new/ServiceStatsNew';
 import GuideCtaSection from '@/components/new/GuideCtaSection';
 import ServiceCtaNew from '@/components/new/ServiceCtaNew';
 import HubLanding from '@/components/new/HubLanding';
+import MedusaStorePricing from '@/components/new/MedusaStorePricing';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getProjectSummaries, getRelatedPostCandidates, getServiceLanding, getServiceLandings, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
 import { absoluteUrl } from '@/lib/site';
 import { getModifiedDate, getPublishedDate } from '@/lib/content-dates';
 import { localizedPath } from '@/lib/i18n-routing';
-import { startingPriceForServicePath } from '@/data/project-budget';
+import { budgetProjects, startingPriceForServicePath } from '@/data/project-budget';
 import { getMarketplaceGuideChapter, getMarketplaceGuideTracks } from '@/lib/marketplace-guide';
 import { isLanguage, SUPPORTED_LANGUAGES, type Language } from '@/lib/language';
 import { getImageAlt } from '@/lib/image-alt';
@@ -196,6 +197,12 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
   const richContent = getLocalizedArray<any>(landing.content, language);
   const heroImageUrl = landing.heroImage ? urlFor(landing.heroImage).width(1600).auto('format').url() : '';
   const path = `/uslugi/${landing.slug.current}`;
+  const isMedusaStore = path === budgetProjects.ecommerce.servicePath;
+  const featuredProjectSlug = isMedusaStore ? manualProjects.find((project) => project?.slug?.current)?.slug.current : undefined;
+  const secondaryCtaPath = featuredProjectSlug ? `/project/${featuredProjectSlug}` : '/#projects';
+  const secondaryCtaLabel = featuredProjectSlug
+    ? (language === 'pl' ? 'Zobacz realizację na Medusa.js' : 'View the Medusa.js case study')
+    : ctaSecondaryLabel;
   const relatedKeywords = Array.from(new Set(tokenizeForRelated([
     title,
     eyebrow,
@@ -398,17 +405,21 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
                 <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
               </PrefetchLink>
               <PrefetchLink
-                href={localizedPath(language, '/#projects')}
+                href={localizedPath(language, secondaryCtaPath)}
                 className="group px-10 py-5 border border-white/20 text-white font-normal hover:border-teal-300 transition-all duration-500 relative overflow-hidden text-center focus:outline-hidden focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-indigo-950"
               >
                 <span className="relative z-10 group-hover:text-indigo-950 transition-colors duration-500">
-                  {ctaSecondaryLabel}
+                  {secondaryCtaLabel}
                 </span>
                 <div className="absolute inset-0 bg-teal-300 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
               </PrefetchLink>
             </div>
           </div>
         </section>
+
+        {isMedusaStore && startingPrice ? (
+          <MedusaStorePricing language={language} startingPrice={startingPrice} />
+        ) : null}
 
         <ServiceStatsNew stats={stats} language={language} />
 
