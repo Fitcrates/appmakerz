@@ -17,6 +17,8 @@
     "start:next": "next start",
     "sanity": "sanity dev",
     "sanity-deploy": "sanity deploy",
+    "sanity:schema-deploy": "sanity schemas deploy",
+    "check:sanity-mcp": "node scripts/check-sanity-mcp-config.mjs",
     "migrate:viewcount": "ts-node migrations/addViewCount.ts"
   },
   "dependencies": {

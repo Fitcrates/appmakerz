@@ -1,0 +1,27 @@
+# Sanity MCP dla Codexa. Codex wczytuje ten plik tylko w projekcie oznaczonym jako zaufany.
+# Logowanie: `codex mcp login sanity` (OAuth, bez tokenu w repo).
+# Lista zablokowanych narzędzi musi być taka sama jak "deny" w .claude/settings.json, opis w docs/sanity-mcp.md.
+
+[mcp_servers.sanity]
+url = "https://mcp.sanity.io"
+disabled_tools = [
+  "publish_documents",
+  "unpublish_documents",
+  "discard_drafts",
+  "version_discard",
+  "deploy_schema",
+  "undeploy_schema",
+  "deploy_studio",
+  "schema_fields_patch",
+  "schema_types_delete",
+  "create_project",
+  "create_dataset",
+  "update_dataset",
+  "add_cors_origin",
+  "cors_origins_delete",
+  "run_sanity_cli",
+  "media_library_create_documents",
+  "media_library_patch_documents",
+  "media_library_publish_documents",
+  "media_library_discard_drafts",
+]
