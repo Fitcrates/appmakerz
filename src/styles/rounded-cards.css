@@ -49,3 +49,59 @@ a.ac-card:hover,
 .ac-rounded {
   border-radius: var(--ac-card-radius-sm);
 }
+
+/* Hover edge light for cards inside .ac-glow-scope (the service pages), the
+   same effect as the review cards on the home page (ReviewCard.module.css):
+   a 1px ring lit near the cursor plus a faint light inside. --mx / --my are
+   written by CardGlowTracker on pointer move. */
+.ac-glow-scope .ac-card {
+  position: relative;
+}
+
+.ac-glow-scope .ac-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(94, 234, 212, 0.95),
+    rgba(94, 234, 212, 0.25) 40%,
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.ac-glow-scope .ac-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    320px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(94, 234, 212, 0.07),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.ac-glow-scope .ac-card:hover::before,
+.ac-glow-scope .ac-card:hover::after {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .ac-glow-scope .ac-card::before,
+  .ac-glow-scope .ac-card::after {
+    display: none;
+  }
+}

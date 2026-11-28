@@ -6,6 +6,7 @@ import PrefetchLink from '@/components/next/PrefetchLink';
 import { localizedPath } from '@/lib/i18n-routing';
 import { useEmailForm } from '../../hooks/useEmailForm';
 import BurnSpotlightText from './BurnSpotlightText';
+import PersonBadge from './PersonBadge';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations } from '../../translations/translations';
 import { trackContactClick, trackFormStart, trackFormView } from '../../utils/gtm';
@@ -90,6 +91,10 @@ const ContactNew: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="space-y-8"
             >
+              <PersonBadge
+                line={language === 'pl' ? 'czytam i odpisuję osobiście' : 'I read and answer every message myself'}
+              />
+
               <div>
                 <span className="text-xs text-teal-300  tracking-widest uppercase block mb-2">
                   {t.info.email.label}

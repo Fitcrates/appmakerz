@@ -18,6 +18,9 @@ import GuideCtaSection from '@/components/new/GuideCtaSection';
 import ServiceCtaNew from '@/components/new/ServiceCtaNew';
 import HubLanding from '@/components/new/HubLanding';
 import MedusaStorePricing from '@/components/new/MedusaStorePricing';
+import CardGlowTracker from '@/components/new/CardGlowTracker';
+import ServiceContentSections, { hasSectionHeadings } from '@/components/new/service-content/ServiceContentSections';
+import { getServiceExtras } from '@/components/new/service-content/serviceExtras';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { getProjectSummaries, getRelatedPostCandidates, getServiceLanding, getServiceLandings, getSitemapEntries, urlFor } from '@/lib/sanity.server';
 import { getLocalizedArray, getLocalizedText } from '@/lib/localize';
@@ -362,7 +365,8 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
           guideTrackCount={guideTracks.length}
         />
       ) : (
-      <main className="min-h-screen bg-indigo-950">
+      <main className="ac-glow-scope min-h-screen bg-indigo-950">
+        <CardGlowTracker />
         <section className="relative min-h-[60vh] lg:min-h-[75vh] flex items-end overflow-hidden">
           {heroImageUrl ? (
             <div className="absolute inset-0 z-0">
@@ -495,8 +499,14 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
           <ServiceProcessNew processSteps={processSteps} language={language} />
         ) : null}
 
-        {richContent.length > 0 ? (
-          <section className="py-20 lg:py-24 border-t border-white/10">
+        {richContent.length > 0 && hasSectionHeadings(richContent) ? (
+          <ServiceContentSections
+            blocks={richContent}
+            language={language}
+            extras={getServiceExtras(landing.slug.current, language)}
+          />
+        ) : richContent.length > 0 ? (
+          <section className="py-20 lg:py-24">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-invert">
               <BurnSpotlightText as="h2" className="text-3xl sm:text-4xl lg:text-5xl font-light text-white font-oxanium mb-8"
                   glowSize={180}
@@ -519,7 +529,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
         ) : null}
 
         {faq.length > 0 ? (
-          <section className="py-20 lg:py-24 border-t border-white/10">
+          <section className="py-20 lg:py-24">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
               <h2 className="text-3xl sm:text-4xl font-light font-oxanium text-white text-center mb-12">{language === 'pl' ? 'Często zadawane pytania' : 'Frequently asked questions'}</h2>
               <div className="border-t border-white/10">
@@ -530,7 +540,7 @@ export default async function LocalizedServiceLandingPage({ params }: LocalizedS
         ) : null}
 
         {hasInternalLinks ? (
-          <section className="py-20 lg:py-24 border-t border-white/10">
+          <section className="py-20 lg:py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="mb-12 flex flex-col items-center justify-center text-center lg:mb-16">
                 <SpotlightText as="h2" className="mt-6 max-w-3xl text-center text-3xl sm:text-4xl/10 lg:text-5xl/none font-light font-oxanium text-white leading-tight">

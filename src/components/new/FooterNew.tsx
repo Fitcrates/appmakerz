@@ -203,7 +203,7 @@ const FooterNew: React.FC = () => {
           </div>
         </div>
 
-        <div className="py-16 lg:py-24 border-t border-white/10">
+        <div className="py-16 lg:py-24">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
             <div>
               <PrefetchLink href={localizedPath(language, '/#hero')} className="inline-block mb-8">

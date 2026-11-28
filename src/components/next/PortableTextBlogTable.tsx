@@ -35,7 +35,7 @@ export default function PortableTextBlogTable({ value }: PortableTextBlogTablePr
   return (
     <figure className="my-10 w-full max-w-full overflow-hidden rounded-lg border border-white/10 bg-indigo-950/20">
       <div className="w-full overflow-x-auto overscroll-x-contain [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-track]:bg-white/5">
-        <table className="w-full min-w-max border-collapse text-left text-sm text-white/70">
+        <table className="w-full min-w-max md:min-w-0 border-collapse text-left text-sm text-white/70">
           {caption ? (
             <caption className="caption-top border-b border-white/10 bg-white/5 px-4 py-3 text-left font-oxanium text-base font-light text-white sm:px-6 sm:py-4 sm:text-lg">
               {caption}

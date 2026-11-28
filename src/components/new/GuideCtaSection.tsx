@@ -26,7 +26,7 @@ export default function GuideCtaSection({ chapters, chapterCount, trackCount, la
     : (trackCount === 2 ? 'two tracks' : `${trackCount} tracks`);
 
   return (
-    <section className="border-t border-white/10 py-16 lg:py-20">
+    <section className="py-16 lg:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="ac-rounded grid gap-8 border border-teal-300/20 bg-teal-300/5 p-7 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>

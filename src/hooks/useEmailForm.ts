@@ -37,7 +37,22 @@ export const useEmailForm = () => {
       const hash = window.location.hash;
       const searchParams = new URLSearchParams(hash.split('?')[1]);
       const plan = searchParams.get('plan');
-      
+
+      // A draft left by an interactive section (the marketplace decision
+      // checklist) before it sent the visitor here. Read once, never over
+      // something they have already typed.
+      let draft: string | null = null;
+      try {
+        draft = window.sessionStorage.getItem('contactDraft');
+        if (draft) window.sessionStorage.removeItem('contactDraft');
+      } catch {
+        draft = null;
+      }
+      if (draft) {
+        const text = draft;
+        setFormData((prev) => (prev.message ? prev : { ...prev, message: text }));
+      }
+
       if (plan) {
         setFormData((prev) => ({
           ...prev,

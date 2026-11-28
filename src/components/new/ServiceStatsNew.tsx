@@ -18,12 +18,14 @@ export default function ServiceStatsNew({ stats }: ServiceStatsNewProps) {
   }
 
   return (
-    <section className="border-y border-white/10">
+    <section>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/10 border-x border-white/10">
+        <div className="grid grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, index) => (
-            <div key={`stat-${index}`} className="bg-indigo-950 py-8 lg:py-10 px-6">
-              <p className="text-3xl sm:text-4xl font-light font-oxanium text-teal-300 notranslate">
+            <div key={`stat-${index}`} className="bg-indigo-950 py-8 lg:py-10 px-4 sm:px-6">
+              {/* Word values ("Workflow-first", "Produkcyjny") need the smaller
+                  size and padding to fit a half-width phone cell. */}
+              <p className="text-2xl sm:text-4xl font-light font-oxanium text-teal-300 notranslate break-words">
                 {stat.value}
               </p>
               <p className="text-white/50 text-sm mt-2">{stat.label}</p>

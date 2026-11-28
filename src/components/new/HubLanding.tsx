@@ -14,6 +14,7 @@ import HubEvidence from '@/components/new/HubEvidence';
 import GuideCtaSection from '@/components/new/GuideCtaSection';
 import TechChips from '@/components/new/TechChips';
 import ServiceCtaNew from '@/components/new/ServiceCtaNew';
+import CardGlowTracker from '@/components/new/CardGlowTracker';
 import HubMedia from '@/components/new/HubMedia';
 import { portableTextComponentsServer } from '@/components/next/PortableTextComponentsServer';
 import { urlFor } from '@/lib/sanity.server';
@@ -100,7 +101,8 @@ export default function HubLanding({
   );
 
   return (
-    <main className="min-h-screen bg-indigo-950">
+    <main className="ac-glow-scope min-h-screen bg-indigo-950">
+      <CardGlowTracker />
       {/* The hero image is shown whole beside the title, not as a dimmed
           backdrop like on the service landings: on the hub it is a finished
           illustration with its own lettering, which a backdrop would wash out
@@ -205,7 +207,7 @@ export default function HubLanding({
           section adds none and promotes h3 to h2: they are top-level topics
           on this page. The promo popout links here. */}
       {richContent.length > 0 ? (
-        <section id="hub-content" className="scroll-mt-28 border-t border-white/10 py-20 lg:py-24">
+        <section id="hub-content" className="scroll-mt-28 py-20 lg:py-24">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 prose prose-invert [&>*:first-child]:mt-0">
             <PortableText value={richContent} components={hubContentComponents} />
           </div>
@@ -228,7 +230,7 @@ export default function HubLanding({
       <TechChips technologies={technologies} language={language} />
 
       {faq.length > 0 ? (
-        <section className="border-t border-white/10 py-20 lg:py-24">
+        <section className="py-20 lg:py-24">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <div className="mb-12 lg:mb-16">
               <BurnSpotlightText

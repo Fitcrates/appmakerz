@@ -75,6 +75,9 @@ function asPortableTextBlocks(value: unknown): any[] {
 
     return {
       _type: 'block',
+      // Kept so the service pages can recognise their sections by key
+      // (ServiceContentSections) and React gets stable keys.
+      ...(typeof block._key === 'string' ? { _key: block._key } : {}),
       style,
       markDefs: Array.isArray(block.markDefs) ? block.markDefs : [],
       children,
