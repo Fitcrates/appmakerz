@@ -3,6 +3,7 @@
 import PrefetchLink from '@/components/next/PrefetchLink';
 import BurnSpotlightText from '@/components/new/BurnSpotlightText';
 import SpotlightText from '@/components/new/SpotlightText';
+import PersonBadge from '@/components/new/PersonBadge';
 import { localizedPath } from '@/lib/i18n-routing';
 import type { Language } from '@/lib/language';
 
@@ -18,7 +19,7 @@ interface ServiceCtaNewProps {
 // the markup.
 export default function ServiceCtaNew({ ctaLabel, language, heading, body }: ServiceCtaNewProps) {
   return (
-    <section className="py-20 lg:py-24 border-t border-white/10">
+    <section className="py-20 lg:py-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="mb-6">
           <BurnSpotlightText
@@ -45,6 +46,12 @@ export default function ServiceCtaNew({ ctaLabel, language, heading, body }: Ser
           <span className="relative z-10">{ctaLabel}</span>
           <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
         </PrefetchLink>
+        <div className="mt-6">
+          <PersonBadge
+            align="center"
+            line={language === 'pl' ? 'rozmawiasz ze mną, nie z handlowcem' : 'you talk to me, not a salesperson'}
+          />
+        </div>
       </div>
     </section>
   );

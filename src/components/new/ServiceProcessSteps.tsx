@@ -113,7 +113,7 @@ export default function ServiceProcessSteps({ steps, language }: ServiceProcessS
   if (!steps.length) return null;
 
   return (
-    <section className="py-20 lg:py-28 bg-indigo-950 border-t border-white/10 relative overflow-hidden">
+    <section className="py-20 lg:py-28 bg-indigo-950 relative overflow-hidden">
       <ProcessStepsBody
         eyebrow={language === 'pl' ? 'Krok po kroku' : 'Step by step'}
         heading={language === 'pl' ? 'Proces współpracy' : 'How we work'}

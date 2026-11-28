@@ -24,8 +24,8 @@ export default function ServiceDeliverablesNew({ deliverables, language }: Servi
             </BurnSpotlightText>
             <SpotlightText as="p" className="text-white/50 font-light font-plex text-lg max-w-md leading-relaxed" glowSize={100}>
               {language === 'pl'
-                ? 'Każdy element projektu jest starannie dopracowany. Przekuwam pomysły w solidne, skalowalne rozwiązania, dbając o najwyższą jakość na każdym etapie.'
-                : 'Every project element is carefully refined. I turn ideas into solid, scalable solutions, ensuring the highest quality at every stage.'}
+                ? 'To przekazuję Ci przy odbiorze. Zakres każdego punktu ustalamy przed wyceną, więc wiesz, za co płacisz.'
+                : 'This is what you receive at handover. We agree the scope of each item before the quote, so you know what you are paying for.'}
             </SpotlightText>
           </div>
 

@@ -35,8 +35,8 @@ const CONSENT_KEY = 'cookieConsent';
 const CONSENT_POLL_MS = 2_000;
 
 const labels = {
-  en: { open: 'Show offer', close: 'Close' },
-  pl: { open: 'Pokaż ofertę', close: 'Zamknij' },
+  en: { open: 'Show offer', close: 'Close', collapse: 'Fold away' },
+  pl: { open: 'Pokaż ofertę', close: 'Zamknij', collapse: 'Zwiń' },
 } as const;
 
 const readStorage = (key: string) => {
@@ -58,8 +58,9 @@ const writeStorage = (key: string, value: string) => {
 const stripLanguage = (pathname: string) => pathname.replace(/^\/(en|pl)(?=\/|$)/, '') || '/';
 
 // A campaign panel managed in Sanity (promoPopout). It slides in from the
-// right edge once, after a delay; closing it leaves a vertical tab at the edge
-// that brings it back, and stops it sliding in by itself for snoozeDays.
+// right edge once, after a delay. The tab's chevron only folds it back to the
+// edge (and stops it sliding in by itself for snoozeDays); the X, or following
+// the link, dismisses it: the panel and its tab are gone for snoozeDays.
 //
 // The panel is rendered on the server, collapsed, so its title, text and link
 // are in the page markup. It is not a modal: a <dialog> sits in the browser's
@@ -71,14 +72,30 @@ export default function PromoPopout({ id, href, hideOn, delaySeconds, snoozeDays
   // The graphic is only mounted once the panel has been opened, so visitors
   // who never see it never download it.
   const [opened, setOpened] = useState(false);
+  // 'pending' until the browser has checked storage: the tab stays invisible
+  // meanwhile, so a visitor who dismissed it never sees it flash back.
+  const [status, setStatus] = useState<'pending' | 'active' | 'dismissed'>('pending');
 
   const storageKey = `promoPopout:${id}`;
+  const dismissKey = `${storageKey}:dismissed`;
   const hidden = hideOn.includes(stripLanguage(pathname ?? '/'));
 
   useEffect(() => {
-    if (hidden || Number(readStorage(storageKey)) > Date.now()) return;
+    if (hidden) return;
 
     let timer: ReturnType<typeof setTimeout>;
+    // Deferred to a task so the state change does not run synchronously
+    // inside the effect.
+    timer = setTimeout(() => {
+      if (Number(readStorage(dismissKey)) > Date.now()) {
+        setStatus('dismissed');
+        return;
+      }
+      setStatus('active');
+      if (Number(readStorage(storageKey)) > Date.now()) return;
+      timer = setTimeout(waitForConsent, delaySeconds * 1000);
+    }, 0);
+
     const waitForConsent = () => {
       if (readStorage(CONSENT_KEY)) {
         setOpen(true);
@@ -87,28 +104,34 @@ export default function PromoPopout({ id, href, hideOn, delaySeconds, snoozeDays
         timer = setTimeout(waitForConsent, CONSENT_POLL_MS);
       }
     };
-    timer = setTimeout(waitForConsent, delaySeconds * 1000);
     return () => clearTimeout(timer);
-  }, [hidden, storageKey, delaySeconds]);
+  }, [hidden, storageKey, dismissKey, delaySeconds]);
 
-  if (hidden) return null;
+  if (hidden || status === 'dismissed') return null;
 
   const t = content[language];
   const ui = labels[language];
   const external = /^https?:\/\//i.test(href);
   const target = external ? href : localizedPath(language, href);
 
+  const snoozeUntil = () => String(Date.now() + snoozeDays * 24 * 60 * 60 * 1000);
   const show = () => {
     setOpen(true);
     setOpened(true);
   };
-  const close = () => {
+  const collapse = () => {
     setOpen(false);
-    writeStorage(storageKey, String(Date.now() + snoozeDays * 24 * 60 * 60 * 1000));
+    writeStorage(storageKey, snoozeUntil());
+  };
+  const dismiss = () => {
+    setOpen(false);
+    writeStorage(storageKey, snoozeUntil());
+    writeStorage(dismissKey, snoozeUntil());
+    setStatus('dismissed');
   };
 
   const linkProps = {
-    onClick: close,
+    onClick: dismiss,
     ...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
   };
   const LinkTag = external ? 'a' : PrefetchLink;
@@ -116,20 +139,20 @@ export default function PromoPopout({ id, href, hideOn, delaySeconds, snoozeDays
   return (
     <aside
       aria-label={t.title}
-      className={`fixed right-0 top-1/2 z-40 flex items-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${open ? '-translate-y-1/2' : '-translate-y-1/2 translate-x-(--panel-w)'}`}
+      className={`fixed right-0 top-1/2 z-40 flex items-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${open ? '-translate-y-1/2' : '-translate-y-1/2 translate-x-(--panel-w)'} ${status === 'pending' ? 'invisible' : ''}`}
       style={{ '--panel-w': 'min(20rem, calc(100vw - 3.5rem))' } as React.CSSProperties}
       onKeyDown={(event) => {
-        if (event.key === 'Escape' && open) close();
+        if (event.key === 'Escape' && open) collapse();
       }}
     >
       {/* The tab travels with the panel: it sits on its left edge while open
-          and is all that is left at the screen edge once it is closed. */}
+          and is all that is left at the screen edge once it is folded. */}
       <button
         type="button"
-        onClick={open ? close : show}
+        onClick={open ? collapse : show}
         aria-expanded={open}
         aria-controls="promo-popout-panel"
-        aria-label={open ? ui.close : `${ui.open}: ${t.tabLabel}`}
+        aria-label={open ? ui.collapse : `${ui.open}: ${t.tabLabel}`}
         className="flex w-10 shrink-0 flex-col items-center gap-3 rounded-l-xl border border-r-0 border-white/10 bg-[#242150] py-4 text-white/80 transition-colors hover:text-teal-300 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-teal-300/60"
       >
         {open ? <ChevronRight className="h-4 w-4" aria-hidden="true" /> : <ChevronLeft className="h-4 w-4" aria-hidden="true" />}
@@ -167,7 +190,7 @@ export default function PromoPopout({ id, href, hideOn, delaySeconds, snoozeDays
 
         <button
           type="button"
-          onClick={close}
+          onClick={dismiss}
           aria-label={ui.close}
           className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-indigo-950/70 text-white/80 backdrop-blur-xs transition-colors hover:border-teal-300 hover:bg-teal-300 hover:text-indigo-950 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-teal-300/60"
         >
